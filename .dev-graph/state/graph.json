@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1638,
+  "graph_revision": 1640,
   "nodes": [
     {
       "acceptance": [
@@ -64168,9 +64168,9 @@
       "goal": "到達状態 (target、未実装): 既存 Markdown.tsx の MarkdownView / ImageGroup / MarkdownEditor / Tabs を拡張し、:::cards container を同一 sanitize 経路で描画する。編集中は大画面は 2 ペイン、狭幅は Tabs とし、記法ミスで本文全体を壊さない。",
       "graph_node_id": "feat-card-block-authoring",
       "implementation_readiness": {
-        "checked_at": "2026-08-13T22:39:59Z",
+        "checked_at": "2026-08-15T00:00:00Z",
         "missing_sections": [],
-        "status": "incomplete"
+        "status": "complete"
       },
       "issue_linkage": null,
       "iteration": null,
@@ -64246,7 +64246,7 @@
       "template_version": "1.0.0",
       "title": "カードブロック本文記法と編集/プレビュー 2 ペイン",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-14T21:55:26Z"
+      "updated_at": "2026-08-15T14:58:21.852971Z"
     },
     {
       "acceptance": [
@@ -64311,9 +64311,9 @@
       "goal": "到達状態 (target、未実装): Docs / Sheets / Catalog の 3 一覧はカードグリッドを既定とし、同じ DataTable column model からテーブル表示へ切り替えられる。tab / q / filter は URL query から完全に復元でき、認可済み集合の status_counts と cursor page が同じ契約で返る。",
       "graph_node_id": "feat-card-list-shell",
       "implementation_readiness": {
-        "checked_at": "2026-08-13T22:39:59Z",
+        "checked_at": "2026-08-15T00:00:00Z",
         "missing_sections": [],
-        "status": "incomplete"
+        "status": "complete"
       },
       "issue_linkage": null,
       "iteration": null,
@@ -64399,7 +64399,7 @@
       "template_version": "1.0.0",
       "title": "一覧のカード型シェル (カードグリッド既定・表示切替・状態タブ・検索)",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-14T21:55:26Z"
+      "updated_at": "2026-08-15T14:57:32.196096Z"
     },
     {
       "acceptance": [

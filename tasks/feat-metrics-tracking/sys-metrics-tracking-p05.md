@@ -71,3 +71,8 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-metrics-tracking` を使い、current pointer から現行世代を再解決する。
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。
+
+## 実装追記 (2026-08-16)
+
+S09 を `/dashboard` へ同居し、S16 を `/tracking` へ移した。旧 `/metrics`・`/metrics/usage` は 308 転送のみ。
+詳細は [カード wave 受領書](../../docs/features/feat-card-list-shell/card-family-20260816-spec-reflection-receipt.md)。

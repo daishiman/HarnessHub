@@ -38,6 +38,32 @@ function outputDir(): string {
   return resolve(process.cwd(), 'artifacts/vrt');
 }
 
+/**
+ * 画像ファイル名に使える識別子か。英数と `-` / `_` だけを許す。
+ *
+ * `key` はそのまま `writeFileSync` の書込み先へ連結される。`VRT_UPDATE=1` で走らせたとき、
+ * `../../src/app/page` のような値を渡せば基準画像の置き場を飛び出して runtime の資産を
+ * PNG で上書きできてしまう。検査用の素材が製品の実体へ混ざり込む経路になるので、
+ * 組み立てる前に弾く。runtime 側は同じ危険を `image-service` の imageId 検証で既に塞いでおり
+ * (経路要素を含む id は拒否)、test 側にだけ穴が残っている状態を無くす。
+ *
+ * 拡張子を含めないのは、`.png` を付けるのは呼び出し側の責務であり、
+ * `key` に `.` を許すと `..` の通過を許す判定を書く羽目になるため。
+ */
+export function isSafeVrtKey(key: string): boolean {
+  return /^[A-Za-z0-9][A-Za-z0-9_-]*$/.test(key);
+}
+
+function assertSafeVrtKey(key: string): void {
+  if (!isSafeVrtKey(key)) {
+    throw new Error(
+      `VRT の key が不正です: ${JSON.stringify(key)}。` +
+        ' 英数字で始まり、英数字と - _ だけを含む名前にしてください' +
+        ' (経路区切りや .. を許すと基準画像の置き場の外へ書き込めてしまいます)。',
+    );
+  }
+}
+
 /** 基準画像を作り直すモードか。`VRT_UPDATE=1 pnpm test:browser` で入る。 */
 export function isUpdateMode(): boolean {
   return process.env.VRT_UPDATE === '1';
@@ -62,6 +88,8 @@ function writePng(path: string, base64: string): void {
  * `key` は `catalog-form-light` のような、そのまま画像ファイル名になる識別子。
  */
 export async function expectMatchesBaseline(session: BrowserSession, key: string): Promise<VrtResult> {
+  // 画面を撮る前に弾く。撮影は成功したのに書込み先が不正、という中途半端な状態を作らない。
+  assertSafeVrtKey(key);
   const actualBase64 = (await session.screenshot({ fullPage: true })).toString('base64');
   const baselinePath = resolve(baselineDir(), `${key}.png`);
 

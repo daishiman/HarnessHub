@@ -39,7 +39,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 | `/pipeline` | S13 構築パイプライン | **MVP 実装 path は `/builds`**（canonical alias は後続） |
 | `/feedback` / `/feedback/[id]` | S14 改善要望 | 起票フォームは一覧内シート/モーダル |
 | `/docs` / `/docs/[id]` / `/docs/[id]/edit` | S15 ドキュメント | |
-| `/tracking` | S16 利用・削減効果 | **MVP 実装 path は `/metrics/usage`**（canonical alias は後続） |
+| `/tracking` | S16 利用・削減効果 | 正本 route。旧 `/metrics/usage` は 308 転送 |
 | `/users` / `/users/[id]` | S17 ユーザー管理 | admin のみ (route guard + API 側 deny) |
 | `/account` / `/legal` | S18 アカウント設定 / 規約 | |
 | `/workspace-settings` | S04 Workspace 設定・Release 履歴 | admin 中心 (履歴は owner も) |

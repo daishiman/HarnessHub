@@ -296,12 +296,14 @@ describe('DC-A11Y / 検査対象が実在すること', () => {
     expect(document.querySelectorAll('h1, h2').length).toBeGreaterThan(0);
     expect(document.querySelector('a[href="#main"]')).not.toBeNull();
 
-    // 行データ: loading スケルトンではなく取得結果が出ていること
-    const rows = document.querySelectorAll('main table tbody tr');
-    expect(rows).toHaveLength(1);
-    expect(document.querySelector('main table')?.getAttribute('aria-busy')).toBeNull();
-    expect(rows[0]?.textContent ?? '').toContain(ENTRY.name);
-    expect(document.querySelector('main table caption')?.textContent).toBe('業務ツール一覧');
+    // 行データ: loading スケルトンではなく取得結果が出ていること。
+    // 既定はカードグリッド (feat-card-list-shell) なので、1 件 = 1 カード (li) で数える。
+    const grid = document.querySelector('main [role="group"][aria-label="業務ツール一覧"]');
+    expect(grid, 'カードグリッドが描画されていない').not.toBeNull();
+    const cards = grid?.querySelectorAll('ul > li') ?? [];
+    expect(cards).toHaveLength(1);
+    expect(grid?.getAttribute('aria-busy')).toBeNull();
+    expect(cards[0]?.textContent ?? '').toContain(ENTRY.name);
   });
 
   it('DC-A11Y-05: 詳細と履歴も取得結果を描画している', async () => {
@@ -324,7 +326,8 @@ describe('DC-NAV / 遷移での scope 保持', () => {
   it('DC-NAV-01: 一覧から詳細へのリンクが tenant/workspace を落とさない', async () => {
     await renderScreen(await listScreen(), '業務ツール一覧 | Harness Hub');
 
-    const link = document.querySelector<HTMLAnchorElement>(`main table tbody a[href*="${ENTRY.project_id}"]`);
+    // 既定のカードグリッドでも、詳細への導線はカード見出しのリンクとして残る。
+    const link = document.querySelector<HTMLAnchorElement>(`main [role="group"] li a[href*="${ENTRY.project_id}"]`);
     expect(link, '詳細への遷移リンクが無い').not.toBeNull();
 
     // 詳細画面は scope を URL から読む。落とすと遷移した先が毎回

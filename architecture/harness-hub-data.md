@@ -237,3 +237,11 @@ control-plane DB、schema migration、保存形式、export、restore、デー�
   順次追記し、監査失敗をジョブ失敗として観測する（DB更新との原子性は主張しない）。
 - Docs画像実体はR2の`docs/{tenantId}/{documentId}/{imageId}`、DB/Markdownは認証付き内部URLだけを保持する。
   詳細正本: `docs/backend-spec.md` §2.3/§7、feat-docs-cms ADR §1/§8。
+
+## 2026-08-16 カード wave / 配色 / Build 編集
+
+- `0016_appearance-palette-preference.sql`: `user_settings.palette` (既定 `gray`) と
+  `resolved_theme` (既定 `light`)。既存 theme/density/locale は非変更。
+- `0017_build-card-authoring.sql`: `builds` へ title_override / risk_override /
+  assignee_user_id / note を純増し、`builds_sheet_id_uq` を張る。
+- Docs / Sheets 一覧の `status_counts` は認可後・cursor 前の集計であり、永続テーブルを増やさない。

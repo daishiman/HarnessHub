@@ -1,5 +1,5 @@
 /** テーブル部品の単体テスト。ソートの読み上げ状態・空表示・スケルトンによる高さ確保を固定する。 */
-import { screen, within } from '@testing-library/react';
+import { cleanup, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -379,5 +379,69 @@ describe('DataTable の狭い画面表現', () => {
 
     // 表側の空セルとカード側の文言で 2 か所。空欄のまま黙らせない
     expect(screen.getAllByText('該当するデータがありません')).toHaveLength(2);
+  });
+
+  describe('表現の切替を利用者へ開いたとき', () => {
+    const renderWithToggle = (viewMode: 'cards' | 'table', onViewModeChange = vi.fn()) => {
+      renderWithUi(
+        <DataTable
+          caption="利用者一覧"
+          columns={cardColumns}
+          rows={rows}
+          rowKey={(row) => row.id}
+          narrowAs="card-collection"
+          viewMode={viewMode}
+          onViewModeChange={onViewModeChange}
+        />,
+      );
+      return onViewModeChange;
+    };
+
+    it('意思が示されたら片方だけを描く (幅の出し分けと二重にしない)', () => {
+      renderWithToggle('cards');
+
+      // 幅による出し分け (data-hh-viewport) は「その画面に収まるか」の話で、
+      // viewMode は「見比べたいか / 読み切りたいか」の話。後者が示されたときに
+      // 両方を DOM へ残すと、読み上げも件数も 2 倍になる
+      expect(document.querySelector('table')).toBeNull();
+      expect(document.querySelectorAll('li')).toHaveLength(rows.length);
+
+      cleanup();
+      renderWithToggle('table');
+      expect(document.querySelector('table')).not.toBeNull();
+      expect(document.querySelectorAll('article')).toHaveLength(0);
+    });
+
+    it('切替は可視ラベルを持ち、いま選ばれているほうを aria-pressed で伝える', async () => {
+      const user = userEvent.setup();
+      const onViewModeChange = renderWithToggle('cards');
+
+      const toggle = screen.getByRole('group', { name: '表示の切替' });
+      // タブの役割 (role="tablist") は名乗らない。名乗ると矢印キー移動と
+      // tabpanel の対応付けまで契約に入り、ここで満たしていない約束になる。
+      // group は role 属性ではなく fieldset の暗黙 role で満たす (要素が先、ARIA は後)
+      expect(toggle.tagName).toBe('FIELDSET');
+      expect(toggle.getAttribute('role')).toBeNull();
+      expect(screen.getByRole('button', { name: 'カードで見る' }).getAttribute('aria-pressed')).toBe('true');
+      expect(screen.getByRole('button', { name: '表で見る' }).getAttribute('aria-pressed')).toBe('false');
+
+      await user.click(screen.getByRole('button', { name: '表で見る' }));
+      // 表示形式の正本は画面側 (記憶に残す責務がある)。部品は通知するだけ
+      expect(onViewModeChange).toHaveBeenCalledWith('table');
+    });
+
+    it('片方だけを描いても、値は同じ列定義から取る', () => {
+      renderWithToggle('table');
+
+      // カード用に宣言した salience 付きの列定義をそのまま渡しても、表側は
+      // これまでどおりの列で出る (受入条件 2: 同一 column model)
+      // 見出しは並べ替えボタンの読み上げ文言も抱えるので、先頭の列名だけを見る
+      expect([...document.querySelectorAll('thead th')].map((cell) => cell.textContent?.slice(0, 2))).toEqual([
+        '名前',
+        '件数',
+        'メモ',
+      ]);
+      expect(bodyTexts(0)).toEqual(['いろは', 'あさひ', 'うたげ']);
+    });
   });
 });

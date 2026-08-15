@@ -18,6 +18,7 @@
 import {
   ActionLink,
   Alert,
+  AppearancePicker,
   AppShell,
   Button,
   buildShellCss,
@@ -262,6 +263,13 @@ export const catalogEntries: readonly CatalogEntry[] = [
         <TextButton tone="muted">閉じる</TextButton>
       </Stack>
     ),
+  },
+  {
+    // 配色 (palette) と明るさ (theme) の 2 軸を選ぶ。VRT では既定の配色で描かれた見本を撮る
+    // (選択後の見た目は UiProvider が data-palette / data-theme を切り替えて全体へ効く)。
+    name: 'AppearancePicker',
+    group: 'form',
+    render: () => <AppearancePicker name="catalog-appearance" />,
   },
   {
     name: 'Select',

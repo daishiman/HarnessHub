@@ -79,7 +79,7 @@ describe('SEARCH-DB: 実クエリでのワイルドカード無効化', () => {
     expect(page.items).toHaveLength(1);
   });
 
-  it('SEARCH-DB-004: docs の検索対象は本文を含まない', async () => {
+  it('SEARCH-DB-004: docs の検索対象は title / body / tags で、それ以外の列は含まない', async () => {
     const { context } = await seedTenantContext();
     const repository = createDocsCmsRepository(asCore(adapter));
     await repository.createDocument(context, {
@@ -87,13 +87,16 @@ describe('SEARCH-DB: 実クエリでのワイルドカード無効化', () => {
       title: '経費精算の手引き',
       bodyMarkdown: '出張旅費についての記載',
       actorId: 'seed',
+      category: '経理',
     });
 
-    const page = await repository.listDocuments(context, { limit: 50, query: '出張旅費' });
-
-    // 本文に在る語では当たらない。一覧に出ていない文字列で行が出ると、
-    // 閲覧者から「なぜ出たか」が読み取れない結果になるため (契約側に理由を記載)。
-    expect(page.items).toStrictEqual([]);
+    // かつては title だけを見ていた。「一覧に出ていない文字列で行が出ると、なぜ出たかが
+    // 読み取れない」という理由だったが、カード一覧では body 由来の要約とタグがカード面に
+    // 出るため前提が変わった (feat-card-list-shell)。見えている情報では引けるようにする。
+    expect((await repository.listDocuments(context, { limit: 50, query: '出張旅費' })).items).toHaveLength(1);
+    // 一方で category はカードの絞り込み条件であって全文検索の対象ではない。
+    // 専用の filter があるものを q へ混ぜると、絞り込みと検索の役割が曖昧になる。
+    expect((await repository.listDocuments(context, { limit: 50, query: '経理' })).items).toStrictEqual([]);
   });
 
   it('SEARCH-DB-005: users は氏名と部署で引ける。email では引けない', async () => {

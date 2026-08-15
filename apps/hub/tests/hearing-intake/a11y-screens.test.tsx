@@ -312,7 +312,15 @@ describe('HI-A11Y: P05 実装後の受入契約', () => {
   it('HI-A11Y-102: hearing-sheets 一覧の実コンポーネントに axe 違反が 0 件', async () => {
     mountScreen(<HearingSheetList tenantId="tenant-a" workspaceId="ws-1" />);
     expect(await violationsOf()).toEqual([]);
-    expect(document.querySelector('table')).not.toBeNull();
+    // 既定はカードグリッド (feat-card-list-shell)。表は「表で見る」へ切り替えた先にあるので、
+    // 初期描画で見るのは「名前を持つ一覧のかたまり」と、表へ移る手段が消えていないこと。
+    expect(document.querySelector('[role="group"][aria-label="ヒアリングシート一覧"]')).not.toBeNull();
+    const toggle = document.querySelector('fieldset[aria-label="表示の切替"]');
+    expect(toggle).not.toBeNull();
+    expect([...(toggle?.querySelectorAll('button') ?? [])].map((button) => button.textContent)).toEqual([
+      'カードで見る',
+      '表で見る',
+    ]);
   });
 
   it('HI-A11Y-103: hearing-sheets 詳細の初期状態に axe 違反が 0 件', async () => {
@@ -381,7 +389,9 @@ describe('HI-A11Y: P05 実装後の受入契約', () => {
 
   it('HI-A11Y-111: S11 は正本の filter・全文検索・cursor ページングを API query へ渡す', () => {
     const source = listSource();
-    expect(source).toContain("query.set('status'");
+    // 状態は自由入力の filter から状態タブへ変わった (feat-card-list-shell)。
+    // API へ渡すのは区分 (`status_group`) で、「すべて」と「状態不明」は送らない = 絞り込まない。
+    expect(source).toContain("query.set('status_group'");
     expect(source).toContain("query.set('department'");
     expect(source).toContain("query.set('q'");
     expect(source).toContain("query.set('cursor'");

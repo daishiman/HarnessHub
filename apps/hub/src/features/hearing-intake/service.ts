@@ -30,6 +30,35 @@ function applicantOf(row: HearingSheetRow) {
   };
 }
 
+/**
+ * 状態タブの件数。repository の戻り値から型を引き出す。
+ *
+ * ここで型を書き起こすと、集計の区分 (active に何を含めるか) が repository と
+ * 二重定義になり、片方だけ増えたときに気付けない。
+ */
+export type HearingSheetStatusCounts = Awaited<ReturnType<HearingIntakeRepository['listSheets']>>['statusCounts'];
+
+/**
+ * 一覧応答に件数を足した形。
+ *
+ * `sheetListResponseSchema` は schemas パッケージが持つ契約で、`.parse()` は
+ * 契約に無いキーを落とす。件数は落とされた後にここで足す (契約側を触らずに済ませる)。
+ */
+export type SheetListResponseWithCounts = SheetListResponse & {
+  readonly status_counts: HearingSheetStatusCounts;
+};
+
+/**
+ * 画面のタブ区分と、そこに属する保存済み状態の対応。
+ *
+ * この 1 箇所だけが区分の定義。件数集計 (repository 側) と絞り込み (ここ) が
+ * 別の規則を持つと、「対応中 5 件」と出たタブを押して 3 件しか出ない、が起きる。
+ */
+const STATUS_GROUP_MEMBERS = {
+  active: ['received', 'generating', 'review'],
+  completed: ['completed'],
+} as const satisfies Readonly<Record<'active' | 'completed', readonly HearingSheetStatus[]>>;
+
 export interface ReceiptNotificationPort {
   notifyReceipt(input: {
     readonly tenantId: string;
@@ -73,7 +102,12 @@ export interface HearingIntakeService {
     readonly applicantUserId: string;
     readonly readAll: boolean;
     readonly query: SheetListQuery;
-  }): Promise<SheetListResponse>;
+    /**
+     * 複数の状態を 1 つの区分として絞り込む。`query.status` (単一状態) とは別の問い。
+     * 画面のタブは「対応中」「完了」という区分で、個々の状態名では表せない。
+     */
+    readonly statusGroup?: 'active' | 'completed';
+  }): Promise<SheetListResponseWithCounts>;
   getSheet(input: { readonly context: RepositoryContext; readonly id: string }): Promise<SheetDetail | null>;
   updateSheetStatus(input: {
     readonly context: RepositoryContext;
@@ -252,6 +286,7 @@ export function createHearingIntakeService(
         ...(input.workspaceId === undefined ? {} : { workspaceId: input.workspaceId }),
         ...(input.readAll ? {} : { applicantUserId: input.applicantUserId }),
         ...(input.query.status === undefined ? {} : { status: input.query.status }),
+        ...(input.statusGroup === undefined ? {} : { statuses: STATUS_GROUP_MEMBERS[input.statusGroup] }),
         ...(input.query.department === undefined ? {} : { department: input.query.department }),
         ...(input.query.q === undefined ? {} : { query: input.query.q }),
         ...(input.query.cursor === undefined ? {} : { cursor: input.query.cursor }),
@@ -269,10 +304,13 @@ export function createHearingIntakeService(
           logMalformedStoredRow('listSheets', error);
         }
       }
-      return sheetListResponseSchema.parse({
-        items,
-        next_cursor: page.nextCursor,
-      });
+      return {
+        ...sheetListResponseSchema.parse({
+          items,
+          next_cursor: page.nextCursor,
+        }),
+        status_counts: page.statusCounts,
+      };
     },
 
     async getSheet(input) {

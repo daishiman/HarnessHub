@@ -2,7 +2,7 @@
   "graph_node_id": "feat-card-list-shell",
   "artifact_kind": "feature",
   "purpose": "現状 (current) の Docs / Sheets / Catalog 一覧は wide table 中心で、q の検索対象・絞込状態の復元・状態別件数がカード一覧の契約を満たさない。テーブルの比較性を残しつつ、3 一覧を中身が見える共通カード shell へ移行する。",
-  "goal": "到達状態 (target、未実装): Docs / Sheets / Catalog の 3 一覧はカードグリッドを既定とし、同じ DataTable column model からテーブル表示へ切り替えられる。tab / q / filter は URL query から完全に復元でき、認可済み集合の status_counts と cursor page が同じ契約で返る。",
+  "goal": "到達状態 (target、実装済み 2026-08-16): Docs / Sheets / Catalog の 3 一覧はカードグリッドを既定とし、同じ DataTable column model からテーブル表示へ切り替えられる。tab / q / filter は URL query から完全に復元でき、認可済み集合の status_counts と cursor page が同じ契約で返る。",
   "scope_in": [
     "Docs / Sheets / Catalog の 3 一覧に、カードグリッドを既定とする共通 shell と可視ラベル付き card/table view mode 切替を導入する",
     "カードとテーブルは既存 DataTable column model の列定義・value・ソート語彙を再利用し、同じ行の別表現とする",
@@ -66,5 +66,10 @@
     "apps/hub/src/lib/catalog/marketplace.ts",
     "apps/hub/src/lib/catalog/response-schemas.ts"
   ],
-  "updated_at": "2026-08-14T21:55:26Z"
+  "implementation_status": {
+    "state": "implemented",
+    "completed_at": "2026-08-16T00:00:00Z",
+    "summary": "Docs / Sheets / Catalog をカード既定の共通 shell へ移行し、URL query を絞込の正本、sessionStorage を view mode 専用にした。status_counts と title/body/tags 検索を repository 応答へ純増した。"
+  },
+  "updated_at": "2026-08-16T00:00:00Z"
 }

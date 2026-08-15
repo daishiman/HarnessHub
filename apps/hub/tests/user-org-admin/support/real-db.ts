@@ -44,6 +44,9 @@ const MIGRATIONS = [
   '0000_baseline-core-domain.sql',
   '0002_hearing-intake-ai-queue.sql',
   '0006_tenant-data-retention.sql',
+  // 0016 は user_settings へ palette/resolved_theme を足す。drizzle は select で全列を
+  // 明示列挙するため、この表を読む route は列が無いと no such column で落ちる。
+  '0016_appearance-palette-preference.sql',
 ];
 
 export interface RealDbHarness {

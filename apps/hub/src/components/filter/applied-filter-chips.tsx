@@ -4,6 +4,13 @@ import type { ReactNode } from 'react';
 export interface AppliedFilter {
   readonly label: string;
   readonly value: ReactNode;
+  /**
+   * この条件だけを外す操作。渡すとチップに解除ボタンが付く。
+   *
+   * 「絞り込みを全部解除」しか無いと、条件を 1 つだけ緩めたいときに他の条件まで
+   * 入れ直すことになる。0 件になった原因の条件をその場で外せることが要る。
+   */
+  readonly onRemove?: () => void;
 }
 
 interface AppliedFilterChipsProps {
@@ -26,6 +33,27 @@ export function AppliedFilterChips({ items }: AppliedFilterChipsProps): ReactNod
         <Badge key={item.label} tone="neutral">
           <span data-hh-applied-filter-chip="">
             <strong>{item.label}:</strong> {item.value}
+            {item.onRemove === undefined ? null : (
+              // ラベルは「×」ではなく条件名を含める。並んだチップの解除ボタンが
+              // 全部「×」だと、読み上げでどれを外すのか区別できない
+              <button
+                type="button"
+                data-hh-focusable=""
+                onClick={item.onRemove}
+                aria-label={`${item.label}の絞り込みを解除`}
+                style={{
+                  marginInlineStart: 'var(--hh-space-1)',
+                  background: 'none',
+                  border: 'none',
+                  padding: 0,
+                  font: 'inherit',
+                  color: 'inherit',
+                  cursor: 'pointer',
+                }}
+              >
+                <span aria-hidden="true">×</span>
+              </button>
+            )}
           </span>
         </Badge>
       ))}

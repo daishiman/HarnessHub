@@ -95,6 +95,19 @@ interface DataTableBaseProps<TRow> {
    */
   narrowAs?: 'table' | 'card-collection';
   /**
+   * 表現の選び方。既定 `auto` は `narrowAs` と画面幅だけで決める (これまでどおり)。
+   *
+   * `cards` / `table` を渡すと画面幅によらずその表現だけを描く。
+   * 幅で決めるのは「その画面に収まるか」であり、`viewMode` で決めるのは
+   * 「利用者が見比べたいか、1 件を読み切りたいか」という**別の判断**なので軸を分ける。
+   */
+  viewMode?: 'auto' | 'cards' | 'table';
+  /**
+   * 表現の切替を利用者へ開く。渡すと可視ラベル付きの切替が表・カードの上に出る。
+   * `viewMode` と必ず対で使う (渡さないと押しても何も変わらない)。
+   */
+  onViewModeChange?: (mode: 'cards' | 'table') => void;
+  /**
    * 表・カードの上に出す注記。
    *
    * 「並べ替えはこのページに表示中の分が対象」のような、**結果の読み方に関わる断り**を置く。
@@ -199,6 +212,8 @@ export function DataTable<TRow>({
   emptyMessage,
   stickyHeader = false,
   narrowAs = 'table',
+  viewMode = 'auto',
+  onViewModeChange,
   note,
   rowAttention,
   rowAttentionLabel,
@@ -405,12 +420,61 @@ export function DataTable<TRow>({
     </div>
   );
 
-  if (narrowAs === 'table') {
+  // 切替は「いま何で見ているか」が押す前に読めることが要る。アイコンだけにすると
+  // 押して初めて分かる操作になるので、可視ラベルを必ず持たせる (WCAG 2.4.6 / 受入条件 1)。
+  // aria-pressed で「いま選ばれているほう」を支援技術にも同じ粒度で伝える。
+  const viewModeToggle =
+    onViewModeChange === undefined || viewMode === 'auto' ? null : (
+      // 押しボタンの束は fieldset が正しい入れ物 (role="group" の再実装をしない)。
+      // 既定の枠・余白と `min-inline-size: min-content` は flex を壊すので消す
+      <fieldset
+        aria-label="表示の切替"
+        style={{
+          margin: 0,
+          border: 0,
+          padding: 0,
+          minInlineSize: 0,
+          display: 'flex',
+          gap: spaceVar(1),
+          paddingBlockEnd: spaceVar(2),
+        }}
+      >
+        {(
+          [
+            { mode: 'cards', label: 'カードで見る' },
+            { mode: 'table', label: '表で見る' },
+          ] as const
+        ).map((option) => (
+          <button
+            key={option.mode}
+            type="button"
+            data-hh-focusable=""
+            aria-pressed={viewMode === option.mode}
+            onClick={() => onViewModeChange(option.mode)}
+            style={{
+              minHeight: 'var(--hh-control-height)',
+              padding: `0 ${spaceVar(3)}`,
+              font: 'inherit',
+              cursor: 'pointer',
+              borderRadius: 'var(--hh-radius-sm)',
+              border: `1px solid ${colorVar('border')}`,
+              background: viewMode === option.mode ? colorVar('surfaceMuted') : colorVar('surface'),
+              color: colorVar('text'),
+            }}
+          >
+            {option.label}
+          </button>
+        ))}
+      </fieldset>
+    );
+
+  if (narrowAs === 'table' && viewMode !== 'cards') {
     // これまでどおり。注記が無ければ包む要素も足さない (既存画面の DOM を変えない)
-    return noteLine === null ? (
+    return noteLine === null && viewModeToggle === null ? (
       table
     ) : (
       <>
+        {viewModeToggle}
         {noteLine}
         {table}
       </>
@@ -528,6 +592,19 @@ export function DataTable<TRow>({
       )}
     </div>
   );
+
+  // 利用者が選んだときは、その 1 つだけを描く。両方描いて CSS で隠す必要があるのは
+  // 「画面幅で決める」場合だけで (SSR では幅が分からない)、意思で決まっているなら
+  // 隠す相手そのものが要らない。DOM も読み上げも半分になる。
+  if (viewMode === 'cards' || viewMode === 'table') {
+    return (
+      <>
+        {viewModeToggle}
+        {noteLine}
+        {viewMode === 'cards' ? cards : table}
+      </>
+    );
+  }
 
   return (
     <>

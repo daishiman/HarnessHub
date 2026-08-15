@@ -70,6 +70,8 @@ const EXPECTED_MATRIX: Readonly<Record<string, Readonly<Record<MatrixColumn, boo
   'sheets.handoff_tokens.revoke': SELF_OR_ADMIN,
   'builds.read': MEMBER_UP,
   'builds.stage_change': ADMIN_UP,
+  'builds.create': ADMIN_UP,
+  'builds.update': ADMIN_UP,
   'projects.read': MEMBER_UP,
   'projects.create': MEMBER_UP,
   'projects.update': OWNER_UP,
@@ -129,6 +131,9 @@ const EXPECTED_MATRIX: Readonly<Record<string, Readonly<Record<MatrixColumn, boo
   // ホーム画面集約: 到達可否は member 以上。機能別の閲覧可否は route 側で
   // sessionActionVisible により個別判定する (rules.ts のコメント参照)。
   'dashboard.summary_read': MEMBER_UP,
+  // feat-appearance-theming: 配色の採用状況は全テナント横断の製品全体傾向。
+  // 1 テナントの管理者が見る値ではないので provider-admin だけに開ける。
+  'appearance.usage_read': PROVIDER_ONLY,
 };
 
 const COLUMNS: readonly MatrixColumn[] = ['member', 'owner', 'workspace-admin', 'provider-admin'];

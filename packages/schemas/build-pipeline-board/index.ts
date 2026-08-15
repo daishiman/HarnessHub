@@ -3,6 +3,7 @@ export type {
   BuildBoardCard,
   BuildBoardColumn,
   BuildBoardResponse,
+  BuildCreateRequest,
   BuildDetailResponse,
   BuildListItem,
   BuildListQuery,
@@ -13,12 +14,14 @@ export type {
   BuildStageTransitionRequest,
   BuildStageTransitionResponse,
   BuildType,
+  BuildUpdateRequest,
 } from './contracts.js';
 export {
   BUILD_STAGE_ORDER,
   buildBoardCardSchema,
   buildBoardColumnSchema,
   buildBoardResponseSchema,
+  buildCreateRequestSchema,
   buildDetailResponseSchema,
   buildListItemSchema,
   buildListQuerySchema,
@@ -29,5 +32,6 @@ export {
   buildStageTransitionRequestSchema,
   buildStageTransitionResponseSchema,
   buildTypeSchema,
+  buildUpdateRequestSchema,
   isAdjacentBuildStage,
 } from './contracts.js';

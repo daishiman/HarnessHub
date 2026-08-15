@@ -272,3 +272,9 @@ md 以上ではアプリ本体を角丸 14px + 1px 輪郭 + `shadow-frame` で�
   lint 本体だけでは、判定ロジックが空になった失効を「違反 0 件」として緑で素通りさせてしまう。
   exit を 0/1/2 (適合/違反/設定エラー) の 3 値に分けてあるのは、この判定を
   「非ゼロなら合格」でなく「exit 1 ちょうど」へ狭めるためである。
+
+### 7. 配色 5 種と本文カード (2026-08-16)
+
+`data-palette` は `gray|blue|beige|green|navy`。切替 UI は `AppearancePicker` が所有し、
+token 表を client chunk に載せない。本文カードは `hh-cards` / `hh-card` と semantic token だけを使い、
+色だけで列や状態を区別しない。

@@ -1,52 +1,11 @@
 /**
- * S09 効果測定ダッシュボード (sys-metrics-tracking-p05 / I10)。
+ * 旧 S09 route (`/metrics`) の互換転送 (sys-metrics-tracking-p05 / ADR §37)。
  *
- * 何を: 認可済み scope と初期表示期間を決めて、描画本体 (client component) へ渡す。
- * なぜ: server page を薄く保つ規約に従う。データ取得は期間変更のたびに走るため client 側に置く。
+ * 何を: 画面本体は `/dashboard` へ移したので、ここは転送だけを行う。
+ * なぜ: 旧 route に画面本体を残すと認可と表示の owner が 2 つに割れ、片方だけ直す事故が起きる。
  *
- * 期間は URL クエリで上書きできる。ダッシュボードの URL をそのまま共有したときに、
- * 受け取った相手が同じ期間の絵を見られるようにするため。
+ * 共有済みの URL が壊れないよう、クエリはそのまま (同名の繰り返しも潰さずに) 引き継ぐ。
  */
-import { ScreenHeader } from '@harness-hub/ui';
-import type { Metadata } from 'next';
+import { createLegacyRedirectPage } from '../../../lib/routing/legacy-route-redirect.js';
 
-import { DEFAULT_SUMMARY_RANGE_DAYS, recentRange } from '../../../features/metrics-tracking/view-model.js';
-import { resolveDashboardScope, scopeFromQuery } from '../../../lib/routing/dashboard-scope.js';
-import { LazyMetricsDashboard } from './metrics-dashboard-lazy.js';
-
-export const metadata: Metadata = {
-  title: '効果測定ダッシュボード | Harness Hub',
-};
-
-interface PageProps {
-  readonly searchParams: Promise<{
-    readonly tenant?: string;
-    readonly workspace?: string;
-    readonly from?: string;
-    readonly to?: string;
-  }>;
-}
-
-export default async function MetricsPage({ searchParams }: PageProps) {
-  const [query, scope] = await Promise.all([searchParams, resolveDashboardScope()]);
-  const { tenantId, workspaceId } = scopeFromQuery(query, scope);
-  const fallback = recentRange(new Date(), DEFAULT_SUMMARY_RANGE_DAYS);
-
-  return (
-    <>
-      <ScreenHeader
-        id="metrics-heading"
-        title="効果測定ダッシュボード"
-        description="ハーネスの実行実績から、削減できた時間と金額を集計して表示します。金額はサーバ側で確定した値です。"
-        sticky
-      />
-      {/* 中身が KPI・グラフ・表を自前の面 (Panel) に載せるようになったため、
-          ここで二重に面で囲まない */}
-      <LazyMetricsDashboard
-        tenantId={tenantId}
-        workspaceId={workspaceId}
-        initialRange={{ from: query.from ?? fallback.from, to: query.to ?? fallback.to }}
-      />
-    </>
-  );
-}
+export default createLegacyRedirectPage('/dashboard');

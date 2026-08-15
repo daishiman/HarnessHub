@@ -197,4 +197,10 @@ export const userSettings = sqliteTable('user_settings', {
   theme: text('theme').notNull().default('system'),
   density: text('density').notNull().default('comfortable'),
   language: text('language').notNull().default('ja'),
+  // 配色は明るさ (theme) と直交する別軸なので列を分ける。1 列に "blue-dark" と混ぜると
+  // 「配色ごとの人気」と「Light/Dark の比率」を別々に数えられなくなる。
+  palette: text('palette').notNull().default('gray'),
+  // theme=system を選んだ利用者が実際に見ている明るさ。保存時の OS 設定を確定値として控える
+  // (system のままでは「自動を選んだ人が何を見ているか」が後から分からない)。
+  resolvedTheme: text('resolved_theme').notNull().default('light'),
 });

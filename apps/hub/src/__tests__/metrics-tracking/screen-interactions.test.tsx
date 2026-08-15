@@ -18,8 +18,8 @@ import { act, createElement, type ReactElement } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { MetricsDashboard } from '../../app/(dashboard)/metrics/metrics-dashboard.js';
-import { UsageSavingsReport } from '../../app/(dashboard)/metrics/usage/usage-savings-report.js';
+import { MetricsDashboard } from '../../app/(dashboard)/dashboard/metrics-dashboard.js';
+import { UsageSavingsReport } from '../../app/(dashboard)/tracking/usage-savings-report.js';
 
 const TENANT_ID = 'tenant-a';
 const WORKSPACE_ID = 'ws-a1';

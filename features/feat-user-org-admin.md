@@ -102,6 +102,13 @@ workspace-admin がユーザーの role・部門・年収係数を管理でき�
 - 編集対象ではなく定義リストの読み取り項目。一覧 (S17) では出さず詳細のみ。
 - 情報設計: `docs/features/feat-user-org-admin/information-design/S17-detail.md`。
 
+## 実装追記 (2026-08-16 / 配色)
+
+- `user_settings.palette` / `resolved_theme` を migration `0016` で純増する。許可値は `gray|blue|beige|green|navy`。
+- 切替 UI は `packages/ui` の `AppearancePicker`。サーバ保存は Hub の consumer 側。
+- provider-admin 限定の採用状況画面は `/settings/system` (`appearance.usage_read`)。返すのは人数と構成比だけ。
+- 詳細は [カード wave 受領書](../docs/features/feat-card-list-shell/card-family-20260816-spec-reflection-receipt.md)。
+
 ## Handoff
 
 ### Post-merge 状態（2026-08-07）

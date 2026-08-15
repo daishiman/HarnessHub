@@ -12,13 +12,13 @@ iteration: null
 title: "カードブロック本文記法と編集/プレビュー 2 ペイン"
 owners: ["daishiman"]
 created_at: "2026-08-13T22:39:59Z"
-updated_at: "2026-08-14T21:55:26Z"
+updated_at: "2026-08-15T14:58:21.852971Z"
 status: "draft"
 depends_on: ["feat-card-mutation-safety","feat-semantic-emphasis-icons"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-security","arch-harness-hub-design-system","feat-docs-cms"]
 resource_scope: ["packages/ui/src/components/Markdown.tsx","packages/ui/src/components/Markdown.test.tsx","packages/ui/src/components/Tabs.tsx","apps/hub/src/components/docs/markdown-view.ts","apps/hub/src/components/docs/markdown-editor.ts","apps/hub/src/app/(dashboard)/docs/[id]/document-detail-content.tsx","apps/hub/src/app/(dashboard)/docs/[id]/edit/document-edit-page.tsx","apps/hub/src/app/(dashboard)/docs/new/document-create-form.tsx","apps/hub/src/app/api/v1/docs/[id]/images/route.ts","apps/hub/src/app/api/v1/docs/[id]/images/[imageId]/route.ts","apps/hub/src/features/docs-cms/image-service.ts","apps/hub/tests/browser"]
 purpose: "現状 (current) の MarkdownEditor は edit/preview Tabs を持ち、編集画面には別途、保存済み本文の preview がある。しかし 2 列・3 列の意味あるカード container、大画面の同時編集、不正記法の警告契約は未実装である。既存の安全な Markdown 経路を広げ、本文をカード単位で構成できるようにする。"
-goal: "到達状態 (target、未実装): 既存 Markdown.tsx の MarkdownView / ImageGroup / MarkdownEditor / Tabs を拡張し、:::cards container を同一 sanitize 経路で描画する。編集中は大画面は 2 ペイン、狭幅は Tabs とし、記法ミスで本文全体を壊さない。"
+goal: "到達状態 (target、実装済み 2026-08-16): 既存 Markdown.tsx の MarkdownView / ImageGroup / MarkdownEditor / Tabs を拡張し、:::cards container を同一 sanitize 経路で描画する。編集中は大画面は 2 ペイン、狭幅は Tabs とし、記法ミスで本文全体を壊さない。"
 scope_in: ["packages/ui/src/components/Markdown.tsx の既存 MarkdownView / ImageGroup / MarkdownEditor / Tabs を拡張し、別 renderer を作らない",":::cards cols=2|3 の内側に :::card を並べる container 記法、DOM 記述順、大画面 2/3 列・中幅最大 2 列・狭幅 1 列のレスポンシブ描画を実装する","hh-cards / hh-card と data-cols=2|3 だけを sanitize allowlist に加え、script / iframe / style / class / id / on* は引き続き除去する","未知 cols、未閉じ、不正な嵌套は例外を投げず通常 Markdown へ safe degradation し、編集中だけ保存を妨げない非 blocking 警告を表示する","draft の編集/preview は大画面は 2 ペインで同時表示し、狭幅は Tabs で同じ 2 面を切り替える。両方の preview は同一 MarkdownView を使う","既存の保存済み preview は『現在保存され、他の利用者が見る内容』の baseline、MarkdownEditor preview は未保存 draft の結果とする。同じ draft を表す第 3 の preview は追加しない","2 列 / 3 列の雛形挿入と、invalid syntax の場所・修正方法を示す非 blocking 警告を MarkdownEditor の既存 toolbar / status 領域に加える","カード内画像は既存 Docs image API / R2 と ImageGroup のアップロード・参照契約だけを使い、新しい保存先を作らない","VRT baseline は test-only の比較証跡とし、runtime の画像カタログ・Docs image API / R2 object・Markdown 本文へ混在させない","markdown-view / markdown-editor の dynamic import 境界、見出し/TOC 際層、sanitize 回帰、未保存面の離脱抑止を維持する"]
 scope_out: ["Markdown 以外の新しい本文保存形式、任意 HTML、class / style の allowlist 開放","画像の新しい保存先・暗号化・削除契約、および VRT baseline の runtime asset 転用","一覧カードと status_counts (これは feat-card-list-shell の責務)","Idempotency-Key、entity revision、412 競合応答 (これは feat-card-mutation-safety の責務)","semantic icon / color token の供給元の実装 (これは feat-semantic-emphasis-icons の責務)","保存済み baseline と draft preview 以外の第 3 の preview renderer"]
 acceptance: [":::cards cols=2 / cols=3 と :::card で作った行を縦に積め、大画面・中幅・狭幅の列数が契約どおりに変わる","列数が変わっても DOM 順は記述順を保ち、読上げ順と視覚順が一致する","未知 cols、未閉じ、不正嵌套は safe degradation してドキュメント全体を描画でき、編集時は非 blocking 警告から修正場所が分かる","sanitize 後に hh-cards / hh-card と正規化済み data-cols だけが残り、script / iframe / style / class / id / on* は除去される","カードが見出しレベルと TOC を壊さず、複数画像は既存 ImageGroup の操作と読上げ契約を維持する","大画面の 2 ペインと狭幅の Tabs が同じ MarkdownView / sanitize 経路を使い、同じ draft の出力が一致する","保存済み preview が baseline、editor preview が draft とラベルで区別され、第 3 の preview と別 renderer が存在しない","toolbar から 2 列 / 3 列の雛形を挿入し、その後は通常 Markdown として編集・外部 Docs 同期できる","カード内画像が既存 Docs image API / R2 を通り、VRT baseline の path / bytes が runtime 本文や object に混入しない","docs 以外の初期 client chunk が増えず、markdown-view / markdown-editor の dynamic import 境界が保たれる"]
@@ -44,8 +44,9 @@ github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
-implementation_readiness: {"checked_at":"2026-08-13T22:39:59Z","missing_sections":[],"status":"incomplete"}
+implementation_readiness: {"checked_at":"2026-08-15T00:00:00Z","missing_sections":[],"status":"complete"}
 ---
+
 
 # 目的
 
@@ -55,7 +56,7 @@ implementation_readiness: {"checked_at":"2026-08-13T22:39:59Z","missing_sections
 
 ## 到達状態
 
-**到達状態 (target):** 未実装。既存 Markdown スタック 1 本で 2/3 列カードを表示し、大画面で draft を編集しながら確認でき、狭幅では同じ 2 面を tab で切り替える。記法ミスは本文を壊さず、修正可能な警告として返す。
+**到達状態 (target):** 実装済み (2026-08-16 / `HarnessHub-iz3n`)。既存 Markdown スタック 1 本で 2/3 列カードを表示し、大画面で draft を編集しながら確認でき、狭幅では同じ 2 面を tab で切り替える。記法ミスは本文を壊さず、修正可能な警告として返す。
 
 ## スコープ
 
@@ -63,9 +64,9 @@ frontmatter / context の範囲どおり、新規 renderer や画像保存基盤
 
 ## 受入
 
-- [ ] パーサ・sanitize・React 描画の同じ fixture で、正常 2/3 列、不正記法、危険 HTML、DOM 順序を固定する。
-- [ ] desktop / mobile の操作テストが 2 ペインと tabs を通して同じ draft 出力、非 blocking 警告、保存済み baseline の区別を証明する。
-- [ ] Docs image API / R2 の結合テストと VRT の静的検査が、test asset と runtime object の混入を防ぐ。
+- [x] パーサ・sanitize・React 描画の同じ fixture で、正常 2/3 列、不正記法、危険 HTML、DOM 順序を固定する。
+- [x] desktop / mobile の操作テストが 2 ペインと tabs を通して同じ draft 出力、非 blocking 警告、保存済み baseline の区別を証明する。
+- [x] Docs image API / R2 の結合テストと VRT の静的検査が、test asset と runtime object の混入を防ぐ。
 
 ## アーキテクチャ参照
 
@@ -74,6 +75,13 @@ frontend、security、design-system の制約を参照する。とくに sanitiz
 ## 機能間依存
 
 編集面を公開する前に mutation safety の CAS / idempotency 契約を release gate として満たす。semantic icons はカード内の強調表現を供給するが、保存の安全性を成立させる依存ではない。
+
+## 実装結果 (2026-08-16)
+
+- `packages/ui` の remark plugin が `:::cards cols=2|3` を `hh-cards` / `hh-card` へ変換する。未知 cols は 2 列へ寄せ、未閉じは素の Markdown へ縮退する。
+- sanitize allowlist の差分は `hh-cards` / `hh-card` と正規化済み `data-cols` だけ。
+- 大画面は 2 ペイン、狭幅は Tabs。toolbar から 2/3 列雛形を挿入できる。
+- 詳細・検証・残課題は [仕様反映受領書](../docs/features/feat-card-block-authoring/spec-reflection-receipt.md)。
 
 ## Handoff
 

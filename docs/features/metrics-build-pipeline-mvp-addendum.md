@@ -34,13 +34,11 @@ recorded_at: 2026-08-10
 
 ## 3. MVP route 面
 
-| 画面 | 正規（仕様） | MVP 実装 path |
+| 画面 | 正規（仕様） | 実装 path (2026-08-16) |
 |---|---|---|
-| S09 | `/dashboard` | `/metrics` |
-| S13 | `/pipeline` | `/builds` |
-| S16 | `/tracking` | `/metrics/usage` |
-
-canonical alias は後続 task。shell は実装済み path だけを露出する。
+| S09 | `/dashboard` | `/dashboard`（旧 `/metrics` は 308） |
+| S13 | `/pipeline` | `/builds`（canonical alias は後続） |
+| S16 | `/tracking` | `/tracking`（旧 `/metrics/usage` は 308） |
 
 ## 4. 受領書
 
