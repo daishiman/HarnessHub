@@ -12,8 +12,8 @@ iteration: null
 title: "C19 resume live-trial の経路別完了契約を閉じる"
 owners: ["daishiman"]
 created_at: "2026-08-09T21:21:12Z"
-updated_at: "2026-08-09T21:37:31Z"
-status: "active"
+updated_at: "2026-08-11T05:13:49Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-system-spec-import-heading-contract-20260808","issue-resource-map-deep-cards-20260722","arch-harness-hub-dev-workflow","feat-dev-pipeline-improvement"]
 resource_scope: ["plugins/dev-graph/skills/run-dev-graph-system-spec","plugins/dev-graph/scripts/validate-system-spec-evaluator-completion.py","plugins/dev-graph/scripts/build-system-spec-resume-import.py","eval-log/dev-graph/run-dev-graph-system-spec/live-trial"]

@@ -9,12 +9,12 @@ priority: "medium"
 start_date: "2026-08-12"
 target_date: null
 iteration: null
-title: "全 page route 共通の client bundle 土台 104796 バイトを分解する"
+title: "framework control 差分予算と本番 TBT gate で client 性能を再計画する"
 owners: ["daishiman"]
 created_at: "2026-08-12T00:00:00Z"
-updated_at: "2026-08-12T06:56:16.160002Z"
+updated_at: "2026-08-13T12:42:40Z"
 status: "active"
-depends_on: ["issue-users-sheets-client-bundle-headroom-20260810"]
+depends_on: ["issue-ui-first-load-perf-measure-20260811","issue-users-sheets-client-bundle-headroom-20260810"]
 related_nodes: []
 resource_scope: ["apps/hub/src/app/layout.tsx","apps/hub/src/components","apps/hub/next.config.ts"]
 purpose: "route 局所の遅延読み込みでは動かない共通土台を対象に据え、指標だけ緑にして最悪 route を放置する是正を防ぐ。"

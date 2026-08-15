@@ -12,8 +12,8 @@ iteration: null
 title: "最終レビュー — 全 phase 成果の横断整合確認"
 owners: ["daishiman"]
 created_at: "2026-07-25T16:38:15Z"
-updated_at: "2026-08-04T03:28:08.342178Z"
-status: "active"
+updated_at: "2026-08-08T02:53:50Z"
+status: "closed"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P09"]
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
 resource_scope: ["docs/features/feat-dev-pipeline-improvement/final-review.md"]

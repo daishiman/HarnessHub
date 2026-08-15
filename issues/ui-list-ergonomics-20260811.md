@@ -12,8 +12,8 @@ iteration: null
 title: "一覧の使い勝手 (列構成・並べ替え・条件記憶・名前列固定)"
 owners: ["daishiman"]
 created_at: "2026-08-11T00:00:00Z"
-updated_at: "2026-08-11T10:45:30Z"
-status: "active"
+updated_at: "2026-08-12T03:37:37Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["apps/hub/src/app/(dashboard)/users","packages/ui/src/components/DataTable.tsx","packages/ui/src/components/FilterBar.tsx"]

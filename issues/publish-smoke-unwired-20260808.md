@@ -12,9 +12,9 @@ iteration: null
 title: "smoke:publish-production を結線するか廃止するか決着させる"
 owners: ["daishiman"]
 created_at: "2026-08-08T09:53:00Z"
-updated_at: "2026-08-10T11:36:20.181914Z"
+updated_at: "2026-08-11T06:18:34Z"
 status: "active"
-depends_on: []
+depends_on: ["issue-production-smoke-cancel-cleanup-20260810"]
 related_nodes: ["issue-production-smoke-coverage-gaps-20260808"]
 resource_scope: [".github/workflows/ci.yml","apps/hub/scripts/smoke-production-publish.ts","apps/hub/scripts/smoke-production-publish-support.ts","apps/hub/tests/publish-pipeline/production-smoke-script.test.ts","packages/db/repository/publish-smoke.ts","packages/db/__tests__/publish-smoke.test.ts","scripts/ci/actions-secrets-registry.json","docs/features/feat-post-signin-scope-routing/production-coverage-smoke-spec-reflection-receipt.md","specs/harness-hub-production-coverage-smoke-addendum.md","system-spec/testing-qa.md"]
 purpose: "登録済みだが CI から一度も呼ばれていない smoke:publish-production について、結線するか廃止するかを決着させ、実装・台帳・運用判断を一致させる。"

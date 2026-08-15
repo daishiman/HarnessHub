@@ -12,8 +12,8 @@ iteration: null
 title: "テストファースト設計 — axe自動検査・Playwright J1/J2ジャーニー×2 viewport・Lighthouse CWV予算・marketplace.jsonスキーマ検証・ポーリングbackoff契約のテスト設計"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:13:14Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-08T08:31:16Z"
+status: "closed"
 depends_on: ["SYS-DUAL-CATALOG-WEB-P03"]
 related_nodes: ["feat-dual-catalog-web","arch-harness-hub-frontend"]
 resource_scope: ["docs/features/feat-dual-catalog-web/test-design.md","apps/hub/src/__tests__/dual-catalog-web/"]

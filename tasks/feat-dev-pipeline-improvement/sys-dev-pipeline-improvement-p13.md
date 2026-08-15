@@ -12,8 +12,8 @@ iteration: null
 title: "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証"
 owners: ["daishiman"]
 created_at: "2026-07-25T16:38:15Z"
-updated_at: "2026-08-04T03:29:48.656827Z"
-status: "active"
+updated_at: "2026-08-09T22:44:05Z"
+status: "closed"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P12"]
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow","issue-register-package-projection-idempotency-drift-20260728"]
 resource_scope: ["eval-log/dev-graph/pipeline-improvement/release-receipt.json"]

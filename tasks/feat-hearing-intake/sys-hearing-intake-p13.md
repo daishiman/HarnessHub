@@ -12,8 +12,8 @@ iteration: null
 title: "リリース/デプロイ — S10-S12 の Cloudflare Workers 本番反映とロールアウト確認"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:14:59Z"
-updated_at: "2026-08-02T07:04:14.571966Z"
-status: "active"
+updated_at: "2026-08-08T05:23:16Z"
+status: "closed"
 depends_on: ["SYS-HEARING-INTAKE-P12"]
 related_nodes: ["feat-hearing-intake","arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data"]
 resource_scope: [".dev-graph/state/graph.json",".github/workflows/ci.yml","apps/hub/package.json","apps/hub/scripts/smoke-production-hearing-support.ts","apps/hub/scripts/smoke-production-hearing.ts","apps/hub/tests/auth-tenancy/wrangler-production-auth-config.test.ts","apps/hub/tests/ci/worker-secrets.test.ts","apps/hub/tests/hearing-intake/production-smoke-script.test.ts","apps/hub/wrangler.jsonc","architecture/harness-hub-infrastructure.md","docs/features/feat-hearing-intake/p13-spec-reflection-receipt.md","docs/features/feat-hearing-intake/release-notes.md","docs/infrastructure-spec.md","features/feat-hearing-intake.md","package.json","packages/db/__tests__/hearing-smoke.test.ts","packages/db/repository/composition.ts","packages/db/repository/hearing-smoke.ts","packages/db/src/index.ts","scripts/ci/check-worker-secrets.mjs","scripts/ci/worker-secrets-registry.json","specs/harness-hub-system-specification.md","system-spec/infrastructure.md","system-spec/spec-state.json","system-spec/testing-qa.md","tasks/feat-hearing-intake/sys-hearing-intake-p13.md"]

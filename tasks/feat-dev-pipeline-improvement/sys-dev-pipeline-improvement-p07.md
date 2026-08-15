@@ -12,8 +12,8 @@ iteration: null
 title: "受入判定 — 8 acceptance の突合と未達の差し戻し"
 owners: ["daishiman"]
 created_at: "2026-07-25T16:38:15Z"
-updated_at: "2026-08-04T03:25:35.369756Z"
-status: "active"
+updated_at: "2026-08-08T02:53:39Z"
+status: "closed"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P06"]
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
 resource_scope: ["docs/features/feat-dev-pipeline-improvement/acceptance-report.md"]

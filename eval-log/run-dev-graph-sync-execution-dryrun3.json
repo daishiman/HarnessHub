@@ -1,0 +1,947 @@
+{
+  "applied": [],
+  "changes": 127,
+  "conflicts": [],
+  "converged": false,
+  "executed_at": "2026-08-14T15:45:12.875763Z",
+  "exports": [
+    {
+      "binding": "beads",
+      "field": "title",
+      "kind": "title-update",
+      "node": "issue-hearing-intake-pr709-remediation-20260813",
+      "value": "PR #709 後始末として公開共有の仕様と pre-DB 上限を揃える"
+    }
+  ],
+  "graph_sha256_after": "e7a299f9ed34824bc21363d9fc1556ddc0790b26a4a2b51803ac4e47eed05b00",
+  "graph_sha256_before": "e7a299f9ed34824bc21363d9fc1556ddc0790b26a4a2b51803ac4e47eed05b00",
+  "imports": [
+    {
+      "field": "status",
+      "from": "active",
+      "node": "feat-publish-pipeline",
+      "to": "closed"
+    },
+    {
+      "field": "title",
+      "from": "Studio: 効果測定 (実行ログ ingest・週次 rollup・KPI ダッシュボード)",
+      "node": "feat-metrics-tracking",
+      "to": "[SUPERSEDED→HarnessHub-eur8] Studio: 効果測定 (実行ログ ingest・週次 rollup・KPI ダッシュボード)"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "feat-hearing-intake",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "feat-feedback-loop",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "feat-docs-cms",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-HEARING-INTAKE-P13",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-FEEDBACK-LOOP-P13",
+      "to": "closed"
+    },
+    {
+      "field": "depends_on",
+      "from": [
+        "SYS-FEEDBACK-LOOP-P12"
+      ],
+      "node": "SYS-FEEDBACK-LOOP-P13",
+      "to": [
+        "SYS-FEEDBACK-LOOP-P12",
+        "issue-authz-provider-admin-edge-route-mismatch-20260808"
+      ]
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-PUBLISH-PIPELINE-P01",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-PUBLISH-PIPELINE-P02",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-PUBLISH-PIPELINE-P03",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-PUBLISH-PIPELINE-P04",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-PUBLISH-PIPELINE-P05",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-PUBLISH-PIPELINE-P06",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-PUBLISH-PIPELINE-P07",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-PUBLISH-PIPELINE-P08",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-PUBLISH-PIPELINE-P09",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-PUBLISH-PIPELINE-P10",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-PUBLISH-PIPELINE-P11",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-PUBLISH-PIPELINE-P12",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-PUBLISH-PIPELINE-P13",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DUAL-CATALOG-WEB-P02",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DUAL-CATALOG-WEB-P03",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DUAL-CATALOG-WEB-P04",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DUAL-CATALOG-WEB-P05",
+      "to": "closed"
+    },
+    {
+      "field": "depends_on",
+      "from": [
+        "SYS-DUAL-CATALOG-WEB-P06",
+        "issue-hub-catalog-page-missing-tenant-scope-20260803"
+      ],
+      "node": "SYS-DUAL-CATALOG-WEB-P07",
+      "to": [
+        "SYS-DUAL-CATALOG-WEB-P06",
+        "issue-hub-catalog-page-missing-tenant-scope-20260803",
+        "issue-hub-cwv-auth-required-route-unmeasurable-20260802"
+      ]
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "feat-dev-pipeline-improvement",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DEV-PIPELINE-IMPROVEMENT-P01",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DEV-PIPELINE-IMPROVEMENT-P02",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DEV-PIPELINE-IMPROVEMENT-P03",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DEV-PIPELINE-IMPROVEMENT-P04",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DEV-PIPELINE-IMPROVEMENT-P05",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DEV-PIPELINE-IMPROVEMENT-P06",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DEV-PIPELINE-IMPROVEMENT-P07",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DEV-PIPELINE-IMPROVEMENT-P08",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DEV-PIPELINE-IMPROVEMENT-P09",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DEV-PIPELINE-IMPROVEMENT-P10",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DEV-PIPELINE-IMPROVEMENT-P11",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DEV-PIPELINE-IMPROVEMENT-P12",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-DEV-PIPELINE-IMPROVEMENT-P13",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "draft",
+      "node": "issue-build-trace-doc-coverage-schema-drift-20260723",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "issue-register-package-projection-idempotency-drift-20260728",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "draft",
+      "node": "issue-aggregate-completeness-file-split-20260722",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "draft",
+      "node": "issue-completeness-report-session-id-migration-20260723",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "draft",
+      "node": "issue-live-trial-verdict-staleness-hook-closure-20260726",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "draft",
+      "node": "issue-resource-map-deep-cards-20260722",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "draft",
+      "node": "issue-run-skill-feedback-ref-format-unify-20260722",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "draft",
+      "node": "issue-flaky-guard-latency-20260728",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "draft",
+      "node": "issue-audit-fork-ledger-forgery-20260728",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "draft",
+      "node": "issue-shared-script-refs-closure-coupling-20260729",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "issue-auth-tenancy-customer-managed-google-oidc-20260729",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "task-remove-aiworkflow-reference-skill-20260802",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "feat-post-signin-scope-routing",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-POST-SIGNIN-SCOPE-P01",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-POST-SIGNIN-SCOPE-P02",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-POST-SIGNIN-SCOPE-P03",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-POST-SIGNIN-SCOPE-P04",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-POST-SIGNIN-SCOPE-P05",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-POST-SIGNIN-SCOPE-P06",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-POST-SIGNIN-SCOPE-P07",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-POST-SIGNIN-SCOPE-P08",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-POST-SIGNIN-SCOPE-P09",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-POST-SIGNIN-SCOPE-P10",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-POST-SIGNIN-SCOPE-P11",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-POST-SIGNIN-SCOPE-P12",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "issue-source-citation-retrieval-integrity-20260803",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "task-render-registration-stale-digest-handoff-20260804",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "task-schedule-beads-ready-entry-absent-reporting-20260803",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-BUILD-IDENTITY-P01",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-BUILD-IDENTITY-P02",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-BUILD-IDENTITY-P03",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-BUILD-IDENTITY-P04",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-BUILD-IDENTITY-P05",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-BUILD-IDENTITY-P06",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-BUILD-IDENTITY-P07",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-BUILD-IDENTITY-P08",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-BUILD-IDENTITY-P09",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-BUILD-IDENTITY-P10",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-BUILD-IDENTITY-P11",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-BUILD-IDENTITY-P12",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "SYS-BUILD-IDENTITY-P13",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "issue-ci-post-deploy-smoke-propagation-window-20260808",
+      "to": "closed"
+    },
+    {
+      "field": "title",
+      "from": "system-spec import の見出し契約と architecture readiness を一致させる",
+      "node": "issue-system-spec-import-heading-contract-20260808",
+      "to": "dev-graph run-dev-graph-system-spec: specification見出し不整合でC02登録が構造的に失敗する"
+    },
+    {
+      "field": "status",
+      "from": "draft",
+      "node": "issue-authz-provider-admin-edge-route-mismatch-20260808",
+      "to": "closed"
+    },
+    {
+      "field": "depends_on",
+      "from": [],
+      "node": "issue-publish-smoke-unwired-20260808",
+      "to": [
+        "issue-production-smoke-cancel-cleanup-20260810"
+      ]
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "issue-hub-shell-page-surface-unification-20260808",
+      "to": "closed"
+    },
+    {
+      "field": "title",
+      "from": "select-verification-tier の算出結果を消費する経路が無い",
+      "node": "issue-verification-tier-unwired-20260809",
+      "to": "verification tier を下流 CI step の起動・blocking 切替へ配線する"
+    },
+    {
+      "field": "depends_on",
+      "from": [],
+      "node": "issue-verification-tier-unwired-20260809",
+      "to": [
+        "issue-governance-gate-not-required-check-20260809"
+      ]
+    },
+    {
+      "field": "title",
+      "from": "dev-workflow.md【3】の『selector 未実装』記述が実装後に stale",
+      "node": "issue-dev-workflow-tier-selector-absent-stale-20260809",
+      "to": "dev-workflow【3】の『selector 未実装』記述が実装後に stale"
+    },
+    {
+      "field": "status",
+      "from": "draft",
+      "node": "issue-elegant-review-condition-derivation-20260809",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "draft",
+      "node": "issue-paradigm-coverage-lane-scope-20260809",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "draft",
+      "node": "issue-foundation-source-index-missing-20260809",
+      "to": "closed"
+    },
+    {
+      "field": "title",
+      "from": "dev-workflow【2】の evaluator 結果 cache が未実装",
+      "node": "issue-verification-evaluator-cache-20260809",
+      "to": "evaluator cache を実 evaluator 呼出元へ配線する"
+    },
+    {
+      "field": "status",
+      "from": "draft",
+      "node": "issue-run-dev-graph-system-spec-live-trial-renewal-20260809",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "draft",
+      "node": "issue-dev-graph-global-artifact-template-drift-20260809",
+      "to": "closed"
+    },
+    {
+      "field": "title",
+      "from": "Dual Catalog polling の fatal 即時停止と visibility 復帰再開",
+      "node": "issue-dual-catalog-polling-terminal-visibility-20260810",
+      "to": "Dual Catalog polling: fatal 即時停止と visibility 復帰再開"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "issue-dual-catalog-polling-terminal-visibility-20260810",
+      "to": "closed"
+    },
+    {
+      "field": "title",
+      "from": "marketplace.json の未認証 consumer 経路を H7 と同時に確定する",
+      "node": "issue-marketplace-unauthenticated-consumer-route-20260810",
+      "to": "marketplace.json 未認証 consumer 経路を H7 と同時に確定する"
+    },
+    {
+      "field": "depends_on",
+      "from": [
+        "feat-stage0-distribution-gate"
+      ],
+      "node": "issue-marketplace-unauthenticated-consumer-route-20260810",
+      "to": [
+        "issue-h7-git-subdir-revalidation-20260730"
+      ]
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "issue-c19-resume-closure-contract-20260810",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "issue-catalog-detail-bundle-headroom-20260808",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "issue-root-layout-theme-css-long-task-20260808",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "issue-catalog-route-bundle-headroom-20260810",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "issue-ui-vrt-navigation-baseline-drift-20260810",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "issue-ui-error-state-split-20260811",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "issue-ui-header-component-dedup-20260811",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "issue-ui-identifier-display-name-20260811",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "issue-ui-list-ergonomics-20260811",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "issue-ui-public-screen-sticky-header-20260811",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "issue-ui-vrt-linux-baseline-20260811",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "issue-flaky-parallel-test-wop-w-003-20260812",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "issue-hearing-intake-reduction-coefficient-20260812",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "issue-relative-time-display-20260812",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "issue-dark-color-scheme-declaration-20260812",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "issue-screen-profile-source-of-truth-20260812",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "issue-crud-workspace-scope-gap-20260812",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "issue-metrics-server-side-ranking-20260812",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "issue-list-header-search-q-support-20260812",
+      "to": "closed"
+    },
+    {
+      "field": "title",
+      "from": "全 page route 共通の client bundle 土台 104796 バイトを分解する",
+      "node": "issue-hub-shared-client-bundle-baseline-20260812",
+      "to": "framework control 差分予算と本番 TBT gate で client 性能を再計画する"
+    },
+    {
+      "field": "depends_on",
+      "from": [
+        "issue-users-sheets-client-bundle-headroom-20260810"
+      ],
+      "node": "issue-hub-shared-client-bundle-baseline-20260812",
+      "to": [
+        "issue-ui-first-load-perf-measure-20260811",
+        "issue-users-sheets-client-bundle-headroom-20260810"
+      ]
+    },
+    {
+      "field": "title",
+      "from": "Dolt remote への Beads push HTTP 400 を解消する",
+      "node": "issue-dolt-remote-push-http-400-20260812",
+      "to": "Dolt remote への beads push が HTTP 400 で失敗する"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "issue-open-residue-bulk-reconciliation-20260812",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "active",
+      "node": "issue-external-docs-api-sync-20260812",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "draft",
+      "node": "issue-agent-kit-elegant-design-integration-20260813",
+      "to": "closed"
+    },
+    {
+      "field": "status",
+      "from": "draft",
+      "node": "issue-production-oidc-smoke-landing-contract-20260813",
+      "to": "closed"
+    },
+    {
+      "field": "title",
+      "from": "保存したダークモードが再読み込み後も維持されるようにする",
+      "node": "issue-dark-mode-persistence-reload-20260813",
+      "to": "保存したダークモードをリロード後も維持する"
+    }
+  ],
+  "mode": "dry-run",
+  "ok": true,
+  "parity_manifest": null,
+  "pending_retry": [
+    {
+      "binding": "beads",
+      "node": "SYS-METRICS-TRACKING-P01",
+      "reason": "external_linkage_missing"
+    },
+    {
+      "binding": "beads",
+      "node": "SYS-METRICS-TRACKING-P02",
+      "reason": "external_linkage_missing"
+    },
+    {
+      "binding": "beads",
+      "node": "SYS-METRICS-TRACKING-P03",
+      "reason": "external_linkage_missing"
+    },
+    {
+      "binding": "beads",
+      "node": "SYS-METRICS-TRACKING-P04",
+      "reason": "external_linkage_missing"
+    },
+    {
+      "binding": "beads",
+      "node": "SYS-METRICS-TRACKING-P05",
+      "reason": "external_linkage_missing"
+    },
+    {
+      "binding": "beads",
+      "node": "SYS-METRICS-TRACKING-P06",
+      "reason": "external_linkage_missing"
+    },
+    {
+      "binding": "beads",
+      "node": "SYS-METRICS-TRACKING-P07",
+      "reason": "external_linkage_missing"
+    },
+    {
+      "binding": "beads",
+      "node": "SYS-METRICS-TRACKING-P08",
+      "reason": "external_linkage_missing"
+    },
+    {
+      "binding": "beads",
+      "node": "SYS-METRICS-TRACKING-P09",
+      "reason": "external_linkage_missing"
+    },
+    {
+      "binding": "beads",
+      "node": "SYS-METRICS-TRACKING-P10",
+      "reason": "external_linkage_missing"
+    },
+    {
+      "binding": "beads",
+      "node": "SYS-METRICS-TRACKING-P11",
+      "reason": "external_linkage_missing"
+    },
+    {
+      "binding": "beads",
+      "node": "SYS-METRICS-TRACKING-P12",
+      "reason": "external_linkage_missing"
+    },
+    {
+      "binding": "beads",
+      "node": "SYS-METRICS-TRACKING-P13",
+      "reason": "external_linkage_missing"
+    },
+    {
+      "binding": "beads",
+      "node": "issue-render-registration-stale-digest-20260803",
+      "reason": "external_linkage_missing"
+    },
+    {
+      "binding": "beads",
+      "node": "feat-runtime-env-resolution-discipline",
+      "reason": "external_linkage_missing"
+    },
+    {
+      "binding": "beads",
+      "node": "feat-post-signin-transition-observability",
+      "reason": "external_linkage_missing"
+    },
+    {
+      "binding": "beads",
+      "node": "feat-classification-vocabulary-parity",
+      "reason": "external_linkage_missing"
+    },
+    {
+      "binding": "beads",
+      "node": "feat-post-signin-landing-surface",
+      "reason": "external_linkage_missing"
+    },
+    {
+      "binding": "beads",
+      "node": "issue-ui-foundation-final-review-20260808",
+      "reason": "external_linkage_missing"
+    },
+    {
+      "binding": "beads",
+      "node": "issue-hub-root-500-signin-20260808",
+      "reason": "external_linkage_missing"
+    },
+    {
+      "binding": "beads",
+      "node": "issue-hearing-sheet-overhaul-20260812",
+      "reason": "external_linkage_missing"
+    },
+    {
+      "binding": "beads",
+      "node": "issue-visual-system-v2-20260813",
+      "reason": "external_linkage_missing"
+    },
+    {
+      "binding": "beads",
+      "node": "feat-ui-integrity-audit-harness",
+      "reason": "external_linkage_missing"
+    },
+    {
+      "binding": "beads",
+      "node": "feat-ui-layout-remediation",
+      "reason": "external_linkage_missing"
+    },
+    {
+      "binding": "beads",
+      "node": "feat-theme-palette-catalog",
+      "reason": "external_linkage_missing"
+    },
+    {
+      "binding": "beads",
+      "node": "feat-feedback-image-attachment",
+      "reason": "external_linkage_missing"
+    },
+    {
+      "binding": "beads",
+      "node": "feat-docs-live-authoring",
+      "reason": "external_linkage_missing"
+    }
+  ],
+  "remote_sha256_after": null,
+  "remote_sha256_before": null,
+  "snapshot_sha256_after": "2b8aefc1c110f6b19cb7285a676d39e3384145100e7db3422a12729b9e4b54e5",
+  "snapshot_sha256_before": "2b8aefc1c110f6b19cb7285a676d39e3384145100e7db3422a12729b9e4b54e5",
+  "tombstones": [],
+  "write_count": 0
+}

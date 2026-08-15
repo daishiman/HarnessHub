@@ -12,8 +12,8 @@ iteration: null
 title: "最新エージェントキットとデザインシステム改善を全配布面へ整合する"
 owners: ["daishiman"]
 created_at: "2026-08-13T07:20:00Z"
-updated_at: "2026-08-13T07:21:30Z"
-status: "draft"
+updated_at: "2026-08-13T10:03:54Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["plugins/harness-creator/skills/run-elegant-review/","plugins/harness-creator/agents/elegant-*.md",".claude/",".codex/",".agents/","packages/ui/","apps/hub/","architecture/","docs/",".github/workflows/ci.yml"]

@@ -12,8 +12,8 @@ iteration: null
 title: "テスト設計 — scope 解決の真理値表・着地先解決の入力分類・deny-by-default 非退行の実行可能テスト ID 定義"
 owners: ["daishiman"]
 created_at: "2026-08-02T12:47:00Z"
-updated_at: "2026-08-04T03:51:46.650735Z"
-status: "active"
+updated_at: "2026-08-04T07:31:54Z"
+status: "closed"
 depends_on: ["SYS-POST-SIGNIN-SCOPE-P03"]
 related_nodes: ["feat-post-signin-scope-routing","arch-harness-hub-frontend","arch-harness-hub-security"]
 resource_scope: ["docs/features/feat-post-signin-scope-routing/test-design.md"]
