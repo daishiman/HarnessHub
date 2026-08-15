@@ -1,3 +1,10 @@
+---
+status: recorded
+layer: feature-evidence
+parent_feature: feat-semantic-emphasis-icons
+recorded_at: 2026-08-14
+---
+
 # feat-semantic-emphasis-icons 受入判定 (P07)
 
 goal-spec.json の acceptance 5 項目について、充足の根拠 (対応する実装ファイルとテスト結果) を

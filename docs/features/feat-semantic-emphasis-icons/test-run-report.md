@@ -1,3 +1,10 @@
+---
+status: recorded
+layer: feature-evidence
+parent_feature: feat-semantic-emphasis-icons
+recorded_at: 2026-08-14
+---
+
 # feat-semantic-emphasis-icons テスト実行報告 (P06)
 
 P04 のテストと P05 の実装に対して、単体・lint・a11y・コントラストの各検証を実行した結果を、

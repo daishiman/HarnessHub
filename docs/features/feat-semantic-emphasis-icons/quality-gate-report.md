@@ -1,3 +1,10 @@
+---
+status: recorded
+layer: feature-evidence
+parent_feature: feat-semantic-emphasis-icons
+recorded_at: 2026-08-14
+---
+
 # feat-semantic-emphasis-icons 品質ゲート確認報告 (P09)
 
 goal-spec.json の quality_constraints 5 件が CI の品質ゲートで担保されていることを、

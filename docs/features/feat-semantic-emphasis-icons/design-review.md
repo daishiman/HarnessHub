@@ -1,3 +1,10 @@
+---
+status: recorded
+layer: feature-evidence
+parent_feature: feat-semantic-emphasis-icons
+recorded_at: 2026-08-14
+---
+
 # feat-semantic-emphasis-icons 設計レビュー (P03)
 
 本文書は P02 の `architecture-decision.md` に対する独立レビューである。判定は散文の同意ではなく、

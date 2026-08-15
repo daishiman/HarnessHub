@@ -1,3 +1,10 @@
+---
+status: recorded
+layer: feature-evidence
+parent_feature: feat-semantic-emphasis-icons
+recorded_at: 2026-08-14
+---
+
 # feat-semantic-emphasis-icons リファクタリング/マイグレーション判定 (P08)
 
 本 feature にリファクタリングおよびマイグレーション作業が不要であることの根拠を記録する。

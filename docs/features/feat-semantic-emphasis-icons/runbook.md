@@ -1,3 +1,10 @@
+---
+status: recorded
+layer: feature-evidence
+parent_feature: feat-semantic-emphasis-icons
+recorded_at: 2026-08-14
+---
+
 # feat-semantic-emphasis-icons 運用手引き (P12)
 
 強調・状態表現を絵文字ではなく inline SVG アイコンと semantic color token で行う運用を、

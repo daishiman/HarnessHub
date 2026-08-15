@@ -1,3 +1,10 @@
+---
+status: recorded
+layer: feature-evidence
+parent_feature: feat-semantic-emphasis-icons
+recorded_at: 2026-08-14
+---
+
 # feat-semantic-emphasis-icons 証跡バンドル (P11)
 
 P01〜P10 の判定根拠となった検証を、**そのまま再実行できる形** (コマンド全文と実測出力) で

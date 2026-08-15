@@ -1,3 +1,10 @@
+---
+status: recorded
+layer: feature-evidence
+parent_feature: feat-semantic-emphasis-icons
+recorded_at: 2026-08-14
+---
+
 # feat-semantic-emphasis-icons アーキテクチャ決定 (P02)
 
 本文書は P01 の要件ベースライン (`requirements-baseline.md`) を受けて、既存実装の再利用範囲・

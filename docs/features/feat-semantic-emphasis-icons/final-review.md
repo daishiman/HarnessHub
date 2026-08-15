@@ -1,3 +1,10 @@
+---
+status: recorded
+layer: feature-evidence
+parent_feature: feat-semantic-emphasis-icons
+recorded_at: 2026-08-14
+---
+
 # feat-semantic-emphasis-icons 最終レビュー (P10)
 
 P01〜P09 の全成果物を突き合わせ、quality_constraints 5 件の合格可否を最終判定する。

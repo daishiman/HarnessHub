@@ -1,3 +1,10 @@
+---
+status: recorded
+layer: feature-evidence
+parent_feature: feat-semantic-emphasis-icons
+recorded_at: 2026-08-14
+---
+
 # feat-semantic-emphasis-icons 要件ベースライン (P01)
 
 本文書は feature `feat-semantic-emphasis-icons` の要件ベースラインである。P02 以降の全 task は
