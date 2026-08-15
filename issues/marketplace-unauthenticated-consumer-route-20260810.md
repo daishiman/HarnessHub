@@ -9,12 +9,12 @@ priority: "medium"
 start_date: "2026-08-10"
 target_date: null
 iteration: null
-title: "marketplace.json の未認証 consumer 経路を H7 と同時に確定する"
+title: "marketplace.json 未認証 consumer 経路を H7 と同時に確定する"
 owners: ["daishiman"]
 created_at: "2026-08-10T00:00:00Z"
-updated_at: "2026-08-09T20:58:03.506550Z"
+updated_at: "2026-08-12T04:26:41Z"
 status: "active"
-depends_on: ["feat-stage0-distribution-gate"]
+depends_on: ["issue-h7-git-subdir-revalidation-20260730"]
 related_nodes: ["feat-dual-catalog-web","feat-stage0-distribution-gate"]
 resource_scope: ["apps/hub/src/app/marketplace.json","apps/hub/src/lib/authz","docs/features/feat-dual-catalog-web"]
 purpose: "CLI や plugin manager など browser session を持たない consumer が marketplace document を取得する正式な認証・scope 境界を確定する。"

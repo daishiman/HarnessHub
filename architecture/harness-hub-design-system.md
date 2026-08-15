@@ -273,6 +273,12 @@ md 以上ではアプリ本体を角丸 14px + 1px 輪郭 + `shadow-frame` で�
   exit を 0/1/2 (適合/違反/設定エラー) の 3 値に分けてあるのは、この判定を
   「非ゼロなら合格」でなく「exit 1 ちょうど」へ狭めるためである。
 
+## 2026-08-15 意味セグメントとタップ領域 (HarnessHub-s36m)
+
+- ナビ文言の折返しは画面別 CSS やゼロ幅文字でいじらない。Hub が意味の境目を宣言し、共通 CSS は `[data-hh-meaning-segment] { white-space: nowrap }` と `.hh-shell__nav-label--segmented` だけを持つ。
+- `touchTargetStyle` は表示密度 token（compact の 36px）と切り分ける。見た目の高さが下がっても、操作域の最小は 44px のままにする。
+- 機械保証: `packages/ui` の shell テスト、Hub の nav label 契約、製品所有印刷 0 件、公開シェルの実ブラウザ操作域。
+
 ### 7. 配色 5 種と本文カード (2026-08-16)
 
 `data-palette` は `gray|blue|beige|green|navy`。切替 UI は `AppearancePicker` が所有し、

@@ -1,0 +1,124 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+  "parent_feature": "feat-demo-coverage-dataset",
+  "nodes": [
+    {
+      "id": "SYS-DEMO-COVERAGE-DATASET-P01",
+      "graph_node_id": "sys-demo-coverage-dataset-p01",
+      "title": "確認用データセット要件ベースライン確定 — 28 route × 5 状態 × enum 全値の対応表確定",
+      "phase_ref": "P01",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "parent_feature": "feat-demo-coverage-dataset",
+      "depends_on": []
+    },
+    {
+      "id": "SYS-DEMO-COVERAGE-DATASET-P02",
+      "graph_node_id": "sys-demo-coverage-dataset-p02",
+      "title": "アーキテクチャ設計 — route×状態対応表・fixture データモデル・冪等 seed 契約の設計",
+      "phase_ref": "P02",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "parent_feature": "feat-demo-coverage-dataset",
+      "depends_on": ["SYS-DEMO-COVERAGE-DATASET-P01"]
+    },
+    {
+      "id": "SYS-DEMO-COVERAGE-DATASET-P03",
+      "graph_node_id": "sys-demo-coverage-dataset-p03",
+      "title": "独立設計レビュー — 対応表網羅性・冪等性設計・ローカル専用ガードの妥当性確認",
+      "phase_ref": "P03",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "parent_feature": "feat-demo-coverage-dataset",
+      "depends_on": ["SYS-DEMO-COVERAGE-DATASET-P02"]
+    },
+    {
+      "id": "SYS-DEMO-COVERAGE-DATASET-P04",
+      "graph_node_id": "sys-demo-coverage-dataset-p04",
+      "title": "テストファースト設計 — 網羅性検査・冪等性・ローカル専用ガードのテストスタブ作成",
+      "phase_ref": "P04",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "parent_feature": "feat-demo-coverage-dataset",
+      "depends_on": ["SYS-DEMO-COVERAGE-DATASET-P03"]
+    },
+    {
+      "id": "SYS-DEMO-COVERAGE-DATASET-P05",
+      "graph_node_id": "sys-demo-coverage-dataset-p05",
+      "title": "実装 — seed-coverage スクリプトと route×状態対応表・網羅性検査スクリプトの実装",
+      "phase_ref": "P05",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "parent_feature": "feat-demo-coverage-dataset",
+      "depends_on": ["SYS-DEMO-COVERAGE-DATASET-P04"]
+    },
+    {
+      "id": "SYS-DEMO-COVERAGE-DATASET-P06",
+      "graph_node_id": "sys-demo-coverage-dataset-p06",
+      "title": "テスト実行 — 冪等性・網羅性・ローカル専用ガード拒否テストの実行と結果記録",
+      "phase_ref": "P06",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "parent_feature": "feat-demo-coverage-dataset",
+      "depends_on": ["SYS-DEMO-COVERAGE-DATASET-P05"]
+    },
+    {
+      "id": "SYS-DEMO-COVERAGE-DATASET-P07",
+      "graph_node_id": "sys-demo-coverage-dataset-p07",
+      "title": "受入 — goal-spec acceptance 7 項目の確認",
+      "phase_ref": "P07",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "parent_feature": "feat-demo-coverage-dataset",
+      "depends_on": ["SYS-DEMO-COVERAGE-DATASET-P06"]
+    },
+    {
+      "id": "SYS-DEMO-COVERAGE-DATASET-P08",
+      "graph_node_id": "sys-demo-coverage-dataset-p08",
+      "title": "リファクタリング/マイグレーション — 既存 schema 変更要否の確認 (N/A 判定)",
+      "phase_ref": "P08",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "parent_feature": "feat-demo-coverage-dataset",
+      "depends_on": ["SYS-DEMO-COVERAGE-DATASET-P07"]
+    },
+    {
+      "id": "SYS-DEMO-COVERAGE-DATASET-P09",
+      "graph_node_id": "sys-demo-coverage-dataset-p09",
+      "title": "品質保証 — 網羅性/冪等性/ローカル専用ガードの品質ゲート確認",
+      "phase_ref": "P09",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "parent_feature": "feat-demo-coverage-dataset",
+      "depends_on": ["SYS-DEMO-COVERAGE-DATASET-P08"]
+    },
+    {
+      "id": "SYS-DEMO-COVERAGE-DATASET-P10",
+      "graph_node_id": "sys-demo-coverage-dataset-p10",
+      "title": "最終独立レビュー — quality_constraints の充足判定",
+      "phase_ref": "P10",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "parent_feature": "feat-demo-coverage-dataset",
+      "depends_on": ["SYS-DEMO-COVERAGE-DATASET-P09"]
+    },
+    {
+      "id": "SYS-DEMO-COVERAGE-DATASET-P11",
+      "graph_node_id": "sys-demo-coverage-dataset-p11",
+      "title": "エビデンス収集 — 再現可能な検証証跡の集約",
+      "phase_ref": "P11",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "parent_feature": "feat-demo-coverage-dataset",
+      "depends_on": ["SYS-DEMO-COVERAGE-DATASET-P10"]
+    },
+    {
+      "id": "SYS-DEMO-COVERAGE-DATASET-P12",
+      "graph_node_id": "sys-demo-coverage-dataset-p12",
+      "title": "ドキュメント/運用 — route×状態到達手順の runbook 作成",
+      "phase_ref": "P12",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "parent_feature": "feat-demo-coverage-dataset",
+      "depends_on": ["SYS-DEMO-COVERAGE-DATASET-P11"]
+    },
+    {
+      "id": "SYS-DEMO-COVERAGE-DATASET-P13",
+      "graph_node_id": "sys-demo-coverage-dataset-p13",
+      "title": "リリース/デプロイ — ローカル専用ツールの close-out (実デプロイなし)",
+      "phase_ref": "P13",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "parent_feature": "feat-demo-coverage-dataset",
+      "depends_on": ["SYS-DEMO-COVERAGE-DATASET-P12"]
+    }
+  ]
+}

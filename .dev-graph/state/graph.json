@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1640,
+  "graph_revision": 1749,
   "nodes": [
     {
       "acceptance": [
@@ -7035,7 +7035,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-hearing-intake",
         "studio-extension",
@@ -7047,7 +7047,7 @@
       "template_version": "1.0.0",
       "title": "リリース/デプロイ — S10-S12 の Cloudflare Workers 本番反映とロールアウト確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T07:04:14.571966Z"
+      "updated_at": "2026-08-08T05:23:16Z"
     },
     {
       "acceptance": [
@@ -11486,7 +11486,8 @@
       "confirmation_status": "confirmed",
       "created_at": "2026-07-19T14:14:11Z",
       "depends_on": [
-        "SYS-FEEDBACK-LOOP-P12"
+        "SYS-FEEDBACK-LOOP-P12",
+        "issue-authz-provider-admin-edge-route-mismatch-20260808"
       ],
       "domain": "operations",
       "evaluation_status": "pass",
@@ -11547,7 +11548,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-feedback-loop",
         "studio-extension",
@@ -11559,7 +11560,7 @@
       "template_version": "1.0.0",
       "title": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-13T08:45:22Z"
     },
     {
       "acceptance": [
@@ -16397,7 +16398,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-publish-pipeline",
         "macro-feature",
@@ -16409,7 +16410,7 @@
       "template_version": "1.1.0",
       "title": "PublishRequest 状態機械・検査 pipeline・promote/rollback 要件ベースライン確定",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:37:16.697468Z"
+      "updated_at": "2026-08-07T02:51:12Z"
     },
     {
       "acceptance": [
@@ -16510,7 +16511,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-publish-pipeline",
         "macro-feature",
@@ -16522,7 +16523,7 @@
       "template_version": "1.1.0",
       "title": "アーキテクチャ設計 — PublishRequest 状態機械実装方式・検査 pipeline 共有パッケージ・R2/監査/認可 consumer 境界確定",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:37:50.064630Z"
+      "updated_at": "2026-08-07T02:51:32Z"
     },
     {
       "acceptance": [
@@ -16623,7 +16624,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-publish-pipeline",
         "macro-feature",
@@ -16635,7 +16636,7 @@
       "template_version": "1.1.0",
       "title": "独立設計レビュー — スキーマ owner 境界・状態機械設計・検査 pipeline 設計の妥当性確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:38:21.799250Z"
+      "updated_at": "2026-08-07T02:51:35Z"
     },
     {
       "acceptance": [
@@ -16746,7 +16747,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-publish-pipeline",
         "macro-feature",
@@ -16758,7 +16759,7 @@
       "template_version": "1.1.0",
       "title": "テストファースト設計 — 状態機械 property test・検査 pipeline 挙動同値テスト・直列化/監査テスト設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:39:00.824132Z"
+      "updated_at": "2026-08-07T02:51:37Z"
     },
     {
       "acceptance": [
@@ -16875,7 +16876,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-publish-pipeline",
         "macro-feature",
@@ -16887,7 +16888,7 @@
       "template_version": "1.1.0",
       "title": "実装 — PublishRequest API・状態機械・検査 pipeline (packages/inspection)・R2 upload・promote/rollback・監査 event 記録",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:39:32.288442Z"
+      "updated_at": "2026-08-07T02:52:00Z"
     },
     {
       "acceptance": [
@@ -16996,7 +16997,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-publish-pipeline",
         "macro-feature",
@@ -17008,7 +17009,7 @@
       "template_version": "1.1.0",
       "title": "テスト実行 — 状態機械 property test・検査 pipeline 挙動同値テスト・直列化/監査テストの実行と結果記録",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:40:06.286747Z"
+      "updated_at": "2026-08-07T02:52:02Z"
     },
     {
       "acceptance": [
@@ -17109,7 +17110,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-publish-pipeline",
         "macro-feature",
@@ -17121,7 +17122,7 @@
       "template_version": "1.1.0",
       "title": "受入 — goal-spec acceptance 3 項目の確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:40:37.785745Z"
+      "updated_at": "2026-08-07T02:52:05Z"
     },
     {
       "acceptance": [
@@ -17229,7 +17230,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-publish-pipeline",
         "macro-feature",
@@ -17241,7 +17242,7 @@
       "template_version": "1.1.0",
       "title": "リファクタリング/マイグレーション — Python→TypeScript 検査 pipeline 移植の最終整理と CI 恒久検査確立",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:41:09.138651Z"
+      "updated_at": "2026-08-07T02:52:07Z"
     },
     {
       "acceptance": [
@@ -17349,7 +17350,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-publish-pipeline",
         "macro-feature",
@@ -17361,7 +17362,7 @@
       "template_version": "1.1.0",
       "title": "品質・セキュリティ・運用保証 — レート制限・Idempotency-Key・tenant 分離・secret scan CI ゲート確立",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:41:40.099750Z"
+      "updated_at": "2026-08-07T02:52:31Z"
     },
     {
       "acceptance": [
@@ -17462,7 +17463,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-publish-pipeline",
         "macro-feature",
@@ -17474,7 +17475,7 @@
       "template_version": "1.1.0",
       "title": "独立最終レビュー — quality_constraints 9 件・acceptance 3 件・cross-feature 境界判断の独立確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:42:11.361422Z"
+      "updated_at": "2026-08-07T02:52:33Z"
     },
     {
       "acceptance": [
@@ -17573,7 +17574,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-publish-pipeline",
         "macro-feature",
@@ -17585,7 +17586,7 @@
       "template_version": "1.1.0",
       "title": "再現可能な証跡 — P06/P07/P09/P10 の証跡集約と再現手順の確立",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:42:42.872478Z"
+      "updated_at": "2026-08-07T02:52:36Z"
     },
     {
       "acceptance": [
@@ -17684,7 +17685,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-publish-pipeline",
         "macro-feature",
@@ -17696,7 +17697,7 @@
       "template_version": "1.1.0",
       "title": "文書化・runbook・引き継ぎ — orphan_candidate 処理・rollback 手順・ポーリング監視の運用手順確立",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:43:14.099294Z"
+      "updated_at": "2026-08-07T02:52:38Z"
     },
     {
       "acceptance": [
@@ -17807,7 +17808,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-publish-pipeline",
         "macro-feature",
@@ -17819,7 +17820,7 @@
       "template_version": "1.1.0",
       "title": "リリース/デプロイ — apps/hub publish endpoint 本番デプロイと full smoke test",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:43:45.399996Z"
+      "updated_at": "2026-08-07T02:52:41Z"
     },
     {
       "acceptance": [
@@ -21280,7 +21281,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-dual-catalog-web",
         "macro-feature",
@@ -21292,7 +21293,7 @@
       "template_version": "1.0.0",
       "title": "アーキテクチャ設計 — S01/S02/S03/S04画面構成・install descriptor取得・ポーリング契約・marketplace.json生成方式・CWVバンドル予算の決定",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-08T08:01:59Z"
     },
     {
       "acceptance": [
@@ -21388,7 +21389,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-dual-catalog-web",
         "macro-feature",
@@ -21400,7 +21401,7 @@
       "template_version": "1.0.0",
       "title": "独立設計レビュー — S01-S04画面構成・install descriptor契約・ポーリング設計・marketplace.json生成方式の妥当性確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-08T08:31:06Z"
     },
     {
       "acceptance": [
@@ -21498,7 +21499,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-dual-catalog-web",
         "macro-feature",
@@ -21510,7 +21511,7 @@
       "template_version": "1.0.0",
       "title": "テストファースト設計 — axe自動検査・Playwright J1/J2ジャーニー×2 viewport・Lighthouse CWV予算・marketplace.jsonスキーマ検証・ポーリングbackoff契約のテスト設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-08T08:31:16Z"
     },
     {
       "acceptance": [
@@ -21620,7 +21621,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-dual-catalog-web",
         "macro-feature",
@@ -21632,7 +21633,7 @@
       "template_version": "1.0.0",
       "title": "実装 — S01/S02/S03/S04画面実装・marketplace.json出力パイプライン・配布経路連携・axe CI組込・CWVバンドル最適化・ポーリング実装",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-08T08:31:24Z"
     },
     {
       "acceptance": [
@@ -25695,7 +25696,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -25707,7 +25708,7 @@
       "template_version": "1.1.0",
       "title": "要件ベースライン確定 — 開発管理パイプライン改善 8 要件の baseline 文書化",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:22:10.971179Z"
+      "updated_at": "2026-08-08T02:53:12Z"
     },
     {
       "acceptance": [
@@ -25811,7 +25812,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -25823,7 +25824,7 @@
       "template_version": "1.1.0",
       "title": "検査・規約・schema 設計 — open 残置検出 / eval-log 配置 lint / handoff disposition / close-gate 配線 / 棚卸し GC の決定論設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:22:43.819589Z"
+      "updated_at": "2026-08-08T02:53:18Z"
     },
     {
       "acceptance": [
@@ -25923,7 +25924,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -25935,7 +25936,7 @@
       "template_version": "1.1.0",
       "title": "設計レビュー — 単一 writer・choke-point・sync authority との整合検証",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:23:18.483865Z"
+      "updated_at": "2026-08-08T02:53:22Z"
     },
     {
       "acceptance": [
@@ -26037,7 +26038,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -26049,7 +26050,7 @@
       "template_version": "1.1.0",
       "title": "テスト設計 — lint script 群と冪等 migration の回帰テスト設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:23:58.797752Z"
+      "updated_at": "2026-08-08T02:53:28Z"
     },
     {
       "acceptance": [
@@ -26171,7 +26172,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -26183,7 +26184,7 @@
       "template_version": "1.1.0",
       "title": "実装 — lint script 3 本・handoff schema・eval-log 規約・task template 追記・CI 配線",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:24:31.527301Z"
+      "updated_at": "2026-08-08T02:53:31Z"
     },
     {
       "acceptance": [
@@ -26283,7 +26284,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -26295,7 +26296,7 @@
       "template_version": "1.1.0",
       "title": "テスト実行 — 回帰テスト全件と lint 実測の記録",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:25:03.595970Z"
+      "updated_at": "2026-08-08T02:53:36Z"
     },
     {
       "acceptance": [
@@ -26395,7 +26396,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -26407,7 +26408,7 @@
       "template_version": "1.1.0",
       "title": "受入判定 — 8 acceptance の突合と未達の差し戻し",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:25:35.369756Z"
+      "updated_at": "2026-08-08T02:53:39Z"
     },
     {
       "acceptance": [
@@ -26514,7 +26515,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -26526,7 +26527,7 @@
       "template_version": "1.1.0",
       "title": "移行 — eval-log 再配置と 94 findings への disposition 遡及付与 (冪等)",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:26:07.993893Z"
+      "updated_at": "2026-08-08T02:53:43Z"
     },
     {
       "acceptance": [
@@ -26626,7 +26627,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -26638,7 +26639,7 @@
       "template_version": "1.1.0",
       "title": "品質保証 — fail-closed 実効性の悪性ケース実測",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:27:35.011681Z"
+      "updated_at": "2026-08-08T02:53:46Z"
     },
     {
       "acceptance": [
@@ -26738,7 +26739,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -26750,7 +26751,7 @@
       "template_version": "1.1.0",
       "title": "最終レビュー — 全 phase 成果の横断整合確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:28:08.342178Z"
+      "updated_at": "2026-08-08T02:53:50Z"
     },
     {
       "acceptance": [
@@ -26850,7 +26851,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -26862,7 +26863,7 @@
       "template_version": "1.1.0",
       "title": "証跡固定 — 実測ログと digest の evidence manifest 化",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:28:42.109995Z"
+      "updated_at": "2026-08-08T02:53:53Z"
     },
     {
       "acceptance": [
@@ -26962,7 +26963,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -26974,7 +26975,7 @@
       "template_version": "1.1.0",
       "title": "運用文書化 — 棚卸し GC と close-loop の sync 運用組込み手順",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:29:14.118964Z"
+      "updated_at": "2026-08-08T02:53:56Z"
     },
     {
       "acceptance": [
@@ -27075,7 +27076,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-dev-pipeline-improvement",
         "macro-feature",
@@ -27087,7 +27088,7 @@
       "template_version": "1.1.0",
       "title": "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:29:48.656827Z"
+      "updated_at": "2026-08-09T22:44:05Z"
     },
     {
       "acceptance": [
@@ -32455,7 +32456,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "quality-gate",
         "skill-design",
@@ -32468,7 +32469,7 @@
       "template_version": "1.0.0",
       "title": "validate-build-trace.py の doc_coverage schema drift で全 skill-design 評価に REG-001 (high) が誤計上される",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:58:30.768368Z"
+      "updated_at": "2026-08-08T02:49:34Z"
     },
     {
       "acceptance": [
@@ -39864,7 +39865,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "dev-graph",
         "register-package",
@@ -39877,7 +39878,7 @@
       "template_version": "1.0.0",
       "title": "register-package 再実行が projection 6 項目差で同一 digest を拒否する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T21:53:58.380741Z"
+      "updated_at": "2026-08-08T05:03:40Z"
     },
     {
       "acceptance": [
@@ -40912,7 +40913,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "quality",
         "dev-graph",
@@ -40924,7 +40925,7 @@
       "template_version": "1.0.0",
       "title": "assign-system-spec-completeness-evaluator の aggregate-completeness.py (572 行) / test_aggregate_completeness.py (592 行) の 500 行超過を分割する",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T00:45:56Z"
+      "updated_at": "2026-08-08T05:03:42Z"
     },
     {
       "acceptance": [
@@ -41015,7 +41016,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "quality",
         "dev-graph",
@@ -41027,7 +41028,7 @@
       "template_version": "1.0.0",
       "title": "completeness-report.json を session_id 付き実 fork 監査で再生成する (x4o migration)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T14:30:15Z"
+      "updated_at": "2026-08-08T05:03:44Z"
     },
     {
       "acceptance": [
@@ -41798,7 +41799,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "quality",
         "dev-graph",
@@ -41810,7 +41811,7 @@
       "template_version": "1.0.0",
       "title": "plugin hooks が全 skill の挙動閉包に入るため hook 1 件の修正で dev-graph 8 skill の live-trial verdict が一斉に stale 化する",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-27T21:55:19Z"
+      "updated_at": "2026-08-08T07:28:51Z"
     },
     {
       "acceptance": [
@@ -42004,7 +42005,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "quality",
         "dev-graph",
@@ -42016,7 +42017,7 @@
       "template_version": "1.0.0",
       "title": "resource-map deep card 不足の解消 (ui-ux/infrastructure/dev-workflow) と backend card 順整列",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T08:27:25Z"
+      "updated_at": "2026-08-11T05:13:37Z"
     },
     {
       "acceptance": [
@@ -42107,7 +42108,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "quality",
         "dev-graph",
@@ -42119,7 +42120,7 @@
       "template_version": "1.0.0",
       "title": "run-skill-feedback の ../../../../ 参照記法を repo root 相対へ統一する",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-21T19:11:55Z"
+      "updated_at": "2026-08-11T13:51:49Z"
     },
     {
       "acceptance": [
@@ -43190,7 +43191,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "dev-workflow",
         "testing",
@@ -43203,7 +43204,7 @@
       "template_version": "1.0.0",
       "title": "遮断レイテンシ test が絶対時間 1.0s を代理指標にしており並列負荷で偽陽性になる",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:59:56.419451Z"
+      "updated_at": "2026-08-04T07:17:08Z"
     },
     {
       "acceptance": [
@@ -43596,7 +43597,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "system-spec-harness",
         "fail-closed",
@@ -43610,7 +43611,7 @@
       "template_version": "1.0.0",
       "title": "system-spec-harness: 独立監査台帳(audit-fork-ledger.jsonl)をモデルがWriteで直接偽装でき、completeness-reportのFAILがPASSへ書き換えられる",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-28T03:51:58Z"
+      "updated_at": "2026-08-11T05:13:25Z"
     },
     {
       "acceptance": [
@@ -43708,7 +43709,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "quality",
         "dev-graph",
@@ -43720,7 +43721,7 @@
       "template_version": "1.0.0",
       "title": "同一 plugin 内の共有 script を複数 skill が script_refs 宣言し 1 ファイル変更で live-trial 証跡が同時失効する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T04:00:27.875270Z"
+      "updated_at": "2026-08-14T15:29:20Z"
     },
     {
       "acceptance": [
@@ -44595,7 +44596,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "follow-up",
         "auth-tenancy",
@@ -44608,7 +44609,7 @@
       "template_version": "1.0.0",
       "title": "顧客持ち込みGoogle OAuthクライアントの管理機能を実装する",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-28T23:16:51.876731Z"
+      "updated_at": "2026-08-08T05:23:07Z"
     },
     {
       "acceptance": [
@@ -45087,7 +45088,7 @@
         "source_version": null
       },
       "start_date": "2026-08-02",
-      "status": "active",
+      "status": "closed",
       "tags": [
         "documentation",
         "portability",
@@ -45099,7 +45100,7 @@
       "template_version": "1.0.0",
       "title": "aiworkflow 依存の外部参考 Skill を削除し有効な CLI 契約を移設する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T04:39:00Z"
+      "updated_at": "2026-08-08T05:03:24Z"
     },
     {
       "acceptance": [
@@ -46083,7 +46084,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-post-signin-scope-routing",
         "macro-feature",
@@ -46095,7 +46096,7 @@
       "template_version": "1.1.0",
       "title": "要件ベースライン確定 — scope 解決 2 系統・サインイン後着地先解決・open redirect 防止・deny-by-default 非退行の要件確定",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:49:14.420172Z"
+      "updated_at": "2026-08-04T07:31:30Z"
     },
     {
       "acceptance": [
@@ -46196,7 +46197,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-post-signin-scope-routing",
         "macro-feature",
@@ -46208,7 +46209,7 @@
       "template_version": "1.1.0",
       "title": "アーキテクチャ決定 — scope 解決の単一合流点・session への active workspace 束縛・着地先解決関数の配置と契約確定",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:50:41.340531Z"
+      "updated_at": "2026-08-04T07:31:39Z"
     },
     {
       "acceptance": [
@@ -46308,7 +46309,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-post-signin-scope-routing",
         "macro-feature",
@@ -46320,7 +46321,7 @@
       "template_version": "1.1.0",
       "title": "設計レビュー — 認可迂回路・open redirect・deny-by-default 退行の 3 リスクに対する設計妥当性審査",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:51:14.089491Z"
+      "updated_at": "2026-08-04T07:31:47Z"
     },
     {
       "acceptance": [
@@ -46420,7 +46421,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-post-signin-scope-routing",
         "macro-feature",
@@ -46432,7 +46433,7 @@
       "template_version": "1.1.0",
       "title": "テスト設計 — scope 解決の真理値表・着地先解決の入力分類・deny-by-default 非退行の実行可能テスト ID 定義",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:51:46.650735Z"
+      "updated_at": "2026-08-04T07:31:54Z"
     },
     {
       "acceptance": [
@@ -46546,7 +46547,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-post-signin-scope-routing",
         "macro-feature",
@@ -46558,7 +46559,7 @@
       "template_version": "1.1.0",
       "title": "実装 — scope 解決への session 系統追加・active workspace 束縛・着地先解決関数の新設とサインイン後遷移の結線",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:52:18.369769Z"
+      "updated_at": "2026-08-04T07:32:02Z"
     },
     {
       "acceptance": [
@@ -46664,7 +46665,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-post-signin-scope-routing",
         "macro-feature",
@@ -46676,7 +46677,7 @@
       "template_version": "1.1.0",
       "title": "テスト実行 — P04 が定義したテスト ID の実行と結果証跡の収集",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:52:50.375403Z"
+      "updated_at": "2026-08-04T07:32:10Z"
     },
     {
       "acceptance": [
@@ -46776,7 +46777,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-post-signin-scope-routing",
         "macro-feature",
@@ -46788,7 +46789,7 @@
       "template_version": "1.1.0",
       "title": "受入判定 — goal-spec acceptance 8 件の実測証跡による判定",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:53:21.807658Z"
+      "updated_at": "2026-08-04T07:32:18Z"
     },
     {
       "acceptance": [
@@ -46902,7 +46903,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-post-signin-scope-routing",
         "macro-feature",
@@ -46914,7 +46915,7 @@
       "template_version": "1.1.0",
       "title": "リファクタリングと移行 — scope 解決の二重実装排除と既定着地定数の集約",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:53:54.137829Z"
+      "updated_at": "2026-08-04T07:32:26Z"
     },
     {
       "acceptance": [
@@ -47014,7 +47015,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-post-signin-scope-routing",
         "macro-feature",
@@ -47026,7 +47027,7 @@
       "template_version": "1.1.0",
       "title": "品質保証 — deny-by-default 非退行・open redirect 防止・所属検証の fail-closed 検査",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:54:24.362410Z"
+      "updated_at": "2026-08-04T07:32:33Z"
     },
     {
       "acceptance": [
@@ -47126,7 +47127,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-post-signin-scope-routing",
         "macro-feature",
@@ -47138,7 +47139,7 @@
       "template_version": "1.1.0",
       "title": "最終レビュー — 実行済み証跡のみによるリリース可否判定",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:54:54.591984Z"
+      "updated_at": "2026-08-04T07:32:42Z"
     },
     {
       "acceptance": [
@@ -47238,7 +47239,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-post-signin-scope-routing",
         "macro-feature",
@@ -47250,7 +47251,7 @@
       "template_version": "1.1.0",
       "title": "証跡固定 — source digest と再実行コマンドの保存",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:55:28.399151Z"
+      "updated_at": "2026-08-04T07:32:49Z"
     },
     {
       "acceptance": [
@@ -47354,7 +47355,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-post-signin-scope-routing",
         "macro-feature",
@@ -47366,7 +47367,7 @@
       "template_version": "1.1.0",
       "title": "ドキュメントと運用 — 画面遷移仕様の更新と scope 未解決時の運用手順整備",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:56:00.327920Z"
+      "updated_at": "2026-08-04T07:32:57Z"
     },
     {
       "acceptance": [
@@ -47881,7 +47882,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "system-spec-harness",
         "citation",
@@ -47892,7 +47893,7 @@
       "template_version": "1.0.0",
       "title": "validate-source-citation.py が citation の実取得性と時刻実在性を検査せず捏造を通す",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-10T00:00:00Z"
+      "updated_at": "2026-08-10T11:05:20Z"
     },
     {
       "acceptance": [
@@ -48451,7 +48452,7 @@
         "source_version": null
       },
       "start_date": "2026-08-04",
-      "status": "active",
+      "status": "closed",
       "tags": [
         "dev-graph",
         "render",
@@ -48464,7 +48465,7 @@
       "template_version": "1.0.0",
       "title": "dev-graph: render の registration receipt が sync 後に必ず stale になる",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T04:54:05Z"
+      "updated_at": "2026-08-08T05:03:37Z"
     },
     {
       "acceptance": [
@@ -48583,7 +48584,7 @@
         "source_version": null
       },
       "start_date": "2026-08-03",
-      "status": "active",
+      "status": "closed",
       "tags": [
         "dev-graph",
         "schedule-graph",
@@ -48596,7 +48597,7 @@
       "template_version": "1.0.0",
       "title": "dev-graph: schedule-graph.py が bd ready に entry の無い beads node を沈黙除外する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T01:34:10Z"
+      "updated_at": "2026-08-08T05:03:35Z"
     },
     {
       "acceptance": [
@@ -50243,7 +50244,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-build-identity-deploy-freshness",
         "macro-feature",
@@ -50255,7 +50256,7 @@
       "template_version": "1.1.0",
       "title": "要件ベースライン確定 — 稼働ビルドの素性確認 (V6) と deploy 反映鮮度検出 (V7) の要件確定",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-07T14:10:05.189200Z"
+      "updated_at": "2026-08-08T01:58:19Z"
     },
     {
       "acceptance": [
@@ -50357,7 +50358,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-build-identity-deploy-freshness",
         "macro-feature",
@@ -50369,7 +50370,7 @@
       "template_version": "1.1.0",
       "title": "アーキテクチャ決定 — commit 識別子の埋込経路・公開読出経路・鮮度判定の所在",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-07T14:10:37.074865Z"
+      "updated_at": "2026-08-08T01:58:21Z"
     },
     {
       "acceptance": [
@@ -50470,7 +50471,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-build-identity-deploy-freshness",
         "macro-feature",
@@ -50482,7 +50483,7 @@
       "template_version": "1.1.0",
       "title": "設計レビュー — 情報露出・deploy 直後の誤検出・CI 依存の 3 リスク検証",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-07T14:11:09.297425Z"
+      "updated_at": "2026-08-08T01:58:23Z"
     },
     {
       "acceptance": [
@@ -50583,7 +50584,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-build-identity-deploy-freshness",
         "macro-feature",
@@ -50595,7 +50596,7 @@
       "template_version": "1.1.0",
       "title": "テスト設計 — 埋込・公開読出・鮮度検出の実行可能テスト定義",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-07T14:11:41.203754Z"
+      "updated_at": "2026-08-08T01:58:24Z"
     },
     {
       "acceptance": [
@@ -50701,7 +50702,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-build-identity-deploy-freshness",
         "macro-feature",
@@ -50713,7 +50714,7 @@
       "template_version": "1.1.0",
       "title": "実装 — build 時の commit 識別子埋込・認証なし読出経路・鮮度検査 script",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-07T14:12:13.043716Z"
+      "updated_at": "2026-08-08T01:58:26Z"
     },
     {
       "acceptance": [
@@ -50814,7 +50815,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-build-identity-deploy-freshness",
         "macro-feature",
@@ -50826,7 +50827,7 @@
       "template_version": "1.1.0",
       "title": "テスト実行 — P04 のテスト ID 実行と結果証跡の収集",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-07T14:12:45.608342Z"
+      "updated_at": "2026-08-08T01:58:28Z"
     },
     {
       "acceptance": [
@@ -50927,7 +50928,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-build-identity-deploy-freshness",
         "macro-feature",
@@ -50939,7 +50940,7 @@
       "template_version": "1.1.0",
       "title": "受入判定 — goal-spec acceptance 5 件の実測証跡による判定",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-07T14:13:18.155316Z"
+      "updated_at": "2026-08-08T01:58:29Z"
     },
     {
       "acceptance": [
@@ -51042,7 +51043,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-build-identity-deploy-freshness",
         "macro-feature",
@@ -51054,7 +51055,7 @@
       "template_version": "1.1.0",
       "title": "リファクタリングと移行 — しきい値の単一定数化と既存 check 系列への整列",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-07T14:13:51.467085Z"
+      "updated_at": "2026-08-08T01:58:31Z"
     },
     {
       "acceptance": [
@@ -51157,7 +51158,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-build-identity-deploy-freshness",
         "macro-feature",
@@ -51169,7 +51170,7 @@
       "template_version": "1.1.0",
       "title": "品質保証 — 露出範囲の非退行と検査の発火性の固定",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-07T14:14:24.332236Z"
+      "updated_at": "2026-08-08T01:58:33Z"
     },
     {
       "acceptance": [
@@ -51269,7 +51270,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-build-identity-deploy-freshness",
         "macro-feature",
@@ -51281,7 +51282,7 @@
       "template_version": "1.1.0",
       "title": "最終レビュー — 実行済み証跡のみによるリリース可否判定",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-07T14:14:56.156044Z"
+      "updated_at": "2026-08-08T01:58:34Z"
     },
     {
       "acceptance": [
@@ -51381,7 +51382,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-build-identity-deploy-freshness",
         "macro-feature",
@@ -51393,7 +51394,7 @@
       "template_version": "1.1.0",
       "title": "証跡固定 — source digest と再実行コマンドの保存",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-07T14:15:28.302690Z"
+      "updated_at": "2026-08-08T01:58:36Z"
     },
     {
       "acceptance": [
@@ -51496,7 +51497,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-build-identity-deploy-freshness",
         "macro-feature",
@@ -51508,7 +51509,7 @@
       "template_version": "1.1.0",
       "title": "ドキュメントと運用 — 稼働ビルドの確認手順と鮮度警告時の対応手順",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-07T14:15:59.603486Z"
+      "updated_at": "2026-08-08T01:58:38Z"
     },
     {
       "acceptance": [
@@ -51614,7 +51615,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-build-identity-deploy-freshness",
         "macro-feature",
@@ -51626,7 +51627,7 @@
       "template_version": "1.1.0",
       "title": "リリース判定と確定仕様・アーキテクチャへの書き戻し",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-07T14:16:31.150745Z"
+      "updated_at": "2026-08-08T01:58:40Z"
     },
     {
       "acceptance": [
@@ -51731,7 +51732,7 @@
         "source_version": null
       },
       "start_date": "2026-08-08",
-      "status": "active",
+      "status": "closed",
       "tags": [
         "ci",
         "deploy",
@@ -51744,7 +51745,7 @@
       "template_version": "1.0.0",
       "title": "post-deploy smoke が配信伝播完了前に走る窓を塞ぐ",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-08T06:00:11.313290Z"
+      "updated_at": "2026-08-08T07:47:14Z"
     },
     {
       "acceptance": [
@@ -52733,7 +52734,7 @@
         "source_version": null
       },
       "start_date": "2026-08-08",
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "authz",
         "multi-tenancy",
@@ -52745,7 +52746,7 @@
       "template_version": "1.0.0",
       "title": "provider-admin 越境の edge 遮断と route 層監査契約の不整合を解消する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-08T09:00:00Z"
+      "updated_at": "2026-08-13T08:44:27Z"
     },
     {
       "acceptance": [
@@ -53128,7 +53129,7 @@
         "source_version": null
       },
       "start_date": "2026-08-08",
-      "status": "active",
+      "status": "closed",
       "tags": [
         "ui-shell",
         "page-surface",
@@ -53141,7 +53142,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub 共通シェル・全ページ表面の統一",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-08T11:46:34.607947Z"
+      "updated_at": "2026-08-10T09:45:06Z"
     },
     {
       "acceptance": [
@@ -53684,7 +53685,7 @@
         "source_version": null
       },
       "start_date": "2026-08-09",
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "elegant-review",
         "schema",
@@ -53696,7 +53697,7 @@
       "template_version": "1.0.0",
       "title": "findings の condition を condition_signal から導出して二重帳簿を根絶する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-09T03:44:58.373225Z"
+      "updated_at": "2026-08-12T01:27:57Z"
     },
     {
       "acceptance": [
@@ -53790,7 +53791,7 @@
         "source_version": null
       },
       "start_date": "2026-08-09",
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "elegant-review",
         "validator",
@@ -53801,7 +53802,7 @@
       "template_version": "1.0.0",
       "title": "validate-paradigm-coverage に lane 単位の検査モードが無い",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-09T03:45:34.768254Z"
+      "updated_at": "2026-08-12T01:28:02Z"
     },
     {
       "acceptance": [
@@ -53895,7 +53896,7 @@
         "source_version": null
       },
       "start_date": "2026-08-09",
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "spec-state",
         "foundation",
@@ -53907,7 +53908,7 @@
       "template_version": "1.0.0",
       "title": "requirements_foundation の U1-U9 source-index が qa_log に存在しない",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-09T03:46:13.693333Z"
+      "updated_at": "2026-08-11T13:54:21Z"
     },
     {
       "acceptance": [
@@ -54823,7 +54824,7 @@
         "source_version": null
       },
       "start_date": "2026-08-09",
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "live-trial",
         "behavior-digest",
@@ -54835,7 +54836,7 @@
       "template_version": "1.0.0",
       "title": "run-dev-graph-system-spec の live-trial を現 behavior digest で再実行する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-09T04:01:26.088854Z"
+      "updated_at": "2026-08-09T10:50:03Z"
     },
     {
       "acceptance": [
@@ -54940,7 +54941,7 @@
         "source_version": null
       },
       "start_date": "2026-08-09",
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "dev-graph",
         "frontmatter",
@@ -54952,7 +54953,7 @@
       "template_version": "1.0.0",
       "title": "HEAD 由来の dev-graph artifact 7 件を現 template 契約へ移行する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-09T04:02:01.436145Z"
+      "updated_at": "2026-08-11T13:53:58Z"
     },
     {
       "acceptance": [
@@ -55411,7 +55412,7 @@
         "source_version": null
       },
       "start_date": "2026-08-10",
-      "status": "active",
+      "status": "closed",
       "tags": [
         "dual-catalog",
         "polling",
@@ -55421,9 +55422,9 @@
       "target_date": null,
       "template_id": "issue",
       "template_version": "1.0.0",
-      "title": "Dual Catalog polling の fatal 即時停止と visibility 復帰再開",
+      "title": "Dual Catalog polling: fatal 即時停止と visibility 復帰再開",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-10T11:21:31.986602Z"
+      "updated_at": "2026-08-10T12:20:01Z"
     },
     {
       "acceptance": [
@@ -55649,7 +55650,7 @@
         "source_version": null
       },
       "start_date": "2026-08-10",
-      "status": "active",
+      "status": "closed",
       "tags": [
         "dev-graph",
         "c19",
@@ -55662,7 +55663,7 @@
       "template_version": "1.0.0",
       "title": "C19 resume live-trial の経路別完了契約を閉じる",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-09T21:37:31Z"
+      "updated_at": "2026-08-11T05:13:49Z"
     },
     {
       "acceptance": [
@@ -56245,7 +56246,7 @@
         "source_version": null
       },
       "start_date": "2026-08-08",
-      "status": "active",
+      "status": "closed",
       "tags": [
         "performance",
         "bundle-budget",
@@ -56258,7 +56259,7 @@
       "template_version": "1.0.0",
       "title": "/catalog/[projectId] の G13 予算残 598 バイトを構造的に広げる",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-10T11:49:00Z"
+      "updated_at": "2026-08-11T12:08:11Z"
     },
     {
       "acceptance": [
@@ -56359,7 +56360,7 @@
         "source_version": null
       },
       "start_date": "2026-08-08",
-      "status": "active",
+      "status": "closed",
       "tags": [
         "performance",
         "cwv",
@@ -56373,7 +56374,7 @@
       "template_version": "1.0.0",
       "title": "root layout の inline buildThemeCss() による Style & Layout ロングタスクを解消する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-10T11:49:00Z"
+      "updated_at": "2026-08-14T01:01:06Z"
     },
     {
       "acceptance": [
@@ -56480,7 +56481,7 @@
         "source_version": null
       },
       "start_date": "2026-08-10",
-      "status": "active",
+      "status": "closed",
       "tags": [
         "performance",
         "bundle-budget",
@@ -56492,7 +56493,7 @@
       "template_version": "1.0.0",
       "title": "catalog 全 route の G13 警告帯を解消し 5% 以上の余裕を作る",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-10T11:53:00Z"
+      "updated_at": "2026-08-11T05:13:29Z"
     },
     {
       "acceptance": [
@@ -56714,7 +56715,7 @@
         "source_version": null
       },
       "start_date": "2026-08-10",
-      "status": "active",
+      "status": "closed",
       "tags": [
         "vrt",
         "navigation",
@@ -56726,7 +56727,7 @@
       "template_version": "1.0.0",
       "title": "navigation VRT の WorkspaceSwitcher 差分を確定する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-10T11:48:16Z"
+      "updated_at": "2026-08-12T03:37:50Z"
     },
     {
       "acceptance": [
@@ -57240,7 +57241,7 @@
         "source_version": null
       },
       "start_date": "2026-08-11",
-      "status": "active",
+      "status": "closed",
       "tags": [
         "ui-consistency",
         "error-state",
@@ -57251,7 +57252,7 @@
       "template_version": "1.0.0",
       "title": "取得の失敗と操作の失敗を分けて出す (残り 4 画面)",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-11T10:45:30Z"
+      "updated_at": "2026-08-12T03:37:39Z"
     },
     {
       "acceptance": [
@@ -57452,7 +57453,7 @@
         "source_version": null
       },
       "start_date": "2026-08-11",
-      "status": "active",
+      "status": "closed",
       "tags": [
         "ui-consistency",
         "design-system"
@@ -57462,7 +57463,7 @@
       "template_version": "1.0.0",
       "title": "見出し帯の部品が 2 種類ある状態を解消する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-11T10:45:30Z"
+      "updated_at": "2026-08-12T03:37:40Z"
     },
     {
       "acceptance": [
@@ -57562,7 +57563,7 @@
         "source_version": null
       },
       "start_date": "2026-08-11",
-      "status": "active",
+      "status": "closed",
       "tags": [
         "ui-consistency",
         "identifier",
@@ -57573,7 +57574,7 @@
       "template_version": "1.0.0",
       "title": "識別子ではなく人が読める表示名を出す",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-11T10:45:30Z"
+      "updated_at": "2026-08-12T03:44:36Z"
     },
     {
       "acceptance": [
@@ -57672,7 +57673,7 @@
         "source_version": null
       },
       "start_date": "2026-08-11",
-      "status": "active",
+      "status": "closed",
       "tags": [
         "ui-consistency",
         "data-table",
@@ -57683,7 +57684,7 @@
       "template_version": "1.0.0",
       "title": "一覧の使い勝手 (列構成・並べ替え・条件記憶・名前列固定)",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-11T10:45:30Z"
+      "updated_at": "2026-08-12T03:37:37Z"
     },
     {
       "acceptance": [
@@ -57778,7 +57779,7 @@
         "source_version": null
       },
       "start_date": "2026-08-11",
-      "status": "active",
+      "status": "closed",
       "tags": [
         "ui-consistency",
         "layout"
@@ -57788,7 +57789,7 @@
       "template_version": "1.0.0",
       "title": "公開画面のヘッダー固定を見直す",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-11T10:45:30Z"
+      "updated_at": "2026-08-12T03:37:42Z"
     },
     {
       "acceptance": [
@@ -57885,7 +57886,7 @@
         "source_version": null
       },
       "start_date": "2026-08-11",
-      "status": "active",
+      "status": "closed",
       "tags": [
         "vrt",
         "ui-consistency",
@@ -57896,7 +57897,7 @@
       "template_version": "1.0.0",
       "title": "VRT の Linux 版 baseline を更新する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-11T10:45:30Z"
+      "updated_at": "2026-08-13T08:45:57Z"
     },
     {
       "acceptance": [
@@ -57988,7 +57989,7 @@
         "source_version": null
       },
       "start_date": "2026-08-12",
-      "status": "active",
+      "status": "closed",
       "tags": [
         "testing",
         "flaky"
@@ -57998,7 +57999,7 @@
       "template_version": "1.0.0",
       "title": "並列実行のときだけ落ちるテスト WOP-W-003 の待ち方を直す",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-11T15:49:49.190691Z"
+      "updated_at": "2026-08-11T23:45:38Z"
     },
     {
       "acceptance": [
@@ -58093,7 +58094,7 @@
         "source_version": null
       },
       "start_date": "2026-08-12",
-      "status": "active",
+      "status": "closed",
       "tags": [
         "domain-logic",
         "maintainability"
@@ -58103,7 +58104,7 @@
       "template_version": "1.0.0",
       "title": "削減時間の見積り係数 0.35 が画面に直書きされている",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-11T15:50:36.312253Z"
+      "updated_at": "2026-08-12T00:40:54Z"
     },
     {
       "acceptance": [
@@ -58305,7 +58306,7 @@
         "source_version": null
       },
       "start_date": "2026-08-12",
-      "status": "active",
+      "status": "closed",
       "tags": [
         "ui-consistency",
         "information-design"
@@ -58315,7 +58316,7 @@
       "template_version": "1.0.0",
       "title": "日時に「3 日前」のような相対表記を併記する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-11T15:51:59.068553Z"
+      "updated_at": "2026-08-12T03:37:45Z"
     },
     {
       "acceptance": [
@@ -58410,7 +58411,7 @@
         "source_version": null
       },
       "start_date": "2026-08-12",
-      "status": "active",
+      "status": "closed",
       "tags": [
         "design-system",
         "accessibility",
@@ -58421,7 +58422,7 @@
       "template_version": "1.0.0",
       "title": "暗い配色のとき、ブラウザ標準の部品が明るいまま出る",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-11T15:52:39.243560Z"
+      "updated_at": "2026-08-12T03:37:43Z"
     },
     {
       "acceptance": [
@@ -58515,7 +58516,7 @@
         "source_version": null
       },
       "start_date": "2026-08-12",
-      "status": "active",
+      "status": "closed",
       "tags": [
         "documentation",
         "information-design"
@@ -58525,7 +58526,7 @@
       "template_version": "1.0.0",
       "title": "画面ごとの表示形式 (profile) の正本が、参照先に存在しない",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-11T15:59:05.259558Z"
+      "updated_at": "2026-08-12T03:37:48Z"
     },
     {
       "acceptance": [
@@ -58620,7 +58621,7 @@
         "source_version": null
       },
       "start_date": "2026-08-12",
-      "status": "active",
+      "status": "closed",
       "tags": [
         "authorization",
         "database",
@@ -58631,7 +58632,7 @@
       "template_version": "1.0.0",
       "title": "汎用 CRUD が Workspace の絞り込みを無視する (渡しても効かない)",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-11T16:31:20.492611Z"
+      "updated_at": "2026-08-12T03:37:47Z"
     },
     {
       "acceptance": [
@@ -58726,7 +58727,7 @@
         "source_version": null
       },
       "start_date": "2026-08-12",
-      "status": "active",
+      "status": "closed",
       "tags": [
         "performance",
         "api-design"
@@ -58736,7 +58737,7 @@
       "template_version": "1.0.0",
       "title": "効果測定の上位ランキングを画面側で切っている (件数が増えると破綻する)",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-11T16:51:06.717350Z"
+      "updated_at": "2026-08-12T00:53:03Z"
     },
     {
       "acceptance": [
@@ -58835,7 +58836,7 @@
         "source_version": null
       },
       "start_date": "2026-08-12",
-      "status": "active",
+      "status": "closed",
       "tags": [
         "ui-consistency",
         "api-design"
@@ -58845,7 +58846,7 @@
       "template_version": "1.0.0",
       "title": "ドキュメント・改善要望・利用者の一覧が検索語を受け取れない",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-11T16:51:53.476323Z"
+      "updated_at": "2026-08-12T00:30:23Z"
     },
     {
       "acceptance": [
@@ -60326,7 +60327,7 @@
         "source_version": null
       },
       "start_date": "2026-08-12",
-      "status": "active",
+      "status": "closed",
       "tags": [
         "dev-graph",
         "beads",
@@ -60338,7 +60339,7 @@
       "template_version": "1.0.0",
       "title": "OR-003残置195件を正規writerで一括整合する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-12T07:28:55.256144Z"
+      "updated_at": "2026-08-12T15:32:18Z"
     },
     {
       "acceptance": [
@@ -60562,7 +60563,7 @@
         "source_version": null
       },
       "start_date": "2026-08-12",
-      "status": "active",
+      "status": "closed",
       "tags": [
         "docs",
         "api",
@@ -60575,7 +60576,7 @@
       "template_version": "1.0.0",
       "title": "Claude Code等の外部環境からDocs CMSへ安全に同期する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-12T06:51:18Z"
+      "updated_at": "2026-08-12T09:52:37Z"
     },
     {
       "acceptance": [
@@ -61066,7 +61067,7 @@
         "source_version": null
       },
       "start_date": "2026-08-13",
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "elegant-review",
         "agent-kit",
@@ -61078,7 +61079,7 @@
       "template_version": "1.0.0",
       "title": "最新エージェントキットとデザインシステム改善を全配布面へ整合する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-13T07:21:30Z"
+      "updated_at": "2026-08-13T10:03:54Z"
     },
     {
       "acceptance": [
@@ -61428,7 +61429,7 @@
         "source_version": null
       },
       "start_date": "2026-08-13",
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "oidc",
         "cloudflare",
@@ -61440,7 +61441,7 @@
       "template_version": "1.0.0",
       "title": "本番OIDCスモークの着地契約ドリフトを解消する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-13T10:22:00Z"
+      "updated_at": "2026-08-13T11:42:29Z"
     },
     {
       "acceptance": [
@@ -65598,6 +65599,2628 @@
       "title": "GitHub issue ミラーの退役 仕様反映受領書",
       "tracker_binding": "none",
       "updated_at": "2026-08-15T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "seed 投入後、28 route それぞれについて 5 状態 (空/1件/大量/長文/エラー) へ到達する手順が存在し実行できる",
+        "各ドメインモデルの enum ステータスが全値、最低 1 件ずつ seed に含まれる (未使用値 0 件を機械検査する)",
+        "大量パターンが 50 件以上で、一覧のページング境界を跨ぐ",
+        "長文パターンが日本語の折返しを実際に発生させる長さを持つ",
+        "同じ seed を連続 2 回実行し、投入後の状態が一致する",
+        "ローカル以外の DB URL を指定した seed 実行が非 0 終了で拒否される",
+        "route × 状態の対応表に未カバーの組が 0 件であることを機械検査する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "feature",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-7xk9",
+        "linked_at": "2026-08-14T15:00:12Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "feature",
+          "candidate_path": "features/feat-demo-coverage-dataset.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "C14 マクロ分解 (確定 system-spec と 2026-08-14 の利用者要望 S1-S8 から導出)",
+      "completion_evidence": {
+        "completed_at": "2026-08-15T01:58:58Z",
+        "evidence_refs": [
+          "docs/features/feat-demo-coverage-dataset/release-notes.md",
+          "docs/features/feat-demo-coverage-dataset/final-review-notes.md",
+          "docs/features/feat-demo-coverage-dataset/evidence/index.md",
+          "docs/features/feat-demo-coverage-dataset/runbook.md",
+          "packages/db/scripts/demo-coverage/coverage-matrix.ts",
+          "architecture/harness-hub-testing-qa.md"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-15T01:59:30Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-14T00:00:00Z",
+      "depends_on": [],
+      "domain": "testing-qa",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "features/feat-demo-coverage-dataset.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "ローカル DB へ投入するだけで、対象 28 route のそれぞれについて 空 / 1 件 / 大量 (50 件以上) / 長文 / エラー の5 状態と、各ドメインの enum ステータス全値が画面上で再現でき、同じ seed を二度流しても結果が一致する状態。",
+      "graph_node_id": "feat-demo-coverage-dataset",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T13:10:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "画面を開いても空か 1 件しか無いため、大量件数での折返し・長文での横溢れ・エラー時の描画といった崩れが最も出やすい状態が一度も観測されていない。UI 崩れの自動検査に食わせる状態を先に用意しないと、データが薄いことによる「崩れていない」という偽の合格が出る。網羅的な確認用データを正本として整備し、全画面・全状態を人も機械も同じ入力で再現できるようにする。",
+      "related_nodes": [
+        "feat-domain-model-db",
+        "feat-metrics-tracking"
+      ],
+      "resource_scope": [
+        "scripts/seed",
+        "apps/hub/src/db",
+        "packages/*/src/fixtures"
+      ],
+      "scope_in": [
+        "対象 28 route と、各 route が描画する状態 (空/1件/大量50件以上/長文/エラー) の対応表の確定",
+        "各ドメインモデルの enum ステータス全値を最低 1 件ずつ含む fixture の定義",
+        "長文パターン (日本語の折返しが起きる見出し・説明文・タグ名) の明示的な収録",
+        "大量パターン (一覧の仮想化・ページング境界を跨ぐ 50 件以上) の収録",
+        "エラー状態 (取得失敗・権限不足・未同期) を画面から再現する手段",
+        "seed の冪等性 (二度流しても同じ状態に収束する) の担保",
+        "ローカル以外の DB URL を拒否する既存ガードの維持",
+        "seed 済み状態から特定 route の特定状態へ到達する手順の文書化"
+      ],
+      "scope_out": [
+        "本番・staging データベースへの投入 (ローカル専用ガードを緩めない)",
+        "実ブラウザ検査そのもの (feat-ui-integrity-audit-harness の担当)",
+        "UI 崩れの是正 (feat-ui-layout-remediation の担当)",
+        "顧客実データの取込み・匿名化",
+        "パフォーマンス負荷試験用の大規模データ (本 feature は表示網羅が目的で負荷が目的ではない)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-14T00:00:00Z",
+        "origin_kind": "generated",
+        "source_digest": "bb7f49362cd1ded1d01d1dd25023533bb066d799b9d0375180310087768d1d3b",
+        "source_path": "system-spec/testing-qa.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "done",
+      "tags": [
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "ui-integrity",
+        "S5"
+      ],
+      "target_date": null,
+      "template_id": "feature",
+      "template_version": "1.0.0",
+      "title": "全画面×全状態を網羅する確認用データセット (28 route × 空/1件/大量/長文/エラー × 全 enum 値)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-15T02:00:43.585473Z"
+    },
+    {
+      "acceptance": [
+        "COVERAGE_MATRIX から route 28・applicable state cell 105・runtime キー 168 を導出し、それぞれの母数を区別する",
+        "Next page.tsx と route 正本の不一致、母数 0、欠落、実 route 未到達は fail-closed になる",
+        "横溢れ・44px 操作域・意味セグメント内改行の negative fixture が検出器の生存を証明する",
+        "実 origin の代表 smoke と全 168 キー実行入口があり、実行していない受入範囲は未確認として残る",
+        "5 合成 fixture を 28 実画面の実走証拠に数えない"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-testing-qa",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "feature",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "feature",
+          "candidate_path": "features/feat-ui-integrity-audit-harness.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "C14 マクロ分解 (確定 system-spec と 2026-08-14 の利用者要望 S1-S8 から導出)",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-14T00:00:00Z",
+      "depends_on": [
+        "feat-demo-coverage-dataset"
+      ],
+      "domain": "testing-qa",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "features/feat-ui-integrity-audit-harness.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "COVERAGE_MATRIX の 28 route・105 applicable state cell と、28 route × 3 幅 × 2 theme = 168 runtime キーを別の母数として検査し、0 件・欠落・Next route 不一致を非 0 終了にする実アプリ監査契約。",
+      "graph_node_id": "feat-ui-integrity-audit-harness",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T00:00:00Z",
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "UI 崩れを全実 route で再現可能に監査する。既存の 5 合成 fixture を 28 実 route の証拠と誤認せず、COVERAGE_MATRIX から直接導出した母数を fail-closed で保護する。",
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "feat-dev-pipeline-improvement"
+      ],
+      "resource_scope": [
+        "tests/browser",
+        "apps/hub/src/app",
+        "packages/ui/src"
+      ],
+      "scope_in": [
+        "COVERAGE_MATRIX からの route/state 導出と Next page.tsx の静的 parity",
+        "360/768/1280 × light/dark の 168 runtime キー生成と実 origin runner",
+        "横溢れ・44px 未満操作域・意味セグメント内改行の検出",
+        "route/state/runtime の母数 0 ・不足・未到達を PASS にしない判定",
+        "通常テストから分離した browser audit 実行入口"
+      ],
+      "scope_out": [
+        "5 合成 fixture の 28 実 route への読み替え",
+        "未実行の 168 runtime キーを PASS と報告すること",
+        "検出した UI 崩れの是正",
+        "seed データ自体の整備"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-14T00:00:00Z",
+        "origin_kind": "generated",
+        "source_digest": "bb7f49362cd1ded1d01d1dd25023533bb066d799b9d0375180310087768d1d3b",
+        "source_path": "system-spec/testing-qa.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "macro-feature",
+        "testing-qa",
+        "browser-test",
+        "ui-integrity",
+        "S1"
+      ],
+      "target_date": null,
+      "template_id": "feature",
+      "template_version": "1.0.0",
+      "title": "実ブラウザによる全画面 UI 崩れ自動検査基盤 (28 route × 3 幅 × 2 テーマ)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-15T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "1280px の幅 212px のフルサイドバーで「使用状況・」/「削減効果」が意味境界 2 行となり、各 segment 内は折れない",
+        "360px はモバイル導線から完全なナビ文言と route へ到達できる",
+        "折返し位置は共通 UI の仕組みで実装され、画面別 CSS を複製しない",
+        "製品所有の印刷ボタンと window.print 起動導線は 0 件で、legal と print stylesheet は保持される",
+        "revision conflict/CAS 処理と既存テストは非退行である"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "feature",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "feature",
+          "candidate_path": "features/feat-ui-layout-remediation.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "C14 マクロ分解 (確定 system-spec と 2026-08-14 の利用者要望 S1-S8 から導出)",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-14T00:00:00Z",
+      "depends_on": [
+        "feat-ui-integrity-audit-harness"
+      ],
+      "domain": "ui-ux",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "features/feat-ui-layout-remediation.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "1280px のフルサイドバーで意味境界 2 行、360px でモバイル導線から全 route への到達、製品所有の印刷ボタン/`window.print` 導線 0 件を共通契約とする。",
+      "graph_node_id": "feat-ui-layout-remediation",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T00:00:00Z",
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "ナビの完全な文言を保ったまま意味境界でのみ折り、不要な製品所有の印刷起動導線だけを除去する。",
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "feat-ui-integrity-audit-harness",
+        "feat-post-signin-landing-surface"
+      ],
+      "resource_scope": [
+        "apps/hub/src/app",
+        "apps/hub/src/components",
+        "packages/ui/src"
+      ],
+      "scope_in": [
+        "Hub 側の完全 label と任意の意味 segment 宣言",
+        "共通 UI 側の segment 内 nowrap・segment 間改行",
+        "1280px のフルサイドバーでの意味境界 2 行確認",
+        "360px のモバイル導線から完全 label と route への到達確認",
+        "hearing detail の明示的な印刷 Button と window.print 起動のみ除去"
+      ],
+      "scope_out": [
+        "全文言の nowrap、サイドバー幅増加、画面別 CSS、ゼロ幅文字",
+        "legal コンテンツと print stylesheet の削除",
+        "存在しない印刷専用 URL の追加または到達不可要件",
+        "revision conflict/CAS 処理の変更",
+        "全ページ印刷の新規実装"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-14T00:00:00Z",
+        "origin_kind": "generated",
+        "source_digest": "8b9c1ca3e35c6a8a5e4eecf510aec342e4ccbd2dbca78c6c091196e058bcfa99",
+        "source_path": "system-spec/ui-ux.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "macro-feature",
+        "ui-ux",
+        "layout",
+        "line-break",
+        "print",
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "target_date": null,
+      "template_id": "feature",
+      "template_version": "1.0.0",
+      "title": "全画面の UI 崩れ是正と折返し位置の意図化・印刷導線の非表示",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-15T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "docs/features/feat-demo-coverage-dataset/requirements-baseline.md に goal-spec acceptance 7 件と scope_in 8 件・scope_out 5 件が過不足なく転記され、対象 28 route の一覧と route×状態(空/1件/大量/長文/エラー)対応表の骨子が明記されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-imlj",
+        "linked_at": "2026-08-14T15:00:16Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p01.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "goal-spec (goal-spec.json) と features/feat-demo-coverage-dataset.md の purpose/goal/scope_in 8 件/scope_out 5 件/acceptance 7 件を要件ベースラインへ確定転記する P01 タスク",
+      "completion_evidence": {
+        "completed_at": "2026-08-14T23:12:04Z",
+        "evidence_refs": [
+          "docs/features/feat-demo-coverage-dataset/requirements-baseline.md",
+          "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p01.md"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-14T23:15:00Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-14T13:38:08Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p01.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P01",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T13:10:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-demo-coverage-dataset",
+      "phase_ref": "P01",
+      "priority": null,
+      "project_id": "feature-package-feat-demo-coverage-dataset",
+      "pull_request_linkages": [],
+      "purpose": "feat-demo-coverage-dataset の P01 を実行する: 確認用データセット要件ベースライン確定 — 28 route × 5 状態 × enum 全値の対応表確定",
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "docs/features/feat-demo-coverage-dataset/requirements-baseline.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-demo-coverage-dataset/requirements-baseline.md"
+      ],
+      "scope_out": [
+        "published task spec の『スコープ外』節を正本とする"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-14T13:38:08Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/task-specs/phase-01-requirements.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "done",
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "requirements-baseline"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "確認用データセット要件ベースライン確定 — 28 route × 5 状態 × enum 全値の対応表確定",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-14T23:12:26.561866Z"
+    },
+    {
+      "acceptance": [
+        "architecture-decision-record.md に route×状態対応表のデータ構造・各ドメイン enum の全値一覧・長文/大量/エラー各パターンの生成規則・冪等性の実現方式 (削除→再作成)・ローカル専用ガード維持方針が明記されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-d4rz",
+        "linked_at": "2026-08-14T15:00:20Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p02.md",
+          "confidence": 0.88
+        }
+      ],
+      "classification_confidence": 0.88,
+      "classification_reason": "既存 packages/db/scripts/seed-local.ts のローカル専用ガード (isLocalDatabaseUrl) と削除→再作成による冪等パターンを踏襲しつつ、28 route × 5 状態 × enum 全値を機械検証可能な対応表として設計する P02 タスク",
+      "completion_evidence": {
+        "completed_at": "2026-08-14T23:15:32Z",
+        "evidence_refs": [
+          "docs/features/feat-demo-coverage-dataset/architecture-decision-record.md",
+          "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p02.md"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-14T23:16:00Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-14T13:38:08Z",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P01"
+      ],
+      "domain": "data",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p02.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P02",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T13:10:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-demo-coverage-dataset",
+      "phase_ref": "P02",
+      "priority": null,
+      "project_id": "feature-package-feat-demo-coverage-dataset",
+      "pull_request_linkages": [],
+      "purpose": "feat-demo-coverage-dataset の P02 を実行する: アーキテクチャ設計 — route×状態対応表・fixture データモデル・冪等 seed 契約の設計",
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "docs/features/feat-demo-coverage-dataset/architecture-decision-record.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-demo-coverage-dataset/architecture-decision-record.md"
+      ],
+      "scope_out": [
+        "published task spec の『スコープ外』節を正本とする"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-14T13:38:08Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/task-specs/phase-02-architecture.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "done",
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "architecture"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "アーキテクチャ設計 — route×状態対応表・fixture データモデル・冪等 seed 契約の設計",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-14T23:15:41.346025Z"
+    },
+    {
+      "acceptance": [
+        "design-review-notes.md に承認可否と、28 route×5状態対応表の未カバー 0 件方針・enum 全値網羅方式・冪等性実現方式・ローカル専用ガード非緩和の 4 論点への適合確認結果が明記されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-6kc4",
+        "linked_at": "2026-08-14T15:00:23Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p03.md",
+          "confidence": 0.86
+        }
+      ],
+      "classification_confidence": 0.86,
+      "classification_reason": "P02 で確定した route×状態対応表・enum 網羅方式・冪等性実現方式・ローカル専用ガード維持方針を、設計担当から独立した視点でレビューする P03 タスク",
+      "completion_evidence": {
+        "completed_at": "2026-08-14T23:22:39Z",
+        "evidence_refs": [
+          "docs/features/feat-demo-coverage-dataset/design-review-notes.md",
+          "docs/features/feat-demo-coverage-dataset/architecture-decision-record.md",
+          "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p03.md"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-15T00:05:00Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-14T13:38:08Z",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P02"
+      ],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p03.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P03",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T13:10:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-demo-coverage-dataset",
+      "phase_ref": "P03",
+      "priority": null,
+      "project_id": "feature-package-feat-demo-coverage-dataset",
+      "pull_request_linkages": [],
+      "purpose": "feat-demo-coverage-dataset の P03 を実行する: 独立設計レビュー — 対応表網羅性・冪等性設計・ローカル専用ガードの妥当性確認",
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "docs/features/feat-demo-coverage-dataset/design-review-notes.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-demo-coverage-dataset/design-review-notes.md"
+      ],
+      "scope_out": [
+        "published task spec の『スコープ外』節を正本とする"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-14T13:38:08Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/task-specs/phase-03-design-review.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "done",
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "design-review"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "独立設計レビュー — 対応表網羅性・冪等性設計・ローカル専用ガードの妥当性確認",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-14T23:22:51.142750Z"
+    },
+    {
+      "acceptance": [
+        "test-design.md に route×状態網羅性検査・enum 全値網羅検査・冪等性 (2 回連続実行で状態一致)・ローカル以外 URL 拒否・長文折返し発生長・大量50件以上ページング境界の 6 テストカテゴリの合否基準が明記され、packages/db/__tests__/seed-coverage/ に対応するテストスタブが作成されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-v0kv",
+        "linked_at": "2026-08-14T15:00:27Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p04.md",
+          "confidence": 0.87
+        }
+      ],
+      "classification_confidence": 0.87,
+      "classification_reason": "P03 で承認された設計に基づき、P05 実装の受入契約となるテストスタブ (網羅性・冪等性・ローカル専用ガード拒否・長文折返し検出・大量ページング境界) を作成する P04 タスク",
+      "completion_evidence": {
+        "completed_at": "2026-08-14T23:40:07Z",
+        "evidence_refs": [
+          "docs/features/feat-demo-coverage-dataset/test-design.md",
+          "packages/db/__tests__/seed-coverage/coverage-matrix.test.ts",
+          "packages/db/__tests__/seed-coverage/enum-coverage.test.ts",
+          "packages/db/__tests__/seed-coverage/idempotency.test.ts",
+          "packages/db/__tests__/seed-coverage/local-guard.test.ts",
+          "packages/db/__tests__/seed-coverage/long-text.test.ts",
+          "packages/db/__tests__/seed-coverage/bulk-boundary.test.ts",
+          "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p04.md"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-15T00:45:00Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-14T13:38:08Z",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P03"
+      ],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p04.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P04",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T13:10:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-demo-coverage-dataset",
+      "phase_ref": "P04",
+      "priority": null,
+      "project_id": "feature-package-feat-demo-coverage-dataset",
+      "pull_request_linkages": [],
+      "purpose": "feat-demo-coverage-dataset の P04 を実行する: テストファースト設計 — 網羅性検査・冪等性・ローカル専用ガードのテストスタブ作成",
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "docs/features/feat-demo-coverage-dataset/test-design.md",
+        "packages/db/__tests__/seed-coverage/"
+      ],
+      "scope_in": [
+        "docs/features/feat-demo-coverage-dataset/test-design.md",
+        "packages/db/__tests__/seed-coverage/"
+      ],
+      "scope_out": [
+        "published task spec の『スコープ外』節を正本とする"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-14T13:38:08Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/task-specs/phase-04-test-design.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "done",
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "test-design"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "テストファースト設計 — 網羅性検査・冪等性・ローカル専用ガードのテストスタブ作成",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-14T23:40:28.661806Z"
+    },
+    {
+      "acceptance": [
+        "P04 のテストスタブがすべて green であること、および pnpm --filter @harness-hub/db build/test の成功ログが得られている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-klhc",
+        "linked_at": "2026-08-14T15:00:30Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p05.md",
+          "confidence": 0.89
+        }
+      ],
+      "classification_confidence": 0.89,
+      "classification_reason": "P03 承認済み設計と P04 テストスタブに基づき、既存 packages/db/scripts/seed-local.ts のローカル専用ガードを再利用しつつ 28 route × 5 状態 × enum 全値を投入する seed-coverage スクリプトと route×状態対応表の機械検証スクリプトを実装する P05 タスク",
+      "completion_evidence": {
+        "completed_at": "2026-08-15T00:51:09Z",
+        "evidence_refs": [
+          "packages/db/scripts/seed-coverage.ts",
+          "packages/db/scripts/verify-demo-coverage-matrix.ts",
+          "packages/db/scripts/demo-coverage/seed.ts",
+          "docs/features/feat-demo-coverage-dataset/route-state-matrix.md",
+          "packages/db/vitest.config.ts",
+          "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p05.md"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-15T00:52:00Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-14T13:38:08Z",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P04"
+      ],
+      "domain": "data",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p05.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P05",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T13:10:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-demo-coverage-dataset",
+      "phase_ref": "P05",
+      "priority": null,
+      "project_id": "feature-package-feat-demo-coverage-dataset",
+      "pull_request_linkages": [],
+      "purpose": "feat-demo-coverage-dataset の P05 を実行する: 実装 — seed-coverage スクリプトと route×状態対応表・網羅性検査スクリプトの実装",
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "packages/db/scripts/seed-coverage.ts",
+        "packages/db/scripts/verify-demo-coverage-matrix.ts",
+        "docs/features/feat-demo-coverage-dataset/route-state-matrix.md"
+      ],
+      "scope_in": [
+        "packages/db/scripts/seed-coverage.ts",
+        "packages/db/scripts/verify-demo-coverage-matrix.ts",
+        "docs/features/feat-demo-coverage-dataset/route-state-matrix.md"
+      ],
+      "scope_out": [
+        "published task spec の『スコープ外』節を正本とする"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-14T13:38:08Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/task-specs/phase-05-implementation.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "done",
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "implementation"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "実装 — seed-coverage スクリプトと route×状態対応表・網羅性検査スクリプトの実装",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-15T00:52:31.112503Z"
+    },
+    {
+      "acceptance": [
+        "test-run-report.md に P04 定義の 6 テストカテゴリ全件の pass/fail 結果と、同一 seed を連続 2 回実行した際の投入後状態が一致することの記録がある"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-khxe",
+        "linked_at": "2026-08-14T15:00:36Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p06.md",
+          "confidence": 0.86
+        }
+      ],
+      "classification_confidence": 0.86,
+      "classification_reason": "P04 のテストスタブ (網羅性・冪等性・ローカル専用ガード拒否・長文折返し・大量ページング境界) を P05 実装に対して実行し結果を記録する P06 タスク",
+      "completion_evidence": {
+        "completed_at": "2026-08-15T00:56:40Z",
+        "evidence_refs": [
+          "docs/features/feat-demo-coverage-dataset/test-run-report.md",
+          "packages/db/__tests__/seed-coverage/coverage-matrix.test.ts",
+          "packages/db/__tests__/seed-coverage/enum-coverage.test.ts",
+          "packages/db/__tests__/seed-coverage/idempotency.test.ts",
+          "packages/db/__tests__/seed-coverage/local-guard.test.ts",
+          "packages/db/__tests__/seed-coverage/long-text.test.ts",
+          "packages/db/__tests__/seed-coverage/bulk-boundary.test.ts",
+          "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p06.md"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-15T00:57:00Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-14T13:38:08Z",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P05"
+      ],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p06.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P06",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T13:10:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-demo-coverage-dataset",
+      "phase_ref": "P06",
+      "priority": null,
+      "project_id": "feature-package-feat-demo-coverage-dataset",
+      "pull_request_linkages": [],
+      "purpose": "feat-demo-coverage-dataset の P06 を実行する: テスト実行 — 冪等性・網羅性・ローカル専用ガード拒否テストの実行と結果記録",
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "docs/features/feat-demo-coverage-dataset/test-run-report.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-demo-coverage-dataset/test-run-report.md"
+      ],
+      "scope_out": [
+        "published task spec の『スコープ外』節を正本とする"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-14T13:38:08Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/task-specs/phase-06-test-run.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "done",
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "test-run"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "テスト実行 — 冪等性・網羅性・ローカル専用ガード拒否テストの実行と結果記録",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-15T00:57:41.872795Z"
+    },
+    {
+      "acceptance": [
+        "acceptance-report.md に acceptance 7 項目それぞれの pass/fail 判定と test-run-report.md への参照が記載されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-0ifl",
+        "linked_at": "2026-08-14T15:00:48Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p07.md",
+          "confidence": 0.86
+        }
+      ],
+      "classification_confidence": 0.86,
+      "classification_reason": "P06 のテスト結果を goal-spec の acceptance 7 項目に照らして受入判定する P07 タスク",
+      "completion_evidence": {
+        "completed_at": "2026-08-15T01:08:52Z",
+        "evidence_refs": [
+          "docs/features/feat-demo-coverage-dataset/acceptance-report.md",
+          "docs/features/feat-demo-coverage-dataset/test-run-report.md",
+          "docs/features/feat-demo-coverage-dataset/route-state-matrix.md",
+          "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p07.md"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-15T01:09:30Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-14T13:38:08Z",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P06"
+      ],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p07.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P07",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T13:10:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-demo-coverage-dataset",
+      "phase_ref": "P07",
+      "priority": null,
+      "project_id": "feature-package-feat-demo-coverage-dataset",
+      "pull_request_linkages": [],
+      "purpose": "feat-demo-coverage-dataset の P07 を実行する: 受入 — goal-spec acceptance 7 項目の確認",
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "docs/features/feat-demo-coverage-dataset/acceptance-report.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-demo-coverage-dataset/acceptance-report.md"
+      ],
+      "scope_out": [
+        "published task spec の『スコープ外』節を正本とする"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-14T13:38:08Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/task-specs/phase-07-acceptance.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "done",
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "acceptance"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "受入 — goal-spec acceptance 7 項目の確認",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-15T01:10:16.656675Z"
+    },
+    {
+      "acceptance": [
+        "refactoring-migration-note.md に、P05 実装が既存 schema (packages/db/schema/**) を変更していないことの確認結果と、migration 不要の判定根拠が記録されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-8yz8",
+        "linked_at": "2026-08-14T15:00:53Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p08.md",
+          "confidence": 0.84
+        }
+      ],
+      "classification_confidence": 0.84,
+      "classification_reason": "本 feature は既存 schema (packages/db/schema/**) への列追加・変更を伴わず fixture データ投入のみを行うため、migration 不要と判定し根拠を記録する P08 タスク (feature-execution-package-contract.md により P08 は N/A 判定時も常設される)",
+      "completion_evidence": {
+        "completed_at": "2026-08-15T01:12:47Z",
+        "evidence_refs": [
+          "docs/features/feat-demo-coverage-dataset/refactoring-migration-note.md",
+          "docs/features/feat-demo-coverage-dataset/acceptance-report.md",
+          "packages/db/scripts/seed-coverage.ts",
+          "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p08.md"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-15T01:13:20Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-14T13:38:08Z",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P07"
+      ],
+      "domain": "data",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p08.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P08",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T13:10:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-demo-coverage-dataset",
+      "phase_ref": "P08",
+      "priority": null,
+      "project_id": "feature-package-feat-demo-coverage-dataset",
+      "pull_request_linkages": [],
+      "purpose": "feat-demo-coverage-dataset の P08 を実行する: リファクタリング/マイグレーション — 既存 schema 変更要否の確認 (N/A 判定)",
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "docs/features/feat-demo-coverage-dataset/refactoring-migration-note.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-demo-coverage-dataset/refactoring-migration-note.md"
+      ],
+      "scope_out": [
+        "published task spec の『スコープ外』節を正本とする"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-14T13:38:08Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/task-specs/phase-08-refactoring-migration.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "done",
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "migration"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "リファクタリング/マイグレーション — 既存 schema 変更要否の確認 (N/A 判定)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-15T01:13:45.256622Z"
+    },
+    {
+      "acceptance": [
+        "quality-assurance-report.md に route×状態未カバー0件検査・enum全値網羅検査・冪等性検査・ローカル専用ガード拒否検査の 4 種の確認結果が記録されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-4cpq",
+        "linked_at": "2026-08-14T15:00:57Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p09.md",
+          "confidence": 0.85
+        }
+      ],
+      "classification_confidence": 0.85,
+      "classification_reason": "P06 テスト結果と P08 migration 不要判定を踏まえ、品質ゲート (route×状態網羅性0未カバー・enum全値網羅・冪等性・ローカル専用ガード) の充足を確認する P09 タスク",
+      "completion_evidence": {
+        "completed_at": "2026-08-15T01:18:43Z",
+        "evidence_refs": [
+          "docs/features/feat-demo-coverage-dataset/quality-assurance-report.md",
+          "docs/features/feat-demo-coverage-dataset/test-run-report.md",
+          "packages/db/scripts/verify-demo-coverage-matrix.ts",
+          "packages/db/vitest.config.ts",
+          "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p09.md"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-15T01:19:10Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-14T13:38:08Z",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P08"
+      ],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p09.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P09",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T13:10:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-demo-coverage-dataset",
+      "phase_ref": "P09",
+      "priority": null,
+      "project_id": "feature-package-feat-demo-coverage-dataset",
+      "pull_request_linkages": [],
+      "purpose": "feat-demo-coverage-dataset の P09 を実行する: 品質保証 — 網羅性/冪等性/ローカル専用ガードの品質ゲート確認",
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "docs/features/feat-demo-coverage-dataset/quality-assurance-report.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-demo-coverage-dataset/quality-assurance-report.md"
+      ],
+      "scope_out": [
+        "published task spec の『スコープ外』節を正本とする"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-14T13:38:08Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/task-specs/phase-09-quality-assurance.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "done",
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "quality-assurance"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "品質保証 — 網羅性/冪等性/ローカル専用ガードの品質ゲート確認",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-15T01:19:45.598707Z"
+    },
+    {
+      "acceptance": [
+        "final-review-notes.md に、seed 冪等性・ローカル以外 DB URL 拒否・route×状態対応表未カバー0件の 3 constraint それぞれの充足判定と根拠成果物への参照が記載されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-l8ap",
+        "linked_at": "2026-08-14T15:01:02Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p10.md",
+          "confidence": 0.85
+        }
+      ],
+      "classification_confidence": 0.85,
+      "classification_reason": "P01-P09 の成果物を根拠に、seed の冪等性・ローカル以外 DB URL 拒否・route×状態対応表の未カバー0件という 3 つの constraint の充足を独立した視点で最終判定する P10 タスク",
+      "completion_evidence": {
+        "completed_at": "2026-08-15T01:26:53Z",
+        "evidence_refs": [
+          "docs/features/feat-demo-coverage-dataset/final-review-notes.md",
+          "docs/features/feat-demo-coverage-dataset/quality-assurance-report.md",
+          "docs/features/feat-demo-coverage-dataset/route-state-matrix.md",
+          "packages/db/scripts/seed-coverage.ts",
+          "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p10.md"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-15T01:27:20Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-14T13:38:08Z",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P09"
+      ],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p10.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P10",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T13:10:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-demo-coverage-dataset",
+      "phase_ref": "P10",
+      "priority": null,
+      "project_id": "feature-package-feat-demo-coverage-dataset",
+      "pull_request_linkages": [],
+      "purpose": "feat-demo-coverage-dataset の P10 を実行する: 最終独立レビュー — quality_constraints の充足判定",
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "docs/features/feat-demo-coverage-dataset/final-review-notes.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-demo-coverage-dataset/final-review-notes.md"
+      ],
+      "scope_out": [
+        "published task spec の『スコープ外』節を正本とする"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-14T13:38:08Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/task-specs/phase-10-final-review.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "done",
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "final-review"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "最終独立レビュー — quality_constraints の充足判定",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-15T01:27:51.189174Z"
+    },
+    {
+      "acceptance": [
+        "evidence/index.md から P06/P07/P09/P10 の各成果物へのリンクと、それぞれの再実行コマンドが辿れる"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-h2hi",
+        "linked_at": "2026-08-14T15:01:05Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p11.md",
+          "confidence": 0.83
+        }
+      ],
+      "classification_confidence": 0.83,
+      "classification_reason": "P06/P07/P09/P10 の検証結果を再現可能な証跡として索引化する P11 タスク",
+      "completion_evidence": {
+        "completed_at": "2026-08-15T01:30:17Z",
+        "evidence_refs": [
+          "docs/features/feat-demo-coverage-dataset/evidence/index.md",
+          "docs/features/feat-demo-coverage-dataset/final-review-notes.md",
+          "docs/features/feat-demo-coverage-dataset/test-run-report.md",
+          "docs/features/feat-demo-coverage-dataset/quality-assurance-report.md",
+          "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p11.md"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-15T01:30:45Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-14T13:38:08Z",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P10"
+      ],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p11.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P11",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T13:10:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-demo-coverage-dataset",
+      "phase_ref": "P11",
+      "priority": null,
+      "project_id": "feature-package-feat-demo-coverage-dataset",
+      "pull_request_linkages": [],
+      "purpose": "feat-demo-coverage-dataset の P11 を実行する: エビデンス収集 — 再現可能な検証証跡の集約",
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "docs/features/feat-demo-coverage-dataset/evidence/"
+      ],
+      "scope_in": [
+        "docs/features/feat-demo-coverage-dataset/evidence/"
+      ],
+      "scope_out": [
+        "published task spec の『スコープ外』節を正本とする"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-14T13:38:08Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/task-specs/phase-11-evidence.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "done",
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "evidence"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "エビデンス収集 — 再現可能な検証証跡の集約",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-15T01:31:33.640795Z"
+    },
+    {
+      "acceptance": [
+        "runbook.md に seed 実行手順・28 route 全件について 5 状態それぞれへ到達する手順・ローカル以外 URL 実行時の拒否確認手順の 3 項目が記載されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-e35q",
+        "linked_at": "2026-08-14T15:01:09Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p12.md",
+          "confidence": 0.84
+        }
+      ],
+      "classification_confidence": 0.84,
+      "classification_reason": "P11 のエビデンスを踏まえ、seed 投入手順と seed 済み状態から特定 route の特定状態へ到達する手順を runbook 化する P12 タスク (feat-ui-integrity-audit-harness が本 runbook を前提データとして消費する)",
+      "completion_evidence": {
+        "completed_at": "2026-08-15T01:37:51Z",
+        "evidence_refs": [
+          "docs/features/feat-demo-coverage-dataset/runbook.md",
+          "docs/features/feat-demo-coverage-dataset/evidence/index.md",
+          "packages/db/scripts/demo-coverage/coverage-matrix.ts",
+          "packages/db/scripts/seed-coverage.ts",
+          "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p12.md"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-15T01:38:20Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-14T13:38:08Z",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P11"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p12.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P12",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T13:10:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-demo-coverage-dataset",
+      "phase_ref": "P12",
+      "priority": null,
+      "project_id": "feature-package-feat-demo-coverage-dataset",
+      "pull_request_linkages": [],
+      "purpose": "feat-demo-coverage-dataset の P12 を実行する: ドキュメント/運用 — route×状態到達手順の runbook 作成",
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "docs/features/feat-demo-coverage-dataset/runbook.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-demo-coverage-dataset/runbook.md"
+      ],
+      "scope_out": [
+        "published task spec の『スコープ外』節を正本とする"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-14T13:38:08Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/task-specs/phase-12-documentation-operations.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "done",
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "documentation",
+        "operations"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "ドキュメント/運用 — route×状態到達手順の runbook 作成",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-15T01:40:46.663298Z"
+    },
+    {
+      "acceptance": [
+        "release-notes.md に、本 feature が本番・staging への配布物を持たない旨の判定根拠と、feat-ui-integrity-audit-harness が本成果物を前提データとして参照可能になったことの確認記録がある"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-m5no",
+        "linked_at": "2026-08-14T15:01:12Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p13.md",
+          "confidence": 0.84
+        }
+      ],
+      "classification_confidence": 0.84,
+      "classification_reason": "本 feature はローカル専用 seed ツールであり本番・staging への配布物を持たないため (scope_out: 本番・staging データベースへの投入)、P12 の runbook を踏まえて close-out receipt を N/A 判定として記録する P13 タスク",
+      "completion_evidence": {
+        "completed_at": "2026-08-15T01:54:06Z",
+        "evidence_refs": [
+          "docs/features/feat-demo-coverage-dataset/release-notes.md",
+          "architecture/harness-hub-testing-qa.md",
+          "docs/features/feat-demo-coverage-dataset/runbook.md",
+          "docs/features/feat-demo-coverage-dataset/evidence/index.md",
+          "issues/spec-writeback-qa236-20260815.md",
+          "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p13.md"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-15T01:54:40Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-14T13:38:08Z",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P12"
+      ],
+      "domain": "operations",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p13.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P13",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T13:10:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-demo-coverage-dataset",
+      "phase_ref": "P13",
+      "priority": null,
+      "project_id": "feature-package-feat-demo-coverage-dataset",
+      "pull_request_linkages": [],
+      "purpose": "feat-demo-coverage-dataset の P13 を実行する: リリース/デプロイ — ローカル専用ツールの close-out (実デプロイなし)",
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "docs/features/feat-demo-coverage-dataset/release-notes.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-demo-coverage-dataset/release-notes.md"
+      ],
+      "scope_out": [
+        "published task spec の『スコープ外』節を正本とする"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-14T13:38:08Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/task-specs/phase-13-release-deploy.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "done",
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "release"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "リリース/デプロイ — ローカル専用ツールの close-out (実デプロイなし)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-15T01:55:39.188586Z"
+    },
+    {
+      "acceptance": [
+        "全 route が印刷プレビューで内容欠落なく表示される"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-wx4h",
+        "linked_at": "2026-08-15T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/print-all-pages-20260815.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "現時点で用途が無いため非表示にした印刷機能を、必要になった時点で全ページ対応で復活させる",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": "manual",
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "cde592e9730aaf1a40b269f3e246d4f71a2e8d252de7d690cdc6cf062bc9b223",
+        "evaluator": "2026-08-15 dev-graph 11 verb 一括実行の実測・既存ドラフト棚卸しで確認",
+        "evidence_ref": "eval-log/dev-graph/"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-15T00:00:00.000000Z",
+      "depends_on": [],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/print-all-pages-20260815.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "全 28 route が印刷レイアウトを持ち、印刷メニューから一括出力できる状態",
+      "graph_node_id": "issue-print-all-pages-20260815",
+      "implementation_readiness": {
+        "checked_at": "2026-08-15T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "low",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "現時点で用途が無いため非表示にした印刷機能を、必要になった時点で全ページ対応で復活させる",
+      "related_nodes": [],
+      "resource_scope": [
+        "apps/hub/src/app/",
+        "packages/ui/src/"
+      ],
+      "scope_in": [
+        "全 route の print CSS",
+        "印刷対象の選択 UI",
+        "印刷エントリの再表示"
+      ],
+      "scope_out": [
+        "現時点での実装 (非表示のまま据え置く)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-15T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-15",
+      "status": "draft",
+      "tags": [
+        "print",
+        "future",
+        "ui"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "全ページを印刷できるようにする (将来課題)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-14T21:58:16.230914Z"
+    },
+    {
+      "acceptance": [
+        "判断とその根拠が文書に残っている",
+        "反映する場合は C01/C03 経由であること",
+        "確定章の既存記述が削除されていないこと"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/spec-writeback-qa236-20260815.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "確定章 writeback の要否判断という単発の作業であり、feature 分解を要しない独立 issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "f72093c7f26a5751797963d4cd1ae546b5b3c4eebf73cb07588de76a75c89605",
+        "evaluator": "feat-demo-coverage-dataset P13 close-out",
+        "evidence_ref": "docs/features/feat-demo-coverage-dataset/release-notes.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-15T01:50:00Z",
+      "depends_on": [],
+      "domain": "testing-qa",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/spec-writeback-qa236-20260815.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "system-spec/testing-qa.md への writeback が『不要と判断して記録済み』か『正規手順で反映済み』のどちらかに決着している",
+      "graph_node_id": "issue-spec-writeback-qa236-20260815",
+      "implementation_readiness": {
+        "checked_at": "2026-08-15T01:50:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "確定章への実行結果 writeback の要否を決め、必要なら C01/C03 の正規手順で反映する",
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "system-spec/testing-qa.md",
+        "architecture/harness-hub-testing-qa.md",
+        "issues/spec-writeback-qa236-20260815.md"
+      ],
+      "scope_in": [
+        "writeback 要否の判断と根拠の記録",
+        "必要時の C01 R4-reopen -> 再確定 -> C03 compile の実行"
+      ],
+      "scope_out": [
+        "確定章の単一 writer を迂回した直接編集",
+        "guard-confirmed-chapter-overwrite.py の緩和",
+        "feat-demo-coverage-dataset の他 phase の再実行"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-15T01:50:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "docs/features/feat-demo-coverage-dataset/release-notes.md",
+        "source_plugin": "manual-close-out",
+        "source_version": "0.1.0"
+      },
+      "start_date": "2026-08-15",
+      "status": "active",
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "spec-writeback",
+        "qa-236",
+        "follow-up"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "system-spec/testing-qa.md へ qa-236 実行結果を writeback するか判断し反映する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-15T01:50:00Z"
+    },
+    {
+      "acceptance": [
+        "RED が既知改行・route/軸母数・操作域検出器・印刷 action で意図して失敗し、実装後に PASS する",
+        "route 母数 28、実走キー 168、state cell 105 が区別され、0 件は PASS にならない",
+        "「使用状況・削減効果」が 1280px のフルサイドバーで意味境界 2 行となり、360px ではモバイル導線から到達できる",
+        "hearing detail に製品所有の印刷ボタンと window.print 起動がなく、revision conflict/CAS 処理は保持される",
+        "変更範囲で矛盾なし・漏れなし・整合性あり・依存関係整合がすべて PASS する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-testing-qa",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-s36m",
+        "linked_at": "2026-08-15T02:41:44Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/ui-integrity-remediation-slice-20260815.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "2つの macro feature を完了偽装せず、今回実装可能な監査・既知改行・印刷導線・仕様整合の縦切りを独立 issue として追跡する",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": "manual",
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "b751b1c860899cb14806045b29685825499b5487dff29f6a185cd16d2377cb05",
+        "evaluator": "2026-08-15 elegant-review 30思考法分析とワークツリー実測",
+        "evidence_ref": "features/feat-ui-integrity-audit-harness.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-15T00:00:00.000000Z",
+      "depends_on": [],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/ui-integrity-remediation-slice-20260815.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "COVERAGE_MATRIX を route/state 正本とした 28 route・168 実走キー・105 state cell の契約と、意味 segment 改行、製品所有の印刷 action 0 件をテストで固定する",
+      "graph_node_id": "issue-ui-integrity-remediation-slice-20260815",
+      "implementation_readiness": {
+        "checked_at": "2026-08-15T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "5つの合成 fixture を 28 実画面と誤認しない fail-closed 監査にし、既知のナビ改行と不要な製品所有印刷導線を最小境界で是正する",
+      "related_nodes": [
+        "feat-ui-integrity-audit-harness",
+        "feat-ui-layout-remediation",
+        "feat-demo-coverage-dataset"
+      ],
+      "resource_scope": [
+        "apps/hub/tests/browser/",
+        "apps/hub/src/components/shell/",
+        "apps/hub/src/app/(dashboard)/sheets/[id]/",
+        "packages/ui/src/shell/",
+        "packages/db/scripts/demo-coverage/coverage-matrix.ts",
+        "system-spec/ui-ux.md",
+        "system-spec/testing-qa.md"
+      ],
+      "scope_in": [
+        "COVERAGE_MATRIX と実 Next route の静的 parity および route×width×theme 実走キー契約",
+        "横溢れ・44px 未満操作域・意図しない語中改行を検出する実ブラウザランナー契約",
+        "Hub 側の完全 label と任意の意味 segment 宣言、packages/ui 側の segment 内 nowrap・segment 間改行",
+        "hearing detail の明示的な印刷 action と window.print 起動のみ除去",
+        "168 走査軸と 105 state cell を区別した仕様統合"
+      ],
+      "scope_out": [
+        "5合成 fixture の 28実routeへの読み替え",
+        "全体 nowrap、サイドバー幅増加、画面別 CSS、ゼロ幅文字",
+        "legal コンテンツと print stylesheet の削除",
+        "PR 作成・commit・push・デプロイ"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-15T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-15",
+      "status": "draft",
+      "tags": [
+        "ui-integrity",
+        "browser-test",
+        "navigation",
+        "print",
+        "vertical-slice"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "UI崩れ監査と意味境界改行を実画面契約へ接続する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-15T02:42:26.769495Z"
+    },
+    {
+      "acceptance": [
+        "編集領域に Markdown を入力すると、別画面へ切り替えることなくその場で変換結果が表示される",
+        "対応記法の一覧が定義され、対応外記法の扱いが決まっている",
+        "初期状態でカテゴリとタグが選択可能な語彙として存在する",
+        "一般利用者がカテゴリ・タグを新規追加できず、選択のみ可能である",
+        "管理者がカテゴリ・タグを追加でき、追加後に一般利用者が選択できる",
+        "ドキュメント作成画面が Card 枠に閉じず全画面幅を使う",
+        "全画面幅レイアウトが 360/768/1280 の 3 幅で横溢れ 0 件である",
+        "カテゴリ・タグでドキュメントを絞り込める"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-backend"
+      ],
+      "artifact_kind": "feature",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "feature",
+          "candidate_path": "features/feat-docs-live-authoring.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "C14 マクロ分解 (確定 system-spec と 2026-08-14 の利用者要望 S1-S8 から導出)",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-14T00:00:00Z",
+      "depends_on": [
+        "feat-docs-cms"
+      ],
+      "domain": "ui-ux",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "features/feat-docs-live-authoring.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "ドキュメント作成画面が、Markdown 記述をその場で変換表示する単一の編集領域を持ち、初期装備のカテゴリ・タグから選択でき (管理者は追加でき)、Card 枠に閉じない全画面幅で編集できる状態。",
+      "graph_node_id": "feat-docs-live-authoring",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T00:00:00Z",
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "ドキュメント作成が、編集とプレビューの往復・分類語彙の後付け・Card 枠に閉じた狭い執筆領域という3 つの摩擦を抱えており、書く行為そのものが妨げられている。書いた内容がその場で結果として見え、分類が最初から用意され、画面幅を使って書ける状態にして、執筆を中断させない。",
+      "related_nodes": [
+        "feat-user-org-admin",
+        "feat-workspace-governance",
+        "feat-classification-vocabulary-parity"
+      ],
+      "resource_scope": [
+        "apps/hub/src/app",
+        "apps/hub/src/components",
+        "apps/hub/src/db",
+        "packages/ui/src"
+      ],
+      "scope_in": [
+        "編集とプレビューを分けない単一領域でのライブ Markdown 変換",
+        "対応する Markdown 記法の範囲の決定",
+        "カテゴリ・タグの初期語彙の定義と初期投入",
+        "一般利用者は既存のカテゴリ・タグから選択のみ可能とする権限",
+        "管理者によるカテゴリ・タグの追加",
+        "カテゴリ・タグとドキュメントの関連付けと、それによる絞り込み",
+        "Card 枠に閉じない全画面幅の編集レイアウト",
+        "全画面幅レイアウトが自動検査 (feat-ui-integrity-audit-harness) の横溢れ判定を満たすこと",
+        "長文ドキュメントのスクロール時の編集領域の挙動"
+      ],
+      "scope_out": [
+        "複数人の同時編集 (リアルタイム共同編集)",
+        "ブロック単位のドラッグ&ドロップ並べ替え",
+        "データベースビュー・ボード等の Notion 固有の高機能",
+        "ドキュメントの保存・版管理・公開そのもの (feat-docs-cms の担当)",
+        "カテゴリ・タグの語彙統制ポリシー (feat-classification-vocabulary-parity の担当)",
+        "画像・ファイルの本文への埋め込み",
+        "既存ドキュメントの記法一括移行"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-15T13:37:01Z",
+        "origin_kind": "generated",
+        "source_digest": "df3a55215acaabb543e3dd5288f893470f928e2fb44622fef177ac540880e39f",
+        "source_path": "system-spec/ui-ux.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "macro-feature",
+        "ui-ux",
+        "docs",
+        "editor",
+        "taxonomy",
+        "S7"
+      ],
+      "target_date": null,
+      "template_id": "feature",
+      "template_version": "1.0.0",
+      "title": "ドキュメント作成の Notion 型化 (ライブ Markdown・カテゴリ/タグ・全画面幅)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-15T13:37:01Z"
+    },
+    {
+      "acceptance": [
+        "改善要望の投稿時に画像を添付でき、投稿後に要望と関連付いて保存される",
+        "要望の閲覧時に添付画像が表示される",
+        "許可外の形式または上限超過のファイルが拒否され、理由が利用者に提示される",
+        "他テナントの添付画像への参照が認可で拒否される",
+        "動画ファイルが受け付けられず、対象外である旨が利用者に提示される",
+        "添付画像がテナントのデータ保持方針の対象として扱われる",
+        "添付なしの改善要望が従来どおり投稿でき非退行である"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "artifact_kind": "feature",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "feature",
+          "candidate_path": "features/feat-feedback-image-attachment.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "C14 マクロ分解 (確定 system-spec と 2026-08-14 の利用者要望 S1-S8 から導出)",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-14T00:00:00Z",
+      "depends_on": [
+        "feat-feedback-loop"
+      ],
+      "domain": "ui-ux",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "features/feat-feedback-image-attachment.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "改善要望の投稿時に画像 (スクリーンショットを含む) を添付でき、添付された画像が要望の閲覧時に表示され、テナント境界を越えて参照されない状態。",
+      "graph_node_id": "feat-feedback-image-attachment",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T00:00:00Z",
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "改善要望が文章だけで届くため、UI の崩れのように「見れば一目で分かる」問題を文章で再現する負担が報告者にかかり、受け手も再現に時間を要している。画面の状態をそのまま添えられるようにして、報告と再現の間にある翻訳を無くす。動画は容量を理由に利用者が明示的に対象外とした。",
+      "related_nodes": [
+        "feat-tenant-data-retention",
+        "feat-workspace-governance"
+      ],
+      "resource_scope": [
+        "apps/hub/src/app",
+        "apps/hub/src/components",
+        "apps/hub/src/db"
+      ],
+      "scope_in": [
+        "改善要望投稿時の画像添付 (選択・貼り付け・ドラッグ&ドロップの受入方式の決定)",
+        "受け入れる画像形式とサイズ上限の決定",
+        "添付画像の保存先と、要望本体との関連付け",
+        "要望閲覧時の添付画像の表示",
+        "テナント境界を越えた添付画像の参照を拒否する認可",
+        "添付画像のデータ保持期間の既存方針への接続",
+        "添付失敗時 (形式違反・容量超過・保存失敗) の利用者への提示"
+      ],
+      "scope_out": [
+        "動画の添付 (利用者が容量を理由に明示的に対象外とした)",
+        "画像内の個人情報の自動マスキング",
+        "画像の編集・注釈付与",
+        "改善要望の起票・一覧・状態遷移そのもの (feat-feedback-loop の担当)",
+        "アプリ内からの画面キャプチャ機能の実装 (利用者が撮った画像の添付を範囲とする)",
+        "添付画像の全文検索・類似画像検索"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-15T13:37:01Z",
+        "origin_kind": "generated",
+        "source_digest": "df3a55215acaabb543e3dd5288f893470f928e2fb44622fef177ac540880e39f",
+        "source_path": "system-spec/ui-ux.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "macro-feature",
+        "ui-ux",
+        "feedback",
+        "attachment",
+        "S4"
+      ],
+      "target_date": null,
+      "template_id": "feature",
+      "template_version": "1.0.0",
+      "title": "改善要望への画像添付 (スクリーンショットを含む・動画は対象外)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-15T13:37:01Z"
+    },
+    {
+      "acceptance": [
+        "3 種類以上のパレットが定義され、各パレットが light / dark の 2 モードを持つ",
+        "利用者がパレットとモードを切り替えられ、再読込後も選択が保持される",
+        "切替 UI が各パレットの参考画像を提示する",
+        "参考画像がパレット定義から生成され、定義変更後に再生成されていない画像を検知できる",
+        "パレットが選択されるたびに実績が記録され、パレット別の選択数を集計できる",
+        "自動検査が全パレット × 2 モードで実行され、いずれのパレットでも横溢れ 0 件である",
+        "配色が全てトークン経由で参照され、画面側に色の直接指定が新規に増えていない"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-data"
+      ],
+      "artifact_kind": "feature",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "feature",
+          "candidate_path": "features/feat-theme-palette-catalog.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "C14 マクロ分解 (確定 system-spec と 2026-08-14 の利用者要望 S1-S8 から導出)",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-14T00:00:00Z",
+      "depends_on": [
+        "feat-ui-integrity-audit-harness"
+      ],
+      "domain": "ui-ux",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "features/feat-theme-palette-catalog.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "3〜4 種類の配色パレットがそれぞれ light / dark を持ち、利用者が切り替えられ、切替画面が各パレットの参考画像を提示し、どのパレットが選択されたかが集計できる状態。",
+      "graph_node_id": "feat-theme-palette-catalog",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T00:00:00Z",
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "現在の配色はグレー系の light / dark しか無く、利用者が好む色合いを選べない。さらに利用者の狙いはパレットを増やすこと自体ではなく、どの色合いが受け入れられるかを選択実績から実測して将来の既定を選定することにある。パレットの追加と選択実績の計測を同時に用意し、選定の根拠を後から作り直さなくてよい状態にする。",
+      "related_nodes": [
+        "feat-ui-integrity-audit-harness",
+        "feat-ui-layout-remediation",
+        "feat-metrics-tracking",
+        "feat-user-org-admin"
+      ],
+      "resource_scope": [
+        "packages/ui/src",
+        "apps/hub/src/app",
+        "apps/hub/src/db"
+      ],
+      "scope_in": [
+        "3〜4 種類の配色パレットの定義 (現行グレー系を含み、ブルー系・明色寄り・暗色寄りを加える)",
+        "各パレットの light / dark 2 モードの定義",
+        "パレットの色をトークンとして定義し、画面ごとの直接指定にしない",
+        "配色切替 UI と、切替結果の永続化",
+        "各パレットの参考画像 (実画面のスクリーンショット) の生成と切替 UI での提示",
+        "参考画像が実装のパレットと乖離したときに検知する仕組み",
+        "パレット選択実績の記録と、パレット別の選択数を集計できる形での保持",
+        "既存の自動検査 (feat-ui-integrity-audit-harness) の検査軸を 2 テーマから全パレット × 2 モードへ拡張"
+      ],
+      "scope_out": [
+        "利用者ごとの自由な色指定 (カスタムカラーピッカー)",
+        "選択実績の分析ダッシュボード・可視化 (集計可能な形での保持までを範囲とする)",
+        "人気に基づく既定パレットの自動切替 (選定は将来の人の判断)",
+        "テナント単位でのパレット強制 (本 feature は個人選択とする)",
+        "UI 崩れの是正 (feat-ui-layout-remediation の担当)",
+        "ロゴ・イラストなど配色トークン外の意匠変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-15T13:37:01Z",
+        "origin_kind": "generated",
+        "source_digest": "df3a55215acaabb543e3dd5288f893470f928e2fb44622fef177ac540880e39f",
+        "source_path": "system-spec/ui-ux.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "macro-feature",
+        "ui-ux",
+        "theme",
+        "palette",
+        "metrics",
+        "S6"
+      ],
+      "target_date": null,
+      "template_id": "feature",
+      "template_version": "1.0.0",
+      "title": "配色テーマの複数パレット化 (3〜4 パレット × light/dark・参考画像・選択実績の計測)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-15T13:37:01Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

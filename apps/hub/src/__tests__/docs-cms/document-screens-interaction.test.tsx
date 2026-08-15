@@ -149,11 +149,11 @@ async function fillField(input: HTMLInputElement | HTMLTextAreaElement, value: s
 
 /** dynamic() import の解決を待つ (next/dynamic の module 解決は microtask だけでは終わらないため)。 */
 async function waitUntil(predicate: () => boolean): Promise<void> {
-  for (let attempt = 0; attempt < 20; attempt += 1) {
-    if (predicate()) return;
-    await act(async () => new Promise((resolve) => setTimeout(resolve, 0)));
+  const deadline = Date.now() + 2_000;
+  while (!predicate()) {
+    if (Date.now() >= deadline) throw new Error('条件が満たされないまま待機がタイムアウトしました');
+    await act(async () => new Promise((resolve) => setTimeout(resolve, 10)));
   }
-  if (!predicate()) throw new Error('条件が満たされないまま待機がタイムアウトしました');
 }
 
 function inputByLabel(text: string): HTMLInputElement {

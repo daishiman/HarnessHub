@@ -9,11 +9,11 @@ priority: "high"
 start_date: "2026-08-10"
 target_date: null
 iteration: null
-title: "Dual Catalog polling の fatal 即時停止と visibility 復帰再開"
+title: "Dual Catalog polling: fatal 即時停止と visibility 復帰再開"
 owners: ["daishiman"]
 created_at: "2026-08-10T00:00:00Z"
-updated_at: "2026-08-10T11:21:31.986602Z"
-status: "active"
+updated_at: "2026-08-10T12:20:01Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-dual-catalog-web","issue-hub-cwv-tbt-over-budget-20260724"]
 resource_scope: ["apps/hub/src/components/catalog","apps/hub/src/components/publish","apps/hub/src/lib/catalog","apps/hub/src/__tests__/dual-catalog-web"]

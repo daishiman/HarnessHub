@@ -12,8 +12,8 @@ iteration: null
 title: "品質保証 — 露出範囲の非退行と検査の発火性の固定"
 owners: ["daishiman"]
 created_at: "2026-08-07T12:10:05Z"
-updated_at: "2026-08-07T14:14:24.332236Z"
-status: "active"
+updated_at: "2026-08-08T01:58:33Z"
+status: "closed"
 depends_on: ["SYS-BUILD-IDENTITY-P08"]
 related_nodes: ["feat-build-identity-deploy-freshness","arch-harness-hub-infrastructure","arch-harness-hub-testing-qa"]
 resource_scope: ["apps/hub/src/__tests__","docs/features/feat-build-identity-deploy-freshness/quality-report.md"]

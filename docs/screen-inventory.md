@@ -113,7 +113,7 @@ review_evidence: eval-log/elegant-review/harness-hub-information-design-20260811
 | **P2 構築パイプライン** | S12「構築へ」→ S13 7 工程 → publish 工程で PublishRequest 接続 → S01/S02 | **current MVP**: カードは title、起点種別、滞留から算出した risk。担当者・ETA は current の永続化/API 契約に無いため、根拠のない空欄を作らない。**target design**: source 参照・assignee・ETA・project metadata は Build ADR §2 の後続差分として current UI から分離する。公開工程は二重状態を持たず PublishRequest を正本にする | current は member 閲覧、workspace-admin 以上の隣接工程操作、認証・tenant scope、PublishRequest 前提、監査を満たす。target design の metadata 完了を current surface の完了表示に混ぜない |
 
 - mock のシート status 表示「下書き」は backend の `received` に対応させ、UI の統一ラベルは「受付」とする。保存値は `received/generating/review/completed` の 4 値から増やさない。
-- mock の「PDF でダウンロード」は S12 の認可済み表示データを印刷用レイアウトへ変換する。salary など権限外の値を export に混入させない。
+- mock の「PDF でダウンロード」は、製品所有の印刷ボタンを出さず、print stylesheet だけを残す（2026-08-15 / `HarnessHub-s36m`）。salary など権限外の値を印刷 DOM に混入させない。全ページ印刷は `HarnessHub-wx4h`。
 - 「ダウンロード」は target 共通の利用者向け語彙とし、`skill` は Stage 0 で確定した marketplace/installer 導線、`web_app` は URL 起動を返す。生 ZIP の直接配布を既定導線にはしない。
 
 ## 画面遷移図

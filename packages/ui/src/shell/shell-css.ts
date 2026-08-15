@@ -111,6 +111,12 @@ export function buildShellCss(): string {
   display: none;
 }
 
+/* 意味分節の内側は分断しない。ラベル全体に nowrap を当てず、
+   Hub が明示した segment の間だけを共通層の改行境界にする。 */
+[data-hh-meaning-segment] {
+  white-space: nowrap;
+}
+
 .hh-shell__mobile-only {
   display: revert;
 }
@@ -380,6 +386,16 @@ ${mediaUp('lg')} {
 
   .hh-shell__nav-label {
     display: inline;
+  }
+
+  /* segment を宣言した短いナビだけを意味境界ごとに積む。
+     サイドバー幅は 212px の正本を保ち、未宣言ラベルの折り返しには干渉しない。 */
+  .hh-shell__nav-label--segmented {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    line-height: var(--hh-line-height-tight);
   }
 
   .hh-shell__nav-group-title {

@@ -12,8 +12,8 @@ iteration: null
 title: "並列実行のときだけ落ちるテスト WOP-W-003 の待ち方を直す"
 owners: ["daishiman"]
 created_at: "2026-08-12T00:00:00Z"
-updated_at: "2026-08-11T15:49:49.190691Z"
-status: "active"
+updated_at: "2026-08-11T23:45:38Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["apps/hub/src/__tests__/web-only-publish/wizard-and-entries.test.tsx"]

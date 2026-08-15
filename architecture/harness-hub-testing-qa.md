@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub testing-qa アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-24T12:35:34Z"
-updated_at: "2026-08-09T00:00:00Z"
+updated_at: "2026-08-15T01:45:07.831833Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure","arch-harness-hub-dev-workflow"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"15d8e29b3bb327bc9e758986542dfbd0a0b95f5b109e09f737b383a2fc8c6dc7","evaluator":"validate-coverage-matrix.py --require-complete (qa-217)","evidence_ref":"system-spec/testing-qa.md"}
-source_lineage: {"imported_at":"2026-08-09T00:00:00Z","origin_kind":"system-spec-harness","source_digest":"15d8e29b3bb327bc9e758986542dfbd0a0b95f5b109e09f737b383a2fc8c6dc7","source_path":"system-spec/testing-qa.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"bb7f49362cd1ded1d01d1dd25023533bb066d799b9d0375180310087768d1d3b","evaluator":"validate-coverage-matrix.py --require-complete (qa-236)","evidence_ref":"system-spec/testing-qa.md"}
+source_lineage: {"imported_at":"2026-08-14T14:10:00Z","origin_kind":"system-spec-harness","source_digest":"bb7f49362cd1ded1d01d1dd25023533bb066d799b9d0375180310087768d1d3b","source_path":"system-spec/testing-qa.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-testing-qa.md","confidence":0.95}]
@@ -44,7 +44,7 @@ github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"not_applicable"}
-implementation_readiness: {"checked_at":"2026-07-24T12:35:34Z","missing_sections":[],"status":"complete"}
+implementation_readiness: {"checked_at":"2026-08-14T14:10:00Z","missing_sections":[],"status":"complete"}
 ---
 
 # Harness Hub testing-qa アーキテクチャ (system-spec 取込)
@@ -53,10 +53,10 @@ implementation_readiness: {"checked_at":"2026-07-24T12:35:34Z","missing_sections
 
 ## 正本 (source of truth)
 
-- [system-spec/testing-qa.md](../system-spec/testing-qa.md) (sha256: `15d8e29b3bb327bc…` (完全値は frontmatter source_lineage.source_digest))
+- [system-spec/testing-qa.md](../system-spec/testing-qa.md) (sha256: `bb7f49362cd1ded1…` (完全値は frontmatter source_lineage.source_digest))
 
 - confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py --require-complete` → **PASS** (`system-spec/spec-state.json`)
-- 取込日時: 2026-08-07T12:30:00Z / plugin: system-spec-harness v0.1.0
+- 取込日時: 2026-08-14T14:10:00Z / plugin: system-spec-harness v0.1.0
 
 ## 要件定義書 (上位概念)
 
@@ -295,6 +295,6 @@ elegant-review の signal は `contradiction / omission / inconsistency / depend
 正本契約と証拠対応は [production coverage smoke 仕様](../specs/harness-hub-production-coverage-smoke-addendum.md) と [仕様反映受領書](../docs/features/feat-post-signin-scope-routing/production-coverage-smoke-spec-reflection-receipt.md) を参照する。
 
 ## 関連追補
-
 - system-spec provenance / C19 受理境界の詳細は [testing-qa provenance C19 追補](../docs/features/feat-dev-pipeline-improvement/testing-qa-provenance-c19-addenda.md) を参照する。
 - 2026-08-10 publish smoke (`HarnessHub-pf5o`) は Device Flow 短命 token で CI 結線。S3 `needs_fix` は次の channel 競合検査より先に cancel して active slot を解放する。cancel 後は DB status 再確認と観測 `channel_slot_released` で slot 返却を固定し、service 層は `needs_fix` 占有の T4-A を持つ。2026-08-11 cancel 回収 (`HarnessHub-aauo`) は `smoke_fixture_leases` を削除 authority とし best-effort `if: always()` と独立 sweeper で再試行する（SLA なし、本番 force-cancel 証跡は未取得）。詳細は [production coverage smoke 追補](../specs/harness-hub-production-coverage-smoke-addendum.md)、[channel slot 検証受領書](../docs/features/feat-hub-foundation/production-smoke-channel-slot-verification-spec-reflection-receipt.md)、[2026-08-11 受領書](../docs/features/feat-dual-catalog-web/mvp-ops-reliability-20260811-spec-reflection-receipt.md)。
+- 2026-08-15 UI 崩れ縦切り (`HarnessHub-s36m`): 確認用データと母数分離 (28 / 105 / 168) の正本は [リリースノート](../docs/features/feat-demo-coverage-dataset/release-notes.md) と [受領書](../docs/features/feat-ui-integrity-audit-harness/ui-integrity-remediation-slice-spec-reflection-receipt.md)。qa-076〜qa-217 は維持する。

@@ -12,8 +12,8 @@ iteration: null
 title: "リリース判定と確定仕様・アーキテクチャへの書き戻し"
 owners: ["daishiman"]
 created_at: "2026-08-07T12:10:05Z"
-updated_at: "2026-08-07T14:16:31.150745Z"
-status: "active"
+updated_at: "2026-08-08T01:58:40Z"
+status: "closed"
 depends_on: ["SYS-BUILD-IDENTITY-P12"]
 related_nodes: ["feat-build-identity-deploy-freshness","arch-harness-hub-infrastructure","arch-harness-hub-testing-qa"]
 resource_scope: ["docs/features/feat-build-identity-deploy-freshness/release-record.md","docs/features/feat-post-signin-landing-surface/landing-observability-investigation.md","architecture/harness-hub-infrastructure.md"]

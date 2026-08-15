@@ -12,8 +12,8 @@ iteration: null
 title: "validate-build-trace.py の doc_coverage schema drift で全 skill-design 評価に REG-001 (high) が誤計上される"
 owners: ["daishiman"]
 created_at: "2026-07-24T08:23:21Z"
-updated_at: "2026-08-04T03:58:30.768368Z"
-status: "draft"
+updated_at: "2026-08-08T02:49:34Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["issues/sys-build-trace-doc-coverage-schema-drift-20260723.md","scripts/validate-build-trace.py","tests/scripts-root/test_root__validate_build_trace_doc_coverage.py"]

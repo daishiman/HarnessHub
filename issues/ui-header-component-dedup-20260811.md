@@ -12,8 +12,8 @@ iteration: null
 title: "見出し帯の部品が 2 種類ある状態を解消する"
 owners: ["daishiman"]
 created_at: "2026-08-11T00:00:00Z"
-updated_at: "2026-08-11T10:45:30Z"
-status: "active"
+updated_at: "2026-08-12T03:37:40Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["packages/ui/src/layout/primitives.tsx","packages/ui/src/layout/ScreenHeader.tsx","specs/harness-hub-ui-foundation-addendum.md"]

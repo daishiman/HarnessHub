@@ -1,0 +1,1238 @@
+{
+  "schema_version": "1.0.0",
+  "source_digest": "sha256:a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+  "promotion_receipt": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/atomic-promotion-receipt.json",
+  "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+  "parent_feature": "feat-demo-coverage-dataset",
+  "expected_count": 13,
+  "phase_refs": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05",
+    "P06",
+    "P07",
+    "P08",
+    "P09",
+    "P10",
+    "P11",
+    "P12",
+    "P13"
+  ],
+  "binding_intents": {
+    "SYS-DEMO-COVERAGE-DATASET-P01": "beads",
+    "SYS-DEMO-COVERAGE-DATASET-P02": "beads",
+    "SYS-DEMO-COVERAGE-DATASET-P03": "beads",
+    "SYS-DEMO-COVERAGE-DATASET-P04": "beads",
+    "SYS-DEMO-COVERAGE-DATASET-P05": "beads",
+    "SYS-DEMO-COVERAGE-DATASET-P06": "beads",
+    "SYS-DEMO-COVERAGE-DATASET-P07": "beads",
+    "SYS-DEMO-COVERAGE-DATASET-P08": "beads",
+    "SYS-DEMO-COVERAGE-DATASET-P09": "beads",
+    "SYS-DEMO-COVERAGE-DATASET-P10": "beads",
+    "SYS-DEMO-COVERAGE-DATASET-P11": "beads",
+    "SYS-DEMO-COVERAGE-DATASET-P12": "beads",
+    "SYS-DEMO-COVERAGE-DATASET-P13": "beads"
+  },
+  "nodes": [
+    {
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P01",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "確認用データセット要件ベースライン確定 — 28 route × 5 状態 × enum 全値の対応表確定",
+      "project_id": "feature-package-feat-demo-coverage-dataset",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "requirements-baseline"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-14T13:38:08Z",
+      "updated_at": "2026-08-14T13:38:08Z",
+      "depends_on": [],
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "docs/features/feat-demo-coverage-dataset/requirements-baseline.md"
+      ],
+      "parent_feature": "feat-demo-coverage-dataset",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "phase_ref": "P01",
+      "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p01.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/plan-findings.json",
+        "evaluated_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/task-specs/phase-01-requirements.md",
+        "source_version": "0.1.0",
+        "source_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "imported_at": "2026-08-14T13:38:08Z"
+      },
+      "classification_confidence": 0.9,
+      "classification_reason": "goal-spec (goal-spec.json) と features/feat-demo-coverage-dataset.md の purpose/goal/scope_in 8 件/scope_out 5 件/acceptance 7 件を要件ベースラインへ確定転記する P01 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.9,
+          "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p01.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T13:10:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P02",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "アーキテクチャ設計 — route×状態対応表・fixture データモデル・冪等 seed 契約の設計",
+      "project_id": "feature-package-feat-demo-coverage-dataset",
+      "domain": "data",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "architecture"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-14T13:38:08Z",
+      "updated_at": "2026-08-14T13:38:08Z",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P01"
+      ],
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "docs/features/feat-demo-coverage-dataset/architecture-decision-record.md"
+      ],
+      "parent_feature": "feat-demo-coverage-dataset",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "phase_ref": "P02",
+      "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p02.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/plan-findings.json",
+        "evaluated_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/task-specs/phase-02-architecture.md",
+        "source_version": "0.1.0",
+        "source_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "imported_at": "2026-08-14T13:38:08Z"
+      },
+      "classification_confidence": 0.88,
+      "classification_reason": "既存 packages/db/scripts/seed-local.ts のローカル専用ガード (isLocalDatabaseUrl) と削除→再作成による冪等パターンを踏襲しつつ、28 route × 5 状態 × enum 全値を機械検証可能な対応表として設計する P02 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.88,
+          "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p02.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T13:10:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P03",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "独立設計レビュー — 対応表網羅性・冪等性設計・ローカル専用ガードの妥当性確認",
+      "project_id": "feature-package-feat-demo-coverage-dataset",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "design-review"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-14T13:38:08Z",
+      "updated_at": "2026-08-14T13:38:08Z",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P02"
+      ],
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "docs/features/feat-demo-coverage-dataset/design-review-notes.md"
+      ],
+      "parent_feature": "feat-demo-coverage-dataset",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "phase_ref": "P03",
+      "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p03.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/plan-findings.json",
+        "evaluated_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/task-specs/phase-03-design-review.md",
+        "source_version": "0.1.0",
+        "source_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "imported_at": "2026-08-14T13:38:08Z"
+      },
+      "classification_confidence": 0.86,
+      "classification_reason": "P02 で確定した route×状態対応表・enum 網羅方式・冪等性実現方式・ローカル専用ガード維持方針を、設計担当から独立した視点でレビューする P03 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.86,
+          "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p03.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T13:10:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P04",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "テストファースト設計 — 網羅性検査・冪等性・ローカル専用ガードのテストスタブ作成",
+      "project_id": "feature-package-feat-demo-coverage-dataset",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "test-design"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-14T13:38:08Z",
+      "updated_at": "2026-08-14T13:38:08Z",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P03"
+      ],
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "docs/features/feat-demo-coverage-dataset/test-design.md",
+        "packages/db/__tests__/seed-coverage/"
+      ],
+      "parent_feature": "feat-demo-coverage-dataset",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "phase_ref": "P04",
+      "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p04.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/plan-findings.json",
+        "evaluated_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/task-specs/phase-04-test-design.md",
+        "source_version": "0.1.0",
+        "source_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "imported_at": "2026-08-14T13:38:08Z"
+      },
+      "classification_confidence": 0.87,
+      "classification_reason": "P03 で承認された設計に基づき、P05 実装の受入契約となるテストスタブ (網羅性・冪等性・ローカル専用ガード拒否・長文折返し検出・大量ページング境界) を作成する P04 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.87,
+          "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p04.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T13:10:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P05",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "実装 — seed-coverage スクリプトと route×状態対応表・網羅性検査スクリプトの実装",
+      "project_id": "feature-package-feat-demo-coverage-dataset",
+      "domain": "data",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "implementation"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-14T13:38:08Z",
+      "updated_at": "2026-08-14T13:38:08Z",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P04"
+      ],
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "packages/db/scripts/seed-coverage.ts",
+        "packages/db/scripts/verify-demo-coverage-matrix.ts",
+        "docs/features/feat-demo-coverage-dataset/route-state-matrix.md"
+      ],
+      "parent_feature": "feat-demo-coverage-dataset",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "phase_ref": "P05",
+      "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p05.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/plan-findings.json",
+        "evaluated_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/task-specs/phase-05-implementation.md",
+        "source_version": "0.1.0",
+        "source_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "imported_at": "2026-08-14T13:38:08Z"
+      },
+      "classification_confidence": 0.89,
+      "classification_reason": "P03 承認済み設計と P04 テストスタブに基づき、既存 packages/db/scripts/seed-local.ts のローカル専用ガードを再利用しつつ 28 route × 5 状態 × enum 全値を投入する seed-coverage スクリプトと route×状態対応表の機械検証スクリプトを実装する P05 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.89,
+          "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p05.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T13:10:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P06",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "テスト実行 — 冪等性・網羅性・ローカル専用ガード拒否テストの実行と結果記録",
+      "project_id": "feature-package-feat-demo-coverage-dataset",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "test-run"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-14T13:38:08Z",
+      "updated_at": "2026-08-14T13:38:08Z",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P05"
+      ],
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "docs/features/feat-demo-coverage-dataset/test-run-report.md"
+      ],
+      "parent_feature": "feat-demo-coverage-dataset",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "phase_ref": "P06",
+      "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p06.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/plan-findings.json",
+        "evaluated_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/task-specs/phase-06-test-run.md",
+        "source_version": "0.1.0",
+        "source_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "imported_at": "2026-08-14T13:38:08Z"
+      },
+      "classification_confidence": 0.86,
+      "classification_reason": "P04 のテストスタブ (網羅性・冪等性・ローカル専用ガード拒否・長文折返し・大量ページング境界) を P05 実装に対して実行し結果を記録する P06 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.86,
+          "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p06.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T13:10:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P07",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "受入 — goal-spec acceptance 7 項目の確認",
+      "project_id": "feature-package-feat-demo-coverage-dataset",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "acceptance"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-14T13:38:08Z",
+      "updated_at": "2026-08-14T13:38:08Z",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P06"
+      ],
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "docs/features/feat-demo-coverage-dataset/acceptance-report.md"
+      ],
+      "parent_feature": "feat-demo-coverage-dataset",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "phase_ref": "P07",
+      "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p07.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/plan-findings.json",
+        "evaluated_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/task-specs/phase-07-acceptance.md",
+        "source_version": "0.1.0",
+        "source_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "imported_at": "2026-08-14T13:38:08Z"
+      },
+      "classification_confidence": 0.86,
+      "classification_reason": "P06 のテスト結果を goal-spec の acceptance 7 項目に照らして受入判定する P07 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.86,
+          "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p07.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T13:10:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P08",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "リファクタリング/マイグレーション — 既存 schema 変更要否の確認 (N/A 判定)",
+      "project_id": "feature-package-feat-demo-coverage-dataset",
+      "domain": "data",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "migration"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-14T13:38:08Z",
+      "updated_at": "2026-08-14T13:38:08Z",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P07"
+      ],
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "docs/features/feat-demo-coverage-dataset/refactoring-migration-note.md"
+      ],
+      "parent_feature": "feat-demo-coverage-dataset",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "phase_ref": "P08",
+      "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p08.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/plan-findings.json",
+        "evaluated_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/task-specs/phase-08-refactoring-migration.md",
+        "source_version": "0.1.0",
+        "source_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "imported_at": "2026-08-14T13:38:08Z"
+      },
+      "classification_confidence": 0.84,
+      "classification_reason": "本 feature は既存 schema (packages/db/schema/**) への列追加・変更を伴わず fixture データ投入のみを行うため、migration 不要と判定し根拠を記録する P08 タスク (feature-execution-package-contract.md により P08 は N/A 判定時も常設される)",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.84,
+          "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p08.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T13:10:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P09",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "品質保証 — 網羅性/冪等性/ローカル専用ガードの品質ゲート確認",
+      "project_id": "feature-package-feat-demo-coverage-dataset",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "quality-assurance"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-14T13:38:08Z",
+      "updated_at": "2026-08-14T13:38:08Z",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P08"
+      ],
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "docs/features/feat-demo-coverage-dataset/quality-assurance-report.md"
+      ],
+      "parent_feature": "feat-demo-coverage-dataset",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "phase_ref": "P09",
+      "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p09.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/plan-findings.json",
+        "evaluated_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/task-specs/phase-09-quality-assurance.md",
+        "source_version": "0.1.0",
+        "source_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "imported_at": "2026-08-14T13:38:08Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "P06 テスト結果と P08 migration 不要判定を踏まえ、品質ゲート (route×状態網羅性0未カバー・enum全値網羅・冪等性・ローカル専用ガード) の充足を確認する P09 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p09.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T13:10:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P10",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "最終独立レビュー — quality_constraints の充足判定",
+      "project_id": "feature-package-feat-demo-coverage-dataset",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "final-review"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-14T13:38:08Z",
+      "updated_at": "2026-08-14T13:38:08Z",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P09"
+      ],
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "docs/features/feat-demo-coverage-dataset/final-review-notes.md"
+      ],
+      "parent_feature": "feat-demo-coverage-dataset",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "phase_ref": "P10",
+      "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p10.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/plan-findings.json",
+        "evaluated_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/task-specs/phase-10-final-review.md",
+        "source_version": "0.1.0",
+        "source_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "imported_at": "2026-08-14T13:38:08Z"
+      },
+      "classification_confidence": 0.85,
+      "classification_reason": "P01-P09 の成果物を根拠に、seed の冪等性・ローカル以外 DB URL 拒否・route×状態対応表の未カバー0件という 3 つの constraint の充足を独立した視点で最終判定する P10 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.85,
+          "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p10.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T13:10:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P11",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "エビデンス収集 — 再現可能な検証証跡の集約",
+      "project_id": "feature-package-feat-demo-coverage-dataset",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "evidence"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-14T13:38:08Z",
+      "updated_at": "2026-08-14T13:38:08Z",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P10"
+      ],
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "docs/features/feat-demo-coverage-dataset/evidence/"
+      ],
+      "parent_feature": "feat-demo-coverage-dataset",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "phase_ref": "P11",
+      "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p11.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/plan-findings.json",
+        "evaluated_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/task-specs/phase-11-evidence.md",
+        "source_version": "0.1.0",
+        "source_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "imported_at": "2026-08-14T13:38:08Z"
+      },
+      "classification_confidence": 0.83,
+      "classification_reason": "P06/P07/P09/P10 の検証結果を再現可能な証跡として索引化する P11 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.83,
+          "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p11.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T13:10:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P12",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "ドキュメント/運用 — route×状態到達手順の runbook 作成",
+      "project_id": "feature-package-feat-demo-coverage-dataset",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "documentation",
+        "operations"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-14T13:38:08Z",
+      "updated_at": "2026-08-14T13:38:08Z",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P11"
+      ],
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "docs/features/feat-demo-coverage-dataset/runbook.md"
+      ],
+      "parent_feature": "feat-demo-coverage-dataset",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "phase_ref": "P12",
+      "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p12.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/plan-findings.json",
+        "evaluated_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/task-specs/phase-12-documentation-operations.md",
+        "source_version": "0.1.0",
+        "source_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "imported_at": "2026-08-14T13:38:08Z"
+      },
+      "classification_confidence": 0.84,
+      "classification_reason": "P11 のエビデンスを踏まえ、seed 投入手順と seed 済み状態から特定 route の特定状態へ到達する手順を runbook 化する P12 タスク (feat-ui-integrity-audit-harness が本 runbook を前提データとして消費する)",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.84,
+          "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p12.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T13:10:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P13",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "リリース/デプロイ — ローカル専用ツールの close-out (実デプロイなし)",
+      "project_id": "feature-package-feat-demo-coverage-dataset",
+      "domain": "operations",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "release"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-14T13:38:08Z",
+      "updated_at": "2026-08-14T13:38:08Z",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P12"
+      ],
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "docs/features/feat-demo-coverage-dataset/release-notes.md"
+      ],
+      "parent_feature": "feat-demo-coverage-dataset",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "phase_ref": "P13",
+      "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p13.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/plan-findings.json",
+        "evaluated_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/task-specs/phase-13-release-deploy.md",
+        "source_version": "0.1.0",
+        "source_digest": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+        "imported_at": "2026-08-14T13:38:08Z"
+      },
+      "classification_confidence": 0.84,
+      "classification_reason": "本 feature はローカル専用 seed ツールであり本番・staging への配布物を持たないため (scope_out: 本番・staging データベースへの投入)、P12 の runbook を踏まえて close-out receipt を N/A 判定として記録する P13 タスク",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.84,
+          "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p13.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T13:10:00Z"
+      }
+    }
+  ]
+}

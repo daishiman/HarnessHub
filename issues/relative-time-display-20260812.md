@@ -12,8 +12,8 @@ iteration: null
 title: "日時に「3 日前」のような相対表記を併記する"
 owners: ["daishiman"]
 created_at: "2026-08-12T00:00:00Z"
-updated_at: "2026-08-11T15:51:59.068553Z"
-status: "active"
+updated_at: "2026-08-12T03:37:45Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["packages/ui/src/index.ts"]

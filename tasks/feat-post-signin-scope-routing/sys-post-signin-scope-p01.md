@@ -12,8 +12,8 @@ iteration: null
 title: "要件ベースライン確定 — scope 解決 2 系統・サインイン後着地先解決・open redirect 防止・deny-by-default 非退行の要件確定"
 owners: ["daishiman"]
 created_at: "2026-08-02T12:47:00Z"
-updated_at: "2026-08-04T03:49:14.420172Z"
-status: "active"
+updated_at: "2026-08-04T07:31:30Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-post-signin-scope-routing","arch-harness-hub-frontend","arch-harness-hub-security"]
 resource_scope: ["docs/features/feat-post-signin-scope-routing/requirements-baseline.md"]

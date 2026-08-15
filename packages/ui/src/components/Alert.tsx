@@ -1,9 +1,9 @@
 'use client';
 
 /** 通知・エラー・空状態の表示。「平易な日本語 + 次の一手」を型で強制する統一フォーマット。 */
-import type { CSSProperties, ReactNode } from 'react';
+import { type CSSProperties, cloneElement, isValidElement, type ReactNode } from 'react';
 import { type StatusTone, statusToneColors } from '../i18n/status-vocabulary.js';
-import { colorVar, radiusVar, spaceVar } from '../internal/style.js';
+import { colorVar, radiusVar, spaceVar, touchTargetStyle } from '../internal/style.js';
 import { useUi } from '../theme/UiProvider.js';
 
 export interface AlertProps {
@@ -43,9 +43,17 @@ export function Alert({ tone, title, description, action, live = 'polite', style
     >
       <strong>{title}</strong>
       {description ? <span style={{ lineHeight: 'var(--hh-line-height-normal)' }}>{description}</span> : null}
-      {action ? <div>{action}</div> : null}
+      {action ? <div>{withTouchTarget(action)}</div> : null}
     </div>
   );
+}
+
+/** Alert の次の一手は生の link も Button も受けるため、操作要素自体に共通タップ領域を合成する。 */
+function withTouchTarget(action: ReactNode): ReactNode {
+  if (!isValidElement<{ readonly style?: CSSProperties | undefined }>(action)) return action;
+  return cloneElement(action, {
+    style: { ...touchTargetStyle, ...action.props.style },
+  });
 }
 
 export interface ErrorStateProps {

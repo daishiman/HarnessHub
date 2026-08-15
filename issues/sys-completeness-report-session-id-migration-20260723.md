@@ -12,8 +12,8 @@ iteration: null
 title: "completeness-report.json を session_id 付き実 fork 監査で再生成する (x4o migration)"
 owners: ["daishiman"]
 created_at: "2026-07-23T00:11:08Z"
-updated_at: "2026-07-25T14:30:15Z"
-status: "draft"
+updated_at: "2026-08-08T05:03:44Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-bd-external-ref-orphan-nodes-20260725","issue-orphan-external-ref-backlog-disposition-20260726"]
 resource_scope: []

@@ -9,10 +9,10 @@ priority: "high"
 start_date: "2026-08-08"
 target_date: null
 iteration: null
-title: "system-spec import の見出し契約と architecture readiness を一致させる"
+title: "dev-graph run-dev-graph-system-spec: specification見出し不整合でC02登録が構造的に失敗する"
 owners: ["daishiman"]
 created_at: "2026-08-08T10:00:00Z"
-updated_at: "2026-08-09T21:00:02.437743Z"
+updated_at: "2026-08-09T21:05:41Z"
 status: "done"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow","arch-harness-hub-testing-qa"]

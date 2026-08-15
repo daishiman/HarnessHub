@@ -64,6 +64,16 @@ describe('TID-PNAV: 共通シェルのナビゲーション href 生成', () => 
     expect(links.get('使用状況・削減効果')).toBe('/tracking?tenant=tenant-a&workspace=ws-1');
   });
 
+  it('TID-PNAV-01c: 使用状況の導線は完全 label と意味境界の宣言を別々に保つ', () => {
+    const item = sidebarNavItems({ tenantId: 'tenant-a', workspaceId: 'ws-1' }, 'provider-admin').find((candidate) =>
+      candidate.href.startsWith('/metrics/usage'),
+    );
+
+    expect(item?.label).toBe('使用状況・削減効果');
+    expect(item?.labelSegments).toEqual(['使用状況・', '削減効果']);
+    expect(item?.labelSegments?.join('')).toBe(item?.label);
+  });
+
   it('TID-PNAV-02: workspace 単位の画面へは tenant と workspace の両方を引き継ぐ', () => {
     const links = linksOf('tenant-a', 'ws-1');
 

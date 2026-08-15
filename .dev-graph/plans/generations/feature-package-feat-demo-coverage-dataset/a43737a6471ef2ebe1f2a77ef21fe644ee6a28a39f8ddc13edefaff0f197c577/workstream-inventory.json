@@ -1,0 +1,1146 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+  "parent_feature": "feat-demo-coverage-dataset",
+  "p01_entry_gate": {
+    "selector": "parent_feature.depends_on",
+    "operator": "all",
+    "required_statuses": [
+      "done",
+      "closed"
+    ]
+  },
+  "repo_context": {
+    "config_path": ".dev-graph/config.json",
+    "repo_identity": "github:daishiman/HarnessHub",
+    "root_resolution_source": "explicit-cli"
+  },
+  "source_lineage": {
+    "source_plugin": "system-spec-harness",
+    "source_version": "0.1.0",
+    "compile_entrypoint": "run-system-spec-compile",
+    "completeness_entrypoint": "assign-system-spec-completeness-evaluator",
+    "source_paths": [
+      "system-spec/index.md",
+      "system-spec/00-requirements-definition.md",
+      "system-spec/testing-qa.md",
+      "system-spec/database.md",
+      "architecture/harness-hub-data.md",
+      "architecture/harness-hub-testing-qa.md",
+      "docs/screen-inventory.md",
+      "features/feat-demo-coverage-dataset.md",
+      "features/feat-demo-coverage-dataset.context.json",
+      "goal-spec.json"
+    ],
+    "confirmed": true
+  },
+  "tasks": [
+    {
+      "id": "SYS-DEMO-COVERAGE-DATASET-P01",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "parent_feature": "feat-demo-coverage-dataset",
+      "title": "確認用データセット要件ベースライン確定 — 28 route × 5 状態 × enum 全値の対応表確定",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "requirements-baseline"
+      ],
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "quality",
+        "data"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P01",
+      "depends_on": [],
+      "write_scope": [
+        "docs/features/feat-demo-coverage-dataset/requirements-baseline.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/testing-qa.md",
+        "system-spec/00-requirements-definition.md",
+        "system-spec/database.md",
+        "docs/screen-inventory.md",
+        "features/feat-demo-coverage-dataset.md",
+        "features/feat-demo-coverage-dataset.context.json",
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.9,
+        "reason": "goal-spec (goal-spec.json) と features/feat-demo-coverage-dataset.md の purpose/goal/scope_in 8 件/scope_out 5 件/acceptance 7 件を要件ベースラインへ確定転記する P01 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.9,
+            "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p01.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-demo-coverage-dataset/requirements-baseline.md に goal-spec acceptance 7 件と scope_in 8 件・scope_out 5 件が過不足なく転記され、対象 28 route の一覧と route×状態(空/1件/大量/長文/エラー)対応表の骨子が明記されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-demo-coverage-dataset"
+      ],
+      "rollback": "goal-spec と features/feat-demo-coverage-dataset.md の内容不一致が判明した場合、requirements-baseline.md を作成前状態 (ファイル未作成) に戻し、goal-spec 側の再確定を dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T13:10:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P01",
+        "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p01.md",
+        "parent_feature": "feat-demo-coverage-dataset",
+        "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+        "phase_ref": "P01"
+      }
+    },
+    {
+      "id": "SYS-DEMO-COVERAGE-DATASET-P02",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "parent_feature": "feat-demo-coverage-dataset",
+      "title": "アーキテクチャ設計 — route×状態対応表・fixture データモデル・冪等 seed 契約の設計",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "architecture"
+      ],
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "workstream_kind": "data",
+      "secondary_workstreams": [
+        "quality",
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P02",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P01"
+      ],
+      "write_scope": [
+        "docs/features/feat-demo-coverage-dataset/architecture-decision-record.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/database.md",
+        "system-spec/testing-qa.md",
+        "docs/screen-inventory.md",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-testing-qa.md",
+        "packages/db/scripts/seed-local.ts",
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.88,
+        "reason": "既存 packages/db/scripts/seed-local.ts のローカル専用ガード (isLocalDatabaseUrl) と削除→再作成による冪等パターンを踏襲しつつ、28 route × 5 状態 × enum 全値を機械検証可能な対応表として設計する P02 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.88,
+            "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p02.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "architecture-decision-record.md に route×状態対応表のデータ構造・各ドメイン enum の全値一覧・長文/大量/エラー各パターンの生成規則・冪等性の実現方式 (削除→再作成)・ローカル専用ガード維持方針が明記されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-demo-coverage-dataset"
+      ],
+      "rollback": "P03 レビューで設計案が却下された場合、architecture-decision-record.md へ却下理由を追記し、本 task を再実行して代替設計を再評価する",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T13:10:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P02",
+        "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p02.md",
+        "parent_feature": "feat-demo-coverage-dataset",
+        "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+        "phase_ref": "P02"
+      }
+    },
+    {
+      "id": "SYS-DEMO-COVERAGE-DATASET-P03",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "parent_feature": "feat-demo-coverage-dataset",
+      "title": "独立設計レビュー — 対応表網羅性・冪等性設計・ローカル専用ガードの妥当性確認",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "design-review"
+      ],
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "data",
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P03",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P02"
+      ],
+      "write_scope": [
+        "docs/features/feat-demo-coverage-dataset/design-review-notes.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/testing-qa.md",
+        "system-spec/database.md",
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.86,
+        "reason": "P02 で確定した route×状態対応表・enum 網羅方式・冪等性実現方式・ローカル専用ガード維持方針を、設計担当から独立した視点でレビューする P03 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.86,
+            "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p03.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "design-review-notes.md に承認可否と、28 route×5状態対応表の未カバー 0 件方針・enum 全値網羅方式・冪等性実現方式・ローカル専用ガード非緩和の 4 論点への適合確認結果が明記されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-demo-coverage-dataset"
+      ],
+      "rollback": "差し戻しと判定された場合、design-review-notes.md に指摘事項を記録し、sys-demo-coverage-dataset-p02 を再実行対象として dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T13:10:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P03",
+        "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p03.md",
+        "parent_feature": "feat-demo-coverage-dataset",
+        "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+        "phase_ref": "P03"
+      }
+    },
+    {
+      "id": "SYS-DEMO-COVERAGE-DATASET-P04",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "parent_feature": "feat-demo-coverage-dataset",
+      "title": "テストファースト設計 — 網羅性検査・冪等性・ローカル専用ガードのテストスタブ作成",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "test-design"
+      ],
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "data"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P04",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P03"
+      ],
+      "write_scope": [
+        "docs/features/feat-demo-coverage-dataset/test-design.md",
+        "packages/db/__tests__/seed-coverage/"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/testing-qa.md",
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.87,
+        "reason": "P03 で承認された設計に基づき、P05 実装の受入契約となるテストスタブ (網羅性・冪等性・ローカル専用ガード拒否・長文折返し検出・大量ページング境界) を作成する P04 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.87,
+            "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p04.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "test-design.md に route×状態網羅性検査・enum 全値網羅検査・冪等性 (2 回連続実行で状態一致)・ローカル以外 URL 拒否・長文折返し発生長・大量50件以上ページング境界の 6 テストカテゴリの合否基準が明記され、packages/db/__tests__/seed-coverage/ に対応するテストスタブが作成されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-demo-coverage-dataset"
+      ],
+      "rollback": "合否基準が P02 設計と矛盾する場合、矛盾箇所を記録し sys-demo-coverage-dataset-p02 または sys-demo-coverage-dataset-p03 を再確認対象として dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T13:10:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P04",
+        "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p04.md",
+        "parent_feature": "feat-demo-coverage-dataset",
+        "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+        "phase_ref": "P04"
+      }
+    },
+    {
+      "id": "SYS-DEMO-COVERAGE-DATASET-P05",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "parent_feature": "feat-demo-coverage-dataset",
+      "title": "実装 — seed-coverage スクリプトと route×状態対応表・網羅性検査スクリプトの実装",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "implementation"
+      ],
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "workstream_kind": "data",
+      "secondary_workstreams": [
+        "quality",
+        "backend"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P05",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P04"
+      ],
+      "write_scope": [
+        "packages/db/scripts/seed-coverage.ts",
+        "packages/db/scripts/verify-demo-coverage-matrix.ts",
+        "docs/features/feat-demo-coverage-dataset/route-state-matrix.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/database.md",
+        "docs/screen-inventory.md",
+        "packages/db/scripts/seed-local.ts",
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.89,
+        "reason": "P03 承認済み設計と P04 テストスタブに基づき、既存 packages/db/scripts/seed-local.ts のローカル専用ガードを再利用しつつ 28 route × 5 状態 × enum 全値を投入する seed-coverage スクリプトと route×状態対応表の機械検証スクリプトを実装する P05 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.89,
+            "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p05.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "P04 のテストスタブがすべて green であること、および pnpm --filter @harness-hub/db build/test の成功ログが得られている"
+      ],
+      "verification": [
+        "pnpm install --frozen-lockfile",
+        "pnpm --filter @harness-hub/db typecheck",
+        "pnpm --filter @harness-hub/db test",
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-demo-coverage-dataset"
+      ],
+      "rollback": "typecheck/test が失敗する場合、失敗箇所を write_scope 内の該当 path に限定して修正し、影響が設計 (P02/P03) に及ぶ場合は該当 task を再実行対象として差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T13:10:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P05",
+        "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p05.md",
+        "parent_feature": "feat-demo-coverage-dataset",
+        "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+        "phase_ref": "P05"
+      }
+    },
+    {
+      "id": "SYS-DEMO-COVERAGE-DATASET-P06",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "parent_feature": "feat-demo-coverage-dataset",
+      "title": "テスト実行 — 冪等性・網羅性・ローカル専用ガード拒否テストの実行と結果記録",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "test-run"
+      ],
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "data"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P06",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P05"
+      ],
+      "write_scope": [
+        "docs/features/feat-demo-coverage-dataset/test-run-report.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/testing-qa.md",
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.86,
+        "reason": "P04 のテストスタブ (網羅性・冪等性・ローカル専用ガード拒否・長文折返し・大量ページング境界) を P05 実装に対して実行し結果を記録する P06 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.86,
+            "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p06.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "test-run-report.md に P04 定義の 6 テストカテゴリ全件の pass/fail 結果と、同一 seed を連続 2 回実行した際の投入後状態が一致することの記録がある"
+      ],
+      "verification": [
+        "pnpm install --frozen-lockfile",
+        "pnpm --filter @harness-hub/db test",
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-demo-coverage-dataset"
+      ],
+      "rollback": "fail が発生した場合、test-run-report.md に失敗詳細を記録し sys-demo-coverage-dataset-p05 を再実行対象として dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T13:10:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P06",
+        "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p06.md",
+        "parent_feature": "feat-demo-coverage-dataset",
+        "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+        "phase_ref": "P06"
+      }
+    },
+    {
+      "id": "SYS-DEMO-COVERAGE-DATASET-P07",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "parent_feature": "feat-demo-coverage-dataset",
+      "title": "受入 — goal-spec acceptance 7 項目の確認",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "acceptance"
+      ],
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P07",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P06"
+      ],
+      "write_scope": [
+        "docs/features/feat-demo-coverage-dataset/acceptance-report.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/testing-qa.md",
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.86,
+        "reason": "P06 のテスト結果を goal-spec の acceptance 7 項目に照らして受入判定する P07 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.86,
+            "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p07.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "acceptance-report.md に acceptance 7 項目それぞれの pass/fail 判定と test-run-report.md への参照が記載されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-demo-coverage-dataset"
+      ],
+      "rollback": "acceptance いずれかが未達の場合、acceptance-report.md に未達理由を記録し、原因が実装にある場合は sys-demo-coverage-dataset-p05 を、設計にある場合は sys-demo-coverage-dataset-p02 を再実行対象として dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T13:10:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P07",
+        "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p07.md",
+        "parent_feature": "feat-demo-coverage-dataset",
+        "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+        "phase_ref": "P07"
+      }
+    },
+    {
+      "id": "SYS-DEMO-COVERAGE-DATASET-P08",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "parent_feature": "feat-demo-coverage-dataset",
+      "title": "リファクタリング/マイグレーション — 既存 schema 変更要否の確認 (N/A 判定)",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "migration"
+      ],
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "workstream_kind": "data",
+      "secondary_workstreams": [
+        "quality"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P08",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P07"
+      ],
+      "write_scope": [
+        "docs/features/feat-demo-coverage-dataset/refactoring-migration-note.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/database.md",
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.84,
+        "reason": "本 feature は既存 schema (packages/db/schema/**) への列追加・変更を伴わず fixture データ投入のみを行うため、migration 不要と判定し根拠を記録する P08 タスク (feature-execution-package-contract.md により P08 は N/A 判定時も常設される)",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.84,
+            "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p08.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "refactoring-migration-note.md に、P05 実装が既存 schema (packages/db/schema/**) を変更していないことの確認結果と、migration 不要の判定根拠が記録されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-demo-coverage-dataset"
+      ],
+      "rollback": "P05 実装が実際には schema 変更を含んでいたと判明した場合、refactoring-migration-note.md に判定誤りを記録し、sys-demo-coverage-dataset-p05 を write_scope 逸脱として再実行対象へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T13:10:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P08",
+        "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p08.md",
+        "parent_feature": "feat-demo-coverage-dataset",
+        "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+        "phase_ref": "P08"
+      }
+    },
+    {
+      "id": "SYS-DEMO-COVERAGE-DATASET-P09",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "parent_feature": "feat-demo-coverage-dataset",
+      "title": "品質保証 — 網羅性/冪等性/ローカル専用ガードの品質ゲート確認",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "quality-assurance"
+      ],
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "operations"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P09",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P08"
+      ],
+      "write_scope": [
+        "docs/features/feat-demo-coverage-dataset/quality-assurance-report.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/testing-qa.md",
+        "system-spec/database.md",
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "P06 テスト結果と P08 migration 不要判定を踏まえ、品質ゲート (route×状態網羅性0未カバー・enum全値網羅・冪等性・ローカル専用ガード) の充足を確認する P09 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.85,
+            "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p09.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "quality-assurance-report.md に route×状態未カバー0件検査・enum全値網羅検査・冪等性検査・ローカル専用ガード拒否検査の 4 種の確認結果が記録されている"
+      ],
+      "verification": [
+        "pnpm --filter @harness-hub/db lint",
+        "pnpm --filter @harness-hub/db test -- --coverage",
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-demo-coverage-dataset"
+      ],
+      "rollback": "未達の品質ゲートがある場合、quality-assurance-report.md に未達理由を記録し、原因が実装にある場合は sys-demo-coverage-dataset-p05 を再実行対象として dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T13:10:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P09",
+        "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p09.md",
+        "parent_feature": "feat-demo-coverage-dataset",
+        "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+        "phase_ref": "P09"
+      }
+    },
+    {
+      "id": "SYS-DEMO-COVERAGE-DATASET-P10",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "parent_feature": "feat-demo-coverage-dataset",
+      "title": "最終独立レビュー — quality_constraints の充足判定",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "final-review"
+      ],
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P10",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P09"
+      ],
+      "write_scope": [
+        "docs/features/feat-demo-coverage-dataset/final-review-notes.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/testing-qa.md",
+        "system-spec/database.md",
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.85,
+        "reason": "P01-P09 の成果物を根拠に、seed の冪等性・ローカル以外 DB URL 拒否・route×状態対応表の未カバー0件という 3 つの constraint の充足を独立した視点で最終判定する P10 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.85,
+            "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p10.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "final-review-notes.md に、seed 冪等性・ローカル以外 DB URL 拒否・route×状態対応表未カバー0件の 3 constraint それぞれの充足判定と根拠成果物への参照が記載されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-demo-coverage-dataset"
+      ],
+      "rollback": "いずれかが未充足の場合、final-review-notes.md に未充足理由を記録し、該当する原因 task (P02/P05/P08 等) を再実行対象として dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T13:10:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P10",
+        "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p10.md",
+        "parent_feature": "feat-demo-coverage-dataset",
+        "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+        "phase_ref": "P10"
+      }
+    },
+    {
+      "id": "SYS-DEMO-COVERAGE-DATASET-P11",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "parent_feature": "feat-demo-coverage-dataset",
+      "title": "エビデンス収集 — 再現可能な検証証跡の集約",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "evidence"
+      ],
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "documentation"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P11",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P10"
+      ],
+      "write_scope": [
+        "docs/features/feat-demo-coverage-dataset/evidence/"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/testing-qa.md",
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.83,
+        "reason": "P06/P07/P09/P10 の検証結果を再現可能な証跡として索引化する P11 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.83,
+            "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p11.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "evidence/index.md から P06/P07/P09/P10 の各成果物へのリンクと、それぞれの再実行コマンドが辿れる"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-demo-coverage-dataset"
+      ],
+      "rollback": "参照先成果物が未整合 (欠落・矛盾) の場合、evidence/index.md に不整合箇所を記録し、該当する原因 task を再実行対象として dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T13:10:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P11",
+        "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p11.md",
+        "parent_feature": "feat-demo-coverage-dataset",
+        "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+        "phase_ref": "P11"
+      }
+    },
+    {
+      "id": "SYS-DEMO-COVERAGE-DATASET-P12",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "parent_feature": "feat-demo-coverage-dataset",
+      "title": "ドキュメント/運用 — route×状態到達手順の runbook 作成",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "documentation",
+        "operations"
+      ],
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "operations"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P12",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P11"
+      ],
+      "write_scope": [
+        "docs/features/feat-demo-coverage-dataset/runbook.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/testing-qa.md",
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.84,
+        "reason": "P11 のエビデンスを踏まえ、seed 投入手順と seed 済み状態から特定 route の特定状態へ到達する手順を runbook 化する P12 タスク (feat-ui-integrity-audit-harness が本 runbook を前提データとして消費する)",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.84,
+            "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p12.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "runbook.md に seed 実行手順・28 route 全件について 5 状態それぞれへ到達する手順・ローカル以外 URL 実行時の拒否確認手順の 3 項目が記載されている"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-demo-coverage-dataset"
+      ],
+      "rollback": "runbook.md の記載が P11 エビデンスと矛盾する場合、矛盾箇所を記録し sys-demo-coverage-dataset-p11 を再確認対象として dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T13:10:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P12",
+        "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p12.md",
+        "parent_feature": "feat-demo-coverage-dataset",
+        "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+        "phase_ref": "P12"
+      }
+    },
+    {
+      "id": "SYS-DEMO-COVERAGE-DATASET-P13",
+      "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+      "parent_feature": "feat-demo-coverage-dataset",
+      "title": "リリース/デプロイ — ローカル専用ツールの close-out (実デプロイなし)",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-demo-coverage-dataset",
+        "macro-feature",
+        "testing-qa",
+        "seed",
+        "coverage",
+        "release"
+      ],
+      "related_nodes": [
+        "feat-demo-coverage-dataset",
+        "arch-harness-hub-data",
+        "arch-harness-hub-testing-qa"
+      ],
+      "workstream_kind": "operations",
+      "secondary_workstreams": [
+        "infrastructure"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P13",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P12"
+      ],
+      "write_scope": [
+        "docs/features/feat-demo-coverage-dataset/release-notes.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "system-spec/00-requirements-definition.md",
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.84,
+        "reason": "本 feature はローカル専用 seed ツールであり本番・staging への配布物を持たないため (scope_out: 本番・staging データベースへの投入)、P12 の runbook を踏まえて close-out receipt を N/A 判定として記録する P13 タスク",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.84,
+            "candidate_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p13.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "release-notes.md に、本 feature が本番・staging への配布物を持たない旨の判定根拠と、feat-ui-integrity-audit-harness が本成果物を前提データとして参照可能になったことの確認記録がある"
+      ],
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-demo-coverage-dataset"
+      ],
+      "rollback": "本 feature が実際には本番・staging への配布物を持つと判明した場合、release-notes.md に判定誤りを記録し、feat-hub-foundation の既存デプロイパイプラインのロールバック手順に従って原因 task を再実行対象として dev-graph へ差し戻す",
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T13:10:00Z"
+      },
+      "graph_node_registration": {
+        "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P13",
+        "file_path": "tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-p13.md",
+        "parent_feature": "feat-demo-coverage-dataset",
+        "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+        "phase_ref": "P13"
+      }
+    }
+  ]
+}

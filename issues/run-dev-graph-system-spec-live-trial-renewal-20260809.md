@@ -12,8 +12,8 @@ iteration: null
 title: "run-dev-graph-system-spec の live-trial を現 behavior digest で再実行する"
 owners: ["daishiman"]
 created_at: "2026-08-09T04:10:00Z"
-updated_at: "2026-08-09T04:01:26.088854Z"
-status: "draft"
+updated_at: "2026-08-09T10:50:03Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-verification-evaluator-cache-20260809","spec-harness-hub-verification-tiering-20260809"]
 resource_scope: ["plugins/dev-graph/skills/run-dev-graph-system-spec","eval-log/dev-graph/run-dev-graph-system-spec/live-trial","scripts/lint-live-trial-verdict.py"]

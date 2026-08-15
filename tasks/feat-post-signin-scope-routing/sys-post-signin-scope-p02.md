@@ -12,8 +12,8 @@ iteration: null
 title: "アーキテクチャ決定 — scope 解決の単一合流点・session への active workspace 束縛・着地先解決関数の配置と契約確定"
 owners: ["daishiman"]
 created_at: "2026-08-02T12:47:00Z"
-updated_at: "2026-08-04T03:50:41.340531Z"
-status: "active"
+updated_at: "2026-08-04T07:31:39Z"
+status: "closed"
 depends_on: ["SYS-POST-SIGNIN-SCOPE-P01"]
 related_nodes: ["feat-post-signin-scope-routing","arch-harness-hub-frontend","arch-harness-hub-security"]
 resource_scope: ["docs/features/feat-post-signin-scope-routing/architecture-decision.md"]

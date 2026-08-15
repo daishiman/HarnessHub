@@ -12,8 +12,8 @@ iteration: null
 title: "plugin hooks が全 skill の挙動閉包に入るため hook 1 件の修正で dev-graph 8 skill の live-trial verdict が一斉に stale 化する"
 owners: ["daishiman"]
 created_at: "2026-07-25T21:00:25Z"
-updated_at: "2026-07-27T21:55:19Z"
-status: "draft"
+updated_at: "2026-08-08T07:28:51Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-bd-external-ref-orphan-nodes-20260725","issue-orphan-external-ref-backlog-disposition-20260726"]
 resource_scope: []

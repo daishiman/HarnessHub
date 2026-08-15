@@ -12,8 +12,8 @@ iteration: null
 title: "PublishRequest 状態機械・検査 pipeline・promote/rollback 要件ベースライン確定"
 owners: ["daishiman"]
 created_at: "2026-07-30T12:25:36Z"
-updated_at: "2026-08-04T03:37:16.697468Z"
-status: "active"
+updated_at: "2026-08-07T02:51:12Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-publish-pipeline","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security"]
 resource_scope: ["docs/features/feat-publish-pipeline/requirements-baseline.md"]

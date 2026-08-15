@@ -12,8 +12,8 @@ iteration: null
 title: "リリース/デプロイ — apps/hub publish endpoint 本番デプロイと full smoke test"
 owners: ["daishiman"]
 created_at: "2026-07-30T12:25:36Z"
-updated_at: "2026-08-04T03:43:45.399996Z"
-status: "active"
+updated_at: "2026-08-07T02:52:41Z"
+status: "closed"
 depends_on: ["SYS-PUBLISH-PIPELINE-P12"]
 related_nodes: ["feat-publish-pipeline","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security"]
 resource_scope: ["apps/hub/package.json","apps/hub/scripts/smoke-production-publish.ts","apps/hub/tests/publish-pipeline/production-smoke-script.test.ts","architecture/harness-hub-backend.md","architecture/harness-hub-security.md","docs/backend-spec.md","docs/backend-spec-api-state.md","docs/features/feat-publish-pipeline/release-record.md"]
