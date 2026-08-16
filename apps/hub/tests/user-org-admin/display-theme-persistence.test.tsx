@@ -9,6 +9,8 @@ import { AccountSettings } from '../../src/app/(dashboard)/settings/account/acco
 import { HubShell } from '../../src/components/shell/hub-shell.js';
 
 const TENANT_ID = 'tenant-a';
+// 全suiteのCPU競合下でも、保存完了という同じ観測条件を待つ。Vitestの30秒上限より十分短く保つ。
+const SAVE_CONFIRMATION_TIMEOUT_MS = 10_000;
 
 /**
  * 保存済み設定は root layout がサーバで解決し `defaultPreferences` として渡す
@@ -76,7 +78,7 @@ describe('表示設定のリロード耐性', () => {
     const themeSelect = await screen.findByRole('combobox', { name: 'テーマ' });
     fireEvent.change(themeSelect, { target: { value: 'dark' } });
 
-    await screen.findByText('表示設定を更新しました。');
+    await screen.findByText('表示設定を更新しました。', {}, { timeout: SAVE_CONFIRMATION_TIMEOUT_MS });
     await waitFor(() =>
       expect(firstPage.container.querySelector('[data-theme]')?.getAttribute('data-theme')).toBe('dark'),
     );

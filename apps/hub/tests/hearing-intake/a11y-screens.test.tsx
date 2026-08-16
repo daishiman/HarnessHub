@@ -419,4 +419,10 @@ describe('HI-A11Y: P05 実装後の受入契約', () => {
     expect(source).toContain('label="Build ID"');
     expect(source).toContain('href={`/builds?tenant=');
   });
+
+  it('HI-A11Y-115: S12 の関連Build・参考URLリンクを44px操作域の共通契約へ載せる', () => {
+    const source = detailSource();
+    expect(source).toMatch(/href=\{`\/builds\?tenant=[\s\S]*?data-hh-focusable=""/);
+    expect(source).toMatch(/href=\{entry\.url\}[\s\S]*?data-hh-focusable=""/);
+  });
 });

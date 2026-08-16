@@ -136,6 +136,7 @@ export function HubShell({
           brand={
             <a
               href={dashboard.href}
+              data-hh-focusable=""
               style={{ fontSize: 'var(--hh-font-size-md)', fontWeight: 700, color: 'inherit', textDecoration: 'none' }}
             >
               Harness Hub

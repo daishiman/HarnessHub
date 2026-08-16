@@ -115,6 +115,21 @@ describe('T1: route × 状態 対応表', () => {
     expect(defects).toEqual([]);
   });
 
+  it('T1-5b: route actor は認可正本と一致し、認証設定は provider-admin 専用である', () => {
+    const actors = matrix.map((coverage) => {
+      const declared = new Set(
+        ROUTE_STATES.flatMap((state) => {
+          const cell = coverage.states[state];
+          return cell?.kind === 'applicable' ? cell.reach.map((step) => step.actor) : [];
+        }),
+      );
+      return [coverage.route, [...declared]] as const;
+    });
+
+    expect(Object.fromEntries(actors)['/settings/auth']).toEqual(['provider-admin']);
+    expect(actors.filter(([, declared]) => declared.length !== 1)).toEqual([]);
+  });
+
   it('T1-6: 集計が適用 105 / 非適用 35 と一致する', () => {
     const cells = matrix.flatMap((coverage) => ROUTE_STATES.map((state) => coverage.states[state]));
     expect(cells.filter((cell) => cell?.kind === 'applicable')).toHaveLength(EXPECTED_APPLICABLE);

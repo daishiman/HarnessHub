@@ -329,6 +329,7 @@ export function HearingSheetDetail({ id, tenantId, workspaceId }: HearingSheetDe
                     >
                       <a
                         href={`/builds?tenant=${encodeURIComponent(tenantId)}&workspace=${encodeURIComponent(workspaceId)}`}
+                        data-hh-focusable=""
                       >
                         工程ボードで確認
                       </a>
@@ -468,7 +469,7 @@ export function HearingSheetDetail({ id, tenantId, workspaceId }: HearingSheetDe
                   : form.referenceUrls.map((entry, index) => ({
                       term: `参考URL ${index + 1}`,
                       description: (
-                        <a href={entry.url} target="_blank" rel="noreferrer">
+                        <a href={entry.url} target="_blank" rel="noreferrer" data-hh-focusable="">
                           {entry.url}
                         </a>
                       ),

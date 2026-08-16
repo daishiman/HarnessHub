@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1748,
+  "graph_revision": 1749,
   "nodes": [
     {
       "acceptance": [
@@ -67740,12 +67740,16 @@
       "classification_confidence": 0.99,
       "classification_reason": "2つの macro feature を完了偽装せず、今回実装可能な監査・既知改行・印刷導線・仕様整合の縦切りを独立 issue として追跡する",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-16T00:20:17.000000Z",
+        "evidence_refs": [
+          "apps/hub/tests/browser/real-app-audit.ts",
+          "packages/db/scripts/issue-demo-coverage-session.ts",
+          "docs/features/feat-ui-integrity-audit-harness/ui-integrity-remediation-slice-spec-reflection-receipt.md"
+        ],
         "policy": "manual",
         "reconciled_at": null,
         "source": "manual",
-        "status": "open"
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "b751b1c860899cb14806045b29685825499b5487dff29f6a185cd16d2377cb05",
@@ -67821,7 +67825,7 @@
         "source_version": null
       },
       "start_date": "2026-08-15",
-      "status": "draft",
+      "status": "done",
       "tags": [
         "ui-integrity",
         "browser-test",
@@ -67834,7 +67838,7 @@
       "template_version": "1.0.0",
       "title": "UI崩れ監査と意味境界改行を実画面契約へ接続する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-15T02:42:26.769495Z"
+      "updated_at": "2026-08-16T00:20:17.000000Z"
     },
     {
       "acceptance": [

@@ -13,9 +13,13 @@ import { chromium } from 'playwright';
 
 export const REAL_APP_AUDIT_WIDTHS = [360, 768, 1280] as const;
 export const REAL_APP_AUDIT_THEMES = ['light', 'dark'] as const;
+const CLIENT_CONTENT_SETTLE_MS = 1_600;
 
 export type RealAppAuditWidth = (typeof REAL_APP_AUDIT_WIDTHS)[number];
 export type RealAppAuditTheme = (typeof REAL_APP_AUDIT_THEMES)[number];
+export const REAL_APP_AUDIT_ACTORS = ['anonymous', 'member', 'workspace-admin', 'provider-admin'] as const;
+export type RealAppAuditActor = (typeof REAL_APP_AUDIT_ACTORS)[number];
+export type AuthenticatedRealAppAuditActor = Exclude<RealAppAuditActor, 'anonymous'>;
 
 export interface RealAppRouteCase {
   readonly screenCode: string;
@@ -23,6 +27,8 @@ export interface RealAppRouteCase {
   readonly route: string;
   /** seed の決定論 ID まで解決した実際に開く URL。 */
   readonly url: string;
+  /** COVERAGE_MATRIX の到達手順が要求する認証主体。 */
+  readonly actor: RealAppAuditActor;
 }
 
 export interface RealAppStateCell extends RealAppRouteCase {
@@ -67,8 +73,8 @@ export interface RealAppAuditReport {
 export interface AuditRealAppKeysOptions {
   readonly origin: string;
   readonly keys: readonly RealAppAuditKey[];
-  /** 認証済み preview の場合に、値をログへ出さず Cookie を渡す。 */
-  readonly cookieHeader?: string | undefined;
+  /** actor ごとに分離した Cookie。値は report へ一切含めない。 */
+  readonly cookieHeaders?: Partial<Readonly<Record<AuthenticatedRealAppAuditActor, string>>> | undefined;
   readonly extraHTTPHeaders?: Readonly<Record<string, string>> | undefined;
 }
 
@@ -110,10 +116,14 @@ export function buildRealAppAuditPlan(matrix: readonly RouteCoverage[] = COVERAG
 
 function toRouteCase(coverage: RouteCoverage): RealAppRouteCase {
   const urls = new Set<string>();
+  const actors = new Set<string>();
   for (const state of ROUTE_STATES) {
     const applicability = coverage.states[state];
     if (applicability.kind !== 'applicable') continue;
-    for (const step of applicability.reach) urls.add(step.url);
+    for (const step of applicability.reach) {
+      urls.add(step.url);
+      actors.add(step.actor);
+    }
   }
   if (urls.size !== 1) {
     throw new Error(`${coverage.screenCode} (${coverage.route}) の到達 URL は 1 件必須です: ${[...urls].join(', ')}`);
@@ -122,7 +132,14 @@ function toRouteCase(coverage: RouteCoverage): RealAppRouteCase {
   if (url === undefined || !url.startsWith('/')) {
     throw new Error(`${coverage.screenCode} (${coverage.route}) の到達 URL が不正です`);
   }
-  return { screenCode: coverage.screenCode, route: coverage.route, url };
+  if (actors.size !== 1) {
+    throw new Error(`${coverage.screenCode} (${coverage.route}) の actor は 1 件必須です: ${[...actors].join(', ')}`);
+  }
+  const [rawActor] = actors;
+  if (rawActor === undefined || !REAL_APP_AUDIT_ACTORS.includes(rawActor as RealAppAuditActor)) {
+    throw new Error(`${coverage.screenCode} (${coverage.route}) の actor が不正です: ${rawActor ?? ''}`);
+  }
+  return { screenCode: coverage.screenCode, route: coverage.route, url, actor: rawActor as RealAppAuditActor };
 }
 
 function assertUnique(values: readonly string[], label: string): void {
@@ -184,10 +201,23 @@ export async function auditRealAppKeys(options: AuditRealAppKeysOptions): Promis
   assertUnique(options.keys.map(formatAuditKey), '実走キー');
 
   let browser: Browser | undefined;
-  let context: BrowserContext | undefined;
+  const actorSessions = new Map<RealAppAuditActor, { readonly context: BrowserContext; readonly page: Page }>();
+  const currentRouteByActor = new Map<RealAppAuditActor, string>();
   const unreachable: UnreachableAuditKey[] = [];
   const violations: UiIntegrityViolation[] = [];
   let executedKeyCount = 0;
+
+  const runnableKeys = options.keys.filter((key) => {
+    if (key.actor === 'anonymous') return true;
+    const cookieHeader = options.cookieHeaders?.[key.actor];
+    if (cookieHeader !== undefined && cookieHeader.trim() !== '') return true;
+    unreachable.push({
+      key: formatAuditKey(key),
+      status: null,
+      reason: `${key.actor} の認証 Cookie がありません`,
+    });
+    return false;
+  });
 
   try {
     // 既定は Playwright 同梱の Chromium。CI はそれを使う。
@@ -195,21 +225,48 @@ export async function auditRealAppKeys(options: AuditRealAppKeysOptions): Promis
     // `HUB_BROWSER_AUDIT_CHANNEL=chrome` のときだけ導入済みの Chrome へ切り替えられるようにする。
     // どちらも Blink なので、この監査が見る幾何 (はみ出し・重なり・折返し) の判定は変わらない。
     const channel = process.env.HUB_BROWSER_AUDIT_CHANNEL?.trim();
-    browser = await chromium.launch(channel !== undefined && channel !== '' ? { channel } : {});
-    context = await browser.newContext({
-      reducedMotion: 'reduce',
-      extraHTTPHeaders: { ...options.extraHTTPHeaders },
-    });
-    if (options.cookieHeader !== undefined && options.cookieHeader.trim() !== '') {
-      await context.addCookies(parseCookies(options.cookieHeader, origin));
+    if (runnableKeys.length > 0) {
+      browser = await chromium.launch(channel !== undefined && channel !== '' ? { channel } : {});
     }
-    const page = await context.newPage();
 
-    for (const key of options.keys) {
-      const result = await openAuditKey(page, origin, key);
-      if (result.reachable === false) {
-        unreachable.push({ key: formatAuditKey(key), status: result.status, reason: result.reason });
-        continue;
+    for (const key of runnableKeys) {
+      if (browser === undefined) throw new Error('実走対象があるのに browser が起動していません');
+      let actorSession = actorSessions.get(key.actor);
+      if (actorSession === undefined) {
+        const context = await browser.newContext({
+          reducedMotion: 'reduce',
+          extraHTTPHeaders: { ...options.extraHTTPHeaders },
+        });
+        if (key.actor !== 'anonymous') {
+          const cookieHeader = options.cookieHeaders?.[key.actor];
+          if (cookieHeader === undefined || cookieHeader.trim() === '') {
+            throw new Error(`${key.actor} の認証 Cookie が実走直前に失われました`);
+          }
+          await context.addCookies(parseCookies(cookieHeader, origin));
+        }
+        actorSession = { context, page: await context.newPage() };
+        actorSessions.set(key.actor, actorSession);
+      }
+      const { page } = actorSession;
+      const routeIdentity = `${key.route}\u0000${key.url}`;
+      if (currentRouteByActor.get(key.actor) !== routeIdentity) {
+        const result = await openAuditKey(page, origin, key);
+        if (result.reachable === false) {
+          unreachable.push({ key: formatAuditKey(key), status: result.status, reason: result.reason });
+          continue;
+        }
+        currentRouteByActor.set(key.actor, routeIdentity);
+      } else {
+        try {
+          await applyAuditAxis(page, key);
+        } catch (cause) {
+          unreachable.push({
+            key: formatAuditKey(key),
+            status: null,
+            reason: cause instanceof Error ? cause.message : String(cause),
+          });
+          continue;
+        }
       }
       // 検出中に画面が遷移すると評価 context ごと消える。1 キーの計測失敗で全 144 キーを
       // 落とすと「違反 0」と「測れなかった」の区別が付かなくなるため、未実行として記録し先へ進む。
@@ -228,7 +285,7 @@ export async function auditRealAppKeys(options: AuditRealAppKeysOptions): Promis
       violations.push(...keyViolations);
     }
   } finally {
-    await context?.close();
+    await Promise.all([...actorSessions.values()].map(({ context }) => context.close()));
     await browser?.close();
   }
 
@@ -282,8 +339,7 @@ async function openAuditKey(
   { readonly reachable: true } | { readonly reachable: false; readonly status: number | null; readonly reason: string }
 > {
   try {
-    await page.setViewportSize({ width: key.width, height: key.width === 768 ? 1024 : 800 });
-    await page.emulateMedia({ colorScheme: key.theme, reducedMotion: 'reduce' });
+    await prepareAuditAxis(page, key);
     const response = await page.goto(new URL(key.url, origin).toString(), { waitUntil: 'load' });
     if (response === null) {
       return { reachable: false, status: null, reason: 'navigation response がありません' };
@@ -297,15 +353,16 @@ async function openAuditKey(
     // 落ち着かない画面 (polling を持つ画面) もあるので、待てなかったこと自体は失敗にしない。
     await page.waitForLoadState('networkidle', { timeout: 5_000 }).catch(() => undefined);
 
-    // 実アプリは DB の表示設定で theme を解決する。監査の軸だけは明示値を優先し、
-    // token 正本の data-theme 切替を実 DOM に対して行う。
-    await page.evaluate((theme) => {
-      document.documentElement.dataset.theme = theme;
-      for (const element of document.querySelectorAll<HTMLElement>('[data-theme]')) {
-        element.dataset.theme = theme;
-      }
-    }, key.theme);
-    await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve())));
+    // Next の client component は load/networkidle の直後に hydrate され、その useEffect から
+    // 実データを取得する。直後に測ると最初の theme だけ skeleton、次の theme は実内容という
+    // 同一 route 内の取りこぼしが起きるため、初回 navigation だけ client 描画の収束を待つ。
+    // 30秒 polling より十分短く、通常の初期fetchだけを含める境界として固定する。
+    await page.waitForTimeout(CLIENT_CONTENT_SETTLE_MS);
+    await page.evaluate(
+      () => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))),
+    );
+
+    await applyAuditAxis(page, key);
     return { reachable: true };
   } catch (cause) {
     return {
@@ -314,6 +371,24 @@ async function openAuditKey(
       reason: cause instanceof Error ? cause.message : String(cause),
     };
   }
+}
+
+async function prepareAuditAxis(page: Page, key: RealAppAuditKey): Promise<void> {
+  await page.setViewportSize({ width: key.width, height: key.width === 768 ? 1024 : 800 });
+  await page.emulateMedia({ colorScheme: key.theme, reducedMotion: 'reduce' });
+}
+
+async function applyAuditAxis(page: Page, key: RealAppAuditKey): Promise<void> {
+  await prepareAuditAxis(page, key);
+  // 実アプリは DB の表示設定で theme を解決する。監査の軸だけは明示値を優先し、
+  // token 正本の data-theme 切替を実 DOM に対して行う。
+  await page.evaluate((theme) => {
+    document.documentElement.dataset.theme = theme;
+    for (const element of document.querySelectorAll<HTMLElement>('[data-theme]')) {
+      element.dataset.theme = theme;
+    }
+  }, key.theme);
+  await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve())));
 }
 
 interface BrowserViolation {
@@ -371,12 +446,26 @@ async function collectUiIntegrityViolations(page: Page, key: RealAppAuditKey): P
       const rect = element.getBoundingClientRect();
       const computed = window.getComputedStyle(element);
       if (!isVisible(element, rect, computed)) continue;
-      if (rect.width + 0.01 < 44 || rect.height + 0.01 < 44) {
+      // radio / checkbox は小さな native glyph だけでなく、関連付けた label 全体が
+      // クリック可能。表示された label がある場合は、実際の操作領域で判定する。
+      const inputType = element instanceof HTMLInputElement ? element.type : '';
+      const associatedLabel =
+        (inputType === 'radio' || inputType === 'checkbox') && element instanceof HTMLInputElement
+          ? [...(element.labels ?? [])].find((label) => {
+              const candidateRect = label.getBoundingClientRect();
+              return isVisible(label, candidateRect, window.getComputedStyle(label));
+            })
+          : undefined;
+      const effectiveRect = associatedLabel?.getBoundingClientRect() ?? rect;
+      if (effectiveRect.width + 0.01 < 44 || effectiveRect.height + 0.01 < 44) {
         found.push({
           code: 'tap-target-under-44',
           element: describe(element),
           detail:
-            Math.round(rect.width * 100) / 100 + 'x' + Math.round(rect.height * 100) / 100 + 'px',
+            Math.round(effectiveRect.width * 100) / 100 +
+            'x' +
+            Math.round(effectiveRect.height * 100) / 100 +
+            'px',
         });
       }
     }

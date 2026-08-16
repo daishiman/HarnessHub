@@ -21,9 +21,12 @@ export const NOT_APPLICABLE_REASONS = {
 } as const;
 export type NotApplicableReason = keyof typeof NOT_APPLICABLE_REASONS;
 
+export const ROUTE_ACTORS = ['anonymous', 'member', 'workspace-admin', 'provider-admin'] as const;
+export type RouteActor = (typeof ROUTE_ACTORS)[number];
+
 export interface ReachStep {
   /** どの役割で開くか。 */
-  readonly actor: string;
+  readonly actor: RouteActor;
   /** 実際に開く URL。動的 segment は決定論 ID へ解決済み。 */
   readonly url: string;
   /** その状態を成立させる seed fixture の論理キー。 */
@@ -93,7 +96,7 @@ interface RouteSpec {
   readonly screenCode: string;
   readonly route: string;
   readonly url: string;
-  readonly actor: string;
+  readonly actor: RouteActor;
   /** その画面を成立させる route 固有の fixture 論理キー。 */
   readonly fixtures: readonly string[];
   readonly na: Partial<Record<RouteState, NotApplicableReason>>;
@@ -312,7 +315,7 @@ const ROUTE_SPECS: readonly RouteSpec[] = [
     screenCode: 'SCR-27',
     route: '/settings/auth',
     url: '/settings/auth',
-    actor: 'workspace-admin',
+    actor: 'provider-admin',
     fixtures: ['idp-connection/active/0001', 'idp-connection/disabled/0001'],
     na: { bulk: 'N5' },
   },
