@@ -160,6 +160,28 @@ const formRules = [
 ].join('\n\n');
 
 /**
+ * マーカー付き操作子と DataTable 内の遷移に、表示密度と切り離した 44px の実操作領域を配る。
+ * compact で `--hh-control-height` が 36px に下がっても、押せる幅・高さは縮めない。
+ */
+const touchTargetRules = [
+  [
+    ':where([data-hh-focusable]),',
+    ':where([data-hh-data-table]) a[href] {',
+    '  min-block-size: 44px;',
+    '  min-inline-size: 44px;',
+    '}',
+  ].join('\n'),
+  [
+    ':where(a, button, [role="button"], [role="link"])[data-hh-focusable],',
+    ':where([data-hh-data-table]) a[href] {',
+    '  display: inline-flex;',
+    '  align-items: center;',
+    '  justify-content: center;',
+    '}',
+  ].join('\n'),
+].join('\n\n');
+
+/**
  * 支援技術にだけ渡したい文言の逃げ道。`display: none` や `visibility: hidden` は
  * 読み上げからも消えるため使えない。部品内では internal/style の `visuallyHidden` が
  * 同じ役割を持つが、apps 側は internal を import できないのでここに属性版を置く。
@@ -396,7 +418,7 @@ const stageBoardRules = [
     '  flex: 0 0 auto;',
     '  align-items: center;',
     '  gap: var(--hh-space-1);',
-    '  min-height: var(--hh-control-height);',
+    '  min-block-size: 44px;',
     '  padding-inline: var(--hh-space-3);',
     '  border: 1px solid var(--hh-color-border);',
     '  border-radius: var(--hh-radius-full);',
@@ -508,6 +530,7 @@ export function buildBaseCss(): string {
     tableRules,
     mediaRules,
     formRules,
+    touchTargetRules,
     visuallyHiddenRules,
     responsiveRules,
     idBadgeRules,

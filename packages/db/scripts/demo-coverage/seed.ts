@@ -12,6 +12,7 @@
 // 型注釈があると綴り違いの列挙値が実行時ではなく型検査で落ちる。逆に `as string` で潰すと
 // リテラル型まで失われ、enum 列の検査が丸ごと無効になる。
 
+import { hearingSheetEstimateSchema, hearingSheetFormSnapshotSchema } from '@harness-hub/schemas';
 import { inArray } from 'drizzle-orm';
 import type { CoreAdapter } from '../../repository/db';
 import * as schema from '../../schema/index';
@@ -390,7 +391,7 @@ function idpConnectionRows(): (typeof schema.idpConnections.$inferInsert)[] {
       credentialMode: 'customer_google',
       credentialStatus: 'active',
       clientSecretLast4: '0003',
-      allowedWorkspaceDomains: 'demo.example.com',
+      allowedWorkspaceDomains: JSON.stringify(['demo.example.com']),
       lastTestedAt: at(6),
       updatedAt: at(6),
     },
@@ -916,6 +917,31 @@ function tenantDataTombstoneRows(): (typeof schema.tenantDataTombstones.$inferIn
 
 // --- hearing intake ---------------------------------------------------------
 
+function hearingFormSnapshot(title: string, index: number) {
+  return hearingSheetFormSnapshotSchema.parse({
+    taskName: title,
+    company: 'デモ株式会社',
+    applicant: 'デモ利用者',
+    domain: index % 2 === 0 ? '経理' : '業務改善',
+    issue: '手作業の確認に時間がかかり、担当者ごとに判断がぶれる',
+    tools: '表計算 / 社内ワークフロー',
+    hours: 20 + index,
+    people: 5 + index,
+    features: '入力チェック・下書き・履歴の記録',
+    output: '確認結果の一覧',
+    priority: 'high',
+  });
+}
+
+function hearingEstimateSnapshot(index: number) {
+  const savedHoursPerYear = 400 + index;
+  return hearingSheetEstimateSchema.parse({
+    savedMinutesPerYear: savedHoursPerYear * 60,
+    savedHoursPerYear,
+    savedAmountPerYear: savedHoursPerYear * 3_000,
+  });
+}
+
 function hearingSheetRows(): (typeof schema.hearingSheets.$inferInsert)[] {
   const statuses = ['received', 'generating', 'review', 'completed'] as const;
   const titles = [
@@ -952,8 +978,8 @@ function hearingSheetRows(): (typeof schema.hearingSheets.$inferInsert)[] {
     tenantId: TENANT.main,
     workspaceId: WORKSPACE.main,
     applicantUserId: USER.member,
-    formJson: JSON.stringify({ purpose: 'デモ', frequency: 'weekly' }),
-    estimateJson: JSON.stringify({ minutesPerRun: 25, runsPerMonth: 8 }),
+    formJson: JSON.stringify(hearingFormSnapshot(row.title, index)),
+    estimateJson: JSON.stringify(hearingEstimateSnapshot(index)),
     createdAt: at(130 + index),
     updatedAt: at(130 + index),
   }));

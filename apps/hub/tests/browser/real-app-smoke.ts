@@ -24,7 +24,11 @@ if (origin === undefined || origin.trim() === '') {
   const report = await auditRealAppKeys({
     origin,
     keys,
-    cookieHeader: process.env.HUB_BROWSER_AUDIT_COOKIE,
+    cookieHeaders: {
+      member: process.env.HUB_BROWSER_AUDIT_MEMBER_COOKIE ?? '',
+      'workspace-admin': process.env.HUB_BROWSER_AUDIT_WORKSPACE_ADMIN_COOKIE ?? '',
+      'provider-admin': process.env.HUB_BROWSER_AUDIT_PROVIDER_ADMIN_COOKIE ?? '',
+    },
   });
 
   // Cookie や header を report に持たせない。出力は実行数と違反のみ。
