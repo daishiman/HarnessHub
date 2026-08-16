@@ -7,8 +7,8 @@ const FILTER_BAR_SOURCES = [
   'src/app/(dashboard)/feedback/feedback-list.tsx',
   'src/app/(dashboard)/docs/document-list.tsx',
   'src/app/(dashboard)/sheets/hearing-sheet-list.tsx',
-  'src/app/(dashboard)/metrics/metrics-dashboard.tsx',
-  'src/app/(dashboard)/metrics/usage/usage-savings-report.tsx',
+  'src/app/(dashboard)/dashboard/metrics-dashboard.tsx',
+  'src/app/(dashboard)/tracking/usage-savings-report.tsx',
 ] as const;
 
 const readSource = (path: string): string => readFileSync(resolve(process.cwd(), path), 'utf8');
@@ -19,8 +19,8 @@ describe('FILTERBAR: 確定済み条件と sticky 方針', () => {
   });
 
   it.each([
-    'src/app/(dashboard)/metrics/metrics-dashboard.tsx',
-    'src/app/(dashboard)/metrics/usage/usage-savings-report.tsx',
+    'src/app/(dashboard)/dashboard/metrics-dashboard.tsx',
+    'src/app/(dashboard)/tracking/usage-savings-report.tsx',
   ])('%s の FilterBar は集計をスクロールしても条件が見える', (path) => {
     const source = readSource(path);
     const filterBar = source.slice(source.indexOf('<FilterBar'), source.indexOf('</FilterBar>'));

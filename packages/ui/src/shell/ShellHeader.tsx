@@ -225,7 +225,6 @@ export function ShellHeader(props: ShellHeaderProps): ReactNode {
                 style={{
                   flex: 1,
                   minWidth: 0,
-                  minHeight: 'calc(var(--hh-control-height) - 2px)',
                   padding: 0,
                   fontSize: 'var(--hh-font-size-md)',
                   fontFamily: 'inherit',

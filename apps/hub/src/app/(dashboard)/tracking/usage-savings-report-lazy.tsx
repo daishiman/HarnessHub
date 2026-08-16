@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 import type { ReactNode } from 'react';
 
-import type { MetricsDateRange } from '../../../../features/metrics-tracking/view-model.js';
+import type { MetricsDateRange } from '../../../features/metrics-tracking/view-model.js';
 
 const UsageSavingsReport = dynamic(
   () => import('./usage-savings-report.js').then((module) => module.UsageSavingsReport),

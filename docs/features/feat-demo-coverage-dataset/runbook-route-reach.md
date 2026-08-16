@@ -1,12 +1,12 @@
 ---
 status: confirmed
 layer: operations
-title: 確認用データセット 28 route 到達手順
+title: 確認用データセット 30 route 到達手順
 feature_id: feat-demo-coverage-dataset
 updated_at: "2026-08-15"
 ---
 
-## 4. 手順 B — 28 route × 5 状態への到達
+## 4. 手順 B — 30 route × 5 状態への到達
 
 各表の読み方: **役割**でサインインし、**開く URL** を開き、**操作**を行うと、その状態の画面になる。**必要な fixture** はその状態を成立させているデータ行で、seed 済みなら必ず存在する (存在しなければ §2.4 の検査が落ちる)。
 
@@ -152,4 +152,4 @@ URL の動的部分 (テナント・ID) は決定論 ID へ解決済みのため
 | 長文 | member | `/docs/07JBX1XEMRY7QAEX3C2BZ8HXBM/edit` | そのまま表示を確認 | `document/tenant-published/0001`<br>`long-text/heading/0001`<br>`long-text/body/0001` |
 | エラー | member | `/docs/07JBX1XEMRY7QAEX3C2BZ8HXBM/edit` | 停止テナントの資源を要求する | `document/tenant-published/0001`<br>`tenant/suspended/0001` |
 
-後半 (SCR-15〜28) は [runbook-route-reach-part2.md](docs/features/feat-demo-coverage-dataset/runbook-route-reach-part2.md) を参照する。
+後半 (SCR-15〜30) は [runbook-route-reach-part2.md](docs/features/feat-demo-coverage-dataset/runbook-route-reach-part2.md) を参照する。

@@ -20,6 +20,7 @@ const exactScreenTitles: Readonly<Record<string, string>> = {
   '/feedback/new': '改善要望を報告',
   '/metrics': '効果測定ダッシュボード',
   '/metrics/usage': '使用状況・削減効果',
+  '/tracking': '使用状況・削減効果',
   '/sheets': 'ヒアリングシート',
   '/sheets/new': '業務の困りごとを登録',
   '/users': 'ユーザー管理',
@@ -27,6 +28,7 @@ const exactScreenTitles: Readonly<Record<string, string>> = {
   '/settings/auth': '認証設定 — 顧客所有 Google OAuth',
   '/settings/coefficients': '見積係数設定',
   '/settings/notion': 'Notion連携',
+  '/settings/system': 'システム',
   // `/legal` は session がある場合だけ HubShell で描画される。
   '/legal': '利用規約・プライバシーポリシー',
 };

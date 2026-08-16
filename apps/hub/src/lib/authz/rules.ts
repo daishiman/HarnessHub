@@ -49,6 +49,10 @@ export const ACTION_RULES: Readonly<Record<string, ActionRule>> = {
   'sheets.regenerate': { minRole: 'workspace-admin', requiredScope: null, credential: SESSION, selfOnly: false },
   'builds.read': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: false },
   'builds.stage_change': { minRole: 'workspace-admin', requiredScope: null, credential: SESSION, selfOnly: false },
+  // 起票 (手動復旧) と カード編集。閲覧は member に開くが、盤面を書き換える操作は工程遷移と同じ admin 限定
+  // にする (SEC2)。カードの題名・担当・メモは工程判断の根拠として読まれるため、閲覧者が書けてはいけない。
+  'builds.create': { minRole: 'workspace-admin', requiredScope: null, credential: SESSION, selfOnly: false },
+  'builds.update': { minRole: 'workspace-admin', requiredScope: null, credential: SESSION, selfOnly: false },
   'projects.read': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: false },
   'projects.create': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: false },
   'projects.update': { minRole: 'owner', requiredScope: null, credential: SESSION, selfOnly: false },
@@ -197,6 +201,12 @@ export const ACTION_RULES: Readonly<Record<string, ActionRule>> = {
   // `sessionActionVisible(role, 'sheets.read_all' | 'feedback.read' | 'builds.read')` で
   // 個別判定し、権限のない機能のデータをレスポンスへ混入させない。
   'dashboard.summary_read': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: false },
+
+  // 配色の採用状況 (feat-appearance-theming)。全テナントを跨いだ製品全体の傾向であり、
+  // 1 テナントの管理者が見るべき値ではないため provider-admin に限る (`requiredScope: null` も
+  // 「workspace に属さない」ことを意味する)。返すのは人数と構成比だけで個人は特定できないが、
+  // 「どの顧客がどう使っているか」の推測材料にはなるので、閲覧できる役割は最小に保つ。
+  'appearance.usage_read': { minRole: 'provider-admin', requiredScope: null, credential: SESSION, selfOnly: false },
 };
 
 export function findActionRule(action: string): ActionRule | null {

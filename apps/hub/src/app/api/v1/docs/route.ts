@@ -56,6 +56,9 @@ export const GET = withAuthz(
     return Response.json({
       items: page.items.map(toDocumentListItem),
       next_cursor: page.nextCursor,
+      // 状態タブの件数。cursor 適用前・認可適用後の集合から数えた値なので、
+      // ページを送っても件数は動かない (受入条件 6)。
+      status_counts: page.statusCounts,
     });
   },
 );

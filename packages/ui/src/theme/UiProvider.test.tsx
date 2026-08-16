@@ -29,7 +29,7 @@ function Probe(): ReactNode {
 
 describe('defaultUiPreferences', () => {
   it('ja / comfortable / auto を既定にする', () => {
-    expect(defaultUiPreferences).toEqual({ theme: 'auto', density: 'comfortable', locale: 'ja' });
+    expect(defaultUiPreferences).toEqual({ theme: 'auto', palette: 'gray', density: 'comfortable', locale: 'ja' });
   });
 });
 
@@ -98,6 +98,7 @@ describe('UiProvider', () => {
 
     expect(onPreferencesChange).toHaveBeenCalledWith({
       theme: 'dark',
+      palette: 'gray',
       density: 'comfortable',
       locale: 'ja',
     });

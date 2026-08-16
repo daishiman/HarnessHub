@@ -53,6 +53,10 @@ const buildItem: BuildListItem = {
   publish_request_id: null,
   title: '改善要望対応',
   risk: 'blocked',
+  title_override: null,
+  risk_override: null,
+  assignee_user_id: null,
+  note: null,
   created_at: 800,
   updated_at: 1_200,
 };

@@ -55,6 +55,10 @@ const LIST_ITEM: BuildListResponse['items'][number] = {
   publish_request_id: null,
   title: '請求書チェックハーネス',
   risk: 'warn',
+  title_override: null,
+  risk_override: null,
+  assignee_user_id: null,
+  note: null,
   created_at: 1_700_000_000_000,
   updated_at: 1_700_000_000_000,
 };

@@ -34,7 +34,7 @@ import {
   parseMutationWireResponse,
   prepareMutationIdempotency,
 } from './mutation-safety';
-import { containsTermInAny } from './search';
+import { containsTermInAny, toContainsPattern } from './search';
 import { serverNow } from './time';
 import { newUlid } from './ulid';
 
@@ -146,7 +146,10 @@ export interface UpdateDocumentInput {
 export interface ListDocumentsInput {
   readonly scope?: DocumentScope;
   readonly status?: DocumentStatus;
-  /** タイトルに含まれる語での絞り込み。対象を title だけにする理由は契約側 (documentListQuerySchema) に記載。 */
+  /**
+   * タイトルに含まれる語での絞り込み。対象を title だけにする理由は契約側
+   * (`documentListQuerySchema`) に記載。他の filter (scope/status/category/tag) とは AND で合成される。
+   */
   readonly query?: string;
   readonly category?: string;
   /** tags JSON 配列の要素に対する完全一致。 */
@@ -155,9 +158,25 @@ export interface ListDocumentsInput {
   readonly limit: number;
 }
 
+/**
+ * 状態タブに出す件数。
+ *
+ * **status 絞り込みと cursor を外した集合**から数える。cursor を残すと「このページの件数」に、
+ * status を残すと選択中のタブ以外が常に 0 になる。可視条件 (`visibilityCondition`) だけは外さない
+ * — 外すと権限の無い行が件数に混ざる。
+ * `unknown` は status が NULL の行 (状態不明) で、個別の状態タブへは混ぜない。
+ */
+export interface DocumentStatusCounts {
+  readonly all: number;
+  readonly published: number;
+  readonly draft: number;
+  readonly unknown: number;
+}
+
 export interface DocumentPage {
   readonly items: readonly DocumentRow[];
   readonly nextCursor: string | null;
+  readonly statusCounts: DocumentStatusCounts;
 }
 
 export interface PublishedDueDocument {
@@ -375,18 +394,31 @@ function documentUpdatePatch(existing: DocumentRow, input: UpdateDocumentInput, 
 export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository {
   return {
     async listDocuments(context, input) {
-      const predicates = [visibilityCondition(context)];
-      if (input.scope !== undefined) predicates.push(eq(documents.scope, input.scope));
-      if (input.status !== undefined) predicates.push(eq(documents.status, input.status));
+      // status と cursor を含まない述語。件数集計はこちらを使う (page 内の件数にしないため)。
+      const scopePredicates = [visibilityCondition(context)];
+      if (input.scope !== undefined) scopePredicates.push(eq(documents.scope, input.scope));
       if (input.query !== undefined) {
-        const search = containsTermInAny(input.query, [documents.title]);
-        if (search !== undefined) predicates.push(search);
+        // 検索対象は title / body / tags の OR (他の filter とは AND)。
+        // title だけだと、本文にしか出てこない語やタグ名で探した利用者に「0 件」を返す。
+        // 一覧に出ている情報で探せることが利用者側の期待なので、カードに出る 3 つを見る。
+        const textMatch = containsTermInAny(input.query, [documents.title, documents.bodyMarkdown]);
+        // tags は JSON 配列文字列 (`["設計","API"]`)。列へ直接 LIKE を当てると引用符や
+        // 角括弧まで検索対象に入り、`",` のような入力がタグを持つ全行に一致してしまう。
+        // 完全一致の tag filter と同じ骨格で要素へ展開してから当てる。json_valid を先に
+        // 置くのも同じ理由で、壊れた値は fail-closed で非一致にする。
+        const tagMatch = sql`EXISTS (
+          SELECT 1 FROM json_each(
+            CASE WHEN json_valid(${documents.tags}) THEN ${documents.tags} ELSE '[]' END
+          ) AS tag_item
+          WHERE tag_item.value LIKE ${toContainsPattern(input.query)} ESCAPE '\\'
+        )`;
+        scopePredicates.push(textMatch === undefined ? tagMatch : sql`(${textMatch} OR ${tagMatch})`);
       }
-      if (input.category !== undefined) predicates.push(eq(documents.category, input.category));
+      if (input.category !== undefined) scopePredicates.push(eq(documents.category, input.category));
       if (input.tag !== undefined) {
         // LIKE では `API` が `GraphAPI` にも当たる。json_valid を先に置いて既存の壊れた値は
         // fail-closed で非一致とし、json_each の配列要素単位で完全一致させる。
-        predicates.push(
+        scopePredicates.push(
           sql`EXISTS (
             SELECT 1 FROM json_each(
               CASE WHEN json_valid(${documents.tags}) THEN ${documents.tags} ELSE '[]' END
@@ -395,6 +427,8 @@ export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository
           )`,
         );
       }
+      const predicates = [...scopePredicates];
+      if (input.status !== undefined) predicates.push(eq(documents.status, input.status));
       // ULID primary key is monotonic, so it is a stable cursor even when a document's
       // updated_at changes while the user is paging.  Ordering by updated_at here would
       // make the ID cursor repeat or skip rows after an edit.
@@ -409,7 +443,29 @@ export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository
       const items = rows as DocumentRow[];
       const hasMore = items.length > input.limit;
       const page = hasMore ? items.slice(0, input.limit) : items;
-      return { items: page, nextCursor: hasMore ? (page[page.length - 1]?.id ?? null) : null };
+
+      // 状態別の件数は「認可を通した後・cursor を当てる前」の集合から数える (受入条件 6)。
+      // status 述語も外すので、選択中のタブ以外の件数もそのまま出る。
+      const countRows = (await adapter.client
+        .select({ status: documents.status, count: sql<number>`count(*)` })
+        .from(documents)
+        .where(and(...scopePredicates))
+        .groupBy(documents.status)) as readonly { status: string | null; count: number }[];
+      const statusCounts = countRows.reduce<{ all: number; published: number; draft: number; unknown: number }>(
+        (accumulator, row) => {
+          const count = Number(row.count);
+          accumulator.all += count;
+          // 状態が読めない行は個別タブへ振り分けず unknown に寄せる。「すべて」にだけ現れる
+          // ようにして、published/draft の件数を静かに水増ししない (受入条件 5)。
+          if (row.status === 'published') accumulator.published += count;
+          else if (row.status === 'draft') accumulator.draft += count;
+          else accumulator.unknown += count;
+          return accumulator;
+        },
+        { all: 0, published: 0, draft: 0, unknown: 0 },
+      );
+
+      return { items: page, nextCursor: hasMore ? (page[page.length - 1]?.id ?? null) : null, statusCounts };
     },
 
     async getDocument(context, id) {

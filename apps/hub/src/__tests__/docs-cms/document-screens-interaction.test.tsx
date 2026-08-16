@@ -291,12 +291,16 @@ describe('DOCS-UI: DocumentList の一覧取得と操作', () => {
     vi.stubGlobal('fetch', fetchMock);
     await render(<DocumentList tenantId="tenant-a" workspaceId="ws-1" />);
 
-    const statusSelect = container.querySelectorAll('select')[1] as HTMLSelectElement;
-    const selectValueSetter = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value')?.set;
-    if (selectValueSetter === undefined) throw new Error('select value setter がありません');
+    // 状態は選択欄から状態タブへ移した (feat-card-list-shell)。タブは押した時点で即適用される。
+    const statusTabs = container.querySelector('fieldset[aria-label="状態で絞り込み"]');
+    if (statusTabs === null) throw new Error('状態タブがありません');
+    // 「非公開」と取り違えないよう前方一致で選ぶ (件数が付くとラベルは「公開3」になる)。
+    const publishedTab = [...statusTabs.querySelectorAll('button')].find((button) =>
+      (button.textContent ?? '').startsWith('公開'),
+    );
+    if (publishedTab === undefined) throw new Error('公開タブがありません');
     await act(async () => {
-      selectValueSetter.call(statusSelect, 'published');
-      statusSelect.dispatchEvent(new Event('change', { bubbles: true }));
+      publishedTab.click();
     });
 
     const categoryInput = fieldByLabel(container, 'カテゴリ');

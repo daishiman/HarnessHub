@@ -18,6 +18,14 @@ PROFILE_RE = re.compile(
     re.MULTILINE,
 )
 
+# 転送だけの page は画面 owner ではないので surface を持たない (ADR §37)。
+# 本体と転送を同じ「実装 route」に数えると、旧 URL を消さない限り inventory が埋まらなくなる。
+LEGACY_REDIRECT_MARKER = "createLegacyRedirectPage"
+# 1 route へ複数 surface が同居してよい場所。ADR §37 で S00.LANDING と S09.METRICS を
+# /dashboard へ寄せ、旧 /metrics は転送だけにした。ここを広げるのは「画面 owner が
+# 2 つに割れないか」を確かめてからにする。
+COHABITING_ROUTES = {"/dashboard"}
+
 ALLOWED_DENSITIES = {"comfortable", "balanced", "compact"}
 ALLOWED_PATTERNS = {
     "table",
@@ -70,8 +78,11 @@ def _inventory_rows() -> list[dict[str, str]]:
 
 
 def _implemented_routes() -> list[str]:
+    """画面本体を持つ route。転送専用 page は surface を持たないので数えない。"""
     routes: list[str] = []
     for page in APP_ROOT.rglob("page.tsx"):
+        if LEGACY_REDIRECT_MARKER in page.read_text(encoding="utf-8"):
+            continue
         relative_parent = page.relative_to(APP_ROOT).parent
         segments = [
             segment
@@ -93,12 +104,13 @@ def test_current_inventory_is_a_bijection_with_implemented_routes() -> None:
     surface_ids = [row["Surface ID"] for row in current]
     implemented_routes = _implemented_routes()
 
-    assert len(inventory_routes) == len(set(inventory_routes)), "duplicate current route"
+    duplicated = {route for route in inventory_routes if inventory_routes.count(route) > 1}
+    assert duplicated <= COHABITING_ROUTES, f"unexpected duplicate current route: {duplicated}"
     assert len(surface_ids) == len(set(surface_ids)), "duplicate current surface ID"
     assert len(implemented_routes) == len(set(implemented_routes)), "duplicate page route"
     assert set(inventory_routes) == set(implemented_routes)
-    # /dashboard (S00.LANDING, feat-hub-foundation) を追加したため、現行画面は 28 件。
-    assert len(current) == 28
+    # /dashboard に S00.LANDING と S09.METRICS が同居する (ADR §37) ため、現行 surface は 29 件。
+    assert len(current) == 29
 
 
 def test_surface_profiles_have_complete_controlled_fields() -> None:

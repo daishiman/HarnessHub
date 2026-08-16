@@ -33,6 +33,8 @@ export const DOMAIN_ENUMS: readonly DomainEnum[] = [
     column: 'stage',
     values: ['hearing', 'requirements', 'design', 'build', 'test', 'review', 'publish'],
   },
+  // null (上書きなし) を含む nullable 列。null は enum 値ではないので、3 値それぞれを持つ行が要る
+  { table: 'builds', column: 'risk_override', values: ['none', 'warn', 'blocked'] },
   { table: 'catalog_entries', column: 'visibility', values: ['private', 'workspace'] },
   { table: 'deployment_references', column: 'provider', values: ['cloudflare'] },
   { table: 'device_authorizations', column: 'status', values: ['pending', 'approved', 'denied', 'consumed'] },

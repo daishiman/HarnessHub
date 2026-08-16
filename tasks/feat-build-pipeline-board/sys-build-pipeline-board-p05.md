@@ -75,3 +75,9 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 ## Final review note (2026-08-13)
 
 MVP 実装は PR #694/#701 で 3 endpoint（GET list/detail + POST stage）まで着地済み。ADR 目標の POST collection / PATCH item・対応認可 rule・delta migration は未実装のため formal close は保留。P04/P06–P12 の検証パッケージは現行 3 endpoint 面で記録済み。
+
+## 実装追記 (2026-08-16)
+
+`POST /api/v1/builds` と `PATCH /api/v1/builds/:id`、`builds.create` / `builds.update`、
+migration `0017` を追加した。詳細は
+[カード wave 受領書](../../docs/features/feat-card-list-shell/card-family-20260816-spec-reflection-receipt.md)。

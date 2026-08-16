@@ -278,3 +278,9 @@ md 以上ではアプリ本体を角丸 14px + 1px 輪郭 + `shadow-frame` で�
 - ナビ文言の折返しは画面別 CSS やゼロ幅文字でいじらない。Hub が意味の境目を宣言し、共通 CSS は `[data-hh-meaning-segment] { white-space: nowrap }` と `.hh-shell__nav-label--segmented` だけを持つ。
 - `touchTargetStyle` は表示密度 token（compact の 36px）と切り分ける。見た目の高さが下がっても、操作域の最小は 44px のままにする。
 - 機械保証: `packages/ui` の shell テスト、Hub の nav label 契約、製品所有印刷 0 件、公開シェルの実ブラウザ操作域。
+
+### 7. 配色 5 種と本文カード (2026-08-16)
+
+`data-palette` は `gray|blue|beige|green|navy`。切替 UI は `AppearancePicker` が所有し、
+token 表を client chunk に載せない。本文カードは `hh-cards` / `hh-card` と semantic token だけを使い、
+色だけで列や状態を区別しない。

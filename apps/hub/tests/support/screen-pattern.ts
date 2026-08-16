@@ -48,6 +48,19 @@ export interface RowJudgement {
   readonly reason: string;
 }
 
+/**
+ * 部品の使い方に印が出る語彙。`form` や `content` はここに無いので機械では判定しない。
+ *
+ * `judgeRow` の判定軸と、SPG-GATE-002 が数える「判定できるはずの件数」は必ず同じ集合で決める。
+ * 数える側だけが別の語彙表を持つと、判定から漏れた行を「対象外」として静かに数え落とす。
+ */
+const JUDGEABLE_WIDE_TOKENS = ['chart', 'table', 'board', 'wizard'] as const;
+
+/** 表の wide 側の語彙から、その行を機械判定できるかを返す。 */
+export function isJudgeableWide(wide: string): boolean {
+  return JUDGEABLE_WIDE_TOKENS.some((token) => wide.includes(token));
+}
+
 /** SSOT 表の marker。表の外にある同じ形の表を巻き込まないための境界。 */
 const TABLE_BEGIN = '<!-- ROUTE_SURFACES_BEGIN -->';
 const TABLE_END = '<!-- ROUTE_SURFACES_END -->';
@@ -110,15 +123,12 @@ export function judgeRow(row: RouteSurfaceRow, evidence: ImplementationEvidence)
   // `chart+table` のように語彙が合成されるので、当てはまる軸を全部見る。
   // 先に当たった 1 軸で打ち切ると、表の記載の片側だけを検査して緑にしてしまう
   const problems: string[] = [];
-  let judged = false;
 
   if (has(row.wide, 'chart')) {
-    judged = true;
     if (!evidence.chart) problems.push('グラフと書いてあるがグラフ部品を使っていない');
   }
 
   if (has(row.wide, 'table')) {
-    judged = true;
     if (!evidence.dataTable) {
       problems.push('表と書いてあるが DataTable を使っていない');
     } else if (has(row.narrow, 'card-collection') && !evidence.narrowAsCard) {
@@ -129,16 +139,14 @@ export function judgeRow(row: RouteSurfaceRow, evidence: ImplementationEvidence)
   }
 
   if (has(row.wide, 'board')) {
-    judged = true;
     if (!evidence.board) problems.push('工程ボードと書いてあるが StageBoard を使っていない');
   }
 
   if (has(row.wide, 'wizard')) {
-    judged = true;
     if (!evidence.wizard) problems.push('手順を追う形と書いてあるが Wizard 部品を使っていない');
   }
 
-  if (!judged) {
+  if (!isJudgeableWide(row.wide)) {
     return {
       ...base,
       verdict: 'not-judgeable',

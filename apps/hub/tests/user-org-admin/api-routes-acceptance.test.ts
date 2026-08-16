@@ -134,10 +134,20 @@ describe('P05 受入層: zod スキーマ契約 (AD-3)', () => {
     expect(parsed.email_enabled).toBe(true);
   });
 
-  it('UOA-API-007: GET/PATCH /api/v1/me/display-settings の zod スキーマが theme/density/language を持つ (AD-2 §S18)', () => {
-    const parsed = displaySettingsResponseSchema.parse({ theme: 'dark', density: 'compact', language: 'en' });
-    expect(parsed).toEqual({ theme: 'dark', density: 'compact', language: 'en' });
-    expect(() => displaySettingsResponseSchema.parse({ theme: 'blue', density: 'compact', language: 'en' })).toThrow();
+  it('UOA-API-007: GET/PATCH /api/v1/me/display-settings の zod スキーマが theme/density/language/palette を持つ (AD-2 §S18)', () => {
+    // palette (配色) と resolved_theme (theme=system のとき実際に見えている明るさ) は
+    // theme と直交する別軸なので、独立した必須フィールドとして持つ。
+    const settings = {
+      theme: 'dark',
+      density: 'compact',
+      language: 'en',
+      palette: 'navy',
+      resolved_theme: 'dark',
+    } as const;
+    expect(displaySettingsResponseSchema.parse(settings)).toEqual(settings);
+    expect(() => displaySettingsResponseSchema.parse({ ...settings, theme: 'blue' })).toThrow();
+    // 配色は theme の値域と混ぜない (theme に 'navy' は無く、palette に 'system' は無い)。
+    expect(() => displaySettingsResponseSchema.parse({ ...settings, palette: 'system' })).toThrow();
   });
 });
 

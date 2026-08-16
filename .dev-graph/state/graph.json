@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1748,
+  "graph_revision": 1753,
   "nodes": [
     {
       "acceptance": [
@@ -64166,12 +64166,12 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "到達状態 (target、未実装): 既存 Markdown.tsx の MarkdownView / ImageGroup / MarkdownEditor / Tabs を拡張し、:::cards container を同一 sanitize 経路で描画する。編集中は大画面は 2 ペイン、狭幅は Tabs とし、記法ミスで本文全体を壊さない。",
+      "goal": "到達状態 (achieved): 既存 Markdown.tsx の MarkdownView / ImageGroup / MarkdownEditor / Tabs を拡張し、:::cards container を同一 sanitize 経路で描画する。編集中は大画面は 2 ペイン、狭幅は Tabs とし、記法ミスで本文全体を壊さない。",
       "graph_node_id": "feat-card-block-authoring",
       "implementation_readiness": {
-        "checked_at": "2026-08-13T22:39:59Z",
+        "checked_at": "2026-08-15T00:00:00Z",
         "missing_sections": [],
-        "status": "incomplete"
+        "status": "complete"
       },
       "issue_linkage": null,
       "iteration": null,
@@ -64247,7 +64247,7 @@
       "template_version": "1.0.0",
       "title": "カードブロック本文記法と編集/プレビュー 2 ペイン",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-14T21:55:26Z"
+      "updated_at": "2026-08-15T23:38:37.521089Z"
     },
     {
       "acceptance": [
@@ -64309,12 +64309,12 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "到達状態 (target、未実装): Docs / Sheets / Catalog の 3 一覧はカードグリッドを既定とし、同じ DataTable column model からテーブル表示へ切り替えられる。tab / q / filter は URL query から完全に復元でき、認可済み集合の status_counts と cursor page が同じ契約で返る。",
+      "goal": "到達状態 (achieved): Docs / Sheets / Catalog の 3 一覧はカードグリッドを既定とし、同じ DataTable column model からテーブル表示へ切り替えられる。tab / q / filter は URL query から完全に復元でき、認可済み集合の status_counts と cursor page が同じ契約で返る。",
       "graph_node_id": "feat-card-list-shell",
       "implementation_readiness": {
-        "checked_at": "2026-08-13T22:39:59Z",
+        "checked_at": "2026-08-15T00:00:00Z",
         "missing_sections": [],
-        "status": "incomplete"
+        "status": "complete"
       },
       "issue_linkage": null,
       "iteration": null,
@@ -64400,7 +64400,7 @@
       "template_version": "1.0.0",
       "title": "一覧のカード型シェル (カードグリッド既定・表示切替・状態タブ・検索)",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-14T21:55:26Z"
+      "updated_at": "2026-08-15T23:36:56.395553Z"
     },
     {
       "acceptance": [
@@ -67740,12 +67740,16 @@
       "classification_confidence": 0.99,
       "classification_reason": "2つの macro feature を完了偽装せず、今回実装可能な監査・既知改行・印刷導線・仕様整合の縦切りを独立 issue として追跡する",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-16T00:20:17.000000Z",
+        "evidence_refs": [
+          "apps/hub/tests/browser/real-app-audit.ts",
+          "packages/db/scripts/issue-demo-coverage-session.ts",
+          "docs/features/feat-ui-integrity-audit-harness/ui-integrity-remediation-slice-spec-reflection-receipt.md"
+        ],
         "policy": "manual",
         "reconciled_at": null,
         "source": "manual",
-        "status": "open"
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "b751b1c860899cb14806045b29685825499b5487dff29f6a185cd16d2377cb05",
@@ -67821,7 +67825,7 @@
         "source_version": null
       },
       "start_date": "2026-08-15",
-      "status": "draft",
+      "status": "done",
       "tags": [
         "ui-integrity",
         "browser-test",
@@ -67834,7 +67838,7 @@
       "template_version": "1.0.0",
       "title": "UI崩れ監査と意味境界改行を実画面契約へ接続する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-15T02:42:26.769495Z"
+      "updated_at": "2026-08-16T00:20:17.000000Z"
     },
     {
       "acceptance": [
@@ -68221,6 +68225,113 @@
       "title": "配色テーマの複数パレット化 (3〜4 パレット × light/dark・参考画像・選択実績の計測)",
       "tracker_binding": "beads",
       "updated_at": "2026-08-15T13:37:01Z"
+    },
+    {
+      "acceptance": [
+        "素の一覧系 route の First Load JS が 113.1 KiB より下がる",
+        "pnpm check:client-bundle の WARN が 0 件になる",
+        "共有 chunk の内訳と削減結果が正本文書へ実測値つきで残る",
+        "barrel 巻き込み級の退行 (+40 KiB 以上) を引き続き検出できることをテストで確認する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/shared-chunk-budget-headroom-20260816.md",
+          "confidence": 0.98
+        }
+      ],
+      "classification_confidence": 0.98,
+      "classification_reason": "G13 予算の引き上げは下限上昇に対する止血であり、原因である共有 chunk の削減は独立した後続作業として追跡する",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": "manual",
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "7dd413babb14929a95df0a461c28da20dbfc0c3afc28efae783c97371b518aac",
+        "evaluator": "2026-08-16 PR #731 の check-client-bundle 実測 (下限 113.1 KiB / settings-system 122,898 bytes)",
+        "evidence_ref": "docs/frontend-ui-foundation-spec.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-16T00:00:00.000000Z",
+      "depends_on": [],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/shared-chunk-budget-headroom-20260816.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "共有 chunk を削って素の一覧系 route の First Load JS 下限を 113.1 KiB より下げ、check:client-bundle の WARN を 0 件にする",
+      "graph_node_id": "issue-shared-chunk-budget-headroom-20260816",
+      "implementation_readiness": {
+        "checked_at": "2026-08-16T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "G13 予算超過の是正先を「最後に import を足した route」ではなく原因である共有 chunk へ戻し、予算引き上げの再発を防ぐ",
+      "related_nodes": [],
+      "resource_scope": [
+        "apps/hub/scripts/check-client-bundle.mjs",
+        "apps/hub/src/app/(dashboard)/",
+        "docs/frontend-ui-foundation-spec.md"
+      ],
+      "scope_in": [
+        "共有 chunk (framework/shared) の内訳を実測で分解する",
+        "一覧系 route が共通で引き込む重い依存を route-local next/dynamic 境界へ逃がす",
+        "警告帯 (126 KiB の 95% = 122.7 KiB) に張り付いた route を帯の外へ戻す"
+      ],
+      "scope_out": [
+        "個別 route の見た目や機能の変更",
+        "G13 閾値そのものの再引き上げ",
+        "PR 作成・commit・push・デプロイ"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-16T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "performance",
+        "client-bundle",
+        "frontend",
+        "follow-up"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "共有 chunk を削って client JS 予算の余裕を戻す",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-16T00:00:00.000000Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

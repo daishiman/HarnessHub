@@ -153,6 +153,194 @@
   }
 }
 
+[data-palette='blue'] {
+  --hh-color-page-bg: #dde4ee;
+  --hh-color-bg: #eef2f9;
+  --hh-color-surface: #ffffff;
+  --hh-color-surface-muted: #e5ebf5;
+  --hh-color-border: #d5deea;
+  --hh-color-border-strong: #6f798c;
+  --hh-color-primary: #1e3a8a;
+  --hh-color-primary-hover: #2b4ba6;
+  --hh-color-primary-soft: #dde5f3;
+  --hh-color-on-primary: #ffffff;
+  --hh-color-neutral-soft: #e3e9f3;
+  --hh-color-focus-ring: #1e3a8a;
+}
+
+[data-palette='blue'][data-theme='dark'] {
+  --hh-color-page-bg: #0d1220;
+  --hh-color-bg: #131a2a;
+  --hh-color-surface: #1c2436;
+  --hh-color-surface-muted: #263046;
+  --hh-color-border: #38445c;
+  --hh-color-border-strong: #8593ad;
+  --hh-color-primary: #dbe7ff;
+  --hh-color-primary-hover: #b9cdf5;
+  --hh-color-primary-soft: #2b3852;
+  --hh-color-on-primary: #101828;
+  --hh-color-neutral-soft: #2c3850;
+  --hh-color-focus-ring: #dbe7ff;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-palette='blue'][data-theme='auto'] {
+    --hh-color-page-bg: #0d1220;
+    --hh-color-bg: #131a2a;
+    --hh-color-surface: #1c2436;
+    --hh-color-surface-muted: #263046;
+    --hh-color-border: #38445c;
+    --hh-color-border-strong: #8593ad;
+    --hh-color-primary: #dbe7ff;
+    --hh-color-primary-hover: #b9cdf5;
+    --hh-color-primary-soft: #2b3852;
+    --hh-color-on-primary: #101828;
+    --hh-color-neutral-soft: #2c3850;
+    --hh-color-focus-ring: #dbe7ff;
+  }
+}
+
+[data-palette='beige'] {
+  --hh-color-page-bg: #e7e0d3;
+  --hh-color-bg: #f6f2ea;
+  --hh-color-surface: #fffefb;
+  --hh-color-surface-muted: #ede7da;
+  --hh-color-border: #ded6c6;
+  --hh-color-border-strong: #7d7466;
+  --hh-color-primary: #3b3227;
+  --hh-color-primary-hover: #574a38;
+  --hh-color-primary-soft: #eae2d2;
+  --hh-color-on-primary: #fffefb;
+  --hh-color-neutral-soft: #ebe4d6;
+  --hh-color-focus-ring: #3b3227;
+}
+
+[data-palette='beige'][data-theme='dark'] {
+  --hh-color-page-bg: #17140f;
+  --hh-color-bg: #1f1b15;
+  --hh-color-surface: #2a251d;
+  --hh-color-surface-muted: #353027;
+  --hh-color-border: #474135;
+  --hh-color-border-strong: #948a76;
+  --hh-color-primary: #f7f0e2;
+  --hh-color-primary-hover: #ded6c4;
+  --hh-color-primary-soft: #3a3428;
+  --hh-color-on-primary: #1a160f;
+  --hh-color-neutral-soft: #3b3529;
+  --hh-color-focus-ring: #f7f0e2;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-palette='beige'][data-theme='auto'] {
+    --hh-color-page-bg: #17140f;
+    --hh-color-bg: #1f1b15;
+    --hh-color-surface: #2a251d;
+    --hh-color-surface-muted: #353027;
+    --hh-color-border: #474135;
+    --hh-color-border-strong: #948a76;
+    --hh-color-primary: #f7f0e2;
+    --hh-color-primary-hover: #ded6c4;
+    --hh-color-primary-soft: #3a3428;
+    --hh-color-on-primary: #1a160f;
+    --hh-color-neutral-soft: #3b3529;
+    --hh-color-focus-ring: #f7f0e2;
+  }
+}
+
+[data-palette='green'] {
+  --hh-color-page-bg: #dbe7dd;
+  --hh-color-bg: #eef5f0;
+  --hh-color-surface: #ffffff;
+  --hh-color-surface-muted: #e4efe8;
+  --hh-color-border: #d2e0d6;
+  --hh-color-border-strong: #69796e;
+  --hh-color-primary: #14532d;
+  --hh-color-primary-hover: #1f6b3d;
+  --hh-color-primary-soft: #dcebe1;
+  --hh-color-on-primary: #ffffff;
+  --hh-color-neutral-soft: #e2ece6;
+  --hh-color-focus-ring: #14532d;
+}
+
+[data-palette='green'][data-theme='dark'] {
+  --hh-color-page-bg: #0d1512;
+  --hh-color-bg: #141d18;
+  --hh-color-surface: #1d2721;
+  --hh-color-surface-muted: #27332c;
+  --hh-color-border: #3a473f;
+  --hh-color-border-strong: #88998e;
+  --hh-color-primary: #e3f3e8;
+  --hh-color-primary-hover: #c2ddcb;
+  --hh-color-primary-soft: #2b3a31;
+  --hh-color-on-primary: #101a14;
+  --hh-color-neutral-soft: #2d3c33;
+  --hh-color-focus-ring: #e3f3e8;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-palette='green'][data-theme='auto'] {
+    --hh-color-page-bg: #0d1512;
+    --hh-color-bg: #141d18;
+    --hh-color-surface: #1d2721;
+    --hh-color-surface-muted: #27332c;
+    --hh-color-border: #3a473f;
+    --hh-color-border-strong: #88998e;
+    --hh-color-primary: #e3f3e8;
+    --hh-color-primary-hover: #c2ddcb;
+    --hh-color-primary-soft: #2b3a31;
+    --hh-color-on-primary: #101a14;
+    --hh-color-neutral-soft: #2d3c33;
+    --hh-color-focus-ring: #e3f3e8;
+  }
+}
+
+[data-palette='navy'] {
+  --hh-color-page-bg: #d7dded;
+  --hh-color-bg: #eaeef8;
+  --hh-color-surface: #ffffff;
+  --hh-color-surface-muted: #e0e6f4;
+  --hh-color-border: #ced7ea;
+  --hh-color-border-strong: #6a7590;
+  --hh-color-primary: #172554;
+  --hh-color-primary-hover: #24376f;
+  --hh-color-primary-soft: #dce3f2;
+  --hh-color-on-primary: #ffffff;
+  --hh-color-neutral-soft: #dee5f2;
+  --hh-color-focus-ring: #172554;
+}
+
+[data-palette='navy'][data-theme='dark'] {
+  --hh-color-page-bg: #0a0f1e;
+  --hh-color-bg: #101728;
+  --hh-color-surface: #192134;
+  --hh-color-surface-muted: #232d44;
+  --hh-color-border: #35415a;
+  --hh-color-border-strong: #8390ab;
+  --hh-color-primary: #dde6fb;
+  --hh-color-primary-hover: #bac9ee;
+  --hh-color-primary-soft: #28334d;
+  --hh-color-on-primary: #0c1322;
+  --hh-color-neutral-soft: #2a344e;
+  --hh-color-focus-ring: #dde6fb;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-palette='navy'][data-theme='auto'] {
+    --hh-color-page-bg: #0a0f1e;
+    --hh-color-bg: #101728;
+    --hh-color-surface: #192134;
+    --hh-color-surface-muted: #232d44;
+    --hh-color-border: #35415a;
+    --hh-color-border-strong: #8390ab;
+    --hh-color-primary: #dde6fb;
+    --hh-color-primary-hover: #bac9ee;
+    --hh-color-primary-soft: #28334d;
+    --hh-color-on-primary: #0c1322;
+    --hh-color-neutral-soft: #2a344e;
+    --hh-color-focus-ring: #dde6fb;
+  }
+}
+
 [data-density='compact'] {
   --hh-control-height: 36px;
   --hh-row-padding-y: 6px;
@@ -317,6 +505,19 @@ legend {
   font-weight: var(--hh-font-weight-bold);
 }
 
+:where([data-hh-focusable]),
+:where([data-hh-data-table]) a[href] {
+  min-block-size: 44px;
+  min-inline-size: 44px;
+}
+
+:where(a, button, [role="button"], [role="link"])[data-hh-focusable],
+:where([data-hh-data-table]) a[href] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 [data-hh-visually-hidden] {
   position: absolute;
   width: 1px;
@@ -468,7 +669,7 @@ body {
   flex: 0 0 auto;
   align-items: center;
   gap: var(--hh-space-1);
-  min-height: var(--hh-control-height);
+  min-block-size: 44px;
   padding-inline: var(--hh-space-3);
   border: 1px solid var(--hh-color-border);
   border-radius: var(--hh-radius-full);

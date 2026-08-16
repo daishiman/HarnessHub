@@ -6,7 +6,7 @@ feature_id: feat-demo-coverage-dataset
 updated_at: "2026-08-15"
 ---
 
-## 10. ドメイン enum 全値 (実測 42 カラム / 132 値)
+## 10. ドメイン enum 全値 (実測 43 カラム / 135 値)
 
 `packages/db/schema/**/*.ts` の実測結果である。検査 3 (A2) の入力となる。
 
@@ -16,6 +16,7 @@ updated_at: "2026-08-15"
 | build-pipeline | `buildStageEvents.to_stage` | 同上 | 7 |
 | builds | `builds.type` | hearing / improvement / review / bug | 4 |
 | builds | `builds.stage` | hearing / requirements / design / build / test / review / publish | 7 |
+| builds | `builds.risk_override` | none / warn / blocked (null は「上書きなし」で enum 値ではない) | 3 |
 | core/catalog | `projects.status` | active / suspended / archived | 3 |
 | core/catalog | `targetChannels.target` | skill / web_app | 2 |
 | core/catalog | `releases.status` | available / suspended / deprecated | 3 |
@@ -55,7 +56,7 @@ updated_at: "2026-08-15"
 | notion-integration | `notionIntegrations.mode` | url / api_key | 2 |
 | tenant-data | `tenantDataObjects.kind` | knowledge_doc / run_input / run_output / hearing_screenshot | 4 |
 
-合計: 42 カラム / 132 値。
+合計: 43 カラム / 135 値。
 
 ### 10.1 動作前提と衝突する enum 値の扱い
 
@@ -71,7 +72,7 @@ updated_at: "2026-08-15"
 
 ### 10.2 画面に現れないテーブルの enum
 
-`encryptionKeys` / `smokeFixtureLeases` / `auditEvents.actor_type` / `buildStageEvents` などは、28 route のいずれにも直接表示されない。受入条件 A2 は「各ドメインモデルの enum ステータスが全値」と定めており、画面表示の有無で対象を絞っていない。したがってこれらも投入対象に含め、検査 3 (§9.2) の対象とする。画面到達手順 (§2 の `reach`) は持たない。
+`encryptionKeys` / `smokeFixtureLeases` / `auditEvents.actor_type` / `buildStageEvents` などは、30 route のいずれにも直接表示されない。受入条件 A2 は「各ドメインモデルの enum ステータスが全値」と定めており、画面表示の有無で対象を絞っていない。したがってこれらも投入対象に含め、検査 3 (§9.2) の対象とする。画面到達手順 (§2 の `reach`) は持たない。
 
 ## 11. 既存 schema への影響
 

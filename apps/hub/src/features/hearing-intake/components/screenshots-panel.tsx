@@ -137,12 +137,13 @@ export function ScreenshotsPanel({ id: sheetId, tenantId, workspaceId }: Hearing
         {loadError === null ? null : <Alert tone="danger" title="読み込みエラー" description={loadError} />}
         {operationError === null ? null : <Alert tone="danger" title="操作エラー" description={operationError} />}
 
-        <div style={{ alignItems: 'flex-end', display: 'flex', flexWrap: 'wrap', gap: 'var(--hh-space-3)' }}>
+        <Stack direction="horizontal" gap={3} align="flex-end">
           <TextInput
             ref={fileInputRef}
             label="ファイル"
             type="file"
             accept={ATTACHMENT_ACCEPTED_FILE_EXTENSIONS}
+            style={{ inlineSize: '100%', maxInlineSize: '100%' }}
             onChange={(event) => setFile(event.target.files?.[0] ?? null)}
           />
           <TextInput
@@ -155,7 +156,7 @@ export function ScreenshotsPanel({ id: sheetId, tenantId, workspaceId }: Hearing
           <Button type="button" onClick={() => void upload()} disabled={file === null || uploading}>
             {uploading ? 'アップロード中…' : 'アップロード'}
           </Button>
-        </div>
+        </Stack>
 
         {items.length === 0 ? (
           <p>まだ添付ファイルはありません。</p>

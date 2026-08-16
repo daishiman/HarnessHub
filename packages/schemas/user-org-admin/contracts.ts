@@ -154,11 +154,28 @@ export type ThemePreference = z.output<typeof themePreferenceSchema>;
 export const densityPreferenceSchema = z.enum(['comfortable', 'compact']);
 export type DensityPreference = z.output<typeof densityPreferenceSchema>;
 
+/**
+ * 配色 (palette) は明るさ (theme) と直交する別軸。`@harness-hub/ui` の `paletteNames` が
+ * 見た目側の正本だが、契約層から UI 部品へ依存させない (依存の向きは ui → schemas)。
+ * 値は同じ集合に保ち、ずれは `packages/ui` 側のテストと本 enum の突き合わせで守る。
+ */
+export const palettePreferenceSchema = z.enum(['gray', 'blue', 'beige', 'green', 'navy']);
+export type PalettePreference = z.output<typeof palettePreferenceSchema>;
+
+/**
+ * `theme` が `system` のとき、その端末で実際に表示された明るさ。
+ * 「自動を選んだ人が実際は何を見ているか」は自動のままでは分からないので、保存時に確定値を控える。
+ */
+export const resolvedThemeSchema = z.enum(['light', 'dark']);
+export type ResolvedTheme = z.output<typeof resolvedThemeSchema>;
+
 export const displaySettingsResponseSchema = z
   .object({
     theme: themePreferenceSchema,
     density: densityPreferenceSchema,
     language: localeSchema,
+    palette: palettePreferenceSchema,
+    resolved_theme: resolvedThemeSchema,
   })
   .strict();
 export type DisplaySettingsResponse = z.output<typeof displaySettingsResponseSchema>;
@@ -168,9 +185,35 @@ export const updateDisplaySettingsRequestSchema = z
     theme: themePreferenceSchema.optional(),
     density: densityPreferenceSchema.optional(),
     language: localeSchema.optional(),
+    palette: palettePreferenceSchema.optional(),
+    resolved_theme: resolvedThemeSchema.optional(),
   })
   .strict();
 export type UpdateDisplaySettingsRequest = z.output<typeof updateDisplaySettingsRequestSchema>;
+
+/**
+ * GET /api/v1/admin/appearance-usage — 配色の採用状況 (provider-admin 限定)。
+ *
+ * 数えるのは「押した回数」ではなく利用者ごとの現在設定 1 行なので、1 人 = 1 票になる。
+ * 構成比の分母は `measured_users` (外観を保存した人) で、全利用者ではない —
+ * 未保存の人は既定の配色で表示されているだけで、選んだ結果ではないため。
+ * 個人を特定できる値は含めない (人数と比率だけ)。
+ */
+const usageShareSchema = { users: z.number().int().nonnegative(), share: z.number().min(0).max(1) };
+
+export const appearanceUsageResponseSchema = z
+  .object({
+    total_users: z.number().int().nonnegative(),
+    measured_users: z.number().int().nonnegative(),
+    measurement_rate: z.number().min(0).max(1),
+    by_palette: z.array(z.object({ palette: palettePreferenceSchema, ...usageShareSchema }).strict()),
+    by_palette_theme: z.array(
+      z.object({ palette: palettePreferenceSchema, theme: themePreferenceSchema, ...usageShareSchema }).strict(),
+    ),
+    by_resolved_theme: z.array(z.object({ resolved_theme: resolvedThemeSchema, ...usageShareSchema }).strict()),
+  })
+  .strict();
+export type AppearanceUsageResponse = z.output<typeof appearanceUsageResponseSchema>;
 
 /**
  * GET/PATCH /api/v1/tenant/coefficients (AD-4)。

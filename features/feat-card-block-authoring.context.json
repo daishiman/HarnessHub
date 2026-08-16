@@ -2,7 +2,7 @@
   "graph_node_id": "feat-card-block-authoring",
   "artifact_kind": "feature",
   "purpose": "現状 (current) の MarkdownEditor は edit/preview Tabs を持ち、編集画面には別途、保存済み本文の preview がある。しかし 2 列・3 列の意味あるカード container、大画面の同時編集、不正記法の警告契約は未実装である。既存の安全な Markdown 経路を広げ、本文をカード単位で構成できるようにする。",
-  "goal": "到達状態 (target、未実装): 既存 Markdown.tsx の MarkdownView / ImageGroup / MarkdownEditor / Tabs を拡張し、:::cards container を同一 sanitize 経路で描画する。編集中は大画面は 2 ペイン、狭幅は Tabs とし、記法ミスで本文全体を壊さない。",
+  "goal": "到達状態 (achieved): 既存 Markdown.tsx の MarkdownView / ImageGroup / MarkdownEditor / Tabs を拡張し、:::cards container を同一 sanitize 経路で描画する。編集中は大画面は 2 ペイン、狭幅は Tabs とし、記法ミスで本文全体を壊さない。",
   "scope_in": [
     "packages/ui/src/components/Markdown.tsx の既存 MarkdownView / ImageGroup / MarkdownEditor / Tabs を拡張し、別 renderer を作らない",
     ":::cards cols=2|3 の内側に :::card を並べる container 記法、DOM 記述順、大画面 2/3 列・中幅最大 2 列・狭幅 1 列のレスポンシブ描画を実装する",
@@ -58,5 +58,5 @@
     "apps/hub/src/features/docs-cms/image-service.ts",
     "apps/hub/tests/browser"
   ],
-  "updated_at": "2026-08-14T21:55:26Z"
+  "updated_at": "2026-08-15T23:38:37.521089Z"
 }

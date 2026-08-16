@@ -53,6 +53,12 @@ const MIGRATIONS = [
   '0005_common_stepford_cuckoos.sql',
   '0006_tenant-data-retention.sql',
   '0007_feedback-loop-builds.sql',
+  // user_settings の通知列を読む経路は、0016 で足した palette/resolved_theme も
+  // 同じ select に含める (drizzle は全列を明示列挙する)。
+  '0016_appearance-palette-preference.sql',
+  // builds の手入力列 (0017)。drizzle は全列を明示列挙するので、列が無いと
+  // builds への insert/select がそのまま "no such column" になる。
+  '0017_build-card-authoring.sql',
 ];
 
 export interface FeedbackDbHarness {

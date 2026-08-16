@@ -12,6 +12,7 @@
 // 型注釈があると綴り違いの列挙値が実行時ではなく型検査で落ちる。逆に `as string` で潰すと
 // リテラル型まで失われ、enum 列の検査が丸ごと無効になる。
 
+import { hearingSheetEstimateSchema, hearingSheetFormSnapshotSchema } from '@harness-hub/schemas';
 import { inArray } from 'drizzle-orm';
 import type { CoreAdapter } from '../../repository/db';
 import * as schema from '../../schema/index';
@@ -390,7 +391,7 @@ function idpConnectionRows(): (typeof schema.idpConnections.$inferInsert)[] {
       credentialMode: 'customer_google',
       credentialStatus: 'active',
       clientSecretLast4: '0003',
-      allowedWorkspaceDomains: 'demo.example.com',
+      allowedWorkspaceDomains: JSON.stringify(['demo.example.com']),
       lastTestedAt: at(6),
       updatedAt: at(6),
     },
@@ -916,6 +917,31 @@ function tenantDataTombstoneRows(): (typeof schema.tenantDataTombstones.$inferIn
 
 // --- hearing intake ---------------------------------------------------------
 
+function hearingFormSnapshot(title: string, index: number) {
+  return hearingSheetFormSnapshotSchema.parse({
+    taskName: title,
+    company: 'デモ株式会社',
+    applicant: 'デモ利用者',
+    domain: index % 2 === 0 ? '経理' : '業務改善',
+    issue: '手作業の確認に時間がかかり、担当者ごとに判断がぶれる',
+    tools: '表計算 / 社内ワークフロー',
+    hours: 20 + index,
+    people: 5 + index,
+    features: '入力チェック・下書き・履歴の記録',
+    output: '確認結果の一覧',
+    priority: 'high',
+  });
+}
+
+function hearingEstimateSnapshot(index: number) {
+  const savedHoursPerYear = 400 + index;
+  return hearingSheetEstimateSchema.parse({
+    savedMinutesPerYear: savedHoursPerYear * 60,
+    savedHoursPerYear,
+    savedAmountPerYear: savedHoursPerYear * 3_000,
+  });
+}
+
 function hearingSheetRows(): (typeof schema.hearingSheets.$inferInsert)[] {
   const statuses = ['received', 'generating', 'review', 'completed'] as const;
   const titles = [
@@ -952,8 +978,8 @@ function hearingSheetRows(): (typeof schema.hearingSheets.$inferInsert)[] {
     tenantId: TENANT.main,
     workspaceId: WORKSPACE.main,
     applicantUserId: USER.member,
-    formJson: JSON.stringify({ purpose: 'デモ', frequency: 'weekly' }),
-    estimateJson: JSON.stringify({ minutesPerRun: 25, runsPerMonth: 8 }),
+    formJson: JSON.stringify(hearingFormSnapshot(row.title, index)),
+    estimateJson: JSON.stringify(hearingEstimateSnapshot(index)),
     createdAt: at(130 + index),
     updatedAt: at(130 + index),
   }));
@@ -1281,12 +1307,19 @@ function feedbackRows(): (typeof schema.feedbacks.$inferInsert)[] {
 const BUILD_STAGES = ['hearing', 'requirements', 'design', 'build', 'test', 'review', 'publish'] as const;
 const BUILD_TYPES = ['hearing', 'improvement', 'review', 'bug', 'hearing', 'improvement', 'review'] as const;
 
+/** risk_override の 3 値を先頭3件へ順に置く。4件目以降は null (上書きなし)。 */
+const BUILD_RISK_OVERRIDES = ['none', 'warn', 'blocked'] as const;
+
 function buildRows(): (typeof schema.builds.$inferInsert)[] {
   // uq(feedback_id) があるため、要望を紐づけるのは 1 行だけにする (NULL 同士は競合しない)。
   const named = BUILD.map((id, index) => ({
     id,
     type: pick(BUILD_TYPES, index),
     stage: pick(BUILD_STAGES, index),
+    // 先頭3件だけに人手の上書きを置き、残りは null (停滞日数からの算出値をそのまま使う) にする。
+    // 3 値それぞれと「上書きなし」の 4 通りが同時に画面へ並ぶようにするため。index 由来なので
+    // 何度実行しても同じ行に同じ値が入る (冪等)。
+    riskOverride: BUILD_RISK_OVERRIDES[index] ?? null,
     sheetId: index === 0 ? pick(SHEET, 3) : null,
     feedbackId: index === 1 ? FEEDBACK.open : null,
     publishRequestId: index === 6 ? pick(PUBLISH_REQUEST, 3) : null,
@@ -1296,6 +1329,7 @@ function buildRows(): (typeof schema.builds.$inferInsert)[] {
     id,
     type: 'hearing' as const,
     stage: pick(BUILD_STAGES, index),
+    riskOverride: null,
     sheetId: null,
     feedbackId: null,
     publishRequestId: null,

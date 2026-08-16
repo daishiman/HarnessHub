@@ -3,7 +3,7 @@ status: confirmed
 layer: operations
 ---
 
-# 運用手順書 (runbook) — デモデータの投入と 28 route × 5 状態への到達 (feat-demo-coverage-dataset / P12)
+# 運用手順書 (runbook) — デモデータの投入と 30 route × 5 状態への到達 (feat-demo-coverage-dataset / P12)
 
 本 feature が用意したデモデータを手元へ投入し、対象 28 画面それぞれについて **空 / 1 件 / 大量 / 長文 / エラー** の 5 状態を目視確認するための手順書である。実ブラウザ検査を行う後続 feature `feat-ui-integrity-audit-harness` の担当者、および人手で画面を確認する担当者を読者に想定している。
 
@@ -98,8 +98,8 @@ pnpm --filter @harness-hub/db exec tsx scripts/verify-demo-coverage-matrix.ts
 | N6 | 単一ドキュメントの表示・編集で、一覧のページング境界を持たない | 2 |
 | N7 | 認証済み利用者が必ず 1 件以上存在するため 0 件が成立しない | 2 |
 
-合計: 140 セル = 適用 105 件 + 非適用 35 件 + 未割当 0 件。
+合計: 150 セル = 適用 115 件 + 非適用 35 件 + 未割当 0 件。
 
-## 4. 28 route × 5 状態への到達
+## 4. 30 route × 5 状態への到達
 
 画面ごとの到達表は [runbook-route-reach.md](docs/features/feat-demo-coverage-dataset/runbook-route-reach.md) を正本とする。

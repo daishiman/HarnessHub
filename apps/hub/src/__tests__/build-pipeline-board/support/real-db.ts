@@ -30,8 +30,9 @@ const MIGRATIONS_DIR = join(HERE, '..', '..', '..', '..', '..', '..', 'packages'
 
 /**
  * `0000` は `publish_requests` (publish 工程の前提確認)、`0007` は `builds`、
- * `0008` は `build_stage_events` を作る。device-flow/OIDC 系 (0001/0003/0004) は
- * 本 feature から参照されないため含めない。canonical lineage と同じ順で適用する。
+ * `0008` は `build_stage_events`、`0017` はカード手入力列と `sheet_id` の一意制約を作る。
+ * device-flow/OIDC 系 (0001/0003/0004) は本 feature から参照されないため含めない。
+ * canonical lineage と同じ順で適用する。
  */
 const MIGRATIONS = [
   '0000_baseline-core-domain.sql',
@@ -40,6 +41,7 @@ const MIGRATIONS = [
   '0006_tenant-data-retention.sql',
   '0007_feedback-loop-builds.sql',
   '0008_metrics-tracking-and-build-stage-events.sql',
+  '0017_build-card-authoring.sql',
 ];
 
 export interface SeedBuildInput {
@@ -50,6 +52,9 @@ export interface SeedBuildInput {
   readonly stage: string;
   readonly publishRequestId?: string | null;
   readonly updatedAt?: number;
+  /** 接続元。一意制約 (`builds_sheet_id_uq`) の重複起票テストで使う。 */
+  readonly sheetId?: string | null;
+  readonly feedbackId?: string | null;
 }
 
 export interface SeedPublishRequestInput {
@@ -89,7 +94,8 @@ export async function createBuildBoardDbHarness(): Promise<BuildBoardDbHarness> 
       await applyDdlStatements(adapter, [
         `INSERT INTO builds (id, tenant_id, workspace_id, type, stage, sheet_id, feedback_id, publish_request_id, created_at, updated_at)
          VALUES (${quote(input.id)}, ${quote(input.tenantId)}, ${quote(input.workspaceId)}, ${quote(input.type)},
-                 ${quote(input.stage)}, NULL, NULL, ${quote(input.publishRequestId ?? null)}, ${timestamp}, ${timestamp})`,
+                 ${quote(input.stage)}, ${quote(input.sheetId ?? null)}, ${quote(input.feedbackId ?? null)},
+                 ${quote(input.publishRequestId ?? null)}, ${timestamp}, ${timestamp})`,
       ]);
     },
 

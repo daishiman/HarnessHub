@@ -1,6 +1,6 @@
 // route × 状態 の対応表 (requirements-baseline.md §6.3 の実装)。
 //
-// 28 route × 5 状態 = 140 セルを、適用 (到達手順つき) と非適用 (理由記号つき) のどちらかへ必ず解決する。
+// 30 route × 5 状態 = 150 セルを、適用 (到達手順つき) と非適用 (理由記号つき) のどちらかへ必ず解決する。
 // 「空欄・保留なし」が A7 の機械検査対象であり、verify-demo-coverage-matrix.ts がこの表を検査する。
 //
 // route 一覧をここに書き写しているのは意図的である。apps/hub の page.tsx から自動導出すると、
@@ -21,9 +21,12 @@ export const NOT_APPLICABLE_REASONS = {
 } as const;
 export type NotApplicableReason = keyof typeof NOT_APPLICABLE_REASONS;
 
+export const ROUTE_ACTORS = ['anonymous', 'member', 'workspace-admin', 'provider-admin'] as const;
+export type RouteActor = (typeof ROUTE_ACTORS)[number];
+
 export interface ReachStep {
   /** どの役割で開くか。 */
-  readonly actor: string;
+  readonly actor: RouteActor;
   /** 実際に開く URL。動的 segment は決定論 ID へ解決済み。 */
   readonly url: string;
   /** その状態を成立させる seed fixture の論理キー。 */
@@ -93,7 +96,7 @@ interface RouteSpec {
   readonly screenCode: string;
   readonly route: string;
   readonly url: string;
-  readonly actor: string;
+  readonly actor: RouteActor;
   /** その画面を成立させる route 固有の fixture 論理キー。 */
   readonly fixtures: readonly string[];
   readonly na: Partial<Record<RouteState, NotApplicableReason>>;
@@ -312,7 +315,7 @@ const ROUTE_SPECS: readonly RouteSpec[] = [
     screenCode: 'SCR-27',
     route: '/settings/auth',
     url: '/settings/auth',
-    actor: 'workspace-admin',
+    actor: 'provider-admin',
     fixtures: ['idp-connection/active/0001', 'idp-connection/disabled/0001'],
     na: { bulk: 'N5' },
   },
@@ -322,6 +325,25 @@ const ROUTE_SPECS: readonly RouteSpec[] = [
     url: '/settings/coefficients',
     actor: 'workspace-admin',
     fixtures: ['tenant-coefficient/main/0001', 'metrics-rollup/tenant-daily/0001'],
+    na: {},
+  },
+  {
+    // 配色の採用状況。行数は配色 × 明るさで上限が決まるが、母数 (利用者数) は件数で動くので
+    // bulk も 0 件の empty も見る意味がある。5 状態すべてに到達手順を置く
+    screenCode: 'SCR-29',
+    route: '/settings/system',
+    url: '/settings/system',
+    actor: 'provider-admin',
+    fixtures: ['user-setting/provider-admin/0001', 'user-setting/member/0001'],
+    na: {},
+  },
+  {
+    // 週次の実行回数と削減効果。集計画面なので /metrics/usage と同じ形で 5 状態を割り当てる
+    screenCode: 'SCR-30',
+    route: '/tracking',
+    url: '/tracking',
+    actor: 'member',
+    fixtures: ['metrics-event/base/0001', 'tenant-coefficient/main/0001'],
     na: {},
   },
 ];

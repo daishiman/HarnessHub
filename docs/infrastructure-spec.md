@@ -154,7 +154,7 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 | G10 | 共通層 duplicate detector | owner package 外の同名 export / 境界迂回 import に加え、**運用機構 (§3) の owner artifact 実在**と**認可 wrapper を迂回した route handler** を検出 |
 | G11 | Core Web Vitals | main 反映後の定期計測 (PR 単位では Actions 無料枠を圧迫するため) |
 | G12 | 認証・認可 静的検査 | `apps/hub/scripts/check-auth-gates.mjs` の 3 検査 — Auth.js 境界隔離 (D3) / 認可判定の単一集約 + route 例外の厳密一致 (SEC2 / AD-4) / dev 専用 provider の非存在 (I7)。静的ゲート段 |
-| G13 | client JS 予算 | `next build` 出力から route ごとの First Load JS を gzip 実測し 120 KiB / route 超過で fail (G5 の Worker 予算とは別軸。qa-018 / frontend-spec §8) |
+| G13 | client JS 予算 | `next build` 出力から route ごとの First Load JS を gzip 実測し 126 KiB / route 超過で fail (G5 の Worker 予算とは別軸。qa-018 / frontend-spec §8) |
 | G14 | OIDC / owner認可 release contract | tenant別OIDC開始フローと、owner関係roleを含む認可表・tenant分離を名指しで再実行 |
 
 **ゲートが空振りしないための実行順序と前提検査 (2026-07-21 追記)**

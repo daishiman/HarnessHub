@@ -38,6 +38,10 @@ function buildRow(overrides: Partial<BuildRow> = {}): BuildRow {
     sheetId: null,
     feedbackId: null,
     publishRequestId: null,
+    titleOverride: null,
+    riskOverride: null,
+    assigneeUserId: null,
+    note: null,
     createdAt: NOW,
     updatedAt: NOW,
     ...overrides,
@@ -92,6 +96,12 @@ function stubRepository(rows: readonly BuildRow[]) {
     listRecentTouchedBuilds: async () => rows,
     transitionStage: async () => {
       throw new Error('この test では遷移を呼ばない');
+    },
+    createBuild: async () => {
+      throw new Error('この test では起票を呼ばない (route テスト側で実 DB を使う)');
+    },
+    updateBuild: async () => {
+      throw new Error('この test ではカード編集を呼ばない (route テスト側で実 DB を使う)');
     },
   };
 }

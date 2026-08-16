@@ -80,6 +80,8 @@ describe('UIS-NAV: 導線の定義', () => {
       ['/feedback/fb-1', 'フィードバック詳細'],
       ['/metrics', '効果測定ダッシュボード'],
       ['/metrics/usage', '使用状況・削減効果'],
+      ['/tracking', '使用状況・削減効果'],
+      ['/settings/system', 'システム'],
       ['/sheets', 'ヒアリングシート'],
       ['/sheets/new', '業務の困りごとを登録'],
       ['/sheets/hs-1', 'ヒアリングシート詳細'],
@@ -241,6 +243,8 @@ describe('UIS-NAV: 導線の定義', () => {
       '認証設定',
       '見積係数設定',
       'Notion連携',
+      // 配色の採用状況 (全テナント横断の傾向) は provider-admin だけに出す。
+      'システム',
     ]);
   });
 });
@@ -257,6 +261,24 @@ describe('UIS-SHELL: HubShell の描画', () => {
     expect(document.querySelector('form[aria-label="ヒアリングシートを検索"]')).not.toBeNull();
     expect(document.querySelector('nav[aria-label="フッター情報"]')).not.toBeNull();
     expect(document.querySelector('nav[aria-label="画面切替"]')).not.toBeNull();
+  });
+
+  it('UIS-SHELL-001b: サイドバーのブランド導線も共通のタップ領域契約に載る', () => {
+    renderShell('/dashboard');
+
+    const brand = [...document.querySelectorAll('nav[aria-label="主要ナビゲーション"] a')].find(
+      (link) => link.textContent?.trim() === 'Harness Hub',
+    );
+    expect(brand?.getAttribute('href')).toMatch(/^\/dashboard(?:\?|$)/);
+    expect(brand?.hasAttribute('data-hh-focusable')).toBe(true);
+  });
+
+  it('UIS-SHELL-001c: 検索入力は共通の44px操作域契約を上書きしない', () => {
+    renderShell('/sheets');
+
+    const search = document.querySelector<HTMLInputElement>('#hh-shell-search');
+    expect(search?.hasAttribute('data-hh-focusable')).toBe(true);
+    expect(search?.style.minHeight).toBe('');
   });
 
   it('UIS-SHELL-002: 現在地が aria-current="page" で 1 か所だけ示される', () => {
