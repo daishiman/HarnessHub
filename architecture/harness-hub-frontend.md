@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub frontend アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-14T11:52:38.903869Z"
+updated_at: "2026-08-16T07:25:13Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements","spec-harness-hub-information-design-addendum"]
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure","arch-harness-hub-dev-workflow","spec-post-signin-workspace-scope"]
@@ -292,6 +292,8 @@ PR #700 の G13 回復では超過画面の client 本体を route-local `next/d
 ## 2026-08-12 hearing-intake / S15 / 配色 (MVP)
 
 S10 を7画面へ分割し S12 に引き渡し UI・form_snapshot 全項目・作成時添付 (画像/動画/CSV/Excel・25MB) を追加。S15 一覧は category/tag/thumbnail/excerpt/予約 badge と権限別 empty CTA。配色境界は [デザインシステム](harness-hub-design-system.md)、breakpoint 正本は `480 / 641 / 1025`。
+
+2026-08-16: 3 一覧はカード既定、本文 `:::cards` は packages/ui。正本は [運用](../docs/features/feat-card-list-shell/operations.md)。PR #731。
 
 ## 2026-08-13 表示設定の再読み込み復元 (HarnessHub-sj20)
 

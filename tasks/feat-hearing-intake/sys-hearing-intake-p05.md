@@ -12,7 +12,7 @@ iteration: null
 title: "実装 — S10 ウィザード/S11-S12 シート管理/受付番号採番/AI キュー API/Markdown sanitize の実装"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:14:59Z"
-updated_at: "2026-07-29T08:49:09Z"
+updated_at: "2026-08-16T07:15:30Z"
 status: "closed"
 depends_on: ["SYS-HEARING-INTAKE-P04"]
 related_nodes: ["feat-hearing-intake","arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data"]
@@ -71,3 +71,9 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-hearing-intake` を使い、current pointer から現行世代を再解決する。
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。
+
+## 実装追記 (2026-08-16 / `HarnessHub-ma7t`)
+
+S11 一覧はカード既定の共通 shell へ移した。詳細は
+[運用](../../docs/features/feat-card-list-shell/operations.md) と
+[カード wave 受領書](../../docs/features/feat-card-list-shell/card-family-20260816-spec-reflection-receipt.md)。

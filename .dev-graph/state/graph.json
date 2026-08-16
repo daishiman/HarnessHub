@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1753,
+  "graph_revision": 1765,
   "nodes": [
     {
       "acceptance": [
@@ -215,7 +215,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub frontend アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-14T11:52:38.903869Z"
+      "updated_at": "2026-08-16T07:25:13Z"
     },
     {
       "acceptance": [
@@ -6075,7 +6075,7 @@
       "template_version": "1.0.0",
       "title": "実装 — S10 ウィザード/S11-S12 シート管理/受付番号採番/AI キュー API/Markdown sanitize の実装",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-29T08:49:09Z"
+      "updated_at": "2026-08-16T07:15:30Z"
     },
     {
       "acceptance": [
@@ -6884,7 +6884,7 @@
       "template_version": "1.0.0",
       "title": "ドキュメント/運用 — S10-S12 運用手順・AI キュー滞留監視・受付番号運用のドキュメント化",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-29T08:49:31Z"
+      "updated_at": "2026-08-16T07:15:30Z"
     },
     {
       "acceptance": [
@@ -7617,7 +7617,7 @@
       "template_version": "1.0.0",
       "title": "実装 — S15 一覧/閲覧/編集・Doc スキーマ・B7 API・AI 下書きキュー・監査 event の実装",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-03T06:10:41Z"
+      "updated_at": "2026-08-16T07:15:30Z"
     },
     {
       "acceptance": [
@@ -8407,7 +8407,7 @@
       "template_version": "1.0.0",
       "title": "ドキュメント/運用 — S15 運用手順・AI キュー滞留監視・監査運用の runbook 作成",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-03T06:55:18Z"
+      "updated_at": "2026-08-16T07:15:30Z"
     },
     {
       "acceptance": [
@@ -21633,7 +21633,7 @@
       "template_version": "1.0.0",
       "title": "実装 — S01/S02/S03/S04画面実装・marketplace.json出力パイプライン・配布経路連携・axe CI組込・CWVバンドル最適化・ポーリング実装",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-08T08:31:24Z"
+      "updated_at": "2026-08-16T07:15:30Z"
     },
     {
       "acceptance": [
@@ -22384,7 +22384,7 @@
       "template_version": "1.0.0",
       "title": "文書化・runbook・引き継ぎ — カタログ利用者/管理者向け手順・marketplace.json形式文書・障害時縮退runbook・更新通知導線の文書化",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-16T07:15:30Z"
     },
     {
       "acceptance": [
@@ -61323,7 +61323,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub デザインシステム アーキテクチャ",
       "tracker_binding": "none",
-      "updated_at": "2026-08-14T00:45:00Z"
+      "updated_at": "2026-08-16T07:07:08.359196Z"
     },
     {
       "acceptance": [
@@ -64247,7 +64247,7 @@
       "template_version": "1.0.0",
       "title": "カードブロック本文記法と編集/プレビュー 2 ペイン",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-15T23:38:37.521089Z"
+      "updated_at": "2026-08-16T07:15:30Z"
     },
     {
       "acceptance": [
@@ -64400,7 +64400,7 @@
       "template_version": "1.0.0",
       "title": "一覧のカード型シェル (カードグリッド既定・表示切替・状態タブ・検索)",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-15T23:36:56.395553Z"
+      "updated_at": "2026-08-16T07:15:30Z"
     },
     {
       "acceptance": [
