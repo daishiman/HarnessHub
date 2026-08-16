@@ -611,8 +611,12 @@ export function DataTable<TRow>({
       {noteLine}
       {/* 両方描いて、表示するほうを CSS が選ぶ (SSR では画面幅が分からないため)。
           隠れているほうは display: none なので支援技術からも二重に読まれない */}
-      <div data-hh-viewport="wide">{table}</div>
-      <div data-hh-viewport="narrow">{cards}</div>
+      <div data-hh-viewport="wide" data-hh-data-table="">
+        {table}
+      </div>
+      <div data-hh-viewport="narrow" data-hh-data-table="">
+        {cards}
+      </div>
     </>
   );
 }

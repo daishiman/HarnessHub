@@ -296,6 +296,8 @@ describe('DataTable の狭い画面表現', () => {
 
     const wide = document.querySelector('[data-hh-viewport="wide"]');
     const narrow = document.querySelector('[data-hh-viewport="narrow"]');
+    expect(wide?.hasAttribute('data-hh-data-table')).toBe(true);
+    expect(narrow?.hasAttribute('data-hh-data-table')).toBe(true);
     expect(wide?.querySelector('table')).not.toBeNull();
     // カード側に表を作らない (両方が表だと、狭い画面での横スクロールが解消しない)
     expect(narrow?.querySelector('table')).toBeNull();

@@ -2,7 +2,7 @@
 status: recorded
 layer: feature-spec-reflection
 spec_impact: reflected
-reviewed_at: 2026-08-15
+reviewed_at: 2026-08-16
 parent_features:
   - feat-demo-coverage-dataset
   - feat-ui-integrity-audit-harness
@@ -48,7 +48,7 @@ beads_ids:
 
 1. 確定章の writer は C01 / C03 だけである。`guard-confirmed-chapter-overwrite.py` が直接編集を止める。
 2. 作業ツリー上の compile 差分は qa-303 / qa-304 で web セルを置き換え、qa-226 / qa-217 を削除していた。これは仕様後退なので本 PR に含めない。
-3. 実行結果（seed 件数、168 キーのうち未到達 144）は設計要件ではなく運用観測なので、architecture 側が正しい置き場である（`HarnessHub-q2n4` 判断 A）。
+3. 実行結果（seed 件数、168 キーの到達・違反件数）は設計要件ではなく運用観測なので、architecture 側が正しい置き場である（`HarnessHub-q2n4` 判断 A）。
 
 将来 C01 で取り込む場合は、**既存 web セル契約を残した統合 entry** にすること。追補だけの再確定は章本文を消す。
 
@@ -61,15 +61,24 @@ beads_ids:
 - 全ページ印刷の新規実装（`HarnessHub-wx4h`）
 - ID 形式（UUIDv4）や一覧ページ送り方式の改訂（別セッションの qa-275。本 PR に混ぜない）
 
-## 6. 検証（MVP 最小）
+## 6. 検証
 
-品質ゲートと focused test の実測は PR 本文と Beads notes に書く。本受領書の機械束縛は commit 後に次で記録する。
+2026-08-16 に、ローカル専用・読取専用の session 発行 CLI で `member`・`workspace-admin`・`provider-admin` の demo/main 所属を照合し、実 Next アプリを監査した。Cookie 値はレポートへ保存していない。
+
+- 実 route 28、viewport 3、theme 2 の 168 キーをすべて実行
+- 到達不能 0、横溢れ・44px 操作域・意味 segment 違反 0
+- 140 state cell は適用 105 / 非適用 35。168 表示軸とは別母数であり、105 状態すべての実ブラウザ実走を意味しない
+- 5 合成 fixture は検出器の生存確認にのみ使い、実 route の成功証跡へ読み替えていない
+- ローカル Next には native R2 binding がないため一部 API は縮退ログを出すが、route 到達判定や UI 違反 0 の根拠とは分離した
+
+品質ゲートと focused test の実測は PR 本文と Beads notes にも記録する。本受領書の機械束縛は commit 後に次で記録する。
 
 ```bash
 python3 scripts/build-spec-reflection-receipt.py --repo-root . --spec-impact reflected --base origin/main
 ```
 
-## 7. 残課題
+## 7. 完了判定と残境界
 
-- 認証済み 144 runtime キーの実走（本 worktree に local seed / 認証環境なし）
-- 確定章への統合は、qa-226 / qa-217 を消さない C01 経路が必要
+- 今回の縦切り受入は、168 / 168 キー到達、到達不能 0、UI 違反 0 により完了した。
+- 製品所有の印刷 action は 0 件を維持し、revision conflict / CAS、legal、print stylesheet は変更していない。
+- 確定章への将来の統合は、qa-226 / qa-217 を消さない C01 経路で行う。この後続作業は今回の実装受入を妨げない。

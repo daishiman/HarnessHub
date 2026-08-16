@@ -110,7 +110,7 @@ export function HomeDashboard({ tenantId, workspaceId }: HomeDashboardProps): Re
                   .filter((row) => row.section.actionable_count > 0)
                   .map((row) => (
                     <li key={row.key}>
-                      <a href={row.href}>
+                      <a href={row.href} data-hh-focusable="">
                         {row.label}: {row.section.actionable_count}件が対応待ちです
                       </a>
                     </li>
@@ -143,7 +143,9 @@ export function HomeDashboard({ tenantId, workspaceId }: HomeDashboardProps): Re
               <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'grid', gap: '0.75rem' }}>
                 {timeline.map((entry) => (
                   <li key={entry.key} style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem' }}>
-                    <a href={entry.href}>{entry.label}</a>
+                    <a href={entry.href} data-hh-focusable="">
+                      {entry.label}
+                    </a>
                     <span style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                       {entry.meta}
                       <DateTimeText value={entry.updatedAt} />

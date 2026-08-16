@@ -119,6 +119,9 @@ importers:
         specifier: '>=0.36.0'
         version: 0.45.2(@libsql/client@0.15.15)
     devDependencies:
+      '@harness-hub/schemas':
+        specifier: workspace:*
+        version: link:../schemas
       '@types/node':
         specifier: ^22.10.0
         version: 22.20.1

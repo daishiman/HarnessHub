@@ -3,7 +3,7 @@ status: confirmed
 layer: operations
 title: 確認用データセット 30 route 到達手順 (SCR-15〜30)
 feature_id: feat-demo-coverage-dataset
-updated_at: "2026-08-15"
+updated_at: "2026-08-16"
 ---
 
 # 確認用データセット 30 route 到達手順 (SCR-15〜30)
@@ -134,11 +134,11 @@ updated_at: "2026-08-15"
 
 | 状態 | 役割 | 開く URL | 操作 | 必要な fixture |
 |---|---|---|---|---|
-| 空 | workspace-admin | `/settings/auth` | 子データを持たないテナントで開く | `idp-connection/active/0001`<br>`idp-connection/disabled/0001`<br>`tenant/empty/0001` |
-| 1 件 | workspace-admin | `/settings/auth` | そのまま表示を確認 | `idp-connection/active/0001`<br>`idp-connection/disabled/0001`<br>`tenant/main/0001` |
+| 空 | provider-admin | `/settings/auth` | 子データを持たないテナントで開く | `idp-connection/active/0001`<br>`idp-connection/disabled/0001`<br>`tenant/empty/0001` |
+| 1 件 | provider-admin | `/settings/auth` | そのまま表示を確認 | `idp-connection/active/0001`<br>`idp-connection/disabled/0001`<br>`tenant/main/0001` |
 | 大量 | — | — | **非適用 (N5)**: 単一フォームで、繰り返し要素のページング境界を持たない | — |
-| 長文 | workspace-admin | `/settings/auth` | そのまま表示を確認 | `idp-connection/active/0001`<br>`idp-connection/disabled/0001`<br>`long-text/heading/0001`<br>`long-text/body/0001` |
-| エラー | workspace-admin | `/settings/auth` | 停止テナントの資源を要求する | `idp-connection/active/0001`<br>`idp-connection/disabled/0001`<br>`tenant/suspended/0001` |
+| 長文 | provider-admin | `/settings/auth` | そのまま表示を確認 | `idp-connection/active/0001`<br>`idp-connection/disabled/0001`<br>`long-text/heading/0001`<br>`long-text/body/0001` |
+| エラー | provider-admin | `/settings/auth` | 停止テナントの資源を要求する | `idp-connection/active/0001`<br>`idp-connection/disabled/0001`<br>`tenant/suspended/0001` |
 
 ### SCR-28 — `/settings/coefficients`
 
@@ -177,16 +177,18 @@ updated_at: "2026-08-15"
 
 ## 5. 手順をなぞって確認した記録
 
-本 runbook の作成にあたり、記載した手順を実際に実行して確認した。実測日 2026-08-15。
+本 runbook の作成にあたり、記載した手順を実際に実行して確認した。実測日 2026-08-16。
 
 | # | なぞった手順 | 結果 |
 |---|---|---|
-| 1 | §2.1 の投入コマンド | 終了コード 0 / 35 テーブル 637 件を投入 |
+| 1 | §2.1 の投入コマンド | 終了コード 0 / 36 テーブル 639 件を投入 |
 | 2 | §2.3 の拒否確認 (`libsql://`) | 終了コード **2** / 「seed-coverage はローカル DB 専用です」 |
 | 3 | §2.4 の対応表検査 | 終了コード 0 / 「未カバー 0 件」 |
 | 4 | §4 の到達手順の生成 | 正本 `coverage-matrix.ts` から 28 route 全件を生成。手書き 0 件 |
+| 5 | actor 別の監査用 session 発行 | 終了コード 0 / `member`・`workspace-admin`・`provider-admin` の3主体を demo/main 所属と照合し、Cookie値を記録せず発行 |
+| 6 | actor 別 session を使った実 Next route 監査 | 168 キー要求 / 168 キー実行 / 到達不能 0 / UI 違反 0 |
 
-§4 の 140 セルすべてを実ブラウザで開く確認は行っていない。それは本 feature の scope 外 (実ブラウザ検査は `feat-ui-integrity-audit-harness` の責務) であり、本 runbook が保証するのは「到達手順が対応表と一致し、指す fixture が seed に実在すること」までである。後者は §2.4 の検査が担保する。
+実ブラウザ監査の 168 キーは 28 route × 3 viewport × 2 theme の表示軸であり、§4 の 140 state cell（適用 105 / 非適用 35）とは別の母数である。168 キーはすべて実走したが、適用 105 state cell の全状態を個別に実走したという意味ではない。本 runbook が保証する state 側の範囲は「到達手順が対応表と一致し、指す fixture が seed に実在すること」までであり、§2.4 の検査が担保する。
 
 ## 6. 困ったとき
 

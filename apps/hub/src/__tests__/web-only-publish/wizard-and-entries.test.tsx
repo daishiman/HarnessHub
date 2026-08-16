@@ -116,7 +116,9 @@ describe('受入 1: Web だけで投入から導入案内まで到達できる',
     expect(screen.getByLabelText(/Project 名/)).toBeDefined();
     expect(screen.getByLabelText(/説明/)).toBeDefined();
     expect(screen.getByLabelText(/公開範囲/)).toBeDefined();
-    expect(screen.getByLabelText(/パッケージ \(ZIP\)/)).toBeDefined();
+    const archiveInput = screen.getByLabelText(/パッケージ \(ZIP\)/);
+    expect(archiveInput).toBeDefined();
+    expect(archiveInput.hasAttribute('data-hh-focusable')).toBe(true);
     expect(screen.getByText(/Web アプリの公開には Publisher CLI が必要/)).toBeDefined();
 
     const deviceApprovalLink = screen.getByRole('link', { name: '別タブで Device 承認を開く' });

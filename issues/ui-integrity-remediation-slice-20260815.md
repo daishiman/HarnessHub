@@ -12,8 +12,8 @@ iteration: null
 title: "UI崩れ監査と意味境界改行を実画面契約へ接続する"
 owners: ["daishiman"]
 created_at: "2026-08-15T00:00:00.000000Z"
-updated_at: "2026-08-15T02:42:26.769495Z"
-status: "draft"
+updated_at: "2026-08-16T00:20:17.000000Z"
+status: "done"
 depends_on: []
 related_nodes: ["feat-ui-integrity-audit-harness","feat-ui-layout-remediation","feat-demo-coverage-dataset"]
 resource_scope: ["apps/hub/tests/browser/","apps/hub/src/components/shell/","apps/hub/src/app/(dashboard)/sheets/[id]/","packages/ui/src/shell/","packages/db/scripts/demo-coverage/coverage-matrix.ts","system-spec/ui-ux.md","system-spec/testing-qa.md"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":"manual","status":"open"}
+completion_evidence: {"completed_at":"2026-08-16T00:20:17.000000Z","evidence_refs":["apps/hub/tests/browser/real-app-audit.ts","packages/db/scripts/issue-demo-coverage-session.ts","docs/features/feat-ui-integrity-audit-harness/ui-integrity-remediation-slice-spec-reflection-receipt.md"],"policy":"manual","reconciled_at":null,"source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-08-15T00:00:00Z","missing_sections":[],"status":"complete"}
 ---
 
