@@ -27,6 +27,7 @@ import {
   DegradedBanner,
   EmptyState,
   ErrorState,
+  FilterTabs,
   FormField,
   Icon,
   ListState,
@@ -196,6 +197,24 @@ export const catalogEntries: readonly CatalogEntry[] = [
         items={[
           { id: 'all', label: 'すべて', content: <p>すべての件数。</p> },
           { id: 'draft', label: '下書き', content: <p>下書きの件数。</p> },
+        ]}
+      />
+    ),
+  },
+  {
+    name: 'FilterTabs',
+    group: 'navigation',
+    render: () => (
+      // 件数ありと件数なしを並べる。件数は集計が届くまで省略できる契約なので、
+      // 「数が入った場合」だけを見本にすると省略時の見た目が VRT の網から外れる。
+      <FilterTabs
+        label="状態で絞り込み"
+        current="all"
+        onSelect={() => undefined}
+        items={[
+          { value: 'all', label: 'すべて', count: 12 },
+          { value: 'draft', label: '下書き', count: 3 },
+          { value: 'published', label: '公開済み' },
         ]}
       />
     ),

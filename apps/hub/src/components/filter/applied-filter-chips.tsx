@@ -1,4 +1,4 @@
-import { Badge, TagRow } from '@harness-hub/ui';
+import { Badge, TagRow, TextButton } from '@harness-hub/ui';
 import type { ReactNode } from 'react';
 
 export interface AppliedFilter {
@@ -35,24 +35,13 @@ export function AppliedFilterChips({ items }: AppliedFilterChipsProps): ReactNod
             <strong>{item.label}:</strong> {item.value}
             {item.onRemove === undefined ? null : (
               // ラベルは「×」ではなく条件名を含める。並んだチップの解除ボタンが
-              // 全部「×」だと、読み上げでどれを外すのか区別できない
-              <button
-                type="button"
-                data-hh-focusable=""
-                onClick={item.onRemove}
-                aria-label={`${item.label}の絞り込みを解除`}
-                style={{
-                  marginInlineStart: 'var(--hh-space-1)',
-                  background: 'none',
-                  border: 'none',
-                  padding: 0,
-                  font: 'inherit',
-                  color: 'inherit',
-                  cursor: 'pointer',
-                }}
-              >
-                <span aria-hidden="true">×</span>
-              </button>
+              // 全部「×」だと、読み上げでどれを外すのか区別できない。
+              // 見た目のない小さな操作なので TextButton。チップ本文との間合いだけを外側で開ける
+              <span style={{ marginInlineStart: 'var(--hh-space-1)' }}>
+                <TextButton tone="muted" onClick={item.onRemove} aria-label={`${item.label}の絞り込みを解除`}>
+                  <span aria-hidden="true">×</span>
+                </TextButton>
+              </span>
             )}
           </span>
         </Badge>

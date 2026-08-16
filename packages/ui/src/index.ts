@@ -92,9 +92,9 @@ export type {
 export { StageBoard } from './components/StageBoard.js';
 export type { StepWizardProps, WizardStep } from './components/StepWizard.js';
 export { StepWizard } from './components/StepWizard.js';
-export type { TabItem, TabsProps } from './components/Tabs.js';
+export type { FilterTabItem, FilterTabsProps, TabItem, TabsProps } from './components/Tabs.js';
 // --- タブ / ウィザード / ステージボード -----------------------------------
-export { Tabs } from './components/Tabs.js';
+export { FilterTabs, Tabs } from './components/Tabs.js';
 export type { TextareaProps } from './components/Textarea.js';
 export { Textarea } from './components/Textarea.js';
 export type { TextButtonProps } from './components/TextButton.js';

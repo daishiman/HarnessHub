@@ -13,7 +13,7 @@ import { describe, expect, it } from 'vitest';
 import { readStoredAppearance, writeStoredAppearance } from '../../components/appearance/appearance-storage.js';
 import { secondaryNavItems } from '../../components/shell/nav-items.js';
 import { resolveShellScreenTitle } from '../../components/shell/route-titles.js';
-import { sessionActionVisible } from '../../lib/authz/index.js';
+import { BASE_ROLES, sessionActionVisible } from '../../lib/authz/index.js';
 
 const SCOPE = { tenantId: 'tenant-a', workspaceId: 'workspace-a' };
 
@@ -33,7 +33,9 @@ describe('システム画面の導線', () => {
   });
 
   it('導線の可否と認可表 (appearance.usage_read) が同じ判断を返す', () => {
-    for (const role of ['provider-admin', 'workspace-admin', 'member', null] as const) {
+    // 総当たりの role 一覧は lib/authz の正本 (BASE_ROLES) から取る。ここへ書き写すと、
+    // role が増えたときにテストだけ古い集合を回り続け、「緑だが未検査」になる。
+    for (const role of [...BASE_ROLES, null]) {
       expect(hasSystemLink(role)).toBe(sessionActionVisible(role, 'appearance.usage_read'));
     }
   });

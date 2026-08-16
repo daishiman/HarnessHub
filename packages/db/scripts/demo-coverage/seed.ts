@@ -1281,12 +1281,19 @@ function feedbackRows(): (typeof schema.feedbacks.$inferInsert)[] {
 const BUILD_STAGES = ['hearing', 'requirements', 'design', 'build', 'test', 'review', 'publish'] as const;
 const BUILD_TYPES = ['hearing', 'improvement', 'review', 'bug', 'hearing', 'improvement', 'review'] as const;
 
+/** risk_override の 3 値を先頭3件へ順に置く。4件目以降は null (上書きなし)。 */
+const BUILD_RISK_OVERRIDES = ['none', 'warn', 'blocked'] as const;
+
 function buildRows(): (typeof schema.builds.$inferInsert)[] {
   // uq(feedback_id) があるため、要望を紐づけるのは 1 行だけにする (NULL 同士は競合しない)。
   const named = BUILD.map((id, index) => ({
     id,
     type: pick(BUILD_TYPES, index),
     stage: pick(BUILD_STAGES, index),
+    // 先頭3件だけに人手の上書きを置き、残りは null (停滞日数からの算出値をそのまま使う) にする。
+    // 3 値それぞれと「上書きなし」の 4 通りが同時に画面へ並ぶようにするため。index 由来なので
+    // 何度実行しても同じ行に同じ値が入る (冪等)。
+    riskOverride: BUILD_RISK_OVERRIDES[index] ?? null,
     sheetId: index === 0 ? pick(SHEET, 3) : null,
     feedbackId: index === 1 ? FEEDBACK.open : null,
     publishRequestId: index === 6 ? pick(PUBLISH_REQUEST, 3) : null,
@@ -1296,6 +1303,7 @@ function buildRows(): (typeof schema.builds.$inferInsert)[] {
     id,
     type: 'hearing' as const,
     stage: pick(BUILD_STAGES, index),
+    riskOverride: null,
     sheetId: null,
     feedbackId: null,
     publishRequestId: null,

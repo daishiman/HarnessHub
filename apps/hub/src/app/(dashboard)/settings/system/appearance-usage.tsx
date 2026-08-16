@@ -11,7 +11,7 @@
  */
 
 import type { AppearanceUsageResponse } from '@harness-hub/schemas';
-import { Alert, DataTable, LiveStatus, Panel, Stack } from '@harness-hub/ui';
+import { Alert, DataTable, DonutChart, LiveStatus, Panel, Stack } from '@harness-hub/ui';
 import { type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 
 const PALETTE_LABELS: Readonly<Record<string, string>> = {
@@ -159,7 +159,12 @@ export function AppearanceUsagePanel({ tenantId }: { readonly tenantId: string }
         </dl>
       </Panel>
 
+      {/* この画面の主題は「どの配色が多いか」という構成比なので、まず形で掴めるようにする
+          (docs/screen-inventory.md の S18.SYSTEM が chart+table を宣言している)。
+          値そのものは下の表が持つ。グラフだけが数値の出口にならないようにするため、
+          同じ数を必ず表にも出す (S09 と同じ扱い) */}
       <Panel title="配色ごとの採用">
+        <DonutChart title="配色ごとの構成比" data={paletteRows.map((row) => ({ label: row.name, value: row.users }))} />
         <DataTable
           caption="配色ごとの現在の採用人数と構成比"
           columns={columns}

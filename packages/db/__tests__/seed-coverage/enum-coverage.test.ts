@@ -12,8 +12,8 @@ import { asCore, createLibsqlTestDb } from '../support/test-db';
 import { loadPendingModule } from './support/pending-module';
 
 /** ADR §10 の実測値。 */
-const EXPECTED_ENUM_COLUMNS = 42;
-const EXPECTED_ENUM_VALUES = 132;
+const EXPECTED_ENUM_COLUMNS = 43;
+const EXPECTED_ENUM_VALUES = 135;
 
 interface EnumColumn {
   table: string;
@@ -76,12 +76,12 @@ beforeAll(async () => {
 });
 
 describe('T2: enum 全値網羅 (定義)', () => {
-  it('T2-1: 宣言が 42 カラム / 132 値である', () => {
+  it('T2-1: 宣言が 43 カラム / 135 値である', () => {
     expect(declared).toHaveLength(EXPECTED_ENUM_COLUMNS);
     expect(declared.reduce((total, entry) => total + entry.values.length, 0)).toBe(EXPECTED_ENUM_VALUES);
   });
 
-  it('T2-1: schema の実測も 42 カラム / 132 値である (ADR §10 の前提が今も成り立つ)', () => {
+  it('T2-1: schema の実測も 43 カラム / 135 値である (ADR §10 の前提が今も成り立つ)', () => {
     const measured = measureSchemaEnums();
     expect(measured).toHaveLength(EXPECTED_ENUM_COLUMNS);
     expect(measured.reduce((total, entry) => total + entry.values.length, 0)).toBe(EXPECTED_ENUM_VALUES);

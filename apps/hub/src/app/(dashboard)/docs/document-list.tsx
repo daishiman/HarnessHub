@@ -16,6 +16,7 @@ import {
   DataTable,
   type DataTableColumn,
   FilterBar,
+  FilterTabs,
   ListState,
   LiveStatus,
   ScopeChip,
@@ -126,46 +127,19 @@ interface StatusTabsProps {
  */
 function StatusTabs({ current, counts, onSelect }: StatusTabsProps): ReactNode {
   return (
-    // 押しボタンの束の入れ物は fieldset。既定の枠・余白・min-inline-size は flex を壊すので消す
-    <fieldset
-      aria-label="状態で絞り込み"
-      style={{
-        margin: 0,
-        border: 0,
-        minInlineSize: 0,
-        display: 'flex',
-        flexWrap: 'wrap',
-        gap: 'var(--hh-space-2)',
-        padding: 'var(--hh-space-3) var(--hh-space-4) 0',
-      }}
-    >
-      {DOCUMENT_TABS.filter(
-        // 状態不明は 0 件なら出さない。押しても「すべて」と同じ結果しか出ないタブを
-        // 常設すると、状態不明という区分が存在するのに空だ、と読めてしまう
-        (tab) => tab.value !== 'unknown' || (counts?.unknown ?? 0) > 0,
-      ).map((tab) => (
-        <button
-          key={tab.value}
-          type="button"
-          data-hh-focusable=""
-          aria-pressed={current === tab.value}
-          onClick={() => onSelect(tab.value)}
-          style={{
-            minHeight: 'var(--hh-control-height)',
-            padding: '0 var(--hh-space-3)',
-            font: 'inherit',
-            cursor: 'pointer',
-            borderRadius: 'var(--hh-radius-sm)',
-            border: '1px solid var(--hh-color-border)',
-            background: current === tab.value ? 'var(--hh-color-surface-muted)' : 'var(--hh-color-surface)',
-            color: 'var(--hh-color-text)',
-          }}
-        >
-          {tab.label}
-          {counts === null ? null : <span style={{ marginInlineStart: 'var(--hh-space-1)' }}>{counts[tab.value]}</span>}
-        </button>
-      ))}
-    </fieldset>
+    // 一覧本体との間合いだけがこの画面の関心。切替そのものの見た目は FilterTabs が持つ
+    <div style={{ padding: 'var(--hh-space-3) var(--hh-space-4) 0' }}>
+      <FilterTabs
+        label="状態で絞り込み"
+        current={current}
+        onSelect={onSelect}
+        items={DOCUMENT_TABS.filter(
+          // 状態不明は 0 件なら出さない。押しても「すべて」と同じ結果しか出ないタブを
+          // 常設すると、状態不明という区分が存在するのに空だ、と読めてしまう
+          (tab) => tab.value !== 'unknown' || (counts?.unknown ?? 0) > 0,
+        ).map((tab) => ({ value: tab.value, label: tab.label, count: counts?.[tab.value] }))}
+      />
+    </div>
   );
 }
 

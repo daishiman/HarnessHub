@@ -29,6 +29,16 @@ PARITY_FIELDS = (
     "resource_scope",
     "updated_at",
 )
+# 実装が製品コードへ接地した feature。到達状態を `(achieved)` と書き、「未実装」の記述を残さない。
+# 完了の記録先はここと frontmatter の implementation_readiness / completion_evidence であって、
+# `## 実装結果` のような章を増やす形は取らない (章立ては EXPECTED_SECTIONS の exact tuple)。
+IMPLEMENTED_FEATURE_IDS = frozenset(
+    {
+        "feat-card-mutation-safety",
+        "feat-card-list-shell",
+        "feat-card-block-authoring",
+    }
+)
 EXPECTED_SECTIONS = (
     "# 目的",
     "## 到達状態",
@@ -79,8 +89,9 @@ def test_current_target_and_feature_template_sections(feature_id: str) -> None:
     _, body = _frontmatter_and_body(feature_id)
     headings = tuple(line for line in body.splitlines() if re.match(r"^#{1,2} ", line))
     assert headings == EXPECTED_SECTIONS
-    if feature_id == "feat-card-mutation-safety":
+    if feature_id in IMPLEMENTED_FEATURE_IDS:
         assert "実装済み" in body
+        # 「未実装」が残っていると、達成済みの到達状態と現状記述が食い違ったまま読まれる。
         assert "未実装" not in body
     else:
         assert "現状 (current)" in body
