@@ -1,9 +1,9 @@
 /** Markdown レンダラの単体テスト。中心は XSS sanitize (SEC7) — 危険な入力が描画に漏れないことを固定する。 */
-import { screen, within } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { MarkdownEditor, MarkdownView, markdownSanitizeSchema } from '../index.js';
+import { collectCardBlockWarnings, MarkdownEditor, MarkdownView, markdownSanitizeSchema, slugify } from '../index.js';
 import { renderWithUi } from '../test-utils.js';
 
 describe('MarkdownView の基本描画', () => {
@@ -294,5 +294,236 @@ describe('MarkdownEditor', () => {
 
     const button = screen.getByRole('button', { name: '画像グループ' });
     expect(button.hasAttribute('disabled')).toBe(true);
+  });
+
+  it('CARD-BLOCK-008: ツールバーから 2 列 / 3 列の雛形を挿入できる', async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    renderWithUi(<MarkdownEditor label="本文" value="" onValueChange={onValueChange} />);
+
+    await user.click(screen.getByRole('button', { name: '2列カード' }));
+    const twoColumns = onValueChange.mock.calls.at(-1)?.[0] as string;
+    expect(twoColumns).toContain(':::cards cols=2');
+    // 挿入直後に「カードが 2 枚ある行」として成立している (書き足さないと壊れる雛形にしない)
+    expect(twoColumns.match(/^:::card$/gm)).toHaveLength(2);
+    expect(collectCardBlockWarnings(twoColumns)).toEqual([]);
+
+    await user.click(screen.getByRole('button', { name: '3列カード' }));
+    const threeColumns = onValueChange.mock.calls.at(-1)?.[0] as string;
+    expect(threeColumns).toContain(':::cards cols=3');
+    expect(threeColumns.match(/^:::card$/gm)).toHaveLength(3);
+  });
+
+  it('CARD-BLOCK-003: 記法ミスは保存を止めない注意として、行番号つきで出す', () => {
+    renderWithUi(
+      <MarkdownEditor label="本文" value={':::cards cols=7\n:::card\n本文\n:::'} onValueChange={() => undefined} />,
+    );
+
+    // role="alert" ではなく status。入力のたびに読み上げへ割り込ませない
+    const notice = screen.getByRole('status', { name: 'カード記法の注意' });
+    expect(notice.textContent).toContain('1 行目');
+    expect(notice.textContent).toContain('cols=2 または cols=3');
+    // 入力欄は無効化されない (非 blocking)
+    expect(screen.getByLabelText('本文').hasAttribute('disabled')).toBe(false);
+  });
+
+  it('記法が正しければ注意は出ない', () => {
+    renderWithUi(
+      <MarkdownEditor
+        label="本文"
+        value={':::cards cols=2\n:::card\n本文\n:::\n:::'}
+        onValueChange={() => undefined}
+      />,
+    );
+
+    expect(screen.queryByRole('status', { name: 'カード記法の注意' })).toBeNull();
+  });
+});
+
+describe('CARD-BLOCK-006: 編集面と確認面の並べ方', () => {
+  /** 大画面 (1025px 以上) を名乗る matchMedia を差し込む。jsdom は既定で matchMedia を持たない。 */
+  const stubWideViewport = (): void => {
+    vi.stubGlobal('matchMedia', (query: string) => ({
+      matches: query.includes('1025'),
+      media: query,
+      addEventListener: () => undefined,
+      removeEventListener: () => undefined,
+    }));
+  };
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('大画面は 2 ペインで編集と確認を同時に出す (tab に隠さない)', async () => {
+    stubWideViewport();
+    const draft = ':::cards cols=2\n:::card\n下書きの本文\n:::\n:::';
+    const { container } = renderWithUi(<MarkdownEditor label="本文" value={draft} onValueChange={() => undefined} />);
+
+    await waitFor(() => expect(container.querySelector('[data-hh-editor-panes]')).not.toBeNull());
+    expect(screen.queryByRole('tab', { name: '編集' })).toBeNull();
+    expect(screen.getByLabelText('本文')).toBeDefined();
+    // 狭幅の tab と同じ MarkdownView 経路なので、draft のカードもそのまま出る
+    expect(container.querySelector('[data-hh-editor-panes] [data-hh-cards]')).not.toBeNull();
+    expect(screen.getByText('下書きの本文')).toBeDefined();
+  });
+
+  it('狭幅は同じ 2 面を tab で切り替える', () => {
+    renderWithUi(<MarkdownEditor label="本文" value="本文" onValueChange={() => undefined} />);
+
+    expect(screen.getByRole('tab', { name: '編集' })).toBeDefined();
+    expect(screen.getByRole('tab', { name: 'プレビュー' })).toBeDefined();
+  });
+});
+
+describe('カードブロック記法 (:::cards / :::card)', () => {
+  const twoCardDocument = [
+    ':::cards cols=2',
+    ':::card',
+    '### 左のカード',
+    '',
+    '左の本文',
+    ':::',
+    ':::card',
+    '### 右のカード',
+    '',
+    '右の本文',
+    ':::',
+    ':::',
+  ].join('\n');
+
+  it('CARD-BLOCK-001: cols=2 / cols=3 が正規化済みの data-cols として残る', () => {
+    const { container } = renderWithUi(<MarkdownView content={twoCardDocument} />);
+
+    const grid = container.querySelector('[data-hh-cards]');
+    expect(grid?.getAttribute('data-cols')).toBe('2');
+    expect(container.querySelectorAll('[data-hh-card]')).toHaveLength(2);
+  });
+
+  it('CARD-BLOCK-001: 未知の cols は 2 列へ寄せ、記事は壊れない', () => {
+    const { container } = renderWithUi(<MarkdownView content={':::cards cols=99\n:::card\nカード本文\n:::\n:::'} />);
+
+    expect(container.querySelector('[data-hh-cards]')?.getAttribute('data-cols')).toBe('2');
+    expect(screen.getByText('カード本文')).toBeDefined();
+  });
+
+  it('CARD-BLOCK-001: 列数の切替は media query で持ち、DOM を差し替えない', () => {
+    renderWithUi(<MarkdownView content={twoCardDocument} />);
+
+    // 幅ごとの列数は CSS が決める。JS で幅を測って描き分けると SSR と初回描画がずれる
+    const css = [...document.querySelectorAll('style')].map((node) => node.textContent ?? '').join('');
+    expect(css).toContain('@media (min-width:641px)');
+    expect(css).toContain('@media (min-width:1025px)');
+    expect(css).toContain('[data-cols="3"]');
+  });
+
+  it('CARD-BLOCK-002: 列数が変わっても DOM 順は記述順のまま', () => {
+    const { container } = renderWithUi(<MarkdownView content={twoCardDocument} />);
+
+    const headings = [...container.querySelectorAll('[data-hh-card] h3')].map((node) => node.textContent);
+    expect(headings).toEqual(['左のカード', '右のカード']);
+  });
+
+  it('CARD-BLOCK-003: 閉じ忘れは例外にせず、本文をそのまま描き切る', () => {
+    const { container } = renderWithUi(<MarkdownView content={':::cards cols=2\n:::card\n書きかけの本文'} />);
+
+    expect(container.querySelector('[data-hh-cards]')).toBeNull();
+    expect(screen.getByText('書きかけの本文')).toBeDefined();
+  });
+
+  it('CARD-BLOCK-003: 対応する :::cards が無い :::card も本文を落とさない', () => {
+    renderWithUi(<MarkdownView content={':::card\n迷子のカード\n:::'} />);
+
+    expect(screen.getByText('迷子のカード')).toBeDefined();
+  });
+
+  it('CARD-BLOCK-004: sanitize 後に残るのは hh-cards / hh-card と data-cols だけ', () => {
+    const { container } = renderWithUi(
+      <MarkdownView
+        content={[
+          ':::cards cols=3',
+          ':::card',
+          '<script>window.__pwned = true;</script>',
+          '',
+          '<div class="danger" id="danger" onclick="window.__pwned = true">危険</div>',
+          ':::',
+          ':::',
+        ].join('\n')}
+      />,
+    );
+
+    const grid = container.querySelector('[data-hh-cards]');
+    expect(grid).not.toBeNull();
+    expect([...(grid?.attributes ?? [])].map((attribute) => attribute.name).sort()).toEqual([
+      'data-cols',
+      'data-hh-cards',
+    ]);
+    expect(container.querySelector('script')).toBeNull();
+    expect(container.innerHTML).not.toContain('__pwned');
+    expect(container.innerHTML).not.toContain('onclick');
+    expect(container.querySelector('.danger')).toBeNull();
+    expect(container.querySelector('#danger')).toBeNull();
+  });
+
+  it('CARD-BLOCK-005: カード内の見出しは見出しレベルと id (TOC アンカー) を保つ', () => {
+    const { container } = renderWithUi(
+      <MarkdownView content={':::cards cols=2\n:::card\n## カードの見出し\n:::\n:::'} />,
+    );
+
+    const heading = screen.getByRole('heading', { level: 2, name: 'カードの見出し' });
+    expect(heading.getAttribute('id')).toBe(slugify('カードの見出し'));
+    expect(container.querySelector('[data-hh-card] h2')).not.toBeNull();
+  });
+
+  it('CARD-BLOCK-005: カード内の連続画像も既存の画像グループとして扱う', () => {
+    const { container } = renderWithUi(
+      <MarkdownView
+        content={[
+          ':::cards cols=2',
+          ':::card',
+          '![1枚目](https://example.com/a.png)',
+          '![2枚目](https://example.com/b.png)',
+          ':::',
+          ':::',
+        ].join('\n')}
+      />,
+    );
+
+    expect(container.querySelector('[data-hh-card] [data-hh-image-group]')).not.toBeNull();
+    expect(screen.getByRole('button', { name: /1枚目/ })).toBeDefined();
+  });
+
+  it('コードフェンスの中の ::: は記法として解釈しない (記法の解説を書ける)', () => {
+    const { container } = renderWithUi(<MarkdownView content={'```\n:::cards cols=2\n:::card\n```'} />);
+
+    expect(container.querySelector('[data-hh-cards]')).toBeNull();
+    expect(container.querySelector('code')?.textContent).toContain(':::cards cols=2');
+  });
+});
+
+describe('collectCardBlockWarnings (編集中の非 blocking 警告)', () => {
+  it('正しい記法では何も返さない', () => {
+    expect(collectCardBlockWarnings(':::cards cols=3\n:::card\n本文\n:::\n:::')).toEqual([]);
+  });
+
+  it('閉じ忘れ・未知 cols・入れ子を、行番号つきで返す', () => {
+    const warnings = collectCardBlockWarnings(':::cards cols=5\n:::cards cols=2\n:::card\n本文\n:::');
+
+    // 1 行目: 未知 cols と閉じ忘れ、2 行目: 入れ子と閉じ忘れ。行番号の昇順で返る
+    expect(warnings.map((warning) => warning.line)).toEqual([1, 1, 2, 2]);
+    expect(warnings[0]?.message).toContain('cols=5 は使えません');
+    expect(warnings.map((warning) => warning.message).join('\n')).toContain(':::cards の中に :::cards');
+    expect(warnings.filter((warning) => warning.message.includes('閉じられていません'))).toHaveLength(2);
+  });
+
+  it('余分な ::: も指摘する', () => {
+    const warnings = collectCardBlockWarnings(':::cards cols=2\n:::card\n本文\n:::\n:::\n:::');
+
+    expect(warnings).toHaveLength(1);
+    expect(warnings[0]).toEqual({ line: 6, message: expect.stringContaining('余分なら削除') });
+  });
+
+  it('コードフェンスの中は数えない', () => {
+    expect(collectCardBlockWarnings('```\n:::cards cols=9\n```')).toEqual([]);
   });
 });

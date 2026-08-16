@@ -111,3 +111,127 @@ export function useRememberedFilters<TFilters extends object>(
 
   return { filters, draft, setDraft, apply, restored };
 }
+
+/* ------------------------------------------------------------------ *
+ * URL query を正本にする絞り込み (feat-card-list-shell 受入条件 3/4)
+ * ------------------------------------------------------------------ */
+
+/**
+ * 絞り込み条件を **URL query だけ**から復元する。
+ *
+ * sessionStorage 版 (`useRememberedFilters`) との違いは「誰が正本か」。
+ * 記憶に置くと、同じ URL を共有しても相手には別の結果が出て、再読込でも条件が
+ * 勝手に戻る。URL に置けば、共有・再読込・戻る/進むの 3 つが同じ 1 つの規則で揃う。
+ *
+ * 覚えておくのは表示形式 (カード/表) だけにする。表示形式は「見え方の好み」で、
+ * 何件出るかを変えないので、共有した相手の結果を左右しない (`useRememberedViewMode`)。
+ *
+ * 条件の確定は `history.pushState` で履歴に 1 段積む。`replaceState` にすると
+ * 「絞り込む前に戻る」ができなくなる。
+ */
+export interface UrlFilters<TFilters> {
+  readonly filters: TFilters;
+  readonly draft: TFilters;
+  readonly setDraft: Dispatch<SetStateAction<TFilters>>;
+  readonly apply: (next: TFilters) => void;
+  readonly restored: boolean;
+}
+
+/** URL query から絞り込み条件を組み立てる。指定が無いキーは初期値のまま。 */
+function readFiltersFromUrl<TFilters extends Record<string, string>>(
+  initial: TFilters,
+  paramName: Readonly<Record<keyof TFilters & string, string>>,
+): TFilters {
+  const params = new URLSearchParams(window.location.search);
+  const next: Record<string, string> = { ...initial };
+  for (const key of Object.keys(initial)) {
+    const raw = params.get(paramName[key] ?? key);
+    if (raw !== null) next[key] = raw;
+  }
+  return next as TFilters;
+}
+
+export function useUrlFilters<TFilters extends Record<string, string>>(
+  initial: TFilters,
+  paramName: Readonly<Record<keyof TFilters & string, string>>,
+): UrlFilters<TFilters> {
+  const [draft, setDraft] = useState<TFilters>(initial);
+  const [filters, setFilters] = useState<TFilters>(initial);
+  const [restored, setRestored] = useState(false);
+  const initialRef = useRef(initial);
+  const paramNameRef = useRef(paramName);
+
+  useEffect(() => {
+    const sync = (): void => {
+      const fromUrl = readFiltersFromUrl(initialRef.current, paramNameRef.current);
+      setFilters(fromUrl);
+      setDraft(fromUrl);
+    };
+    sync();
+    setRestored(true);
+    // 戻る/進むでも同じ規則で読み直す。これが無いと URL だけが変わって一覧が取り残される
+    window.addEventListener('popstate', sync);
+    return () => window.removeEventListener('popstate', sync);
+  }, []);
+
+  const apply = useCallback((next: TFilters): void => {
+    setFilters(next);
+    setDraft(next);
+    const params = new URLSearchParams(window.location.search);
+    for (const key of Object.keys(initialRef.current)) {
+      const param = paramNameRef.current[key] ?? key;
+      const value = next[key] ?? '';
+      // 既定値と同じものは URL へ書かない。共有する URL が短く読めるものになるのと、
+      // 「条件が付いているか」を URL の見た目だけで判断できるようにするため。
+      if (value === '' || value === initialRef.current[key]) params.delete(param);
+      else params.set(param, value);
+    }
+    const search = params.toString();
+    window.history.pushState(null, '', `${window.location.pathname}${search === '' ? '' : `?${search}`}`);
+  }, []);
+
+  return { filters, draft, setDraft, apply, restored };
+}
+
+/** 一覧の表示形式。カードを既定にする (1 件を読み切れる形が既定という判断)。 */
+export type ListViewMode = 'cards' | 'table';
+
+export const VIEW_MODE_STORAGE_KEYS = {
+  sheets: 'harness-hub:view-mode:sheets',
+  docs: 'harness-hub:view-mode:docs',
+  catalog: 'harness-hub:view-mode:catalog',
+} as const;
+
+/**
+ * 表示形式だけを sessionStorage で覚える。
+ *
+ * 絞り込みと違って URL には載せない。載せると、共有した URL に自分の見え方の好みが
+ * 混ざり、相手の画面まで変わってしまう。逆にここで絞り込みを覚えないことで、
+ * 「URL の条件が記憶に上書きされる」という取り違えが構造的に起きなくなる。
+ */
+export function useRememberedViewMode(storageKey: string): readonly [ListViewMode, (next: ListViewMode) => void] {
+  const [viewMode, setViewMode] = useState<ListViewMode>('cards');
+
+  useEffect(() => {
+    try {
+      const saved = window.sessionStorage.getItem(storageKey);
+      if (saved === 'cards' || saved === 'table') setViewMode(saved);
+    } catch {
+      // 保存領域が使えなくても一覧は動かす。覚えないだけ
+    }
+  }, [storageKey]);
+
+  const update = useCallback(
+    (next: ListViewMode): void => {
+      setViewMode(next);
+      try {
+        window.sessionStorage.setItem(storageKey, next);
+      } catch {
+        // 同上
+      }
+    },
+    [storageKey],
+  );
+
+  return [viewMode, update] as const;
+}

@@ -13,6 +13,7 @@
  * 3 つを一律 409 にすると、画面は「再読込を促す」以外の案内を出せなくなる。
  */
 import {
+  DuplicateBuildSourceError,
   EntityNotFoundError,
   InvalidStageTransitionError,
   PublishRequestNotPublishedError,
@@ -40,6 +41,28 @@ export function buildListProblem(error: unknown, instance: string): ProblemDetai
       detail: error.message,
       instance,
     });
+  }
+  return null;
+}
+
+/**
+ * 起票 (POST) と編集 (PATCH) の domain error を写す。
+ *
+ * 409 は「同じ接続元の Build が既にある」だけで、利用者が取るべき行動は
+ * 「新しく作る」ではなく「既にあるカードを開く」なので、404/422 とは区別する。
+ * 404 は存在秘匿を兼ねる (別テナントの ID 総当たりで在庫を推定させない)。
+ */
+export function buildMutationProblem(error: unknown, instance: string): ProblemDetails | null {
+  if (error instanceof DuplicateBuildSourceError) {
+    return problemDetails({
+      title: 'この接続元の Build は既に存在します',
+      status: 409,
+      detail: error.message,
+      instance,
+    });
+  }
+  if (error instanceof EntityNotFoundError) {
+    return problemDetails({ title: 'Build が見つかりません', status: 404, instance });
   }
   return null;
 }

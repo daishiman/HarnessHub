@@ -270,8 +270,9 @@ catalog adapter は HTTP error を分類してから response schema を遅延�
 
 - HubShell の insight navigation に S09 ダッシュボード・S13 パイプライン・S16 使用状況を追加する。
   モバイルの primary 4 枠には混ぜず、サイドバー専用層 (`insightNavItems`) に分離する。
-- **MVP path**: 実装 route は `/metrics`・`/builds`・`/metrics/usage`。仕様上の正規 path は
-  `/dashboard`・`/pipeline`・`/tracking`。canonical alias は後続で接続する。
+- **実装 path (2026-08-16)**: S00+S09 は `/dashboard`、S16 は `/tracking`。旧 `/metrics`・
+  `/metrics/usage` は 308 転送のみ。S13 は当面 `/builds`。分析ナビの「ダッシュボード」は
+  `/metrics` のまま置き、ホームと現在地が二重にならないようにする。
 - S09/S16 は server component が rollup API を読み、生 event の画面内集計を禁止する。
   期間 filter は URL search params を正本とする。
 - S13 は共有 `StageBoard` を消費し、admin のみ工程操作 UI を出す。axe 0 を focused test で固定する。

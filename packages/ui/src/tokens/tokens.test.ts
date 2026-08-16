@@ -13,6 +13,9 @@ import {
   densityNames,
   densityTokens,
   mediaUp,
+  paletteColorTokens,
+  paletteNames,
+  paletteTokenNames,
   radiusTokens,
   relativeLuminance,
   shadowTokens,
@@ -24,12 +27,12 @@ import {
 describe('コントラスト契約 (token 段階の保証)', () => {
   const results = checkContrastRequirements();
 
-  it.each(results.map((result) => [`${result.theme}: ${result.usage}`, result] as const))(
+  it.each(results.map((result) => [`${result.palette}/${result.theme}: ${result.usage}`, result] as const))(
     '%s が要求比を満たす',
     (_label, result) => {
       expect(
         result.passes,
-        `${result.theme} の ${result.foreground} on ${result.background} は ${result.ratio.toFixed(2)}:1 (要求 ${result.minRatio}:1)`,
+        `${result.palette}/${result.theme} の ${result.foreground} on ${result.background} は ${result.ratio.toFixed(2)}:1 (要求 ${result.minRatio}:1)`,
       ).toBe(true);
     },
   );
@@ -38,8 +41,34 @@ describe('コントラスト契約 (token 段階の保証)', () => {
     expect(new Set(results.map((result) => result.theme))).toEqual(new Set(['light', 'dark']));
   });
 
-  it('テーマを指定するとその分だけ返る', () => {
-    expect(checkContrastRequirements('dark')).toHaveLength(contrastRequirements.length);
+  it('全 5 配色を検証している (配色を足したら自動で検査対象に入る)', () => {
+    expect(new Set(results.map((result) => result.palette))).toEqual(new Set(paletteNames));
+  });
+
+  it('テーマと配色を指定するとその分だけ返る', () => {
+    // theme だけ指定なら「全配色 × その明るさ」。両方指定して初めて 1 組になる
+    expect(checkContrastRequirements('dark')).toHaveLength(contrastRequirements.length * paletteNames.length);
+    expect(checkContrastRequirements('dark', 'navy')).toHaveLength(contrastRequirements.length);
+  });
+
+  /**
+   * CSS の勝ち負け設計の前提。`[data-palette='X']` (詳細度 0,1,0) が light を、
+   * `[data-palette='X'][data-theme='dark']` (0,2,0) が dark を取るので、
+   * 片方だけ token が欠けると「light の値が dark 画面に残る」形で静かに壊れる。
+   */
+  it('全配色の light / dark が同じ token 集合を出す', () => {
+    const expected = [...paletteTokenNames].sort();
+    for (const palette of paletteNames) {
+      for (const theme of themeNames) {
+        expect(Object.keys(paletteColorTokens[palette][theme]).sort(), `${palette}/${theme}`).toEqual(expected);
+      }
+    }
+  });
+
+  it('配色が差し替えるのは面・罫線・主色だけ (状態色は全配色で同一)', () => {
+    for (const token of ['success', 'warning', 'danger', 'accent', 'text', 'textMuted'] as const) {
+      expect(paletteTokenNames as readonly string[]).not.toContain(token);
+    }
   });
 
   it('文字用途は全て 4.5:1 を要求している (基準の緩和が混ざっていないこと)', () => {

@@ -110,7 +110,8 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 
 - Beads: `HarnessHub-lm7`（P01 closed、P02 in_progress、P03〜P13 は merge 後に順次）
 - package digest: `sha256:85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef`
-- 実装: ingest/summary/rollups API、cron rollup、estimation metrics module、S09/S16 UI（path `/metrics`・`/metrics/usage`）
+- 実装: ingest/summary/rollups API、cron rollup、estimation metrics module、S09/S16 UI
+- 2026-08-16 route 収束: S09 は `/dashboard` へ S00 と同居。S16 は `/tracking`。旧 `/metrics`・`/metrics/usage` は 308 転送のみ (ADR §37)。
 - 仕様反映: [mvp-implementation-spec-reflection-receipt.md](../docs/features/feat-metrics-tracking/mvp-implementation-spec-reflection-receipt.md)
 - 最終レビュー: [mvp-final-review.md](../docs/features/feat-metrics-tracking/mvp-final-review.md)
 - P02 で owner を確定: `packages/estimation` 境界は foundation、metrics domain module は本 feature

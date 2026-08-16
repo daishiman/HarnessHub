@@ -17,12 +17,15 @@
  */
 import type { BuildRow, BuildStageRepository, RepositoryContext } from '@harness-hub/db';
 import {
+  BUILD_STAGE_ORDER,
+  type BuildCreateRequest,
   type BuildDetailResponse,
   type BuildListItem,
   type BuildListQuery,
   type BuildListResponse,
   type BuildStageTransitionRequest,
   type BuildStageTransitionResponse,
+  type BuildUpdateRequest,
   buildDetailResponseSchema,
   buildListResponseSchema,
   buildStageTransitionResponseSchema,
@@ -57,6 +60,28 @@ export interface BuildPipelineBoardService {
     readonly workspaceId: string;
     readonly query: BuildListQuery;
   }): Promise<BuildListResponse>;
+  /**
+   * POST /api/v1/builds。手動復旧の起票。接続元の重複は repository の
+   * `DuplicateBuildSourceError` がそのまま伝播する (route が 409 へ写す)。
+   */
+  createBuild(input: {
+    readonly context: RepositoryContext;
+    readonly workspaceId: string;
+    readonly actorUserId: string;
+    readonly request: BuildCreateRequest;
+    readonly canManage: boolean;
+  }): Promise<BuildDetailResponse>;
+  /**
+   * PATCH /api/v1/builds/:id。カードの手入力欄だけを更新する。
+   * 対象が無ければ repository の `EntityNotFoundError` が伝播する (route が 404 へ写す)。
+   */
+  updateBuild(input: {
+    readonly context: RepositoryContext;
+    readonly workspaceId: string;
+    readonly id: string;
+    readonly request: BuildUpdateRequest;
+    readonly canManage: boolean;
+  }): Promise<BuildDetailResponse>;
   /** GET /api/v1/builds/:id。見つからなければ null (route が 404 へ写す)。 */
   getBuild(input: {
     readonly context: RepositoryContext;
@@ -167,6 +192,42 @@ export function createBuildPipelineBoardService(
       return buildListResponseSchema.parse({
         items: await toItems(input.context, page, nowMillis),
         next_cursor: hasMore ? (page.at(-1)?.id ?? null) : null,
+      });
+    },
+
+    async createBuild(input) {
+      const result = await repository.createBuild(input.context, {
+        workspaceId: input.workspaceId,
+        type: input.request.type,
+        // 省略時は 7 工程の先頭。既定値の決定を schema ではなくここに置くのは、
+        // 「省略」と「明示的に hearing を指定」を schema 側が区別できなくなるため。
+        stage: input.request.stage ?? BUILD_STAGE_ORDER[0],
+        sheetId: input.request.sheet_id ?? null,
+        feedbackId: input.request.feedback_id ?? null,
+        actorUserId: input.actorUserId,
+      });
+      return buildDetailResponseSchema.parse({
+        ...toBuildListItem(result.build, await resolveTitle(input.context, result.build), now()),
+        stage_events: [toBuildStageEvent(result.event)],
+        can_manage: input.canManage,
+      });
+    },
+
+    async updateBuild(input) {
+      const row = await repository.updateBuild(input.context, {
+        buildId: input.id,
+        // wire の `title` / `risk` は**上書き列**へ入る。実効値の列を持たないので、
+        // 「上書きを外す (null)」がそのまま算出値への復帰になる。
+        ...(input.request.title === undefined ? {} : { titleOverride: input.request.title }),
+        ...(input.request.risk === undefined ? {} : { riskOverride: input.request.risk }),
+        ...(input.request.assignee_user_id === undefined ? {} : { assigneeUserId: input.request.assignee_user_id }),
+        ...(input.request.note === undefined ? {} : { note: input.request.note }),
+      });
+      const events = await repository.listStageEvents(input.context, row.id);
+      return buildDetailResponseSchema.parse({
+        ...toBuildListItem(row, await resolveTitle(input.context, row), now()),
+        stage_events: events.map(toBuildStageEvent),
+        can_manage: input.canManage,
       });
     },
 

@@ -1,12 +1,12 @@
 ---
 status: confirmed
 layer: operations
-title: 確認用データセット 28 route 到達手順 (SCR-15〜28)
+title: 確認用データセット 30 route 到達手順 (SCR-15〜30)
 feature_id: feat-demo-coverage-dataset
 updated_at: "2026-08-16"
 ---
 
-# 確認用データセット 28 route 到達手順 (SCR-15〜28)
+# 確認用データセット 30 route 到達手順 (SCR-15〜30)
 
 前半 (SCR-01〜14) は [runbook-route-reach.md](docs/features/feat-demo-coverage-dataset/runbook-route-reach.md) を参照する。
 
@@ -149,6 +149,30 @@ updated_at: "2026-08-16"
 | 大量 | workspace-admin | `/settings/coefficients` | 既定の並び順のまま、DISPLAY_BOUNDARIES を跨ぐ件数まで送る | `tenant-coefficient/main/0001`<br>`metrics-rollup/tenant-daily/0001`<br>`tenant/main/0001` |
 | 長文 | workspace-admin | `/settings/coefficients` | そのまま表示を確認 | `tenant-coefficient/main/0001`<br>`metrics-rollup/tenant-daily/0001`<br>`long-text/heading/0001`<br>`long-text/body/0001` |
 | エラー | workspace-admin | `/settings/coefficients` | 停止テナントの資源を要求する | `tenant-coefficient/main/0001`<br>`metrics-rollup/tenant-daily/0001`<br>`tenant/suspended/0001` |
+
+### SCR-29 — `/settings/system`
+
+配色の採用状況。行数は配色 × 明るさで上限が決まるが、母数 (利用者数) は件数で動くため 5 状態すべてを見る。
+
+| 状態 | 役割 | 開く URL | 操作 | 必要な fixture |
+|---|---|---|---|---|
+| 空 | provider-admin | `/settings/system` | 子データを持たないテナントで開く | `user-setting/provider-admin/0001`<br>`user-setting/member/0001`<br>`tenant/empty/0001` |
+| 1 件 | provider-admin | `/settings/system` | そのまま表示を確認 | `user-setting/provider-admin/0001`<br>`user-setting/member/0001`<br>`tenant/main/0001` |
+| 大量 | provider-admin | `/settings/system` | 既定の並び順のまま、DISPLAY_BOUNDARIES を跨ぐ件数まで送る | `user-setting/provider-admin/0001`<br>`user-setting/member/0001`<br>`tenant/main/0001` |
+| 長文 | provider-admin | `/settings/system` | そのまま表示を確認 | `user-setting/provider-admin/0001`<br>`user-setting/member/0001`<br>`long-text/heading/0001`<br>`long-text/body/0001` |
+| エラー | provider-admin | `/settings/system` | 停止テナントの資源を要求する | `user-setting/provider-admin/0001`<br>`user-setting/member/0001`<br>`tenant/suspended/0001` |
+
+### SCR-30 — `/tracking`
+
+週次の実行回数と削減効果。集計画面なので `/metrics/usage` (SCR-19) と同じ形で 5 状態を割り当てる。
+
+| 状態 | 役割 | 開く URL | 操作 | 必要な fixture |
+|---|---|---|---|---|
+| 空 | member | `/tracking` | 子データを持たないテナントで開く | `metrics-event/base/0001`<br>`tenant-coefficient/main/0001`<br>`tenant/empty/0001` |
+| 1 件 | member | `/tracking` | そのまま表示を確認 | `metrics-event/base/0001`<br>`tenant-coefficient/main/0001`<br>`tenant/main/0001` |
+| 大量 | member | `/tracking` | 既定の並び順のまま、DISPLAY_BOUNDARIES を跨ぐ件数まで送る | `metrics-event/base/0001`<br>`tenant-coefficient/main/0001`<br>`tenant/main/0001` |
+| 長文 | member | `/tracking` | そのまま表示を確認 | `metrics-event/base/0001`<br>`tenant-coefficient/main/0001`<br>`long-text/heading/0001`<br>`long-text/body/0001` |
+| エラー | member | `/tracking` | 停止テナントの資源を要求する | `metrics-event/base/0001`<br>`tenant-coefficient/main/0001`<br>`tenant/suspended/0001` |
 
 
 ## 5. 手順をなぞって確認した記録

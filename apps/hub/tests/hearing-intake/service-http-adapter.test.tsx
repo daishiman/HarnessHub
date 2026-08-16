@@ -79,6 +79,9 @@ const GENERATED = generatedSectionsSchema.parse({
   estimated_effect: '## 効果',
 });
 
+/** 状態タブの件数。この test の関心は一覧の中身なので、件数は 0 で固定する。 */
+const EMPTY_STATUS_COUNTS = { all: 0, active: 0, completed: 0, unknown: 0 } as const;
+
 const SHEET_ROW: HearingSheetRow = {
   id: 'sheet-1',
   entityRevision: 1,
@@ -132,7 +135,11 @@ function repository(overrides: Partial<HearingIntakeRepository> = {}): HearingIn
         wireResponse: buildResponse(SHEET_ROW, expiresAt),
       };
     }),
-    listSheets: vi.fn(async () => ({ items: [SHEET_ROW], nextCursor: 'sheet-next' })),
+    listSheets: vi.fn(async () => ({
+      items: [SHEET_ROW],
+      nextCursor: 'sheet-next',
+      statusCounts: EMPTY_STATUS_COUNTS,
+    })),
     findSheet: vi.fn(async () => SHEET_ROW),
     updateSheetStatus: vi.fn(async (_context, _id, status) => ({ ...SHEET_ROW, status })),
     updateSheetStatusCas: vi.fn(async (_context, _id, status) => ({
@@ -245,7 +252,11 @@ describe('HI-SVC: service の提出・参照・管理操作', () => {
   });
 
   it('一覧は本人用フィルタと管理者用フィルタを分け、snapshot から表示項目を作る', async () => {
-    const listSheets = vi.fn(async () => ({ items: [SHEET_ROW], nextCursor: 'sheet-next' }));
+    const listSheets = vi.fn(async () => ({
+      items: [SHEET_ROW],
+      nextCursor: 'sheet-next',
+      statusCounts: EMPTY_STATUS_COUNTS,
+    }));
     const service = createHearingIntakeService(repository({ listSheets }));
     const query = { status: 'generating' as const, department: '経理部', q: '請求', cursor: 'cursor-1', limit: 20 };
 
@@ -284,7 +295,9 @@ describe('HI-SVC: service の提出・参照・管理操作', () => {
     const malformed = { ...SHEET_ROW, formJson: JSON.stringify({ secret: secretSentinel }) };
     const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined);
     const service = createHearingIntakeService(
-      repository({ listSheets: vi.fn(async () => ({ items: [malformed], nextCursor: null })) }),
+      repository({
+        listSheets: vi.fn(async () => ({ items: [malformed], nextCursor: null, statusCounts: EMPTY_STATUS_COUNTS })),
+      }),
     );
 
     await expect(
@@ -311,7 +324,7 @@ describe('HI-SVC: service の提出・参照・管理操作', () => {
       const legacyRow = { ...SHEET_ROW, formJson: JSON.stringify(legacy) };
       const service = createHearingIntakeService(
         repository({
-          listSheets: vi.fn(async () => ({ items: [legacyRow], nextCursor: null })),
+          listSheets: vi.fn(async () => ({ items: [legacyRow], nextCursor: null, statusCounts: EMPTY_STATUS_COUNTS })),
           findSheet: vi.fn(async () => legacyRow),
         }),
       );

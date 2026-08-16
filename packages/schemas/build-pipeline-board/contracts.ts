@@ -64,6 +64,14 @@ export const buildListItemSchema = z
     /** 表示用の見出し。sheet/feedback の題名から route が合成する (builds に列は持たない)。 */
     title: z.string().min(1).max(200),
     risk: buildRiskSchema,
+    /**
+     * カード編集で入れた手入力。null は「上書きなし」で、`title` / `risk` は算出値に戻る。
+     * 実効値 (`title` / `risk`) と併記するのは、画面が「これは手入力か」を区別して見せるため。
+     */
+    title_override: z.string().min(1).max(200).nullable(),
+    risk_override: buildRiskSchema.nullable(),
+    assignee_user_id: identifierSchema.nullable(),
+    note: z.string().max(2_000).nullable(),
     created_at: epochMillis,
     updated_at: epochMillis,
   })
@@ -146,6 +154,55 @@ export const buildStageTransitionResponseSchema = z
   })
   .strict();
 export type BuildStageTransitionResponse = z.output<typeof buildStageTransitionResponseSchema>;
+
+/**
+ * POST /api/v1/builds。接続元 (sheet / feedback) から Build カードを 1 枚起票する。
+ *
+ * `sheet_id` と `feedback_id` は **どちらか一方だけ**を必須にする。両方許すと「どちらの案件の
+ * Build なのか」が 2 つになり、題名の正本が決まらない。どちらも無い Build は接続元を持たず、
+ * カードの見出しを合成する材料が無いまま一覧へ並ぶことになる。どちらも入力書式の問題として
+ * 422 で弾く (業務規則ではなく「受理できる形」の判定なので schema 側に置く)。
+ *
+ * `stage` 省略時の既定は route 層で `'hearing'` を入れる。schema は既定値を注入しない
+ * (省略と明示指定を route が区別できなくなるため)。
+ */
+export const buildCreateRequestSchema = z
+  .object({
+    type: buildTypeSchema,
+    stage: buildStageSchema.optional(),
+    sheet_id: identifierSchema.optional(),
+    feedback_id: identifierSchema.optional(),
+  })
+  .strict()
+  .refine((value) => (value.sheet_id === undefined) !== (value.feedback_id === undefined), {
+    message: '接続元は sheet_id か feedback_id のどちらか一方だけを指定してください',
+  });
+export type BuildCreateRequest = z.output<typeof buildCreateRequestSchema>;
+
+/**
+ * PATCH /api/v1/builds/:id。カードの手入力欄だけを部分更新する。
+ *
+ * 全項目が **optional かつ nullable** で、意味が 3 通りに分かれる。
+ * - key 自体が無い: その項目に触れない
+ * - `null`: 上書きを外す (`title` なら接続元由来の題名へ、`risk` なら停滞日数からの算出値へ戻る)
+ * - 値: その値で上書きする
+ *
+ * `stage` はここに置かない。工程遷移は CAS と隣接判定と監査を伴う別 endpoint
+ * (`POST /:id/stage`) の責務であり、`.strict()` によって `{ stage }` は 422 になる。
+ * 空 body (`{}`) も 422 にする。「何も変えない更新」は成功として台帳へ載せる意味が無い。
+ */
+export const buildUpdateRequestSchema = z
+  .object({
+    title: z.string().trim().min(1).max(200).nullable().optional(),
+    risk: buildRiskSchema.nullable().optional(),
+    assignee_user_id: identifierSchema.nullable().optional(),
+    note: z.string().trim().min(1).max(2_000).nullable().optional(),
+  })
+  .strict()
+  .refine((value) => Object.keys(value).length > 0, {
+    message: '更新する項目を 1 つ以上指定してください',
+  });
+export type BuildUpdateRequest = z.output<typeof buildUpdateRequestSchema>;
 
 /** S13 のカード 1 枚 (`@harness-hub/ui` の `StageCard` と同型)。 */
 export const buildBoardCardSchema = z

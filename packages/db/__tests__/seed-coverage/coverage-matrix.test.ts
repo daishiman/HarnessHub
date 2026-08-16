@@ -12,7 +12,7 @@ const ROUTE_STATES = ['empty', 'single', 'bulk', 'longText', 'error'] as const;
 const NOT_APPLICABLE_REASONS = ['N1', 'N2', 'N3', 'N4', 'N5', 'N6', 'N7'] as const;
 
 /** requirements-baseline.md §6.3 の集計。 */
-const EXPECTED_APPLICABLE = 105;
+const EXPECTED_APPLICABLE = 115;
 const EXPECTED_NOT_APPLICABLE = 35;
 
 interface ReachStep {
@@ -68,8 +68,8 @@ beforeAll(async () => {
 });
 
 describe('T1: route × 状態 対応表', () => {
-  it('T1-1: 対応表が 28 route ちょうどを持つ', () => {
-    expect(matrix).toHaveLength(28);
+  it('T1-1: 対応表が 30 route ちょうどを持つ', () => {
+    expect(matrix).toHaveLength(30);
   });
 
   it('T1-2: 各 route が 5 状態のキーをちょうど持つ', () => {
@@ -78,9 +78,9 @@ describe('T1: route × 状態 対応表', () => {
     }
   });
 
-  it('T1-3: 140 セルすべてが applicable か notApplicable へ解決する', () => {
+  it('T1-3: 150 セルすべてが applicable か notApplicable へ解決する', () => {
     const cells = matrix.flatMap((coverage) => ROUTE_STATES.map((state) => coverage.states[state]));
-    expect(cells).toHaveLength(140);
+    expect(cells).toHaveLength(150);
     const unresolved = cells.filter((cell) => cell?.kind !== 'applicable' && cell?.kind !== 'notApplicable');
     expect(unresolved).toEqual([]);
   });
@@ -130,7 +130,7 @@ describe('T1: route × 状態 対応表', () => {
     expect(actors.filter(([, declared]) => declared.length !== 1)).toEqual([]);
   });
 
-  it('T1-6: 集計が適用 105 / 非適用 35 と一致する', () => {
+  it('T1-6: 集計が適用 115 / 非適用 35 と一致する', () => {
     const cells = matrix.flatMap((coverage) => ROUTE_STATES.map((state) => coverage.states[state]));
     expect(cells.filter((cell) => cell?.kind === 'applicable')).toHaveLength(EXPECTED_APPLICABLE);
     expect(cells.filter((cell) => cell?.kind === 'notApplicable')).toHaveLength(EXPECTED_NOT_APPLICABLE);

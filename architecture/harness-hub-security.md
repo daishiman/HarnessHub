@@ -271,3 +271,6 @@ OIDC/Device Flow の本人確認と、tenant/workspace 行レベル scope を分
 - 認可拒否の **判定** は `authz.ts` 単一層のまま。**表現**だけを middleware が分ける:
   navigation (GET + `Accept: text/html` + Bearer 無し + 非 `/api`) → HTML、
   それ以外 → JSON。`tenant_mismatch` は HTML でも理由を明かさず 404 相当の文言にする。
+
+**差分追記 (2026-08-16 / カード wave)**: `builds.create` / `builds.update` は工程遷移と同じ
+workspace-admin 以上。`appearance.usage_read` は provider-admin 限定で、返すのは人数と構成比だけ。

@@ -35,6 +35,8 @@ export {
 } from '../registry/tenant-data';
 export {
   type AiJobRow,
+  type AppearanceAggregate,
+  type AppearanceBucket,
   type BuildBoardColumnRows,
   type BuildRow,
   type BuildStageEventRow,
@@ -42,6 +44,7 @@ export {
   type BuildsRepository,
   type CoreRepositories,
   type CoreRepositoriesInput,
+  type CreateBuildInput,
   createBuildStageRepository,
   createBuildsRepository,
   createCoreRepositories,
@@ -59,6 +62,7 @@ export {
   type DeviceAuthorizationRow,
   type DocsCmsRepository,
   type DocumentRow,
+  DuplicateBuildSourceError,
   ExternalDocumentPreconditionError,
   type ExternalDocumentRow,
   type FeedbackRepository,
@@ -112,6 +116,7 @@ export {
   type TenantDataUploadInput,
   type TenantRow,
   type TransitionStageInput,
+  type UpdateBuildInput,
   type UpsertNotionIntegrationInput,
   type UpsertRollupInput,
   type UserRow,

@@ -20,8 +20,8 @@ import { buildStageEvents } from '../schema/build-pipeline/schema';
 import { BUILD_STAGES, builds } from '../schema/builds/schema';
 import { EntityNotFoundError, RepositoryError } from '../src/errors';
 import type { RepositoryContext } from '../src/types';
-import type { BuildRow, BuildStage } from './builds';
-import { guardedWrite } from './conflict';
+import type { BuildRisk, BuildRow, BuildStage, BuildType } from './builds';
+import { errorChainText, guardedWrite } from './conflict';
 import type { CoreAdapter } from './db';
 import { createPublishRequestsRepo, type PublishRequestStatus } from './publish-requests';
 import { serverNow } from './time';
@@ -99,6 +99,48 @@ export class PublishRequestNotPublishedError extends RepositoryError {
   }
 }
 
+/**
+ * 同じ接続元 (sheet / feedback) の Build を二重に起票した。
+ *
+ * 判定は route の事前 SELECT ではなく **DB の一意制約**に置く。SELECT→INSERT の間には隙間があり、
+ * 並行する 2 要求が両方とも「まだ無い」と読んで両方 INSERT できてしまう (TOCTOU)。
+ * INSERT の失敗を受けてこの error へ写すことで、隙間そのものを無くしている。
+ */
+export class DuplicateBuildSourceError extends RepositoryError {
+  readonly sheetId: string | null;
+  readonly feedbackId: string | null;
+
+  constructor(sheetId: string | null, feedbackId: string | null) {
+    super('conflict', `接続元 (${sheetId ?? feedbackId ?? '不明'}) の Build は既に存在します`);
+    this.name = 'DuplicateBuildSourceError';
+    this.sheetId = sheetId;
+    this.feedbackId = feedbackId;
+  }
+}
+
+export interface CreateBuildInput {
+  readonly workspaceId: string;
+  readonly type: BuildType;
+  /** 起票時の工程。route が既定値 (先頭工程) を決めてから渡す。 */
+  readonly stage: BuildStage;
+  readonly sheetId: string | null;
+  readonly feedbackId: string | null;
+  /** 認可判定は route が済ませた前提で、初期履歴の記録のためだけに受け取る。 */
+  readonly actorUserId: string;
+}
+
+/**
+ * カード編集の部分更新。`undefined` は「触れない」、`null` は「上書きを外す」を意味する。
+ * この 2 つを 1 つの型で区別するために optional と nullable を併用している。
+ */
+export interface UpdateBuildInput {
+  readonly buildId: string;
+  readonly titleOverride?: string | null;
+  readonly riskOverride?: BuildRisk | null;
+  readonly assigneeUserId?: string | null;
+  readonly note?: string | null;
+}
+
 export interface TransitionStageInput {
   readonly buildId: string;
   /** CAS (compare-and-swap) の期待値。画面が表示していた現在工程。 */
@@ -121,6 +163,14 @@ export interface BuildBoardColumnRows {
 }
 
 export interface BuildStageRepository {
+  /**
+   * 手動復旧の起票。`builds` への INSERT と `build_stage_events` の初期 1 件
+   * (`fromStage: null`) を同一の書き込みゲート内で行う。接続元の重複は
+   * `DuplicateBuildSourceError` として返す。
+   */
+  createBuild(context: RepositoryContext, input: CreateBuildInput): Promise<StageTransitionResult>;
+  /** カード編集。指定された項目だけを更新し、該当行が無ければ `EntityNotFoundError`。 */
+  updateBuild(context: RepositoryContext, input: UpdateBuildInput): Promise<BuildRow>;
   /**
    * 工程を 1 つ進める / 戻す。隣接工程のみ許可し、CAS で lost update を防ぎ、
    * `builds.stage` の更新と `build_stage_events` への追記を**同一の書き込みゲート内**で行う。
@@ -153,6 +203,99 @@ export function createBuildStageRepository(adapter: CoreAdapter): BuildStageRepo
   }
 
   return {
+    async createBuild(context, input) {
+      if (context.workspaceId !== undefined && context.workspaceId !== input.workspaceId) {
+        throw new RepositoryError('invalid-context', 'context と入力の workspaceId が一致しません');
+      }
+
+      return guardedWrite(adapter, async () => {
+        const now = serverNow();
+        const buildId = newUlid(now);
+        let buildRow: BuildRow | undefined;
+        try {
+          const inserted = await adapter.client
+            .insert(builds)
+            .values({
+              id: buildId,
+              tenantId: context.tenantId,
+              workspaceId: input.workspaceId,
+              type: input.type,
+              stage: input.stage,
+              sheetId: input.sheetId,
+              feedbackId: input.feedbackId,
+              publishRequestId: null,
+              titleOverride: null,
+              riskOverride: null,
+              assigneeUserId: null,
+              note: null,
+              createdAt: now,
+              updatedAt: now,
+            })
+            .returning();
+          buildRow = inserted[0] as BuildRow | undefined;
+        } catch (error) {
+          // 一意制約 (`builds_sheet_id_uq` / `builds_feedback_id_uq`) だけを重複起票へ写す。
+          // それ以外の driver 例外を握り潰すと、書き込み失敗が「既にあります」に化ける。
+          if (/unique/i.test(errorChainText(error))) {
+            throw new DuplicateBuildSourceError(input.sheetId, input.feedbackId);
+          }
+          throw error;
+        }
+        if (buildRow === undefined) throw new RepositoryError('conflict', 'builds 行の作成に失敗しました');
+
+        // 初期工程も履歴の 1 件目として残す。ここを省くと「いつこの工程に入ったか」が
+        // 2 件目の遷移が起きるまで分からず、停滞日数の根拠が欠ける。
+        const inserted = await adapter.client
+          .insert(buildStageEvents)
+          .values({
+            id: newUlid(now),
+            tenantId: context.tenantId,
+            workspaceId: buildRow.workspaceId,
+            buildId: buildRow.id,
+            fromStage: null,
+            toStage: buildRow.stage,
+            actorUserId: input.actorUserId,
+            reason: null,
+            occurredAt: now,
+            createdAt: now,
+          })
+          .returning();
+        const event = inserted[0] as BuildStageEventRow | undefined;
+        if (event === undefined) {
+          throw new RepositoryError('conflict', 'build_stage_events の初期記録に失敗しました');
+        }
+
+        return { build: buildRow, event };
+      });
+    },
+
+    async updateBuild(context, input) {
+      return guardedWrite(adapter, async () => {
+        const current = await findBuild(context, input.buildId);
+        if (current === undefined) throw new EntityNotFoundError('builds', input.buildId);
+
+        // key の有無で「触れない」と「上書きを外す (null)」を区別する。undefined を
+        // そのまま drizzle へ渡すと前者が後者に化けるため、明示されたものだけを組み立てる。
+        const patch: Partial<typeof builds.$inferInsert> = {};
+        if (input.titleOverride !== undefined) patch.titleOverride = input.titleOverride;
+        if (input.riskOverride !== undefined) patch.riskOverride = input.riskOverride;
+        if (input.assigneeUserId !== undefined) patch.assigneeUserId = input.assigneeUserId;
+        if (input.note !== undefined) patch.note = input.note;
+
+        // `updatedAt` は意図的に触らない。この列は「工程が最後に動いた時刻」であり、
+        // 停滞日数からのリスク算出 (features/build-pipeline-board/dto.ts) の基準でもある。
+        // メモを直すたびに進むと、停止中の警告をメモ編集だけで消せてしまう。
+        const updated = await adapter.client
+          .update(builds)
+          .set(patch)
+          .where(and(eq(builds.tenantId, context.tenantId), eq(builds.id, input.buildId)))
+          .returning();
+        const buildRow = updated[0] as BuildRow | undefined;
+        if (buildRow === undefined) throw new EntityNotFoundError('builds', input.buildId);
+        return buildRow;
+      });
+    },
+
     async transitionStage(context, input) {
       // 状態機械の判定は DB を触らずに済むので、書き込みゲートへ入る前に落とす。
       if (!isAdjacent(input.expectedStage, input.toStage)) {

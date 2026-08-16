@@ -3,7 +3,7 @@
 /** タブ。矢印キーでの移動と roving tabindex を実装し、Tab キーはタブ群を 1 ストップとして扱う。 */
 import { type KeyboardEvent as ReactKeyboardEvent, type ReactNode, useId, useRef, useState } from 'react';
 
-import { colorVar, spaceVar } from '../internal/style.js';
+import { colorVar, radiusVar, spaceVar } from '../internal/style.js';
 
 export interface TabItem {
   id: string;
@@ -20,6 +20,86 @@ export interface TabsProps {
   activeId?: string;
   defaultActiveId?: string;
   onActiveIdChange?: (id: string) => void;
+}
+
+export interface FilterTabItem<Value extends string = string> {
+  readonly value: Value;
+  readonly label: string;
+  /**
+   * 併記する件数。集計がまだ届いていない間は省略でき、そのときは数を出さない。
+   *
+   * `| undefined` を明示するのは `exactOptionalPropertyTypes` のため。呼び手は
+   * `counts?.[tab.value]` のように「まだ無いかもしれない値」をそのまま渡すので、
+   * 省略と undefined を同じ扱いにしておかないと呼び出し側が三項演算子だらけになる。
+   */
+  readonly count?: number | undefined;
+}
+
+export interface FilterTabsProps<Value extends string = string> {
+  /** 何で絞り込む切替なのかの説明 (「状態で絞り込み」など)。 */
+  label: string;
+  items: readonly FilterTabItem<Value>[];
+  current: Value;
+  onSelect: (value: Value) => void;
+}
+
+/**
+ * 同じ一覧の中身を絞り込む切替。`Tabs` とは別物。
+ *
+ * `Tabs` は `role="tablist"` + tabpanel の対応付けまで担う。こちらが切り替えるのは
+ * 「同じ一覧に何を出すか」だけで、切替先の面が増えるわけではないので、押しボタンの束として
+ * `aria-pressed` で「いま選ばれているもの」を伝える。tab を名乗ると矢印キー移動と
+ * tabpanel の契約まで背負うことになり、実態と合わない。
+ *
+ * docs / sheets / catalog の 3 画面が同じ形を各自で書き起こしていたのをここへ集約した
+ * (視覚の決定は packages/ui の層 1-3 に置く: architecture/harness-hub-design-system.md §1)。
+ */
+export function FilterTabs<Value extends string>({
+  label,
+  items,
+  current,
+  onSelect,
+}: FilterTabsProps<Value>): ReactNode {
+  return (
+    // 押しボタンの束の入れ物は fieldset。既定の枠・余白・min-inline-size は flex を壊すので消す
+    <fieldset
+      aria-label={label}
+      style={{
+        margin: 0,
+        border: 0,
+        minInlineSize: 0,
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: spaceVar(2),
+      }}
+    >
+      {items.map((item) => {
+        const selected = item.value === current;
+        return (
+          <button
+            key={item.value}
+            type="button"
+            data-hh-focusable=""
+            aria-pressed={selected}
+            onClick={() => onSelect(item.value)}
+            style={{
+              minHeight: 'var(--hh-control-height)',
+              padding: `0 ${spaceVar(3)}`,
+              font: 'inherit',
+              cursor: 'pointer',
+              borderRadius: radiusVar('sm'),
+              border: `1px solid ${colorVar('border')}`,
+              background: colorVar(selected ? 'surfaceMuted' : 'surface'),
+              color: colorVar('text'),
+            }}
+          >
+            {item.label}
+            {item.count === undefined ? null : <span style={{ marginInlineStart: spaceVar(1) }}>{item.count}</span>}
+          </button>
+        );
+      })}
+    </fieldset>
+  );
 }
 
 export function Tabs({ label, items, activeId, defaultActiveId, onActiveIdChange }: TabsProps): ReactNode {

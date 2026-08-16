@@ -26,7 +26,7 @@ P03 で承認された設計 (`architecture-decision-record.md`、以下 ADR) �
 
 | path | 責務 | 主な export |
 |---|---|---|
-| `packages/db/scripts/demo-coverage/coverage-matrix.ts` | 28 route × 5 状態の対応表 (ADR §2.2) | `COVERAGE_MATRIX`、型 `RouteCoverage` / `RouteState` / `Applicability` |
+| `packages/db/scripts/demo-coverage/coverage-matrix.ts` | 30 route × 5 状態の対応表 (ADR §2.2) | `COVERAGE_MATRIX`、型 `RouteCoverage` / `RouteState` / `Applicability` |
 | `packages/db/scripts/demo-coverage/seed-id.ts` | 論理キー → 決定論 ID (ADR §3.2) | `seedId(logicalKey: string): string` |
 | `packages/db/scripts/demo-coverage/fixtures.ts` | fixture 定義・長文文面・件数 (ADR §5・§6) | `FIXTURES`、`LOGICAL_KEYS`、`LONG_TEXT`、`BULK_COUNTS`、`BASE_TIME` |
 | `packages/db/scripts/demo-coverage/boundaries.ts` | 実測した表示区切り (ADR §5.1) | `DISPLAY_BOUNDARIES` |
@@ -49,12 +49,12 @@ P03 で承認された設計 (`architecture-decision-record.md`、以下 ADR) �
 
 | # | 判定 | 合格条件 |
 |---|---|---|
-| T1-1 | 対応表の件数 | `COVERAGE_MATRIX.length === 28` |
+| T1-1 | 対応表の件数 | `COVERAGE_MATRIX.length === 30` |
 | T1-2 | 状態キーの網羅 | 各要素が `empty` / `single` / `bulk` / `longText` / `error` の 5 キーをちょうど持つ |
-| T1-3 | 未記入 0 件 | 全 140 セルが `applicable` または `notApplicable` のいずれかに解決する |
+| T1-3 | 未記入 0 件 | 全 150 セルが `applicable` または `notApplicable` のいずれかに解決する |
 | T1-4 | 非適用の理由 | `notApplicable` のセルが `N1`〜`N7` のいずれかの `reason` を持つ |
 | T1-5 | 適用セルの到達手順 | `applicable` のセルが 1 件以上の `reach` を持ち、各 `reach` が非空の `actor` / `url` / `fixtures` を持つ |
-| T1-6 | 集計の一致 | 適用 105 / 非適用 35 (`requirements-baseline.md` §6.3 と一致) |
+| T1-6 | 集計の一致 | 適用 115 / 非適用 35 (`requirements-baseline.md` §6.3 と一致) |
 | T1-7 | route 集合の一致 | 対応表の route 集合が `apps/hub/src/app` 配下の `page.tsx` から導いた route 集合と一致する |
 
 T1-7 の route 導出はテスト側に独自実装を置く。実装が持つ逆変換関数を使うと、実装の誤りをテストが追認してしまうためである。導出規則は「`(...)` のセグメントを除去」「`page.tsx` を除去」「残りが空なら `/`」とする。
@@ -63,7 +63,7 @@ T1-7 の route 導出はテスト側に独自実装を置く。実装が持つ�
 
 | # | 判定 | 合格条件 |
 |---|---|---|
-| T2-1 | 定義の規模 | `DOMAIN_ENUMS` が 42 カラム・値の総数 132 (ADR §10 と一致) |
+| T2-1 | 定義の規模 | `DOMAIN_ENUMS` が 43 カラム・値の総数 135 (ADR §10 と一致) |
 | T2-2 | 定義と schema の一致 | 各カラムの値集合が `packages/db/schema/**` の実定義と一致する |
 | T2-3 | 投入後の存在 | seed 実行後、各カラムの各値が DB に最低 1 行存在する |
 | T2-4 | 動作前提との両立 | サインインに使うテナント・利用者・連携が、それぞれ有効な状態の行として別に存在する (ADR §10.1) |

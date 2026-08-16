@@ -88,6 +88,7 @@ describe('表示設定のリロード耐性', () => {
     firstPage.unmount();
     const reloadedPage = renderSignedInAccountSettings({
       theme: persistedTheme === 'system' ? 'auto' : persistedTheme,
+      palette: 'gray',
       density: 'comfortable',
       locale: 'ja',
     });
@@ -147,7 +148,12 @@ describe('サーバ側の表示設定解決 (root layout の初期値)', () => {
   /** `resolveShellIdentity` と runtime を差し替えたうえで、対象を読み直す。 */
   async function loadResolver(options: {
     readonly subject: string | null;
-    readonly getDisplaySettings?: () => Promise<{ theme: string; density: string; language: string }>;
+    readonly getDisplaySettings?: () => Promise<{
+      theme: string;
+      palette: string;
+      density: string;
+      language: string;
+    }>;
   }) {
     vi.resetModules();
     vi.doMock('../../src/lib/routing/shell-identity.js', () => ({
@@ -160,7 +166,8 @@ describe('サーバ側の表示設定解決 (root layout の初期値)', () => {
       }),
     }));
     const getDisplaySettings = vi.fn(
-      options.getDisplaySettings ?? (async () => ({ theme: 'dark', density: 'compact', language: 'en' })),
+      options.getDisplaySettings ??
+        (async () => ({ theme: 'dark', palette: 'blue', density: 'compact', language: 'en' })),
     );
     vi.doMock('../../src/features/user-org-admin/runtime.js', () => ({
       userOrgAdminRuntime: () => ({ service: { getDisplaySettings } }),
@@ -174,6 +181,7 @@ describe('サーバ側の表示設定解決 (root layout の初期値)', () => {
 
     await expect(resolveUiPreferences()).resolves.toEqual({
       theme: 'dark',
+      palette: 'blue',
       density: 'compact',
       locale: 'en',
     });
@@ -183,11 +191,18 @@ describe('サーバ側の表示設定解決 (root layout の初期値)', () => {
   it('サーバの system は UI の auto へ寄せる (語彙の差を 1 箇所に閉じる)', async () => {
     const { resolveUiPreferences } = await loadResolver({
       subject: 'user-a',
-      getDisplaySettings: async () => ({ theme: 'system', density: 'comfortable', language: 'ja' }),
+      getDisplaySettings: async () => ({
+        theme: 'system',
+        // 値域に無い配色 (減らした後に残った古い保存値) は既定へ倒し、画面を落とさない。
+        palette: 'sunset',
+        density: 'comfortable',
+        language: 'ja',
+      }),
     });
 
     await expect(resolveUiPreferences()).resolves.toEqual({
       theme: 'auto',
+      palette: 'gray',
       density: 'comfortable',
       locale: 'ja',
     });

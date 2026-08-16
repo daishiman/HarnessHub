@@ -241,3 +241,13 @@ N/A: 今回の分冊に伴う製品判断はない。
 - Docs / Sheets 通常 CRUD は Idempotency-Key と entity revision ETag/If-Match を純増する。
   Catalog / PublishRequest と外部 import 専用 revision は非変更。
 - 判断と検証は [仕様反映受領書](../docs/features/feat-semantic-emphasis-icons/card-family-20260815-spec-reflection-receipt.md)。
+
+## 成果物カード一覧 製品実装 writeback (2026-08-16)
+
+- qa-232 / qa-233 の確定契約は reopen しない。一覧カード既定・`:::cards`・2 ペインを製品コードへ落とした。
+- Docs / Sheets / Catalog は URL query を絞込の正本、sessionStorage は view mode だけ。
+  `status_counts` と title/body/tags 検索は repository 応答への純増。
+- sanitize allowlist の差分は `hh-cards` / `hh-card` と正規化済み `data-cols` だけ。
+- S09 は `/dashboard` へ同居、S16 は `/tracking`。旧 `/metrics` 系は 308 転送のみ。
+- 配色 5 種と Build create/update は確定 QA を変えず、本分冊と architecture 差分へ写す。
+- 判断と検証は [カード wave 受領書](../docs/features/feat-card-list-shell/card-family-20260816-spec-reflection-receipt.md)。

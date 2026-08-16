@@ -126,6 +126,7 @@ elicitation（要件ヒアリング）確定後に実装へ落とした契約の
 | 複数監査 dispatch 台帳 schema 1.2（製品要求の reopen なし） | 開発品質 follow-up（利用者要求・QA セル変更なし） | 製品章は非変更。内部契約は [dev-workflow architecture](../architecture/harness-hub-dev-workflow.md) / [uypz 受領書](../docs/features/feat-dev-pipeline-improvement/uypz-audit-fork-schema12-spec-reflection-receipt.md) | `feat-dev-pipeline-improvement` / `HarnessHub-uypz`（fresh live-trial まで open） |
 | サインイン後の既定着地を `/dashboard` に実装結線 | `frontend.md` qa-170 / `ui-ux.md` qa-171（値は確定済み。実装と派生文書の現行値を揃える） | [着地 observability 契約](../specs/harness-hub-post-signin-landing-observability-contract.md) / [受領書](../docs/features/feat-hub-foundation/elegant-home-review-20260813-spec-reflection-receipt.md) | `feat-hub-foundation` / `HarnessHub-1cno` |
 | 配色仕様書 v2（グラファイト×アンバー、書体役割分離、md=641/lg=1025） | `frontend.md` / `ui-ux.md` の見た目契約。qa-226 の md=768 逐語は FR-UIF-003/014 が実装正本として上書き | [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md) FR-UIF-003/014 / [受領書](../docs/features/feat-hub-foundation/visual-system-v2-20260813-spec-reflection-receipt.md) | `feat-hub-foundation` / `HarnessHub-l0o6` |
+| 成果物カード一覧の製品実装（カード既定・本文カード・配色 5 種・計測 route 収束） | `frontend.md` / `ui-ux.md` qa-232 / qa-233（確定済み。今回は実装 writeback） | [カード wave 受領書](../docs/features/feat-card-list-shell/card-family-20260816-spec-reflection-receipt.md) / [writebacks](harness-hub-system-specification-implementation-writebacks.md) | `feat-card-list-shell` / `HarnessHub-ma7t`・`HarnessHub-iz3n` |
 
 ## 全体ドキュメント出典 (未割当参照)
 

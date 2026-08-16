@@ -35,7 +35,7 @@ pnpm --filter @harness-hub/db exec tsx scripts/verify-demo-coverage-matrix.ts
 | N6 | 単一ドキュメントの表示・編集で、一覧のページング境界を持たない |
 | N7 | 認証済み利用者が必ず 1 件以上存在するため 0 件が成立しない |
 
-## 3. 対応表 (28 画面 × 5 状態 = 140 セル)
+## 3. 対応表 (30 画面 × 5 状態 = 150 セル)
 
 `✓` は到達手順と fixture を持つセル、`— Nn` は上表の理由による非適用である。未割当は 0 件。
 
@@ -69,8 +69,10 @@ pnpm --filter @harness-hub/db exec tsx scripts/verify-demo-coverage-matrix.ts
 | SCR-26 | `/settings/notion` | ✓ | ✓ | — N5 | ✓ | ✓ |
 | SCR-27 | `/settings/auth` | ✓ | ✓ | — N5 | ✓ | ✓ |
 | SCR-28 | `/settings/coefficients` | ✓ | ✓ | ✓ | ✓ | ✓ |
+| SCR-29 | `/settings/system` | ✓ | ✓ | ✓ | ✓ | ✓ |
+| SCR-30 | `/tracking` | ✓ | ✓ | ✓ | ✓ | ✓ |
 
-集計: 適用 105 件 / 非適用 35 件 (N1 11・N2 6・N3 1・N4 6・N5 7・N6 2・N7 2) / 未割当 0 件。
+集計: 適用 115 件 / 非適用 35 件 (N1 11・N2 6・N3 1・N4 6・N5 7・N6 2・N7 2) / 未割当 0 件。
 
 ## 4. 実装時に確定した判断
 

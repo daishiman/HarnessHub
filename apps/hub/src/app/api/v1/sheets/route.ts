@@ -96,12 +96,20 @@ export const GET = withAuthz(
       return problemResponse(problemDetailsFromZodError(parsed.error, { instance: url.pathname }));
     }
 
+    // 状態タブの区分。schema (`sheetListQuerySchema`) は個々の状態名しか持たないので、
+    // 区分は query から直接読む。zod object は既定で契約外のキーを落とすため、
+    // これを足しても safeParse は通ったままになる。
+    const statusGroupParam = url.searchParams.get('status_group');
+    const statusGroup =
+      statusGroupParam === 'active' || statusGroupParam === 'completed' ? statusGroupParam : undefined;
+
     const result = await hearingIntakeRuntime().service.listSheets({
       context: contextFor(authz.resource.tenantId, authz.resource.workspaceId, authz.principal.userId),
       workspaceId: authz.resource.workspaceId,
       applicantUserId: authz.principal.userId,
       readAll: authz.can('sheets.read_all'),
       query: parsed.data,
+      ...(statusGroup === undefined ? {} : { statusGroup }),
     });
     return Response.json(result);
   },

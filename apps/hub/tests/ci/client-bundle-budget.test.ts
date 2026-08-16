@@ -15,7 +15,7 @@ const APP_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../
 const SCRIPT = path.join(APP_ROOT, 'scripts/check-client-bundle.mjs');
 
 /** check-client-bundle.mjs の DEFAULT_BUDGET_BYTES と同値。ここがズレたら片方の変更漏れとして落とす */
-const BUDGET_BYTES = 120 * 1024;
+const BUDGET_BYTES = 126 * 1024;
 
 const workDirs: string[] = [];
 

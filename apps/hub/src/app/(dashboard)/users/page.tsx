@@ -1,7 +1,7 @@
 import { Panel, ScreenHeader } from '@harness-hub/ui';
 import type { Metadata } from 'next';
 import { resolveDashboardScope, tenantIdFromQuery } from '../../../lib/routing/dashboard-scope.js';
-import { UserList } from './user-list.js';
+import { UserListLazy } from './user-list-lazy.js';
 
 export const metadata: Metadata = {
   title: 'ユーザー管理 | Harness Hub',
@@ -24,7 +24,7 @@ export default async function UsersPage({ searchParams }: PageProps) {
         sticky
       />
       <Panel flush>
-        <UserList tenantId={tenantIdFromQuery(query, scope)} initialQuery={initialQuery} />
+        <UserListLazy tenantId={tenantIdFromQuery(query, scope)} initialQuery={initialQuery} />
       </Panel>
     </>
   );

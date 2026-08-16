@@ -1,11 +1,14 @@
 /** feat-user-org-admin 契約の公開入口。consumer は @harness-hub/schemas root から参照する。 */
 export type {
+  AppearanceUsageResponse,
   CreateUserRequest,
   CreateUserResponse,
   DensityPreference,
   DisplaySettingsResponse,
   MeResponse,
   NotificationSettingsResponse,
+  PalettePreference,
+  ResolvedTheme,
   SalaryDisplay,
   TenantCoefficientsResponse,
   ThemePreference,
@@ -21,12 +24,15 @@ export type {
   UserListResponse,
 } from './contracts.js';
 export {
+  appearanceUsageResponseSchema,
   createUserRequestSchema,
   createUserResponseSchema,
   densityPreferenceSchema,
   displaySettingsResponseSchema,
   meResponseSchema,
   notificationSettingsResponseSchema,
+  palettePreferenceSchema,
+  resolvedThemeSchema,
   salaryDisplaySchema,
   tenantCoefficientsResponseSchema,
   themePreferenceSchema,

@@ -67,7 +67,19 @@ export function normalizeBuildTitle(title: string, row: BuildRow): string {
   return oneLine.length <= TITLE_MAX_LENGTH ? oneLine : `${oneLine.slice(0, TITLE_MAX_LENGTH - 1)}…`;
 }
 
+/**
+ * DB 行を wire の 1 件へ写す。
+ *
+ * `title` / `risk` は **実効値** (手入力があればそれ、無ければ算出値) を入れ、手入力そのものは
+ * `title_override` / `risk_override` として併記する。画面が「この値は人が決めたのか、
+ * 停滞日数から自動で付いたのか」を区別して見せられるようにするためで、実効値だけを返すと
+ * 編集画面が「上書きを外す」操作を提示できなくなる。
+ */
 export function toBuildListItem(row: BuildRow, title: string, nowMillis: number): BuildListItem {
+  // 手入力列は 0017 で後から足したので、旧 migration しか流していない DB や
+  // 列を持たない fixture 行では undefined で届きうる。「未設定」は null に寄せて扱う。
+  const rawTitleOverride = row.titleOverride ?? null;
+  const titleOverride = rawTitleOverride === null ? null : normalizeBuildTitle(rawTitleOverride, row);
   return buildListItemSchema.parse({
     id: row.id,
     workspace_id: row.workspaceId,
@@ -76,8 +88,12 @@ export function toBuildListItem(row: BuildRow, title: string, nowMillis: number)
     sheet_id: row.sheetId,
     feedback_id: row.feedbackId,
     publish_request_id: row.publishRequestId,
-    title: normalizeBuildTitle(title, row),
-    risk: computeBuildRisk(row.stage, row.updatedAt, nowMillis),
+    title: titleOverride ?? normalizeBuildTitle(title, row),
+    risk: row.riskOverride ?? computeBuildRisk(row.stage, row.updatedAt, nowMillis),
+    title_override: titleOverride,
+    risk_override: row.riskOverride ?? null,
+    assignee_user_id: row.assigneeUserId ?? null,
+    note: row.note ?? null,
     created_at: row.createdAt,
     updated_at: row.updatedAt,
   });

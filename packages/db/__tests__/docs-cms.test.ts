@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import type { TursoAdapter } from '../connection/turso';
@@ -107,6 +107,40 @@ describe('DOCS-DB: documents repository', () => {
       new Set([...firstPage.items, ...secondPage.items, ...thirdPage.items].map((document) => document.id)),
     ).toEqual(new Set(created.map((document) => document.id)));
   });
+  it('DOCS-COUNT-001: 状態タブの件数は cursor と status を外した集合から数え、未知の状態は unknown に寄せる', async () => {
+    const context = await seedActor();
+    const repository = createDocsCmsRepository(asCore(adapter));
+    const actorId = context.actorId ?? 'missing-actor';
+    const published = await repository.createDocument(context, {
+      scope: 'tenant',
+      title: '公開済み',
+      bodyMarkdown: '',
+      actorId,
+    });
+    await repository.updateDocument(context, published.id, { status: 'published', actorId });
+    await repository.createDocument(context, { scope: 'tenant', title: '下書き', bodyMarkdown: '', actorId });
+    const legacy = await repository.createDocument(context, {
+      scope: 'tenant',
+      title: '旧形式',
+      bodyMarkdown: '',
+      actorId,
+    });
+    // 画面の状態写像に無い値を直接書く。過去データや将来の状態が published/draft へ
+    // 紛れ込まないこと (受入条件 5) を、repository の集計側で固定する。
+    // drizzle の型は enum に無い値を拒むので、ここだけ生 SQL で書く。
+    // 型で書けない値こそが検証対象 (旧データ・将来の状態) なので、型を緩めずに経路を変える。
+    await adapter.client.run(sql`update documents set status = 'archived' where id = ${legacy.id}`);
+
+    const firstPage = await repository.listDocuments(context, { limit: 1 });
+    expect(firstPage.items).toHaveLength(1);
+    expect(firstPage.statusCounts).toEqual({ all: 3, published: 1, draft: 1, unknown: 1 });
+
+    // 状態で絞っても他タブの件数は残る。ここが 0 になると絞り込み後に全タブが空に見える
+    const draftOnly = await repository.listDocuments(context, { limit: 50, status: 'draft' });
+    expect(draftOnly.items.map((row) => row.title)).toStrictEqual(['下書き']);
+    expect(draftOnly.statusCounts).toEqual({ all: 3, published: 1, draft: 1, unknown: 1 });
+  });
+
   it('DOCS-TAG-001: tag は JSON 配列要素の完全一致で絞り込む', async () => {
     const context = await seedActor();
     const repository = createDocsCmsRepository(asCore(adapter));
@@ -135,6 +169,86 @@ describe('DOCS-DB: documents repository', () => {
     const page = await repository.listDocuments(context, { limit: 50, tag: 'API' });
 
     expect(page.items.map((row) => row.title)).toStrictEqual(['API ガイド']);
+  });
+
+  /**
+   * 検索語 q は title / body / tags の OR で当てる (feat-card-list-shell 受入条件)。
+   * 一覧のカードに出ているのはこの 3 つなので、「画面に見えている語で探して 0 件」を作らない。
+   */
+  async function seedSearchCorpus(context: Awaited<ReturnType<typeof seedActor>>) {
+    const repository = createDocsCmsRepository(asCore(adapter));
+    const make = (title: string, bodyMarkdown: string, tags: string[]) =>
+      repository.createDocument(context, {
+        scope: 'tenant',
+        title,
+        bodyMarkdown,
+        actorId: context.actorId ?? 'missing-actor',
+        tags: JSON.stringify(tags),
+      });
+    await make('題名で当たる納品物', '本文は無関係', ['無関係']);
+    await make('無関係な題名 A', '本文に納品物が出てくる', ['無関係']);
+    await make('無関係な題名 B', '本文も無関係', ['納品物']);
+    await make('どこにも出てこない', '無関係', ['無関係']);
+    return repository;
+  }
+
+  it('DOCS-SEARCH-001: q は title / body / tags のいずれかに当たる (どれか 1 つでも一致すれば返す)', async () => {
+    const context = await seedActor();
+    const repository = await seedSearchCorpus(context);
+
+    const page = await repository.listDocuments(context, { limit: 50, query: '納品物' });
+
+    // 3 件は title / body / tags のいずれかで一致し、4 件目はどこにも無いので落ちる。
+    // 「title だけ検索」への退行は、この 3 件が 1 件へ減ることで検知できる。
+    expect(page.items.map((row) => row.title).sort()).toStrictEqual([
+      '無関係な題名 A',
+      '無関係な題名 B',
+      '題名で当たる納品物',
+    ]);
+    // 件数も同じ集合から数える。items だけ直して counts が古い、を起こさない。
+    expect(page.statusCounts.all).toBe(3);
+  });
+
+  it('DOCS-SEARCH-002: q は他の絞り込みと AND で合成される (OR が外へ漏れない)', async () => {
+    const context = await seedActor();
+    const repository = await seedSearchCorpus(context);
+
+    // tags で一致する行だけを別のタグ条件で外す。q の OR が括弧で閉じていないと、
+    // tag 条件が OR の一項として扱われて件数が増える。
+    const page = await repository.listDocuments(context, { limit: 50, query: '納品物', tag: '納品物' });
+
+    expect(page.items.map((row) => row.title)).toStrictEqual(['無関係な題名 B']);
+  });
+
+  it('DOCS-SEARCH-003: tags 検索は要素単位で当て、JSON の構文文字や壊れた値に引っかからない', async () => {
+    const context = await seedActor();
+    const repository = createDocsCmsRepository(asCore(adapter));
+    await repository.createDocument(context, {
+      scope: 'tenant',
+      title: 'タグつき',
+      bodyMarkdown: '',
+      actorId: context.actorId ?? 'missing-actor',
+      tags: JSON.stringify(['設計', 'API']),
+    });
+    await repository.createDocument(context, {
+      scope: 'tenant',
+      title: '壊れたタグ',
+      bodyMarkdown: '',
+      actorId: context.actorId ?? 'missing-actor',
+      tags: 'not-json',
+    });
+
+    // `","` は JSON 文字列としての区切りであってタグの中身ではない。列へ直接 LIKE を
+    // 当てる実装ならタグを持つ全行に一致してしまう。
+    expect((await repository.listDocuments(context, { limit: 50, query: '","' })).items).toStrictEqual([]);
+    // LIKE のメタ文字はただの文字として扱う (`%` が全件一致にならない)。
+    expect((await repository.listDocuments(context, { limit: 50, query: '%' })).items).toStrictEqual([]);
+    // 壊れた tags は fail-closed で非一致。例外にもしない。
+    expect((await repository.listDocuments(context, { limit: 50, query: 'not-json' })).items).toStrictEqual([]);
+    // 正しいタグの部分一致は当たる (検索が全部を拒否して無意味になっていないことの確認)。
+    expect(
+      (await repository.listDocuments(context, { limit: 50, query: 'AP' })).items.map((row) => row.title),
+    ).toStrictEqual(['タグつき']);
   });
 
   it('DOCS-SCHEDULE-001: 未来だけを予約でき、明示公開と実際の本文変更は予約を解除する', async () => {

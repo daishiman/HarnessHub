@@ -97,15 +97,41 @@ export interface ListHearingSheetsInput {
   readonly workspaceId?: string;
   readonly applicantUserId?: string;
   readonly status?: HearingSheetStatus;
+  /**
+   * 複数の状態をまとめて 1 つの区分として扱うときに使う (例: 受付・生成中・レビュー待ちを「対応中」)。
+   *
+   * `status` と別に持たせるのは、単一指定と束ね指定が**別の問いだから**。
+   * 単一指定を配列に統合すると、呼び出し側が「1 件だけの配列」と「区分」を書き分けられなくなる。
+   * 両方渡された場合は AND (どちらも満たす行) になる。
+   */
+  readonly statuses?: readonly HearingSheetStatus[];
   readonly department?: string;
   readonly query?: string;
   readonly cursor?: string;
   readonly limit: number;
 }
 
+/**
+ * 状態タブに出す件数。
+ *
+ * **status 絞り込みと cursor を外した集合**から数える。cursor を残すと「このページの件数」に、
+ * status を残すと選択中のタブ以外が常に 0 になる。tenant/workspace/申請者の可視条件だけは外さない
+ * — 外すと権限の無い行が件数に混ざる。
+ *
+ * `active` は受付・生成中・レビュー待ちの合計 (まだ手が離れていないもの)、`unknown` は
+ * どの既知状態にも当てはまらない行で、個別区分へは混ぜない。
+ */
+export interface HearingSheetStatusCounts {
+  readonly all: number;
+  readonly active: number;
+  readonly completed: number;
+  readonly unknown: number;
+}
+
 export interface HearingSheetPage {
   readonly items: readonly HearingSheetRow[];
   readonly nextCursor: string | null;
+  readonly statusCounts: HearingSheetStatusCounts;
 }
 
 export interface HearingIntakeRepository extends HearingQueueRepository {
@@ -494,15 +520,14 @@ export function createHearingIntakeRepository(adapter: CoreAdapter): HearingInta
     },
 
     async listSheets(context, input) {
-      const predicates: SQL[] = [eq(hearingSheets.tenantId, context.tenantId)];
-      if (context.workspaceId !== undefined) predicates.push(eq(hearingSheets.workspaceId, context.workspaceId));
-      if (input.workspaceId !== undefined) predicates.push(eq(hearingSheets.workspaceId, input.workspaceId));
+      // status と cursor を含まない述語。件数集計はこちらを使う (ページ内の件数にしないため)。
+      const scopePredicates: SQL[] = [eq(hearingSheets.tenantId, context.tenantId)];
+      if (context.workspaceId !== undefined) scopePredicates.push(eq(hearingSheets.workspaceId, context.workspaceId));
+      if (input.workspaceId !== undefined) scopePredicates.push(eq(hearingSheets.workspaceId, input.workspaceId));
       if (input.applicantUserId !== undefined) {
-        predicates.push(eq(hearingSheets.applicantUserId, input.applicantUserId));
+        scopePredicates.push(eq(hearingSheets.applicantUserId, input.applicantUserId));
       }
-      if (input.status !== undefined) predicates.push(eq(hearingSheets.status, input.status));
-      if (input.department !== undefined) predicates.push(eq(hearingSheets.department, input.department));
-      if (input.cursor !== undefined) predicates.push(lt(hearingSheets.id, input.cursor));
+      if (input.department !== undefined) scopePredicates.push(eq(hearingSheets.department, input.department));
       if (input.query !== undefined) {
         // 検索対象は HS コード・業務名・回答内容 (formJson)。パターン組立ては
         // repository/search.ts に一本化してある — 直に `%...%` を書くと利用者の
@@ -512,8 +537,14 @@ export function createHearingIntakeRepository(adapter: CoreAdapter): HearingInta
           hearingSheets.title,
           hearingSheets.formJson,
         ]);
-        if (search !== undefined) predicates.push(search);
+        if (search !== undefined) scopePredicates.push(search);
       }
+      const predicates: SQL[] = [...scopePredicates];
+      if (input.status !== undefined) predicates.push(eq(hearingSheets.status, input.status));
+      if (input.statuses !== undefined && input.statuses.length > 0) {
+        predicates.push(inArray(hearingSheets.status, [...input.statuses]));
+      }
+      if (input.cursor !== undefined) predicates.push(lt(hearingSheets.id, input.cursor));
 
       const rows = await adapter.client
         .select({
@@ -531,9 +562,38 @@ export function createHearingIntakeRepository(adapter: CoreAdapter): HearingInta
         .limit(input.limit + 1);
       const hasNext = rows.length > input.limit;
       const items = rows.slice(0, input.limit).map(asSheetRow);
+
+      // 件数は「可視条件を通した後・cursor を当てる前」の集合から数える (受入条件 6)。
+      // status 述語も外すので、選択中の区分以外の件数もそのまま出る。
+      const countRows = (await adapter.client
+        .select({ status: hearingSheets.status, value: count() })
+        .from(hearingSheets)
+        .where(and(...scopePredicates))
+        .groupBy(hearingSheets.status)) as readonly { status: string | null; value: number }[];
+      const statusCounts = countRows.reduce(
+        (accumulator, row) => {
+          const value = Number(row.value);
+          accumulator.all += value;
+          // まだ手が離れていないものを 1 つの区分にまとめる。完了だけが終端で、
+          // それ以外の既知状態は利用者から見ると「対応中」で括れる
+          if (row.status === 'received' || row.status === 'generating' || row.status === 'review') {
+            accumulator.active += value;
+          } else if (row.status === 'completed') {
+            accumulator.completed += value;
+          } else {
+            // 読めない状態は active/completed のどちらにも寄せない。寄せると
+            // 「対応中が 1 件多い」という静かな取り違えになる (受入条件 5)
+            accumulator.unknown += value;
+          }
+          return accumulator;
+        },
+        { all: 0, active: 0, completed: 0, unknown: 0 },
+      );
+
       return {
         items,
         nextCursor: hasNext ? (items.at(-1)?.id ?? null) : null,
+        statusCounts,
       };
     },
 

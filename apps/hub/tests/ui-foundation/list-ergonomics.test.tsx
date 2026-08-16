@@ -43,6 +43,19 @@ const columnTexts = (container: HTMLElement, index: number): string[] =>
     (row.querySelectorAll('td')[index]?.textContent ?? '').replace(/^要対応: /, ''),
   );
 
+/**
+ * 一覧の既定はカードグリッド (feat-card-list-shell)。表の契約 (列順・左端の貼り付き・
+ * 並べ替えの基準) は消えたのではなく「表で見る」へ切り替えた先に残っているので、
+ * 表を見るテストは先にここを通す。切替そのものが動くことの確認も兼ねる。
+ */
+async function switchToTable(container: HTMLElement): Promise<void> {
+  const button = [...container.querySelectorAll('button')].find((element) => element.textContent === '表で見る');
+  if (button === undefined) throw new Error('「表で見る」への切替がありません');
+  await act(async () => {
+    button.click();
+  });
+}
+
 async function clickHeader(container: HTMLElement, header: string): Promise<void> {
   const target = [...container.querySelectorAll('thead th')].find((cell) => cell.textContent?.includes(header));
   const button = target?.querySelector('button');
@@ -92,6 +105,7 @@ describe('LISTERG: 一覧の使い勝手', () => {
   it('LISTERG-02: ヒアリングシート一覧は行を名指しする列が先頭で、左端に貼り付く', async () => {
     stubFetch(() => ({ items: [sheet('s1', 'HS-001', 'received', '2026-08-01T00:00:00.000Z')], next_cursor: null }));
     const container = await mount(createElement(HearingSheetList, { tenantId: 't', workspaceId: 'w' }));
+    await switchToTable(container);
 
     expect(headerTexts(container)[0]).toContain('シート番号');
     expect(container.querySelector('tbody td')?.getAttribute('style') ?? '').toContain('position: sticky');
@@ -107,6 +121,7 @@ describe('LISTERG: 一覧の使い勝手', () => {
       next_cursor: null,
     }));
     const container = await mount(createElement(HearingSheetList, { tenantId: 't', workspaceId: 'w' }));
+    await switchToTable(container);
 
     await clickHeader(container, '状態');
 
@@ -169,6 +184,7 @@ describe('LISTERG: 一覧の使い勝手', () => {
       next_cursor: null,
     }));
     const container = await mount(createElement(DocumentList, { tenantId: 't', workspaceId: 'w' }));
+    await switchToTable(container);
 
     // 分類はタイトルセル内の badge に集約する。独立列に戻すとカード表示との情報配置が二重になる。
     expect(headerTexts(container)).toEqual(['タイトル', '適用範囲', '状態', '更新日時']);

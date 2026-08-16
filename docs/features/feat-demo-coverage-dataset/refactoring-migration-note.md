@@ -58,7 +58,7 @@ async function schemaDdl(): Promise<string[]> {
 
 投入本体 (`packages/db/scripts/demo-coverage/seed.ts`) も schema barrel を import するだけである。したがって schema 側に新しい表・カラム・enum 値を要求していない。
 
-この向きは検査でも固定されている。`DOMAIN_ENUMS` の宣言 (42 カラム / 132 値) が schema の実定義と完全一致することを T2-2 が突き合わせており、seed のために enum を増やしていれば不一致として落ちる。
+この向きは検査でも固定されている。`DOMAIN_ENUMS` の宣言 (43 カラム / 135 値) が schema の実定義と完全一致することを T2-2 が突き合わせており、seed のために enum を増やしていれば不一致として落ちる。
 
 > **設計上の含意:** DDL を canonical migration から作らず schema barrel から導出しているのは、手元の空 DB へ「今の schema」をそのまま起こすためである。migration の適用順序を再現するのが目的ではないので、本 feature が migration 履歴に手を入れる必要は構造的に生じない。
 
