@@ -36,35 +36,8 @@
     "真の 0 件と絞込後 0 件が異なる空状態で表示され、適用中条件を解除する chip がある"
   ],
   "architecture_refs": [
-    "arch-harness-hub-frontend",
-    "arch-harness-hub-design-system"
-  ],
-  "depends_on": [
-    "feat-card-mutation-safety",
-    "feat-semantic-emphasis-icons"
-  ],
-  "resource_scope": [
-    "packages/ui/src/components/DataTable.tsx",
-    "packages/ui/src/components/DataTable.test.tsx",
-    "apps/hub/src/app/(dashboard)/docs/page.tsx",
-    "apps/hub/src/app/(dashboard)/docs/document-list.tsx",
-    "apps/hub/src/app/(dashboard)/docs/[id]/page.tsx",
-    "apps/hub/src/app/(dashboard)/docs/[id]/edit/document-edit-page.tsx",
-    "apps/hub/src/app/(dashboard)/docs/new/document-create-form.tsx",
-    "apps/hub/src/app/(dashboard)/sheets/page.tsx",
-    "apps/hub/src/app/(dashboard)/sheets/hearing-sheet-list.tsx",
-    "apps/hub/src/app/(dashboard)/sheets/[id]/hearing-sheet-detail.tsx",
-    "apps/hub/src/app/(dashboard)/sheets/new/hearing-intake-wizard.tsx",
-    "apps/hub/src/app/(workspace)/catalog/page.tsx",
-    "apps/hub/src/components/catalog/CatalogList.tsx",
-    "apps/hub/src/app/api/v1/docs/route.ts",
-    "apps/hub/src/app/api/v1/sheets/route.ts",
-    "packages/db/repository/docs-cms.ts",
-    "packages/db/repository/hearing-intake.ts",
-    "packages/db/schema/docs-cms/schema.ts",
-    "packages/db/schema/hearing-intake/schema.ts",
-    "apps/hub/src/lib/catalog/marketplace.ts",
-    "apps/hub/src/lib/catalog/response-schemas.ts"
+    "architecture/harness-hub-design-system.md",
+    "architecture/harness-hub-frontend.md"
   ],
   "updated_at": "2026-08-16T07:15:30Z"
 }
