@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # /// script
 # name: build-resume-receipt
-# version: 0.1.0
+# version: 0.2.0
 # purpose: Build a digest-bound C19 resume receipt only after the canonical evaluator report and fork ledger pass validation.
-# inputs: [argv --repo-root --report --fork-ledger --session --output]
-# outputs: [system-spec/resume-receipt.json, stdout JSON]
+# inputs: [argv --repo-root --report --fork-ledger --session --output --print-artifact-snapshot]
+# outputs: [system-spec/resume-receipt.json, stdout JSON or artifact snapshot JSON]
 # contexts: [E]
 # network: false
 # write-scope: caller-repo/system-spec/resume-receipt.json
@@ -32,10 +32,15 @@ PLUGIN_ROOT = SCRIPT_DIR.parents[2]
 MANIFEST = PLUGIN_ROOT / ".claude-plugin" / "plugin.json"
 AGGREGATE = SCRIPT_DIR / "aggregate-completeness.py"
 RECEIPT_SCHEMA = SCRIPT_DIR.parent / "schemas" / "resume-receipt.schema.json"
-GATE_IDS = {"coverage": "G-matrix", "source_citation": "G-source-citation"}
+GATE_IDS = {
+    "coverage": "G-matrix",
+    "source_citation": "G-source-citation",
+    "knowledge_graph": "G-knowledge-graph",
+}
 SEMVER = re.compile(r"^(\d+)\.(\d+)\.(\d+)(?:[-+].*)?$")
 COVERAGE = PLUGIN_ROOT / "scripts" / "validate-coverage-matrix.py"
 SOURCE_CITATION = PLUGIN_ROOT / "scripts" / "validate-source-citation.py"
+SNAPSHOT_SCHEMA_VERSION = "system-spec-artifact-snapshot/v1"
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -96,6 +101,28 @@ def receipt_contract() -> tuple[set[str], Path, Path, Path]:
         raise ValueError(f"resume receipt schema lacks gate artifact: {exc}") from exc
 
 
+def snapshot_artifacts(root: Path, required: set[str]) -> set[str]:
+    """Bind every system-spec Markdown body in addition to the fixed gate inputs."""
+    spec_root = root / "system-spec"
+    markdown = {
+        path.relative_to(root).as_posix()
+        for path in spec_root.rglob("*.md")
+        if path.is_file()
+    }
+    return required | markdown
+
+
+def build_artifact_snapshot(root: Path, required: set[str]) -> dict[str, Any]:
+    """Capture the exact evaluator inputs, excluding its self-referential report."""
+    return {
+        "schema_version": SNAPSHOT_SCHEMA_VERSION,
+        "artifacts": {
+            relative: digest(contained(root, Path(relative), must_exist=True))
+            for relative in sorted(snapshot_artifacts(root, required))
+        },
+    }
+
+
 def atomic_json(path: Path, value: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     fd, temporary = tempfile.mkstemp(prefix=f".{path.name}.", dir=str(path.parent))
@@ -119,17 +146,60 @@ def checked_gate(command: list[str], *, label: str) -> None:
         raise ValueError(f"{label} failed: {process.stderr or process.stdout}")
 
 
+def checked_json_gate(command: list[str], *, label: str) -> dict[str, Any]:
+    process = subprocess.run(command, capture_output=True, text=True, check=False)
+    if process.returncode != 0:
+        raise ValueError(f"{label} failed: {process.stderr or process.stdout}")
+    try:
+        result = json.loads(process.stdout)
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"{label} returned invalid JSON: {exc}") from exc
+    if not isinstance(result, dict):
+        raise ValueError(f"{label} returned a non-object result")
+    return result
+
+
+def knowledge_gate_projection(result: Any) -> tuple[Any, ...] | None:
+    """Ignore volatile command paths while preserving the complete profile verdict set."""
+    if not isinstance(result, dict) or not isinstance(result.get("subgates"), list):
+        return None
+    profiles = []
+    for subgate in result["subgates"]:
+        if not isinstance(subgate, dict) or not isinstance(subgate.get("profile"), str):
+            return None
+        profiles.append((subgate["profile"], subgate.get("exit_code")))
+    if len({profile for profile, _ in profiles}) != len(profiles):
+        return None
+    return (
+        result.get("id"),
+        result.get("name"),
+        result.get("exit_code"),
+        tuple(sorted(profiles)),
+    )
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--repo-root", required=True, type=Path)
     parser.add_argument("--report", type=Path, help="canonical completeness report (schema default)")
     parser.add_argument("--fork-ledger", default="eval-log/system-spec-harness/audit-fork-ledger.jsonl", type=Path)
-    parser.add_argument("--session", required=True)
+    parser.add_argument("--session")
     parser.add_argument("--output", type=Path, help="canonical sibling resume receipt (schema default)")
+    parser.add_argument(
+        "--print-artifact-snapshot",
+        action="store_true",
+        help="print the evaluator-input snapshot without validating a report or writing a receipt",
+    )
     args = parser.parse_args(argv)
     try:
         root = args.repo_root.resolve(strict=True)
         artifacts_required, canonical_report, state_relative, references_relative = receipt_contract()
+        evaluator_inputs = artifacts_required - {canonical_report.as_posix()}
+        current_snapshot = build_artifact_snapshot(root, evaluator_inputs)
+        if args.print_artifact_snapshot:
+            print(json.dumps(current_snapshot, ensure_ascii=False, indent=2))
+            return 0
+
         canonical_output = canonical_report.with_name("resume-receipt.json")
         report_arg = args.report or canonical_report
         output_arg = args.output or canonical_output
@@ -140,7 +210,7 @@ def main(argv: list[str] | None = None) -> int:
             raise ValueError(f"--report must be the canonical path: {canonical_report}")
         if output_path != (root / canonical_output).resolve():
             raise ValueError(f"--output must be the canonical path: {canonical_output}")
-        if args.session == "unknown" or not args.session.strip():
+        if args.session == "unknown" or not isinstance(args.session, str) or not args.session.strip():
             raise ValueError("a concrete evaluator session is required")
 
         manifest = load_json(MANIFEST)
@@ -193,10 +263,19 @@ def main(argv: list[str] | None = None) -> int:
             ],
             label="G-source-citation",
         )
+        current_knowledge_gate = checked_json_gate(
+            [sys.executable, str(AGGREGATE), "--knowledge-graph"],
+            label="G-knowledge-graph",
+        )
 
         report = load_json(report_path)
         if report.get("verdict") != "PASS":
             raise ValueError("only a canonical PASS evaluator report can produce a resume receipt")
+        report_snapshot = report.get("artifact_snapshot")
+        if report_snapshot != current_snapshot:
+            raise ValueError(
+                "artifact snapshot differs from the evaluator report; restart evaluation on the current inputs"
+            )
         gate_results = report.get("gate_results")
         by_id = {
             item.get("id"): item
@@ -206,19 +285,29 @@ def main(argv: list[str] | None = None) -> int:
         for gate_id in GATE_IDS.values():
             if not isinstance(by_id.get(gate_id), dict) or by_id[gate_id].get("exit_code") != 0:
                 raise ValueError(f"canonical evaluator report lacks passing gate: {gate_id}")
+        if knowledge_gate_projection(by_id["G-knowledge-graph"]) != knowledge_gate_projection(
+            current_knowledge_gate
+        ):
+            raise ValueError(
+                "canonical evaluator report knowledge profiles differ from the current deterministic gate"
+            )
 
-        artifacts = {}
-        for relative in sorted(artifacts_required):
-            artifacts[relative] = digest(contained(root, Path(relative), must_exist=True))
+        artifacts = dict(report_snapshot["artifacts"])
+        artifacts[canonical_report.as_posix()] = digest(report_path)
         receipt = {
-            "schema_version": "1.1",
+            "schema_version": "1.2",
             "producer": {
                 "plugin": "system-spec-harness",
                 "version": version,
                 "entry_point": "assign-system-spec-completeness-evaluator",
             },
             "verdict": "PASS",
-            "gates": {"coverage": "PASS", "source_citation": "PASS", "evaluator": "PASS"},
+            "gates": {
+                "coverage": "PASS",
+                "source_citation": "PASS",
+                "knowledge_graph": "PASS",
+                "evaluator": "PASS",
+            },
             "artifacts": artifacts,
             "evaluator": {
                 "report_path": report_path.relative_to(root).as_posix(),

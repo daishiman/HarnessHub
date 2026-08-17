@@ -111,6 +111,63 @@ def _validate_design_application_provenance(entry: dict) -> list[str]:
     ]
 
 
+QA_SOURCE_KINDS = {
+    "user-dialogue",
+    "written-requirements",
+    "harness-remediation",
+    "derived-consolidation",
+}
+
+
+def _validate_qa_source_shape(entry: dict) -> list[str]:
+    """qa entry の出所メタデータが契約形状であることを検証する。
+
+    契約は ``source`` を object と定め ``kind`` を必須とするが、本ゲートは長らく ``source``
+    を一度も参照していなかった。そのため素の文字列 (採番変更の注記など) が混入しても全ゲートが
+    緑のまま通り、実際に監査 reader が型を前提に走査して途中で落ちる事故が起きた。
+
+    出所は「その回答が利用者の一次入力か否か」を決める唯一の手掛かりなので、形状が壊れている
+    ことは中立性監査と foundation trace の前提が崩れていることを意味する。source を持たない
+    entry (schema 1.1 移行前の legacy) は別の経路が扱うため、ここでは非 None のみを検査する。
+    """
+    qa_id = entry.get("id", "<unknown>")
+    source = entry.get("source")
+    if source is None:
+        return []
+    if not isinstance(source, dict):
+        return [
+            f"qa_log[{qa_id}].source: object 必須 ({type(source).__name__} が混入)。"
+            " 注記は source_note へ退避し set-qa-source で契約形状へ修復する"
+        ]
+    kind = source.get("kind")
+    if kind not in QA_SOURCE_KINDS:
+        return [f"qa_log[{qa_id}].source.kind={kind!r} は {sorted(QA_SOURCE_KINDS)} のいずれか必須"]
+    return []
+
+
+def _validate_qa_retirement_shape(entry: dict) -> list[str]:
+    """Retirement metadata is writer-owned and exact, never a loose annotation."""
+    qa_id = entry.get("id", "<unknown>")
+    retirement = entry.get("retirement")
+    if retirement is None:
+        return []
+    if not isinstance(retirement, dict):
+        return [f"qa_log[{qa_id}].retirement: object 必須"]
+    findings: list[str] = []
+    if set(retirement) - {"writer", "reason", "superseded_by"}:
+        findings.append(f"qa_log[{qa_id}].retirement: 未知 key を持つ")
+    if retirement.get("writer") != "retire-qa":
+        findings.append(f"qa_log[{qa_id}].retirement.writer: retire-qa 必須")
+    if not isinstance(retirement.get("reason"), str) or not retirement["reason"].strip():
+        findings.append(f"qa_log[{qa_id}].retirement.reason: 非空文字列必須")
+    superseded_by = retirement.get("superseded_by")
+    if superseded_by is not None and (
+        not isinstance(superseded_by, str) or not superseded_by.strip()
+    ):
+        findings.append(f"qa_log[{qa_id}].retirement.superseded_by: 非空文字列必須")
+    return findings
+
+
 def _validate_design_applications(entry: dict) -> list[str]:
     """確定 qa の章固有設計解釈を fail-closed に検証する。"""
     qa_id = entry.get("id", "<unknown>")
@@ -250,6 +307,26 @@ def validate(data: dict, require_complete: bool = False) -> list[str]:
                 str(entry.get(key, "")) for key in ("question", "answer")
             )
             findings.extend(_validate_design_application_provenance(entry))
+            findings.extend(_validate_qa_source_shape(entry))
+            findings.extend(_validate_qa_retirement_shape(entry))
+
+    for qa_id, entry in qa_entries.items():
+        retirement = entry.get("retirement")
+        if not isinstance(retirement, dict):
+            continue
+        superseded_by = retirement.get("superseded_by")
+        if superseded_by is None:
+            continue
+        if superseded_by == qa_id or superseded_by not in qa_entries:
+            findings.append(
+                f"qa_log[{qa_id}].retirement.superseded_by={superseded_by!r}: "
+                "qa_log の別の active entry を指す必要がある"
+            )
+        elif isinstance(qa_entries[superseded_by].get("retirement"), dict):
+            findings.append(
+                f"qa_log[{qa_id}].retirement.superseded_by={superseded_by!r}: "
+                "retired entry を後継にできない"
+            )
 
     unresolved = 0
     confirmed_qa_refs: set[str] = set()
@@ -297,6 +374,11 @@ def validate(data: dict, require_complete: bool = False) -> list[str]:
                     )
                 elif qa_ref in qa_entries:
                     confirmed_qa_refs.add(qa_ref)
+                    if isinstance(qa_entries[qa_ref].get("retirement"), dict):
+                        findings.append(
+                            f"matrix[{cat_id}][{pf}]: retired qa_ref={qa_ref!r} を"
+                            " active consumer が参照している"
+                        )
                 else:
                     confirmed_non_qa_refs.add(qa_ref)
                 approval_ref = cell.get("approval_ref")

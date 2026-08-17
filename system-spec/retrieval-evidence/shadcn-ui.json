@@ -1,18 +1,29 @@
 {
-  "allowed_domains": [
-    "ui.shadcn.com"
-  ],
-  "findings": [
-    "shadcn/ui は Tailwind v4 と React 19 を公式にサポートしている",
-    "Tailwind v4 向け更新では CSS variables を HSL から OKLCH へ移行している",
-    "コンポーネントには data-slot 属性が付与され、スタイル指定の安定した入口として使える",
-    "既存プロジェクトは強制的に一括移行されず、段階的な更新が想定されている"
-  ],
-  "retrieval_channel": "WebSearch/WebFetch",
-  "retrieval_method_disclosure": "公式 host に限定して検索し、Tailwind v4 対応の公式説明本文を取得・確認した。",
-  "retrieved_at": "2026-08-10T11:54:59Z",
+  "retrieval_path": "WebSearch (allowed_domains=ui.shadcn.com)",
+  "query": "shadcn/ui Base UI default changelog 2026 Radix",
+  "retrieved_at": "2026-08-16T03:19:23Z",
+  "official_url": "https://ui.shadcn.com/docs/changelog/2026-07-base-ui-default",
   "returned_official_urls": [
-    "https://ui.shadcn.com/docs/tailwind-v4"
+    "https://ui.shadcn.com/docs/changelog/2026-07-base-ui-default",
+    "https://ui.shadcn.com/docs/changelog",
+    "https://ui.shadcn.com/docs/changelog/2026-01-base-ui",
+    "https://ui.shadcn.com/docs/changelog/2026-02-blocks",
+    "https://ui.shadcn.com/docs/changelog/2026-02-radix-ui",
+    "https://ui.shadcn.com/docs/changelog/2026-07-react-aria",
+    "https://ui.shadcn.com/docs/changelog/2026-03-cli-v4"
   ],
-  "target_id": "shadcn-ui"
+  "facts": [
+    "July 2026 changelog: Base UI is the default component library in shadcn/ui",
+    "New projects default to Base UI: `npx shadcn init` picks Base UI",
+    "Radix is NOT deprecated; it remains supported",
+    "every update and new component ships for BOTH libraries (unless a component only exists in Base UI)",
+    "no migration is required for existing projects",
+    "Radix is one flag away for new projects: add `-b radix` for scripts/CI expecting Radix",
+    "docs default to the Base UI tab; Radix docs are one click away",
+    "rationale: shadcn/create users were already picking Base UI over Radix 2 to 1",
+    "history: shadcn/ui launched Jan 2023 on Radix; the same team later began building Base UI",
+    "migration tooling shipped as an agent skill (not a codemod); test project of 60+ components (36 on Radix) migrated in ~25 min, ~10k tokens per component",
+    "July 2026 React Aria release: Base UI remains the default, Radix remains fully supported, existing projects stay on their current base; React Aria selectable in CLI/presets/shadcn-create"
+  ],
+  "prior_source_url": "https://ui.shadcn.com/docs/tailwind-v4"
 }

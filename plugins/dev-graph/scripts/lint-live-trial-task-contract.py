@@ -33,6 +33,7 @@ from live_trial_task_contract import (  # noqa: E402
     PREMISE_END,
     LintError,
     args_drift,
+    canonical_runner_command,
     check_task,
     contract_digest,
     find_contract,
@@ -66,6 +67,10 @@ def render_premise(
         [str(item) for item in task_contract.get("required_fragments", ())]
         if isinstance(task_contract, dict)
         else []
+    )
+    runner_command = canonical_runner_command(contract, fixture_path=fixture_path)
+    runner_instruction = str(
+        contract.get("runner_instruction", "この1行を文字どおり単独実行する")
     )
 
     lines: list[str] = [
@@ -132,6 +137,15 @@ def render_premise(
             "",
         ])
         lines.extend(f"- {fragment}" for fragment in required_fragments)
+    if runner_command is not None:
+        lines.extend([
+            "",
+            f"canonical runner command は以下です。{runner_instruction}:",
+            "",
+            "```text",
+            runner_command,
+            "```",
+        ])
     lines.extend(["", PREMISE_END, ""])
     return "\n".join(lines)
 

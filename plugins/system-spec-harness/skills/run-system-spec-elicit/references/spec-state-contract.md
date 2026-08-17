@@ -38,6 +38,7 @@
     "success_criteria": [], "stakeholders": [],
     "scope": {"in": [], "out": []}, "constraints": [],
     "concrete_intents": [{"id": "I1", "text": "...", "serves": ["G1"]}],
+    "effective_source_refs": {},
     "confirmed": false
   },
   "decisions": [],
@@ -98,7 +99,7 @@ python3 scripts/apply-spec-transition.py set-targets --state spec-state.json \
 
 - **要素 (U1-U9)**: `essential_purpose`(U1 本質的目的) / `background`(U2 背景) / `goals`(U3 ゴール `{id,text}`) / `objectives`(U4 目標 `{id,text,measure}`) / `success_criteria`(U5) / `stakeholders`(U6) / `scope`(U7 `{in,out}`) / `constraints`(U8) / `concrete_intents`(U9 `{id,text,serves:[goal_id]}`) / `confirmed`。
 - **単一 writer**: `requirements_foundation` の書込は `set-foundation` op が唯一の経路。`init` は空 (`empty_foundation`) で初期化するだけ。goals は `id` 必須・重複禁止、`concrete_intents.serves` は実在 goal id を指す (dangling 拒否)。
-- **確定条件**: `confirmed: true` を要求するときは U1-U9 の全項目が値を持つか、該当しない項目が `{"status":"not_applicable","reason":"..."}` で理由付き明示されていること。空のまま確認済みにできない。さらに writer と `--require-foundation` は各 U に対応する canonical id `qa-foundation-u1`〜`qa-foundation-u9` の 1論点 `qa_log` entry を機械的に要求する。対話 entry は `source:{"kind":"user-dialogue"}`、書面 entry は `source:{"kind":"written-requirements","path":"<relative-path>","section":"<section>","sha256":"<sha256(answer UTF-8 bytes)>"}` とし、質問にも path/section、`answer` には指定 section に実在する対応原文の逐語 excerpt を残す。承認ログだけ・AI 要約だけ・AI が生成した entry 自身の digest を一次根拠にしてはならない。新しい利用者入力が無い再質問で新規 approval を作ってはならない。未確定なら途中保存として空でも保存できる。
+- **確定条件**: `confirmed: true` を要求するときは U1-U9 の全項目が値を持つか、該当しない項目が理由付き N/A であること。schema 1.1 は `effective_source_refs` に U1-U9 を過不足なく持ち、各 binding の `qa_ref` / `approval_ref` が一意に実在し、QA question が binding 対象の `U<N>` を明示し、QA が利用者一次入力 (`user-dialogue` または検証可能な `written-requirements`) で retired でなく、現行 foundation の `approval_ref` と整合することを writer と `--require-foundation` が強制する。原則は U ごとの 1論点 QA だが、answer に U ごとに分離可能な利用者決定が逐語で残る **明示的な共有 binding** は許可し、qa_ref の一致だけを重複違反にしない。共有時の機械ゲートは `qa_ref` ごとの binding U 集合を正本とし、(1) question の **共有対象の全 U marker** と集合の exact match、(2) 各 binding の consumer 別 `evidence_quote` が answer に完全一致し `evidence_sha256 == sha256(evidence_quote UTF-8 bytes)`、(3) consumer 間の quote が同一または包含関係でない、(4) 各 binding の `approval_ref` が同一、を強制する。answer 全体の他 U 言及は binding 対象にはしない。対象 marker 欠落、question の対象外 marker、quote 欠落/改変/hash 不一致/流用は機械層で拒否する。ただし quote が対象 U の現行値を意味的に裏付けるか、AI 要約でなく逐語の利用者決定かは機械層の保証外であり、C06 が question / answer / approval / consumer 別 quote の生証跡を意味監査する。exact schema 1.0 だけは canonical `qa-foundation-u1`〜`qa-foundation-u9` を fallback に使える。canonical entry は初回値の immutable な履歴であり、後続の確定値変更では新 QA/approval、対象 U の effective binding、トップレベル `approval_ref` を同時更新する。値だけを旧証拠へ付け替える操作、承認ログだけ・AI 要約だけ・AI が生成した entry 自身の digest を一次根拠にする操作は禁止する。
 - **serves_goals (トレース)**: 各 `確定` セルは `serves_goals: ["G1", ...]` でどの上位概念 (ゴール) に資するかを明示する。`confirm` op に `serves_goals` を同時付与するか、確定後に `set-serves` op で additive に付与する。`set-serves` は `state=確定` を変えないため確定巻き戻し防御には抵触しない。
 - **approval_ref (承認記録へのトレース)**: `対象外` セルは `exclude` op で `approval_ref` を持てるが、`確定` セルには対応経路が無く、「回答本文は明示承認を根拠に引用しているのに、セルから承認記録へ機械追跡できない」状態が生じていた (F-0025)。確定セル限定の後付け annotation である **`set-approval` op** で `approval_ref` を additive に付与する。`set-serves` と同型で `state=確定` を変えないため確定巻き戻し防御には抵触しない。writer は `approval_log` に実在する id だけを受理する (dangling 拒否)。`chunk` で同 turn に `approval_id` を持つ場合は省略でき、その turn の承認 id が自動で紐づく。
 
@@ -116,7 +117,7 @@ python3 scripts/apply-spec-transition.py apply --state spec-state.json \
 
 ### 書面要件の source-index
 
-利用者が `requirements-brief.md` のような書面を渡したとき、内容を AI の回答として再表現して foundation を確定してはならない。`chunk` は `ops: []` の turn でも `qa_log` を append-only で追記できるため、U1-U9 を canonical id ごとに 1論点ずつ索引化してから `set-foundation` を実行する。writer は `source.kind`、書面なら安全な相対 path・非空 section・`answer` 原文と一致する SHA-256・質問中の path/section まで fail-closed で検証する。ここでいう `answer` 原文は指定した source path/section に実在する逐語 excerpt であり、writer が検査する digest 一致だけで「AI が書いた answer が利用者原文に実在する」ことまで証明した扱いにはしない。R6 監査は参照元書面と照合する。
+利用者が `requirements-brief.md` のような書面を渡したとき、内容を AI の回答として再表現して foundation を確定してはならない。初回は U1-U9 を canonical id ごとに 1論点ずつ索引化し、各 `effective_source_refs` をその QA/approval へ結ぶ。後続変更は別 id の entry を追記して binding を差し替える。writer は `source.kind`、書面なら安全な相対 path・非空 section・`answer` 原文と一致する SHA-256・質問中の path/section まで fail-closed で検証する。R6 監査は参照元書面と照合する。
 
 ```json
 [
@@ -274,9 +275,12 @@ writer は上記形状を検証して qa entry に保存する。新規 state �
 
 - **確定巻き戻し拒否**: `確定` セルへの `confirm` / `exclude` は `TransitionError`。Bash/script 経由でも拒否。
 - **R4-reopen 経由のみ確定変更**: `確定` を動かせるのは `reopen` (要 reason) だけ。`未収集` へ戻し `reopen_log` に根拠を残す。
-- **goal-seek chunk**: `chunk` は 1 invocation で最大 `max_loops` turn を適用し、その実値を `hearing_progress.max_loops` に保存する。未収集が残れば `complete=false`・`next_question` 非 null、未収集0なら `complete=true` とする。後続の `reopen` / `add-category` / `apply` も同じ不変則へ再同期する。
+- **goal-seek chunk**: `chunk` は 1 invocation で最大 `max_loops` turn を適用し、その実値を `hearing_progress.max_loops` に保存する。未収集が残れば `complete=false`・`next_question` 非 null、未収集0なら `complete=true` とする。後続の `reopen` / `add-category` / `apply` も同じ不変則へ再同期する。投入 turn が `max_loops` を超えた場合、超過分は適用されないが黙って捨ててはならない。writer は未消化件数を必ず stderr へ出し、`--require-all` 指定時は `TransitionError` で停止して部分適用を書き戻さない。`hearing_progress.complete` は未収集セル0を意味するだけで turn 消化の証跡にはならないため、この可視化が無いと「投入した turn の一部だけが適用された state」を完了扱いできてしまう。
 - **set-targets**: `targets[]` の唯一の書込経路 (上記「targets と set-targets op」)。
-- **set-foundation / set-serves / set-approval / set-decision / set-knowledge-candidate / set-qa-design-applications**: `requirements_foundation`、確定セルの `serves_goals`、確定セルの `approval_ref`、`decisions[]`、`knowledge_candidates[]`、既存 qa の設計解釈の唯一の書込経路。`set-serves` / `set-approval` は確定セル限定、`set-qa-design-applications` は既存 qa 限定の additive annotation で、いずれも確定セルの `state` や Q&A 原文を変えない。
+- **set-foundation / set-serves / set-approval / set-decision / set-knowledge-candidate / set-qa-design-applications / set-qa-source / retire-qa**: foundation と effective binding、セル annotation、decision、knowledge candidate、既存 qa metadata の唯一の書込経路。`retire-qa` は matrix と effective foundation の active consumer が0件の QA だけに `retirement={writer:"retire-qa",reason[,superseded_by]}` を付け、question/answer/source を改変しない。
+- **retire-qa**: 歴史的な誘導 entry 等を削除・改変せず、現行証拠から明示的に外す一般経路。`superseded_by` を付けるなら別の実在 active QA を要求する。同一 payload の再適用だけ冪等で、既存 retirement の上書きは拒否する。coverage は retired QA が matrix/effective source から参照された状態を fail-closed にする。R6 は正規 retirement かつ active consumer 0 を歴史 finding として非 blocking に扱う。
+- **set-qa-source**: schema 1.1 移行前に記録され `source` を持たない既存 qa へ、質問・回答を改変せず出所だけを追記する。`kind` は利用者の一次入力を表す `user-dialogue` / `written-requirements` と、利用者の新規入力を伴わない `harness-remediation` / `derived-consolidation` の 4 種。後者 2 種を `user-dialogue` と索引すると、C06 中立性監査と foundation trace が「利用者が答えた」という前提のまま偽の一次根拠を数えるため、由来を必須フィールドで持たせて区別する。`harness-remediation` はレビュー・監査の指摘に由来する是正で、どの指摘かを示す非空 `trigger` を要求する。`derived-consolidation` は既存 qa の統合・復旧で新しい情報を増やさないため、非空の `derived_from` (qa id 配列) と `approval_ref` の両方を要求する。書面は安全な相対 `path`・非空 `section`・`answer` 原文 (UTF-8 bytes) と一致する `sha256` を fail-closed に検証する。後付けであることは隠さず `source_provenance={"mode":"metadata_backfill","writer":"set-qa-source"}` を残し、対話時にその場で記録された source と監査が区別できるようにする。既存 source の差し替えは常に拒否し、補完済み source への同一 payload 再適用のみ冪等に受け入れる。この経路が無いと出所補完のために reopen → 再確認で回答ごと作り直すことになり、かえって利用者の一次根拠を失う。ただし `source` が object でない値 (契約違反の素の文字列) は「対話経路で記録済みの source」ではなく壊れた値なので保護対象に含めず、注記本文を `source_note` へ退避したうえで契約形状へ修復し `source_provenance={"mode":"type_repair","writer":"set-qa-source"}` を残す。注記を捨てると「なぜこの qa が存在するか」の唯一の手掛かりを失うため、必ず保存する。
+- **fix-qa-knowledge-ref**: 既存 qa の `design_applications[].knowledge_ref` のうち、参照先が実在しないものだけを実在する参照へ差し替える。`set-qa-design-applications` は design_applications を丸ごと一単位として保護するため、対話経路 (provenance なし) の entry では綴り違いすら訂正できず、根拠を持たない引用が恒久的に残っていた。契約の保護意図は「対話で得た解釈内容を後から書き換えないこと」なので、`principle` / `applicability` / `rationale` / `tradeoffs` に一切触れず、**旧 ref の path が実在しない**場合に限って差し替える。実在する参照の付け替えは「どの知識で判断したか」の書き換えにあたるため常に拒否する。新 ref は path と (指定時は) anchor 見出しの実在を要求し、差し替えは `knowledge_ref_corrections[]` へ append-only で記録して、対話時の引用と後からの接地し直しを監査が区別できるようにする。同一訂正の再適用は冪等に no-op とする。
 
 ## 検証 (deterministic gate)
 

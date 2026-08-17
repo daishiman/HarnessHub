@@ -12,6 +12,10 @@ SKILL_DIR = Path(__file__).resolve().parents[1]
 PLUGIN_ROOT = SKILL_DIR.parents[1]
 FIXTURES = SKILL_DIR / "fixtures"
 SPEC = FIXTURES / "spec-state.json"
+REFS = FIXTURES / "fetched-references.json"
+REPO_ROOT = PLUGIN_ROOT.parents[1]
+PROJECT_SPEC = REPO_ROOT / "system-spec" / "spec-state.json"
+PROJECT_REFS = REPO_ROOT / "system-spec" / "fetched-references.json"
 
 
 def _load_mod():
@@ -28,6 +32,69 @@ mod = _load_mod()
 
 def _spec() -> dict:
     return json.loads(SPEC.read_text(encoding="utf-8"))
+
+
+def test_oversize_category_splits_knowledge_without_losing_source_contract():
+    """300行超のカテゴリは、入力を削らず責務単位で分割する。"""
+    state = json.loads(PROJECT_SPEC.read_text(encoding="utf-8"))
+    references = json.loads(PROJECT_REFS.read_text(encoding="utf-8"))
+    docset = mod.compile_docset(state, references)
+
+    oversized = {
+        name: len(text.splitlines())
+        for name, text in docset.items()
+        if name.endswith(".md") and len(text.splitlines()) > 300
+    }
+    assert oversized == {}
+
+    main = docset["ui-ux.md"]
+    appendix = docset["ui-ux-design-knowledge.md"]
+    assert mod.render_confirmed_qa(state, "ui-ux") in main
+    assert mod.render_design_refs("ui-ux", state) in appendix
+    assert "[設計知識付録](./ui-ux-design-knowledge.md)" in main
+    assert "[UI-UX 本章](./ui-ux.md)" in appendix
+    assert "[設計知識付録](./ui-ux-design-knowledge.md)" in docset["index.md"]
+    assert appendix.startswith("---\nstatus: confirmed\ncategory: ui-ux")
+    assert "kind: design-knowledge-appendix" in appendix
+    assert "parent_chapter: ui-ux.md" in appendix
+
+    qa_by_id = {qa["id"]: qa for qa in state["qa_log"] if isinstance(qa, dict) and qa.get("id")}
+    confirmed_refs = list(
+        dict.fromkeys(
+            cell["qa_ref"]
+            for cell in state["matrix"]["ui-ux"].values()
+            if cell.get("state") == "確定"
+        )
+    )
+    for qa_ref in confirmed_refs:
+        qa = qa_by_id[qa_ref]
+        assert qa["question"] in main
+        assert qa["answer"] in main
+        assert f"確定内容 {qa_ref}" in appendix
+        for application in qa.get("design_applications") or []:
+            assert f"`{application['knowledge_ref']}`" in appendix
+
+
+def test_under_limit_category_keeps_existing_single_chapter_contract():
+    """分割はカテゴリ名でなく行数で決め、300行以下の既存出力を変えない。"""
+    state = _spec()
+    references = json.loads(REFS.read_text(encoding="utf-8"))
+    refs_by_category, _ = mod.references_by_category(state, references)
+
+    documents = mod.render_chapter_documents(state, "database", refs_by_category)
+
+    assert list(documents) == ["database.md"]
+    assert documents["database.md"] == mod.render_chapter(state, "database", refs_by_category)
+
+
+def test_generated_index_links_to_writeback_ssot_without_owning_its_contents():
+    """実装 writeback は再compileで消さず、独立正本への導線だけを生成する。"""
+    state = json.loads(PROJECT_SPEC.read_text(encoding="utf-8"))
+    references = json.loads(PROJECT_REFS.read_text(encoding="utf-8"))
+    docset = mod.compile_docset(state, references)
+
+    assert "[実装 writeback 索引](./implementation-writebacks.md)" in docset["index.md"]
+    assert "implementation-writebacks.md" not in docset
 
 def test_render_design_knowledge_contains_deep_meaning_not_only_pointer():
     rendered = mod.render_design_refs("database", _spec())
@@ -132,9 +199,10 @@ def test_render_design_refs_application_note_explicit_when_no_confirmed_cell():
 
 def test_category_design_refs_derived_from_resource_map():
     # SSOT = resource-map.yaml の read_when (対象ファイル集合)。ハードコード写像のドリフトが
-    # 無いことを検証 (A-1)。database の read_when は ddd のみ (clean-architecture は
-    # backend/frontend 対応 → 混入しない)。
-    assert mod.category_design_refs("database") == ["ddd.md"]
+    # 無いことを検証 (A-1)。database の read_when は ddd と cloud-architecture-patterns
+    # (データ配置=blob offloading と跨ぎ書込みの整合性境界) で、clean-architecture は
+    # backend/frontend 対応 → 混入しない。順序は topo_order (依存先の ddd が先)。
+    assert mod.category_design_refs("database") == ["ddd.md", "cloud-architecture-patterns.md"]
     assert "clean-architecture.md" not in mod.category_design_refs("database")
     # backend は read_when に "backend" を含む 3 ファイルを、knowledge-catalog.json の
     # depends_on が定める位相順 (topo_order・C14) で導出する。resource-map.yaml の記述順
@@ -161,7 +229,12 @@ def test_category_specific_cards_for_previously_pointer_only_chapters():
         "usability-accessibility.md",
         "information-design.md",
     ]
-    assert mod.category_design_refs("infrastructure") == ["site-reliability-engineering.md"]
+    # infrastructure は SRE に加え、基盤制約 (実行時間/ペイロード上限/トランザクション到達範囲)
+    # を非機能要件として扱う cloud-architecture-patterns を depends_on 順で後に置く。
+    assert mod.category_design_refs("infrastructure") == [
+        "site-reliability-engineering.md",
+        "cloud-architecture-patterns.md",
+    ]
     assert mod.category_design_refs("testing-qa") == ["test-strategy.md"]
     assert mod.category_design_refs("dev-workflow") == ["continuous-delivery.md"]
     # 章本文が汎用ポインタ節ではなく card 本文 (深度項目) を描画する。

@@ -11,7 +11,7 @@
 # contexts: [E, C]
 # network: false
 # write-scope: none
-# dependencies: []
+# dependencies: [audit_fork_attribution.py, validate-json-schema-subset.py]
 # requires-python: ">=3.9"
 # ///
 """C05 完成度レポートを検証・集約する CLI。
@@ -23,7 +23,9 @@ report 形状、全 6 観点の fail-closed verdict、high finding、独立監�
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -32,7 +34,8 @@ _SCRIPT_DIR = Path(__file__).resolve().parent
 if str(_SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(_SCRIPT_DIR))
 
-from audit_fork_attribution import (  # noqa: E402
+# Keep the legacy names re-exported for callers while attribution lives in its local module.
+from audit_fork_attribution import (  # noqa: E402,F401
     ASPECTS,
     ASPECT_VERDICTS,
     DELEGATION_ROLES,
@@ -51,6 +54,38 @@ from audit_fork_attribution import (  # noqa: E402
     required_delegations,
     validate_attribution,
 )
+_JSON_SCHEMA_SUBSET = Path(__file__).with_name("validate-json-schema-subset.py")
+_SPEC = importlib.util.spec_from_file_location("json_schema_subset", _JSON_SCHEMA_SUBSET)
+assert _SPEC and _SPEC.loader
+_MODULE = importlib.util.module_from_spec(_SPEC)
+sys.modules["json_schema_subset"] = _MODULE
+_SPEC.loader.exec_module(_MODULE)
+Draft7SubsetValidator = _MODULE.Draft7SubsetValidator
+SchemaDefinitionError = _MODULE.SchemaDefinitionError
+
+
+SNAPSHOT_SCHEMA_VERSION = "system-spec-artifact-snapshot/v1"
+SHA256 = re.compile(r"^[0-9a-f]{64}$")
+COMPLETENESS_SCHEMA = _SCRIPT_DIR.parent / "schemas" / "completeness-findings.schema.json"
+PASS_GATE_IDS = {"G-matrix", "G-source-citation", "G-knowledge-graph"}
+KNOWLEDGE_PROFILES = {"knowledge", "doctrine", "required-info", "cross"}
+
+
+def validate_schema(report: dict) -> list[str]:
+    """Validate the entire public report schema instead of duplicating its field rules."""
+    try:
+        schema = json.loads(COMPLETENESS_SCHEMA.read_text(encoding="utf-8"))
+        validator = Draft7SubsetValidator(schema)
+    except (OSError, json.JSONDecodeError, SchemaDefinitionError) as exc:
+        return [f"schema の読取/構築に失敗: {exc}"]
+    violations = []
+    for error in sorted(
+        validator.iter_errors(report),
+        key=lambda item: tuple(str(part) for part in item.absolute_path),
+    ):
+        location = "/".join(str(part) for part in error.absolute_path) or "(root)"
+        violations.append(f"schema {location}: {error.message}")
+    return violations
 
 
 def aggregate_verdict(aspect_verdicts: dict, high_count: int) -> str:
@@ -76,6 +111,8 @@ def validate_report(
     if not isinstance(report, dict):
         return ["report: オブジェクトでない"]
 
+    violations.extend(validate_schema(report))
+
     evaluator = report.get("evaluator")
     if not isinstance(evaluator, dict):
         violations.append("evaluator: オブジェクトでない")
@@ -90,6 +127,28 @@ def validate_report(
     verdict = report.get("verdict")
     if verdict not in OVERALL_VERDICTS:
         violations.append(f"verdict={verdict!r} が {sorted(OVERALL_VERDICTS)} 外")
+
+    snapshot = report.get("artifact_snapshot")
+    if not isinstance(snapshot, dict):
+        violations.append("artifact_snapshot: オブジェクトでない (評価入力への束縛必須)")
+    else:
+        if set(snapshot) != {"schema_version", "artifacts"}:
+            violations.append("artifact_snapshot: field set が不正")
+        if snapshot.get("schema_version") != SNAPSHOT_SCHEMA_VERSION:
+            violations.append(
+                f"artifact_snapshot.schema_version != {SNAPSHOT_SCHEMA_VERSION!r}"
+            )
+        snapshot_artifacts = snapshot.get("artifacts")
+        if not isinstance(snapshot_artifacts, dict) or not snapshot_artifacts:
+            violations.append("artifact_snapshot.artifacts: 非空オブジェクトでない")
+        else:
+            for relative, value in snapshot_artifacts.items():
+                if not isinstance(relative, str) or not relative:
+                    violations.append("artifact_snapshot.artifacts: 空または非文字列 path")
+                if not isinstance(value, str) or SHA256.fullmatch(value) is None:
+                    violations.append(
+                        f"artifact_snapshot.artifacts[{relative!r}]: sha256 が不正"
+                    )
 
     aspects = report.get("aspects")
     aspect_verdicts: dict[str, str] = {}
@@ -138,6 +197,30 @@ def validate_report(
                 violations.append(f"findings[{index}].bucket が空")
             if not finding.get("observation"):
                 violations.append(f"findings[{index}].observation が空")
+
+    gate_results = report.get("gate_results")
+    if verdict == "PASS":
+        by_id = {
+            item.get("id"): item
+            for item in gate_results
+            if isinstance(item, dict) and isinstance(item.get("id"), str)
+        } if isinstance(gate_results, list) else {}
+        for gate_id in sorted(PASS_GATE_IDS):
+            result = by_id.get(gate_id)
+            if not isinstance(result, dict) or result.get("exit_code") != 0:
+                violations.append(f"PASS report lacks passing gate: {gate_id}")
+        knowledge = by_id.get("G-knowledge-graph")
+        subgates = knowledge.get("subgates") if isinstance(knowledge, dict) else None
+        profiles = {
+            item.get("profile")
+            for item in subgates
+            if isinstance(item, dict) and item.get("exit_code") == 0
+        } if isinstance(subgates, list) else set()
+        if profiles != KNOWLEDGE_PROFILES or len(subgates or []) != len(KNOWLEDGE_PROFILES):
+            violations.append(
+                "PASS report knowledge gate lacks four passing profiles: "
+                + ",".join(sorted(KNOWLEDGE_PROFILES))
+            )
 
     if isinstance(aspects, dict) and verdict in OVERALL_VERDICTS:
         derived = aggregate_verdict(aspect_verdicts, _high_count(findings))
@@ -200,7 +283,9 @@ def run_knowledge_graph_gate() -> dict:
             "exit_code": int(process.returncode),
             "stderr": process.stderr.strip(),
         })
-        worst = max(worst, int(process.returncode))
+        return_code = int(process.returncode)
+        normalized_failure = return_code if return_code > 0 else (1 if return_code < 0 else 0)
+        worst = max(worst, normalized_failure)
     return {
         "id": "G-knowledge-graph",
         "name": "validate-knowledge-graph",

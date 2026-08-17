@@ -13,7 +13,10 @@ def test_adapter_keeps_all_five_audit_axes_in_stopping_contract() -> None:
     assert "PASS`=5 軸すべて問題なし" in text
     assert "5 軸すべてを評価" in text
     assert "foundation 根拠欠落" in text
-    assert "U1-U9 を canonical source-index" in text
+    assert "effective_source_refs" in text
+    assert "schema 1.0" in text
+    assert "retirement" in text
+    assert "active consumer" in text
     assert "4 軸" not in text
 
 
@@ -24,6 +27,18 @@ def test_adapter_and_ssot_use_persisted_max_loops_not_fixed_five() -> None:
     for text in (adapter, ssot):
         assert "`max_loops` の実値" in text
         assert "5 周" not in text
+
+
+def test_r0_and_r6_share_effective_source_and_immutable_history_contract() -> None:
+    r0 = (PLUGIN / "skills" / "run-system-spec-elicit" / "prompts" / "R0-foundation.md").read_text(encoding="utf-8")
+    r6 = SSOT.read_text(encoding="utf-8")
+
+    for text in (r0, r6):
+        assert "effective_source_refs" in text
+        assert "qa-foundation-u1" in text
+        assert "schema 1.0" in text
+    assert "履歴" in r0 and "改変せず" in r0
+    assert "retired" in r6 and "active consumer" in r6
 
 
 def test_adapter_allows_only_read_and_read_only_bash() -> None:

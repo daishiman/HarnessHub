@@ -25,7 +25,7 @@
 
 ### 受入条件
 
-- resume 時は `validate-system-spec-resume.py` が exit 0 かつ upstream Skill 呼出し 0 件。build 時は正規 Skill 呼出しだけで coverage/source/evaluator gate 全 PASS になる。
+- resume 時は `validate-system-spec-resume.py` が exit 0 かつ upstream Skill 呼出し 0 件。build 時は正規 Skill 呼出しだけで coverage/source_citation/knowledge_graph/evaluator gate 全 PASS になる。
 - build 時の `context: fork` evaluator は、Skill 起動結果の完全な `agentId` と一致する native `task-notification` (`status=completed`、完全 response あり) まで待ち、その fork 自身が書いた report だけを evaluator evidence にする。foreground 待機は1回30秒以内の有限操作に限定し、loop/sentinel wait、`TaskStop`、outer session の代筆を禁止する。
 
 ## Layer 3: インフラ層
@@ -56,7 +56,7 @@
 - [ ] 宣言した入力が全て検証済みである
 - [ ] 出力が宣言した shape と authority を満たす
 - [ ] 責務境界に反する read/write/delegation が0件である
-- [ ] resume/build の条件分岐どおりに coverage/source/evaluator gate 全 PASS が確認されている
+- [ ] resume/build の条件分岐どおりに coverage/source_citation/knowledge_graph/evaluator gate 全 PASS が確認されている
 - [ ] build 経路では completeness evaluator fork の完全 response を完全 `agentId` と一致する native completion で回収し、outer session による report の代筆と foreground blocking wait が0件である
 
 ### 5.4 実行方式

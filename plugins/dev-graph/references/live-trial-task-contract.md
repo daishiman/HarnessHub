@@ -34,6 +34,16 @@ nested Skill 呼出しを要求しない。scenario の `forbidden_invoked_skill
 resume validator の三重ゲートで上流再生成を禁止する。`build` mode は従来どおり未配置
 成果物を正規 entry point で生成する。
 
+`reuse-confirmed` の決定論 runner は single-shot とする。初回 runner の終了状態を
+その run の終端結果とし、失敗後に診断コマンド、依存 package 導入、個別 validator、
+runner 再実行でセッション内の環境を変えて PASS 化してはならない。失敗は `status: FAIL` と
+blocker を記録して終了し、環境修復は trial 外の別工程で行う。
+
+resume runner の Bash input は、`TASK_CONTRACT.runner_argv_template` に fixture root を
+埋め、`shlex.join` で生成した canonical command の 1 行と raw 完全一致
+させる。shell parser や演算子 blacklist は受理 authority にせず、空白・引用・
+展開・glob・redirect・prefix/suffix・wrapper・末尾改行のいずれの差分も拒否する。
+
 ## 実行方法
 
 最新の verdict 保有 run を検査する。

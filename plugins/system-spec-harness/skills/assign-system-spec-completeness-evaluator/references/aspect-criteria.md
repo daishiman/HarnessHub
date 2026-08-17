@@ -11,11 +11,11 @@
 | `foundation_trace` | 上位概念trace | C05 R1-score | `requirements_foundation` / 00要件定義章 | `validate-coverage-matrix.py --require-foundation` |
 | `decision_guidance` | 意思決定支援 | C05 R1-score | `decisions[]` / 00要件定義章 | 同上 |
 | `matrix_coverage` | マトリクス網羅性 | `system-spec-matrix-auditor` (C07) + sub-input `system-spec-hearing-auditor` (C06) | `spec-state.json` | `validate-coverage-matrix.py` |
-| `design_knowledge_reflection` | 設計知識反映 | C05 R1-score が自前評価 (**独立 auditor なし**) | `system-spec/*.md` / `resource-map.yaml` | (機械層=ポインタ存在 / 意味層=原則の具体適用) |
+| `design_knowledge_reflection` | 設計知識反映 | C05 R1-score が自前評価 (**独立 auditor なし**) | `system-spec/` 配下の全 Markdown (`Path.rglob("*.md")`) / `resource-map.yaml` | (機械層=ポインタ存在 / 意味層=原則の具体適用) |
 | `doc_freshness` | 最新ドキュメント出典 | `system-spec-doc-freshness-auditor` (C08) | `fetched-references.json` | `validate-source-citation.py` (C08 内実行) |
 | `prompt_quality` | prompt-creator準拠 | C05 R1-score | 全`prompts/*.md` | `verify-completeness.py` + `validate-prompt.py` |
 
-> C06 (hearing-auditor) はヒアリング品質の 5 軸 (聞き漏れ/誘導/早期停止/トレーサビリティ/foundation 利用者根拠) を `spec-state.json` と利用者一次入力から監査するが、生成済み `system-spec/*.md` の設計知識反映は読まない。そのため `design_knowledge_reflection` へ束縛するのは虚偽対応であり、C06 は `matrix_coverage` の sub-input (網羅性・トレースの補助根拠) に限定する。設計知識反映は C05 が `system-spec/*.md` と `resource-map.yaml` から自前評価する。
+> C06 (hearing-auditor) はヒアリング品質の 5 軸 (聞き漏れ/誘導/早期停止/トレーサビリティ/foundation 利用者根拠) を `spec-state.json` と利用者一次入力から監査するが、生成済み仕様書 Markdown の設計知識反映は読まない。そのため `design_knowledge_reflection` へ束縛するのは虚偽対応であり、C06 は `matrix_coverage` の sub-input (網羅性・トレースの補助根拠) に限定する。設計知識反映は C05 が `system-spec/` 配下の全 Markdown (`Path.rglob("*.md")`) と `resource-map.yaml` から自前評価する。
 
 ## 観点別の合否判定
 
@@ -41,7 +41,7 @@
   matrix_coverage を FAIL に寄せる。
 
 ### 2. 設計知識反映 (design_knowledge_reflection / C05 自前評価・独立 auditor なし)
-- 本観点は独立 auditor を立てず C05 R1-score が `system-spec/*.md` と `resource-map.yaml` を直接読んで評価する
+- 本観点は独立 auditor を立てず C05 R1-score が `system-spec/` 配下の全 Markdownと `resource-map.yaml` を直接読んで評価する
   (C06 は設計知識を読まないため束縛しない = 虚偽対応の撤去)。
 - **機械層**: コンパイル済み各章が `ref-system-design-knowledge` 由来の設計知識ポインタ節
   (クリーンアーキテクチャ / デザインパターン / API デザイン / セキュアバイデザイン / DDD /

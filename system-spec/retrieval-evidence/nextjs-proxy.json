@@ -3,43 +3,22 @@
   "nextjs.org"
  ],
  "findings": [
-  "Next.js 16 で middleware.ts は proxy.ts へ改名された。機能は同一で、export する関数名も proxy へ変える (公式は default export でも改名を推奨)",
-  "proxy の runtime は nodejs 固定で設定不可。edge runtime は proxy では非対応",
-  "edge runtime を使い続ける場合は middleware.ts を維持できるが、deprecated であり将来の版で削除される",
-  "codemod がファイル名・関数名・config キー (skipMiddlewareUrlNormalize → skipProxyUrlNormalize 等) を一括改名する",
-  "proxy は「完全な session / 認可の解決手段ではない」と公式が明記しており、最終手段 (last resort) として使うことを推奨している",
-  "proxy ファイルは project root か src 配下に 1 個だけ置ける"
- ],
- "freshness_rechecks": [
-  {
-   "checked_at": "2026-08-13T15:44:31Z",
-   "http_status": 200,
-   "method": "python3 urllib.request GET (User-Agent 明示)",
-   "observation": "ページ表示 \"Last updated August 3, 2026\" を本文から直接抽出。世代落ちなし。",
-   "page_last_updated_extracted": [
-    "Last updated August 3, 2026",
-    "Last updated \\\",\\\"August 3, 2026\\\"]}],[\\\"\\\\n\\\",[\\\"$\\\",\\\"h2\\\",null,{\\\"id\\\":\\\"use-an-ai-agent-recommended\\\",\\\"data-docs-he"
-   ],
-   "reason": "C08 独立監査 (2026-08-13 / verdict FAIL) の finding F6/F8/F9/F10 対応。F9 (先行 recheck の checked_at 12 件が 2026-08-13T15:34:43Z で秒まで一括一致し実測でない) を受け、同じ照合を request 単位の実測時刻付きで再実行し、先行エントリを本エントリへ差し替えた。",
-   "request_started_at": "2026-08-13T15:44:31Z",
-   "response_body_sha256": "0a6fa677376b3368d3df28dc8d28c97ce6bba2e9bf1ece89cd5d524f8ffcbf5c",
-   "response_bytes": 1279701,
-   "response_last_modified_header": null,
-   "retrieval_channel": "primary-http-get",
-   "url": ""
-  }
+  "proxy.ts が middleware.ts を置き換え、network 境界を明示する。実行 runtime は nodejs で、設定による変更はできない",
+  "移行は file 名と関数名の双方を proxy へ改名する。default export でも関数名は proxy が推奨される。名前付き export の middleware は deprecated",
+  "codemod は npx @next/codemod@latest middleware-to-proxy . で、file 名・関数名・設定 flag (skipMiddlewareUrlNormalize → skipProxyUrlNormalize 等) を書き換える",
+  "edge runtime は proxy では非対応。edge が要る場合は deprecated の middleware を使い続ける (将来の minor で edge 向けの案内が出る予定)",
+  "middleware.ts は edge 用途で当面残るが deprecated であり、将来の版で削除される",
+  "proxy.ts は project root (src がある場合は src 直下) の pages / app と同階層に置き、export する関数は 1 つだけとする"
  ],
  "retrieval_channel": "web-search-official-host-restricted",
- "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と、その応答から読み取れた事実だけを記録する。",
- "retrieval_query": "Next.js 16 proxy.ts replaces middleware.ts Node.js runtime upgrading",
- "retrieved_at": "2026-08-07T07:17:12Z",
+ "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と要約から読み取れた事実だけを記録する。retrieved_at は本 record 作成時に読んだ実時刻で、同一 turn 内で発行した検索の記録時刻 (個別応答の受信時刻ではない)。",
+ "retrieval_query": "Next.js 16 proxy.ts middleware rename upgrade guide",
+ "retrieved_at": "2026-08-15T01:35:54Z",
  "returned_official_urls": [
-  "https://nextjs.org/blog/next-16",
   "https://nextjs.org/docs/app/guides/upgrading/version-16",
   "https://nextjs.org/docs/messages/middleware-to-proxy",
   "https://nextjs.org/docs/app/api-reference/file-conventions/proxy",
-  "https://nextjs.org/docs/app/getting-started/proxy",
-  "https://nextjs.org/docs/app/guides/upgrading/codemods"
+  "https://nextjs.org/docs/app/getting-started/proxy"
  ],
  "target_id": "nextjs-proxy"
 }

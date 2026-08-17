@@ -42,6 +42,24 @@ def test_hearing_auditor_reads_and_checks_the_referenced_section() -> None:
     assert "`Read` のみ" not in adapter
 
 
+def test_effective_binding_contract_distinguishes_explicit_shared_qa_from_duplicates() -> None:
+    foundation = (SKILL_ROOT / "prompts" / "R0-foundation.md").read_text(encoding="utf-8")
+    hearing = (SKILL_ROOT / "prompts" / "R6-audit-hearing.md").read_text(encoding="utf-8")
+    contract = (SKILL_ROOT / "references" / "spec-state-contract.md").read_text(
+        encoding="utf-8"
+    )
+
+    for text in (foundation, hearing, contract):
+        assert "明示的な共有 binding" in text
+        assert "共有対象の全 U marker" in text
+        assert "U ごとに分離可能な利用者決定" in text
+        assert "evidence_quote" in text
+        assert "evidence_sha256" in text
+        assert "consumer" in text
+        assert "C06" in text
+        assert "qa_ref の一致だけを重複違反にしない" in text
+
+
 def test_noninteractive_shape_never_authorizes_ai_inference_or_approval() -> None:
     shape = SHAPE.read_text(encoding="utf-8")
 

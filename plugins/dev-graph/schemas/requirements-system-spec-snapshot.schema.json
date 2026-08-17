@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harnesshub.local/schemas/requirements-system-spec-snapshot.schema.json",
+  "title": "C04 requirements system-spec snapshot binding",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "validator",
+    "valid",
+    "consumer",
+    "upstream_validator",
+    "mode",
+    "resume_receipt_sha256",
+    "completeness_report_sha256",
+    "artifact_snapshot_sha256",
+    "artifacts",
+    "failures"
+  ],
+  "properties": {
+    "schema_version": {"const": "requirements-system-spec-snapshot/v1"},
+    "validator": {"const": "validate-requirements-system-spec-snapshot"},
+    "valid": {"type": "boolean"},
+    "consumer": {"const": "run-dev-graph-requirements"},
+    "upstream_validator": {"const": "validate-system-spec-resume"},
+    "mode": {"const": "reuse-confirmed"},
+    "resume_receipt_sha256": {
+      "type": ["string", "null"],
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "completeness_report_sha256": {
+      "type": ["string", "null"],
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "artifact_snapshot_sha256": {
+      "type": ["string", "null"],
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^system-spec/[^/].*"},
+      "uniqueItems": true
+    },
+    "failures": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"valid": {"const": true}}, "required": ["valid"]},
+      "then": {
+        "properties": {
+          "resume_receipt_sha256": {"type": "string"},
+          "completeness_report_sha256": {"type": "string"},
+          "artifact_snapshot_sha256": {"type": "string"},
+          "artifacts": {"minItems": 1},
+          "failures": {"maxItems": 0}
+        }
+      }
+    }
+  ]
+}

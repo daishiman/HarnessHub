@@ -1,20 +1,20 @@
 # Prompt: R2b-readiness
 
-> C11の純粋validation report、C02保存済みimplementation_readiness/evaluation_status/source digest、validate-system-plan.pyのP01..P13 exact-set/13-node DAGを照合し、不一致またはincomplete/pending/fail/staleならmissing sectionsをsurfaceしてhandoffを保留する
+> C11/C02 readiness、feature/package lineage、system plan、C19 digest-bound system-spec snapshotを正規validatorで照合し、不一致またはincomplete/pending/fail/staleならmissing sectionsをsurfaceしてhandoffを保留する
 
 ## Layer 1: 基本定義層
 
 - `responsibility_id`: `R2b-readiness`
 - `skill`: `run-dev-graph-requirements`
-- responsibility summary: C11の純粋validation reportとC02が保存したimplementation_readiness/evaluation_statusを照合し、不一致またはincomplete/pending/fail/staleならmissing sectionsをsurfaceしてhandoffを保留する
-- 不変目的: C11の純粋validation report、C02保存済みimplementation_readiness/evaluation_status/source digest、validate-system-plan.pyのP01..P13 exact-set/13-node DAGを照合し、不一致またはincomplete/pending/fail/staleならmissing sectionsをsurfaceしてhandoffを保留する
+- responsibility summary: C11/C02 readiness、feature/package lineage、system plan、C19 digest-bound system-spec snapshotを正規validatorで照合し、不一致またはincomplete/pending/fail/staleならmissing sectionsをsurfaceしてhandoffを保留する
+- 不変目的: graph readiness/lineage、exact-13 system plan、C19 receipt/report/全 system-spec artifact snapshot の currentness と upstream 成功後の安定性を正規 validator で照合し、不整合時は handoff を保留する
 - 成功条件は Layer 2 の受入条件と Layer 5 の二値 checklist の同時充足とする。
 
 ## Layer 2: ドメイン層
 
 ### 入力契約
 
-- C11 report、C02保存readiness/evaluation、source digest。C11 report は `validate-graph-schema.py --graph <repo の .dev-graph/state/graph.json>` の実行出力へ係留し、graph.json 直読や ad-hoc script の出力を report として扱わない (2026-07-23 live-trial で validator 0回実行のまま照合が自己申告された fail-open の再発防止)。source digest の照合対象は、選択 feature node、同 feature の `architecture_refs`、同じ `feature_package_id` を持つ task 13 件の lineage closure 全件とする。これを `validate-source-digest.py --registered` へ重複除去・node ID 昇順で渡し、`confirmation_status`/`evaluation_status`/`implementation_readiness` の比較だけや task 13 件だけの検査で readiness を PASS にしない。
+- C11 report、C02保存readiness/evaluation、source digest、system plan、C19 `system-spec/resume-receipt.json` / `completeness-report.json` / 全 Markdown artifact snapshot。C11 report は `validate-graph-schema.py --graph <repo の .dev-graph/state/graph.json>` の実行出力へ係留し、graph.json 直読や ad-hoc script の出力を report として扱わない (2026-07-23 live-trial で validator 0回実行のまま照合が自己申告された fail-open の再発防止)。source digest の照合対象は、選択 feature node、同 feature の `architecture_refs`、同じ `feature_package_id` を持つ task 13 件の lineage closure 全件とする。これを `validate-source-digest.py --registered` へ重複除去・node ID 昇順で渡し、`confirmation_status`/`evaluation_status`/`implementation_readiness` の比較だけや task 13 件だけの検査で readiness を PASS にしない。C19 snapshot は `validate-requirements-system-spec-snapshot.py` の exit code だけを authority とし、coverage/source-citation/knowledge-graph/evaluator の個別検証を複製しない。
 
 ### 出力契約
 
@@ -26,11 +26,11 @@
 
 ### 受入条件
 
-- C11 reportとC02 saved stateが一致し、選択 feature・その `architecture_refs`・package task 13 件の closure 全件を `--registered` に渡した `validate-source-digest.py` が exit 0 (stale digest 0件) で、`validate-system-plan.py --repo-root "$DEV_GRAPH_ROOT" --feature-package "<選択 feature node の feature_package_id>"` の P01..P13 exact-set/13-node DAG が PASS した complete/pass/confirmed だけ ready になる。`--staging` や package 引数なし実行へ読み替えない。
+- C11 reportとC02 saved stateが一致し、選択 feature・その `architecture_refs`・package task 13 件の closure 全件を `--registered` に渡した `validate-source-digest.py` が exit 0 (stale digest 0件) で、`validate-system-plan.py --repo-root "$DEV_GRAPH_ROOT" --feature-package "<選択 feature node の feature_package_id>"` の P01..P13 exact-set/13-node DAG が PASS し、かつ `validate-requirements-system-spec-snapshot.py --repo-root "$DEV_GRAPH_ROOT"` が exit 0 で post-validation rehash が current かつ安定な complete/pass/confirmed だけ ready になる。`--staging` や package 引数なし実行へ読み替えない。
 
 ## Layer 3: インフラ層
 
-- 使用資産: validate-graph-schema、validate-source-digest、`validate-system-plan.py --feature-package <選択 feature node の feature_package_id>`。
+- 使用資産: `references/resource-map.yaml`、validate-graph-schema、validate-source-digest、`validate-system-plan.py --feature-package <選択 feature node の feature_package_id>`、validate-requirements-system-spec-snapshot。
 - path は caller repository context または skill-relative reference から解決し、環境固有の絶対 path を成果物へ保存しない。
 
 ## Layer 4: 共通ポリシー層
@@ -47,7 +47,7 @@
 
 ### 5.2 ゴール定義
 
-- 目的: C11の純粋validation report、C02保存済みimplementation_readiness/evaluation_status/source digest、validate-system-plan.pyのP01..P13 exact-set/13-node DAGを照合し、不一致またはincomplete/pending/fail/staleならmissing sectionsをsurfaceしてhandoffを保留する
+- 目的: graph readiness/lineage、exact-13 system plan、C19 digest-bound system-spec snapshot の currentness を正規 validator で照合し、不整合時は handoff を保留する
 - 背景: この責務を隣接 responsibility から分離し、入力・出力・authority を一意にする。
 - 達成ゴール: ready/blocked/stale verdictとnode/section別missing_sectionsが生成され、受入条件を満たした状態になっている。
 
@@ -60,6 +60,7 @@
 - [ ] C11 reportとC02 saved stateが一致したcomplete/pass/confirmedだけreadyになる
 - [ ] 選択 feature、同 feature の `architecture_refs`、同一 package の task 13 件を重複除去した lineage closure 全件を `--registered` に渡した `validate-source-digest.py` を実行し exit 0 である (task 13 件だけ、status 比較、目視で代替しない)
 - [ ] `validate-system-plan.py --repo-root "$DEV_GRAPH_ROOT" --feature-package "<選択 feature node の feature_package_id>"` の P01..P13 exact-set/13-node DAG が PASS し、`--staging` や package 引数なし実行をしていない
+- [ ] `validate-requirements-system-spec-snapshot.py --repo-root "$DEV_GRAPH_ROOT"` が exit 0 で、upstream 成功後の post-validation rehash が安定し、receipt/report/全 Markdown snapshot の 3 digest binding を得ている
 
 ### 5.4 実行方式
 

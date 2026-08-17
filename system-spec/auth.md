@@ -3,7 +3,7 @@ status: confirmed
 category: auth
 aggregate: 確定
 spec_cells: [auth.web, auth.mobile, auth.tablet, auth.desktop-windows, auth.desktop-linux, auth.desktop-macos]
-serves_goals: [G2, G4, G1]
+serves_goals: [G2, G4, G5, G6, G1]
 ---
 
 # 認証(ログイン) (auth)
@@ -15,7 +15,7 @@ serves_goals: [G2, G4, G1]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-231 |
+| Web (web) | 確定 | 確定質疑: qa-237 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。モバイルブラウザからの認証は web 行 (Hub Web の IdP/SSO) でカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。タブレットブラウザからの認証は web 行でカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-231 |
@@ -24,7 +24,21 @@ serves_goals: [G2, G4, G1]
 
 ## 確定内容 (質疑録)
 
-### qa-231 (対応セル: web, desktop-windows, desktop-macos)
+### qa-237 (対応セル: web)
+
+**質問**: 改善要望を閲覧・対応できる role をどこまでに絞るか。
+
+**回答**: [逐語] 「それをシステム管理者が一元管理したものを確認して見れるようにしておいてほしいです。権限はシステム管理者以外はそれが見れないようにしておいてください。システム管理者という権限がなければ、それに付随するような管理者でOKです。」 さらに選択肢提示に対し利用者は「provider-admin + workspace-admin」を明示選択した。
+
+[技術的具体化] HarnessHub の role は provider-admin / workspace-admin / member の 3 値であり、参考実装の SUPER_ADMIN / COMPANY_ADMIN はそれぞれ provider-admin / workspace-admin に対応する。利用者の言う「システム管理者」は provider-admin、「それに付随するような管理者」は workspace-admin にあたる。
+
+認可: ACTION_RULES へ screen_improvement.create (minRole member)、screen_improvement.read (minRole workspace-admin)、screen_improvement.status_change (minRole workspace-admin) を追加する。既存 feedback.* は公開ハーネス評価用なので再利用せず、別 action として定義する。
+
+可視範囲: workspace-admin は自 workspace の要望だけ。provider-admin は全テナント横断で一元管理できるが、越境は既存の canCrossTenantBoundary を通し /api/** 経由に限定して provider.cross_tenant_access として監査記録を残す。member は投稿だけができ、自分の投稿を含めて一覧・詳細は見られない。他人の書いた不満がそのまま載るため、一般利用者へは開かない。
+
+実装規約: role リテラルを lib/authz の外へ書かない (既存規約、check-single-authz-middleware.mjs が機械検査)。画面の出し分けだけに頼らず、API と各画面の両方が同じ判定関数を通る。UI で隠れているだけで API が開いている状態を作らない。
+
+### qa-231 (対応セル: desktop-windows, desktop-macos)
 
 **質問**: Claude CodeやCodexで作成したドキュメントをHarness HubへAPI反映する追加要件について、既存の認証・セキュリティ・backend・database契約をどう更新するか。
 
@@ -94,17 +108,25 @@ serves_goals: [G2, G4, G1]
 
 #### 本章での適用
 
-##### 確定内容 qa-231 (対応セル: web, desktop-windows, desktop-macos)
+##### 確定内容 qa-237 (対応セル: web)
 
-- 確定要件: [出所] 利用者の2026-08-12の明示要望『Claude Codeの方で作成したドキュメントをこちらのシステムのドキュメントの方に送信できるようにもしておいてほしい』『APIでこちらの方に反映させる』を追加要件として確定する。qa-073（Device Flow数値・保存先）、qa-161/qa-162（Web認証・セキュリティ）、qa-228（backend）、qa-229（database）の既存契約は、以下の差分以外を全面維持する。
+- 確定要件: 「[逐語] 「それをシステム管理者が一元管理したものを確認して見れるようにしておいてほしいです。権限はシステム管理者以外はそれが見れないようにしておいてください。…」 (全文は本章「確定内容 (質疑録)」の `qa-237` を正本とする)
+- 設計解釈の記録経路: `dialogue`
+- 原則: deny-by-default と、UI 出し分けに依存しない認可 (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: 改善要望には他利用者の実名を含む不満が載るため、閲覧が漏れると業務上の人間関係に直接の害が出る。ナビゲーションから隠すだけでは URL 直打ちで到達できるので、API と画面の双方を同じ ACTION_RULES に通す。
+  - トレードオフ:
+    - 投稿者が自分の要望の対応状況を追えない。対応結果の通知は別 feature として後続に回す
+    - action を新設するぶん認可表が増える。既存 feedback.* を流用する誘惑を断つ代償として受け入れる
+- 原則: テナント越境を監査可能な単一経路へ限定する (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: provider-admin の一元管理は本質的にテナント越境であり、無記録で行うと顧客データを見た事実が残らない。既存の cross-tenant 監査経路に載せ、越境閲覧を provider.cross_tenant_access として必ず記録する。
+  - トレードオフ:
+    - provider-admin の一覧表示ごとに監査行が増え、監査ログの量が増える
+    - 越境が /api/** 限定のため、server component から直接 DB を読む実装が使えず一覧も API 経由になる
+##### 確定内容 qa-231 (対応セル: desktop-windows, desktop-macos)
 
-【外部Docs同期】Claude Code、Codex、Publisher CLI等の外部作成環境は、固定API keyやブラウザCookieを使わず、既存Device Flowの15分短命access tokenと新しい専用scope docs:writeでMarkdownを同期する。発行主体はworkspace-admin以上、同期先はtokenと同一tenantのdraft文書だけとし、provider-adminにもこの機械経路でのtenant越境を許さない。common文書・自動公開・画像同期はv1対象外とする。既存4 scopeへdocs:writeを加え現行値域を5 scopeとするが、TTL、refresh rotation、OS資格情報域保存、即時失効、再利用検知の契約は変えない。Linuxは永続token保存を行わず実行ごとにDevice Flowを使う。
-
-【API契約】GET/PUT /api/v1/docs/imports/:source/:externalIdを追加する。自然キーはtenant+source+externalId、externalIdはrepository identityとrepository相対pathから導出したSHA-256とし、絶対pathや利用者名を送らない。同じ内容の再送は文書を増やさずunchangedを返す。既存変更にはGETのETagをIf-Matchで要求し、欠落428、古い値412とする。Hub側で手動編集・公開された文書はmodifiedとし、CLIは明示的forceが無い限り停止する。監査には本文を入れず、source、hash ID、revision、結果だけを記録する。
-
-【DB契約】documentsへnullableなexternal_source、external_document_id、external_content_hash、external_revisionをadditive migrationで追加し、tenant_id+external_source+external_document_idを一意にする。外部同期はCASでrevisionを更新し、通常文書と既存行の意味を変えない。documentsは既存ADRどおりworkspace_idを持たずtenant帰属を維持する。
-
-【クライアント境界】同期対象はrepository root配下のMarkdown通常ファイルに限定し、../、絶対path、repository外を指すsymlinkを拒否する。同期コマンドはdocs:writeだけを要求し、既存publish/feedback/aijob/metrics権限を同梱しない。
+- 確定要件: 「[出所] 利用者の2026-08-12の明示要望『Claude Codeの方で作成したドキュメントをこちらのシステムのドキュメントの方に送信できるようにもしてお…」 (全文は本章「確定内容 (質疑録)」の `qa-231` を正本とする)
 - 設計解釈の記録経路: `dialogue`
 - 原則: Least privilege / deny by default (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念`)
   - 採否: `applied`
@@ -118,8 +140,10 @@ serves_goals: [G2, G4, G1]
   - トレードオフ:
     - clientは更新前にGETする必要がある
     - 競合時の428/412処理とrevision管理が増える
-- 資するゴール: G2, G4, G1
+- 資するゴール: G2, G4, G5, G6, G1
 
 ## 最新ドキュメント出典
 
-- (このカテゴリに割り当てた取得済みドキュメントなし。全体出典は index.md 参照)
+| 対象 | バージョン | 公式発行元 | 出典URL | 取得 | 最新確認 |
+|---|---|---|---|---|---|
+| authjs | next-auth 5.0.0-beta.32 (@auth/* namespace の v5 系。latest tag 4.24.15 は旧 v4 系) | Auth.js (OSS) (authjs.dev) | https://authjs.dev/getting-started | 2026-08-15T00:15:16Z | 2026-08-15T00:15:16Z |

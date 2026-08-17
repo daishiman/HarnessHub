@@ -11,7 +11,7 @@
 |---|---|
 | name | R7-audit-matrix |
 | skill | run-system-spec-elicit |
-| responsibility | 収集マトリクス網羅性の独立監査 (未収集放置 / 対象外理由の妥当性 / 確定 qa_ref トレーサビリティ / カテゴリ集約の真理値表整合 / canonical platform 行の全存在) (1 prompt = 1 責務 = 1 agent) |
+| responsibility | R7-audit-matrix (収集マトリクス網羅性の独立監査: 未収集放置 / 対象外理由の妥当性 / 確定 qa_ref トレーサビリティ / カテゴリ集約の真理値表整合 / canonical platform 行の全存在) (1 prompt = 1 責務 = 1 agent) |
 | layers_covered | [L1, L2, L3, L4, L5, L6, L7] |
 | output_schema | references/spec-state-contract.md (audit verdict/findings 契約) |
 | reproducible | true (同一 `spec-state.json` に対し同一 verdict と findings) |

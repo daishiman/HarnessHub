@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import importlib.util
 import json
 from pathlib import Path
@@ -10,6 +11,7 @@ from pathlib import Path
 import pytest
 
 from spec_transition_support import (
+    effective_source_refs,
     foundation_source_turns,
     record_foundation_sources,
     valid_foundation as _valid_foundation,
@@ -90,6 +92,265 @@ def test_set_foundation_confirmed_ok():
     assert [g["id"] for g in rf["goals"]] == ["G1", "G2"]
 
 
+def test_current_confirmed_foundation_requires_all_effective_source_refs():
+    state = mod.init_state(_taxonomy())
+    record_foundation_sources(mod, state)
+    foundation = _valid_foundation()
+    foundation.pop("effective_source_refs")
+    with pytest.raises(mod.TransitionError, match="effective_source_refs"):
+        mod.set_foundation(state, foundation)
+
+
+def test_set_foundation_persists_effective_sources_without_mutating_history():
+    state = mod.init_state(_taxonomy())
+    record_foundation_sources(mod, state)
+    historical = copy.deepcopy(state["qa_log"])
+    foundation = _valid_foundation()
+    mod.set_foundation(state, foundation)
+
+    assert state["requirements_foundation"]["effective_source_refs"] == effective_source_refs()
+    assert state["qa_log"] == historical
+
+
+def test_confirmed_foundation_value_change_requires_fresh_qa_and_approval_binding():
+    """確定値だけを変え、旧QA/承認を新値の根拠として再利用できない。"""
+    state = mod.init_state(_taxonomy())
+    _set_confirmed_foundation(state)
+
+    with pytest.raises(mod.TransitionError, match="U1.*qa_ref.*approval_ref"):
+        mod.set_foundation(
+            state,
+            {"essential_purpose": "利用者入力なしで置換した本質的目的"},
+        )
+
+
+def test_confirmed_foundation_value_change_accepts_fresh_qa_and_approval_binding():
+    """新しい利用者QAと承認へ対象Uを付け替えた更新は受理する。"""
+    state = mod.init_state(_taxonomy())
+    _set_confirmed_foundation(state)
+    previous_history = copy.deepcopy(state["qa_log"])
+    mod.run_chunk(
+        state,
+        [
+            {
+                "qa_id": "qa-foundation-u1-revision",
+                "question": "利用者との再確認で U1 は何か",
+                "answer": "事業展開を本質的目的として再承認する",
+                "source": {"kind": "user-dialogue"},
+                "approval_id": "appr-foundation-revision",
+                "approval_note": "U1 の変更を利用者が承認した",
+                "ops": [],
+            }
+        ],
+        max_loops=5,
+    )
+    revised = copy.deepcopy(state["requirements_foundation"])
+    revised["essential_purpose"] = "事業展開を本質的目的とする"
+    revised["approval_ref"] = "appr-foundation-revision"
+    revised["effective_source_refs"]["U1"] = {
+        "qa_ref": "qa-foundation-u1-revision",
+        "approval_ref": "appr-foundation-revision",
+    }
+
+    mod.set_foundation(state, revised)
+
+    assert state["requirements_foundation"]["essential_purpose"] == revised["essential_purpose"]
+    assert state["requirements_foundation"]["effective_source_refs"]["U1"] == revised[
+        "effective_source_refs"
+    ]["U1"]
+    assert state["qa_log"][: len(previous_history)] == previous_history
+
+
+@pytest.mark.parametrize(
+    "mutate,expected",
+    [
+        (lambda refs: refs.pop("U9"), "U1-U9"),
+        (lambda refs: refs.__setitem__("U10", refs["U9"]), "U1-U9"),
+        (lambda refs: refs.__setitem__("U1", "qa-foundation-u1"), "object"),
+        (lambda refs: refs["U1"].__setitem__("qa_ref", "qa-missing"), "qa_log に不在"),
+        (lambda refs: refs["U1"].__setitem__("approval_ref", "appr-missing"), "approval_log に不在"),
+    ],
+)
+def test_set_foundation_rejects_invalid_effective_source_bindings(mutate, expected):
+    state = mod.init_state(_taxonomy())
+    record_foundation_sources(mod, state)
+    foundation = _valid_foundation()
+    refs = effective_source_refs()
+    mutate(refs)
+    foundation["effective_source_refs"] = refs
+
+    with pytest.raises(mod.TransitionError, match=expected):
+        mod.set_foundation(state, foundation)
+
+
+def test_set_foundation_rejects_non_primary_effective_qa_source():
+    state = mod.init_state(_taxonomy())
+    record_foundation_sources(mod, state)
+    state["qa_log"][0]["source"] = {
+        "kind": "harness-remediation",
+        "trigger": "review",
+    }
+    foundation = _valid_foundation()
+    with pytest.raises(mod.TransitionError, match="source.kind"):
+        mod.set_foundation(state, foundation)
+
+
+def test_set_foundation_rejects_duplicate_effective_qa_ids():
+    state = mod.init_state(_taxonomy())
+    record_foundation_sources(mod, state)
+    state["qa_log"].append(copy.deepcopy(state["qa_log"][0]))
+
+    with pytest.raises(mod.TransitionError, match="重複"):
+        mod.set_foundation(state, _valid_foundation())
+
+
+def test_set_foundation_rejects_effective_qa_bound_to_the_wrong_u():
+    """実在する1件のQAを全Uへ使い回してlineageを偽装できない。"""
+    state = mod.init_state(_taxonomy())
+    record_foundation_sources(mod, state)
+    foundation = _valid_foundation()
+    u1_binding = copy.deepcopy(foundation["effective_source_refs"]["U1"])
+    foundation["effective_source_refs"] = {
+        label: copy.deepcopy(u1_binding)
+        for label in (f"U{number}" for number in range(1, 10))
+    }
+
+    with pytest.raises(mod.TransitionError, match="U2.*示す"):
+        mod.set_foundation(state, foundation)
+
+
+def _record_shared_u3_u4(state, *, question: str, answer: str) -> dict:
+    record_foundation_sources(mod, state)
+    mod.run_chunk(
+        state,
+        [
+            {
+                "qa_id": "qa-shared-u3-u4",
+                "question": question,
+                "answer": answer,
+                "source": {"kind": "user-dialogue"},
+                "ops": [],
+            }
+        ],
+        max_loops=5,
+    )
+    foundation = _valid_foundation()
+    evidence = {
+        "U3": "U3 はデータ統合をゴールとする",
+        "U4": "U4 は請求漏れ月0件を目標とする",
+    }
+    for label in ("U3", "U4"):
+        foundation["effective_source_refs"][label] = {
+            "qa_ref": "qa-shared-u3-u4",
+            "approval_ref": "appr-foundation",
+            "evidence_quote": evidence[label],
+            "evidence_sha256": hashlib.sha256(evidence[label].encode("utf-8")).hexdigest(),
+        }
+    return foundation
+
+
+def test_set_foundation_accepts_explicit_shared_qa_with_consumer_evidence():
+    state = mod.init_state(_taxonomy())
+    foundation = _record_shared_u3_u4(
+        state,
+        question="利用者との対話で U3 と U4 を共有確認する",
+        answer="U3 はデータ統合をゴールとする。U4 は請求漏れ月0件を目標とする。",
+    )
+
+    mod.set_foundation(state, foundation)
+
+
+def test_set_foundation_rejects_shared_qa_when_answer_replaces_bound_evidence():
+    state = mod.init_state(_taxonomy())
+    foundation = _record_shared_u3_u4(
+        state,
+        question="利用者との対話で U3 と U4 を共有確認する",
+        answer="AI が上位概念をひとつに要約した。",
+    )
+
+    with pytest.raises(mod.TransitionError, match="shared qa_ref.*evidence_quote"):
+        mod.set_foundation(state, foundation)
+
+
+def test_set_foundation_rejects_out_of_scope_u_marker_in_shared_question():
+    state = mod.init_state(_taxonomy())
+    foundation = _record_shared_u3_u4(
+        state,
+        question="利用者との対話で U3 / U4 / U5 を共有確認する",
+        answer="U3 はデータ統合をゴールとする。U4 は請求漏れ月0件を目標とする。",
+    )
+
+    with pytest.raises(mod.TransitionError, match="shared qa_ref.*question"):
+        mod.set_foundation(state, foundation)
+
+
+def test_set_foundation_rejects_mixed_approvals_for_one_shared_qa():
+    state = mod.init_state(_taxonomy())
+    foundation = _record_shared_u3_u4(
+        state,
+        question="利用者との対話で U3 と U4 を共有確認する",
+        answer="U3 はデータ統合をゴールとする。U4 は請求漏れ月0件を目標とする。",
+    )
+    mod.run_chunk(
+        state,
+        [
+            {
+                "qa_id": "qa-other-approval",
+                "question": "別の承認が必要か",
+                "answer": "別の承認とする",
+                "source": {"kind": "user-dialogue"},
+                "approval_id": "appr-other",
+                "approval_note": "別の承認",
+                "ops": [],
+            }
+        ],
+        max_loops=5,
+    )
+    foundation["effective_source_refs"]["U4"]["approval_ref"] = "appr-other"
+
+    with pytest.raises(mod.TransitionError, match="shared qa_ref.*approval_ref"):
+        mod.set_foundation(state, foundation)
+
+
+def test_set_foundation_rejects_reused_shared_evidence_quote():
+    state = mod.init_state(_taxonomy())
+    foundation = _record_shared_u3_u4(
+        state,
+        question="利用者との対話で U3 と U4 を共有確認する",
+        answer="U3 はデータ統合をゴールとする。U4 は請求漏れ月0件を目標とする。",
+    )
+    u3 = foundation["effective_source_refs"]["U3"]
+    u4 = foundation["effective_source_refs"]["U4"]
+    u4["evidence_quote"] = u3["evidence_quote"]
+    u4["evidence_sha256"] = u3["evidence_sha256"]
+
+    with pytest.raises(mod.TransitionError, match="consumer ごとに独立"):
+        mod.set_foundation(state, foundation)
+
+
+def test_set_foundation_rejects_duplicate_effective_approval_ids():
+    state = mod.init_state(_taxonomy())
+    record_foundation_sources(mod, state)
+    duplicate = {"id": "appr-foundation", "note": "重複した承認"}
+    state["approval_log"] = [copy.deepcopy(duplicate), copy.deepcopy(duplicate)]
+
+    with pytest.raises(mod.TransitionError, match="重複"):
+        mod.set_foundation(state, _valid_foundation())
+
+
+def test_set_foundation_requires_current_approval_in_effective_bindings():
+    state = mod.init_state(_taxonomy())
+    record_foundation_sources(mod, state)
+    state["approval_log"].append({"id": "appr-older", "note": "旧承認"})
+    foundation = _valid_foundation()
+    foundation["effective_source_refs"] = effective_source_refs(
+        approval_ids=("appr-older",) * 9
+    )
+
+    with pytest.raises(mod.TransitionError, match="現行 approval_ref"):
+        mod.set_foundation(state, foundation)
+
+
 def test_written_foundation_source_indexes_are_append_only_and_preserve_matrix():
     """書面要件を1論点の qa_log 索引として残しても matrix を変更しない。"""
     state = mod.init_state(_taxonomy())
@@ -117,12 +378,25 @@ def test_set_foundation_confirm_rejects_missing_source_index():
         mod.set_foundation(state, _valid_foundation())
 
 
-def test_set_foundation_confirm_rejects_written_source_hash_mismatch():
+def test_written_source_hash_mismatch_is_rejected_at_record_time():
+    # 記録時点で落とす。以前は chunk が source を逐語コピーしていたため digest 不一致の
+    # entry が保存でき、confirm まで進んで初めて露見していた。
     state = mod.init_state(_taxonomy())
     written_turns = foundation_source_turns(written=True)
     written_turns[0]["source"]["sha256"] = "0" * 64
+    with pytest.raises(mod.TransitionError, match="sha256 が answer 原文と不一致"):
+        mod.run_chunk(state, written_turns[:5], max_loops=5)
+    assert not state["qa_log"], "拒否した turn の entry を残さない"
+
+
+def test_set_foundation_confirm_rejects_written_source_hash_mismatch():
+    # 記録経路の検査を通過した後に digest が壊れた state (別 writer の退行・手編集の混入) でも、
+    # confirm は「利用者原文を索引した」という主張を受理しない。多層で同じ不変則を守る。
+    state = mod.init_state(_taxonomy())
+    written_turns = foundation_source_turns(written=True)
     assert mod.run_chunk(state, written_turns[:5], max_loops=5) == 5
     assert mod.run_chunk(state, written_turns[5:], max_loops=5) == 4
+    state["qa_log"][0]["source"]["sha256"] = "0" * 64
     with pytest.raises(mod.TransitionError, match="sha256 が answer 原文と不一致"):
         mod.set_foundation(state, _valid_foundation())
 
@@ -331,10 +605,11 @@ def test_cli_set_foundation_string_and_file(tmp_path):
     assert st["requirements_foundation"]["confirmed"] is True
     # ファイル入力経路
     ffile = tmp_path / "foundation.json"
-    ffile.write_text(json.dumps({"stakeholders": ["A"]}), encoding="utf-8")
+    # file path の読込だけを検証する。確定値の変更は別テストで新QA/承認を伴わせる。
+    ffile.write_text(json.dumps({"stakeholders": ["経理チーム"]}), encoding="utf-8")
     assert mod.main(["set-foundation", "--state", str(state_path), "--foundation", str(ffile)]) == 0
     st = json.loads(state_path.read_text(encoding="utf-8"))
-    assert st["requirements_foundation"]["stakeholders"] == ["A"]
+    assert st["requirements_foundation"]["stakeholders"] == ["経理チーム"]
 
 
 def _valid_decision(status="recommended_pending_confirmation") -> dict:

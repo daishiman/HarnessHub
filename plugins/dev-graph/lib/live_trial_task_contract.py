@@ -253,6 +253,31 @@ def _lines_with(text: str, needle: str) -> list[str]:
     return [line for line in text.splitlines() if needle in line or name in line]
 
 
+def canonical_runner_command(
+    contract: dict[str, Any], *, fixture_path: str
+) -> str | None:
+    """shape の argv template から唯一の raw runner command を生成する。
+
+    ``shlex.join`` の出力自体を task/transcript の authority にする。引用方や
+    空白の「同値な別表現」を認めないため、shell parser は受理判定に使わない。
+    """
+    template = contract.get("runner_argv_template")
+    if template is None:
+        return None
+    if not isinstance(template, (list, tuple)) or not all(
+        isinstance(item, str) and item for item in template
+    ):
+        raise LintError("TASK_CONTRACT.runner_argv_template が非空文字列でない")
+    placeholder = "<contained-fixture-repo>"
+    if tuple(template).count(placeholder) != 1:
+        raise LintError(
+            "TASK_CONTRACT.runner_argv_template は "
+            f"{placeholder!r} を丁度 1 個含む必要がある"
+        )
+    argv = [fixture_path if item == placeholder else item for item in template]
+    return shlex.join(argv)
+
+
 # --------------------------------------------------------------------------- 検査本体
 
 
@@ -319,6 +344,7 @@ def check_task(
 
     template = scenario.get("task_args_template")
     invocation = extract_skill_args(text)
+    invocation_args: list[str] | None = None
     if invocation is None:
         add("LT-006", "task.md に Skill({skill: ..., args: ...}) 呼出しが無い")
     else:
@@ -338,6 +364,43 @@ def check_task(
             drift = args_drift(template, invocation[1])
             if drift is not None:
                 add("LT-006", f"args が task_args_template とずれている — {drift}")
+        try:
+            invocation_args = shlex.split(invocation[1])
+        except ValueError:
+            # args_drift が LT-006 として報告済み。runner 契約も fail-closed
+            # にするため None のままにする。
+            invocation_args = None
+
+    runner_template = contract.get("runner_argv_template")
+    if runner_template is not None:
+        fixture_path: str | None = None
+        if invocation_args is not None:
+            indices = [
+                index
+                for index, value in enumerate(invocation_args)
+                if value == "--repo-root"
+            ]
+            if len(indices) == 1 and indices[0] + 1 < len(invocation_args):
+                fixture_path = invocation_args[indices[0] + 1]
+        if fixture_path is None:
+            add(
+                "LT-012",
+                "canonical runner command 用の --repo-root を Skill args から一意に得られない",
+            )
+        else:
+            try:
+                expected_runner = canonical_runner_command(
+                    contract, fixture_path=fixture_path
+                )
+            except LintError as exc:
+                add("LT-012", str(exc))
+            else:
+                if expected_runner not in text.splitlines():
+                    add(
+                        "LT-012",
+                        "shlex.join で生成した canonical runner command の"
+                        f"1行が無い: {expected_runner!r}",
+                    )
 
     entry_points = [str(item) for item in contract.get("required_entry_points", ())]
     missing = [name for name in entry_points if name not in text]

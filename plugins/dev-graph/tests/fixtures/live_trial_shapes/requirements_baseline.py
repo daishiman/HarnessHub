@@ -15,7 +15,7 @@ skill の能力が一切観測されない (Goodhart 穴)。実際に C04-OUT1 �
 
 ## 入力 / 出力の判定 (実装から確定した結論)
 
-**C04 (run-dev-graph-requirements) の出力**は次の 4 点で、fixture には 1 件も無い。
+**C04 (run-dev-graph-requirements) の出力**は次の 7 点で、fixture には 1 件も無い。
   - plugin-plans/dev-graph/component-inventory.json:196 (output_contract)
     「要件定義書 + 参照ノードごとの implementation_readiness/missing_sections 一覧
       + capability-build/task-graph build 向け handoff 参照 + グラフスナップショット」
@@ -82,10 +82,13 @@ SUBJECT_OUTPUTS = [
     "参照ノードごとの implementation_readiness / missing_sections 一覧 (readiness matrix)",
     "capability-build/task-graph build 向け handoff 参照",
     "グラフスナップショット digest",
+    "C19 resume_receipt_sha256 digest binding",
+    "C19 completeness_report_sha256 digest binding",
+    "C19 artifact_snapshot_sha256 digest binding",
 ]
 
 
-def declared_inputs() -> dict[str, str]:
+def declared_inputs(system_spec_paths: list[str]) -> dict[str, str]:
     """baseline に存在してよい content path -> その生成主体 (= 入力である根拠)。
 
     ここに無い path が生成後の tree に現れたら、それは C04 の出力を fixture が
@@ -101,8 +104,6 @@ def declared_inputs() -> dict[str, str]:
         ),
         ARCHITECTURE_REL: "feature.architecture_refs の参照先 artifact (C11:288-295 が実在を要求)",
         f"features/{FEATURE_ID.lower()}.md": "C02 が保存した macro feature node の artifact 実体",
-        SYSTEM_SPEC_INDEX_REL: "C19 が取り込んだ system-spec-harness 確定成果物 (要件の引用元)",
-        SYSTEM_SPEC_REQUIREMENTS_REL: "同上。feature の source_lineage が指す確定章",
         package + "feature-context.json": "system-dev-planner C09 の plan 入力 (package 生成の材料)",
         package + "feature-package.json": "system-dev-planner の exact-13 package 本体 "
                                           "(validate-system-plan.py:37,264 の必須入力)",
@@ -123,6 +124,17 @@ def declared_inputs() -> dict[str, str]:
         inputs[package + rel] = "exact-13 task spec (validate-system-plan.py:37 BASE_DIGEST_FILES)"
     for phase in PHASES:
         inputs[task_file_path(phase)] = "C02 が保存した exact-13 task node の artifact 実体"
+    for relative in system_spec_paths:
+        if relative == SYSTEM_SPEC_REQUIREMENTS_REL:
+            provenance = "C19 digest-bound PASS bundle。feature/architecture source_lineage が指す確定章"
+        elif relative == SYSTEM_SPEC_INDEX_REL:
+            provenance = "C19 digest-bound PASS bundle の index (要件の引用元)"
+        else:
+            provenance = (
+                "C19 digest-bound PASS bundle の current artifact snapshot。"
+                "validate-requirements-system-spec-snapshot.py が C04 handoff 前に再検証する入力"
+            )
+        inputs[relative] = provenance
     return inputs
 
 

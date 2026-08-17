@@ -28,7 +28,10 @@ system-spec-harness の evaluator が `PASS` の場合だけ、次の準備 scri
 specification/architecture の内容を生成し直さず、確定済み `system-spec/` 成果物の本文そのものから
 C02 用の 40-key node envelope と substantive body（空や placeholder でない本文）を作る adapter である。
 組込み contract は artifact path と node shape のみを持ち、製品固有の本文を持たない。各出力 body は
-対応する `source_artifact` の本文（YAML frontmatter のみ除去）と同一でなければならない。
+対応する `source_artifact` の本文から YAML frontmatter だけを除き、prose を保持する。配置先 directory が
+変わるため、repository-local Markdown link は source 位置から destination 位置へ再基底化し、同じ実体を
+参照させる。URI・ページ内 anchor・inline/fenced code は変更しない。`source_digest` はこの表示用変換後の
+body ではなく、未変更の source artifact bytes を引き続き指す。
 
 この source-derived body は dev-graph の汎用 specification / architecture テンプレートを
 埋めた成果物ではない。C11 は `source_lineage.origin_kind=system-spec-harness` を根拠に、

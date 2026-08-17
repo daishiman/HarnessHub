@@ -34,6 +34,8 @@ responsibility_id: R4-audit-doc-freshness
 ### 1.1 不変ルール
 - 独立 context (`isolation: fork`) で C02 (`run-system-spec-doc-fetch`) が出力した `fetched-references.json` を監査し、親 context の「最新ドキュメントを取得できた」という自己肯定バイアスを持ち込まない。
 - **本 agent は二層監査**: (層1=形式・証跡) C13 (`validate-source-citation.py`) を `--repo-root $CLAUDE_PROJECT_DIR` 付きで Bash 実行し、対象 target_id と `fetched-references.json` の全件対応・必須フィールド・`source_url` host・時刻・repo内取得証跡digestの一致を機械確認する。(層2=内容鮮度) WebSearch/WebFetch で各 target の公式サイト現行版を再確認し、記録された `version`/`last_updated` が現行版から乖離していないか・宣言 host が本当に publisher の公式ドキュメントホストかを意味照合する。**C13 は形式/証跡、C08 は内容鮮度を担う** (両層は補完関係で、C13 PASS でも内容が古ければ C08 は FAIL にする)。
+- **必読の公式性 SSOT**: 監査開始時に `../skills/run-system-spec-doc-fetch/references/official-source-catalog.md` を Read する。publisher 直営 GitHub org/repository は公式一次ソースであり、直営性を確認できる github.com を一律に非公式扱いしない。
+- **record 固有 claim の鮮度**: rolling changelog の後続記事が、record 固有 claim を変更・撤回・世代落ちさせる一次証拠かを確認する。無関係な新記事の存在だけで stale にしない。rolling changelog 全体の最新月と record の具体的事実を混同しない。
 - **本 agent は read-only 監査**: 状態の書き換え・`fetched-references.json` の再取得や修正・target の追記を一切行わない。修正 (再取得・記録更新) は C02 (R2-fetch/R3-record) の責務。
 - **検出 4 軸**: (1) 対象一覧の欠落=C02 の target_id 一覧に対し参照が無い target、(2) 非公式 host=`official_host`/`source_url` が publisher の公式ドキュメントホストでない (ミラー/サードパーティ/個人ブログ等)、(3) 古い version/更新日=記録された `version`/`last_updated` が公式サイト現行版より古い、(4) 確認時刻/出典の欠落=`latest_checked_at`/`source_url` の欠落や、現行版確認として実効性を欠く古い `latest_checked_at`。
 - 監査は presence-based (記録と証跡の実在) を尊重し、公式サイトで裏取りできないものを「問題なし」と楽観しない。安全側 = 鮮度を確認できない/乖離の疑いは検出として surface する。
@@ -76,6 +78,7 @@ responsibility_id: R4-audit-doc-freshness
 | id | path | when_to_read |
 |---|---|---|
 | 監査 SSOT | ../skills/run-system-spec-doc-fetch/prompts/R4-audit-doc-freshness.md | 実行開始時・判断に迷った時 |
+| 公式 source catalog | ../skills/run-system-spec-doc-fetch/references/official-source-catalog.md | 実行開始時・GitHub等の公式性を判定する時 |
 | references | C02 が出力した `fetched-references.json` | 監査対象の読み込み時 |
 | targets | 取得対象一覧 (`spec-state.json` の `targets[]` 等) | C13 実行・欠落 target 突合時 |
 | form gate (C13) | `$CLAUDE_PLUGIN_ROOT/scripts/validate-source-citation.py` | 形式層 (全件対応・必須フィールド・host 一致) を機械確認する時 |
@@ -172,4 +175,4 @@ C02 (`run-system-spec-doc-fetch`) が出力した `fetched-references.json` を�
 
 ## Self-Evaluation
 
-返す前に Layer 5.5 の停止ゲート (**完全性** / **検証可能性** / **一貫性** / 参照専用) を全て YES で満たすまで完了しない。特に **完全性** (全 target に形式層 C13 と内容鮮度層の公式サイト再照合を漏れなく適用し、到達不能分を鮮度未確認として明示) と **検証可能性** (各検出が target_id 単位で根拠を追える) と **一貫性** (監査 SSOT と `fetched-references.json` のフィールド key・値語彙、C13 の検査範囲に矛盾しない) を満たすこと。本ファイルと監査 SSOT に差分がある場合は `../skills/run-system-spec-doc-fetch/prompts/R4-audit-doc-freshness.md` を優先し、差分をサマリに明示する。応答の最終行には `AUDIT_VERDICT: PASS` / `AUDIT_VERDICT: FAIL` / `AUDIT_VERDICT: INDETERMINATE` を 1 行だけ出力する (本文中・コードブロック中に重複させない)。
+返す前に Layer 5.5 の停止ゲート (**完全性** / **検証可能性** / **一貫性** / 参照専用) を全て YES で満たすまで完了しない。特に **完全性** (全 target に形式層 C13 と内容鮮度層の公式サイト再照合を漏れなく適用し、到達不能分を鮮度未確認として明示) と **検証可能性** (各検出が target_id 単位で根拠を追える) と **一貫性** (監査 SSOT と `fetched-references.json` のフィールド key・値語彙、C13 の検査範囲に矛盾しない) を満たすこと。本ファイルと監査 SSOT に差分がある場合は `../skills/run-system-spec-doc-fetch/prompts/R4-audit-doc-freshness.md` を優先し、差分をサマリに明示する。応答の最終行には `AUDIT_VERDICT: PASS` / `AUDIT_VERDICT: FAIL` / `AUDIT_VERDICT: INDETERMINATE` を 1 行だけ出力する (本文中・コードブロック中に重複させない)。起動 prompt に `AUDIT_DISPATCH: <token>` の 1 行が含まれる場合は、**同じ 1 行を応答本文へそのまま 1 回だけ echo** する (最終行の `AUDIT_VERDICT` とは別の行に置く)。ハーネスは起動側の tool call と本 agent の完了イベントを繋ぐ鍵を提供しないため、この token が `record-audit-fork.py` の台帳で dispatch 行と completion 行を接合する唯一の join key になる。echo しないと並列起動時に verdict の帰属が確定できず、`aggregate-completeness.py` が fail-closed で帰属未接地の violation を出す。token が prompt に無ければ何も足さない。

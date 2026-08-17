@@ -20,7 +20,9 @@ FOUNDATION_U_KEYS = (
     "stakeholders", "scope", "constraints", "concrete_intents",
 )
 FOUNDATION_NA_FORBIDDEN = ("essential_purpose", "background", "goals")
-FOUNDATION_KEYS = FOUNDATION_U_KEYS + ("confirmed", "approval_ref")
+FOUNDATION_KEYS = FOUNDATION_U_KEYS + (
+    "confirmed", "approval_ref", "effective_source_refs",
+)
 DECISION_STATUSES = {"needs_guidance", "recommended_pending_confirmation", "confirmed"}
 DECISION_COST_CATEGORIES = {"free", "low-cost", "paid", "unknown"}
 DECISION_COMPARISON_AXES = ("goal_fit", "tco", "security", "operations", "lock_in")
@@ -39,7 +41,8 @@ def empty_foundation() -> dict:
     return {
         "essential_purpose": "", "background": "", "goals": [], "objectives": [],
         "success_criteria": [], "stakeholders": [], "scope": {"in": [], "out": []},
-        "constraints": [], "concrete_intents": [], "confirmed": False,
+        "constraints": [], "concrete_intents": [], "effective_source_refs": {},
+        "confirmed": False,
     }
 
 
