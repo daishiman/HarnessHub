@@ -2,7 +2,7 @@
   "target": {
     "plugin": "system-spec-harness",
     "skill": "assign-system-spec-completeness-evaluator",
-    "skill_md_sha256": "e8cd5a31dd92c1392d0cd6a05a5926e073796ce6acaa4751e7ddf6c1fcbb70fa"
+    "skill_md_sha256": "4c3da76393344ab85139f04552b93a9e8b4bc0a1256c50940f57bf041282318f"
   },
   "review_kind": "elegance",
   "verdict": "PASS",
