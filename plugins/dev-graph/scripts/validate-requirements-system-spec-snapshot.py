@@ -24,10 +24,25 @@ from typing import Any
 
 HERE = Path(__file__).resolve().parent
 UPSTREAM_VALIDATOR = HERE / "validate-system-spec-resume.py"
-RECEIPT_RELATIVE = Path("system-spec/resume-receipt.json")
-REPORT_RELATIVE = Path("system-spec/completeness-report.json")
+RECEIPT_NAME = "resume-receipt.json"
+REPORT_NAME = "completeness-report.json"
 SCHEMA_VERSION = "requirements-system-spec-snapshot/v1"
 CONSUMER = "run-dev-graph-requirements"
+
+
+def resolve_system_spec_dir(repo_root: Path, explicit: str | None) -> Path:
+    if explicit:
+        candidate = Path(explicit)
+        return candidate.resolve() if candidate.is_absolute() else (repo_root / candidate).resolve()
+    config_path = repo_root / ".dev-graph" / "config.json"
+    if config_path.is_file():
+        payload = json.loads(config_path.read_text(encoding="utf-8"))
+        roots = payload.get("content_roots") if isinstance(payload, dict) else None
+        system_spec = roots.get("system_spec") if isinstance(roots, dict) else None
+        if isinstance(system_spec, str) and system_spec:
+            candidate = Path(system_spec)
+            return candidate.resolve() if candidate.is_absolute() else (repo_root / candidate).resolve()
+    raise ValueError("content_roots.system_spec is required")
 
 
 def digest(path: Path) -> str | None:
@@ -79,14 +94,17 @@ def artifact_digest(root: Path, relative: str) -> str:
 
 def capture_post_validation_binding(
     root: Path,
+    system_spec_dir: Path | None = None,
 ) -> tuple[dict[str, Any], list[str]]:
+    if system_spec_dir is None:
+        system_spec_dir = resolve_system_spec_dir(root, None)
     """Capture one complete C04 integrity pass without repeating C19 semantic gates."""
     failures: list[str] = []
     receipt_sha256, receipt = read_json_snapshot(
-        root / RECEIPT_RELATIVE, "resume-receipt", failures
+        system_spec_dir / RECEIPT_NAME, "resume-receipt", failures
     )
     report_sha256, report = read_json_snapshot(
-        root / REPORT_RELATIVE, "completeness-report", failures
+        system_spec_dir / REPORT_NAME, "completeness-report", failures
     )
 
     raw_artifacts = receipt.get("artifacts")
@@ -111,7 +129,7 @@ def capture_post_validation_binding(
     try:
         markdown_artifacts = sorted(
             path.relative_to(root).as_posix()
-            for path in (root / "system-spec").rglob("*.md")
+            for path in system_spec_dir.rglob("*.md")
             if path.is_file()
         )
     except OSError:
@@ -139,10 +157,11 @@ def capture_post_validation_binding(
     }, failures
 
 
-def validate(root: Path) -> dict[str, Any]:
+def validate(root: Path, system_spec_dir: Path | None = None) -> dict[str, Any]:
     root = root.resolve(strict=True)
-    receipt_path = root / RECEIPT_RELATIVE
-    report_path = root / REPORT_RELATIVE
+    system_spec_dir = (system_spec_dir or resolve_system_spec_dir(root, None)).resolve()
+    receipt_path = system_spec_dir / RECEIPT_NAME
+    report_path = system_spec_dir / REPORT_NAME
     before = {
         "receipt": digest(receipt_path),
         "report": digest(report_path),
@@ -196,10 +215,11 @@ def validate(root: Path) -> dict[str, Any]:
         if actual is not None and actual != expected:
             failures.append(f"post-validation-artifact-digest-stale:{relative}")
 
+    spec_prefix = system_spec_dir.relative_to(root).as_posix().rstrip("/") + "/"
     current_markdown = set(second_post["markdown_artifacts"])
     receipt_markdown = {
         relative for relative in artifacts
-        if relative.startswith("system-spec/") and relative.endswith(".md")
+        if relative.startswith(spec_prefix) and relative.endswith(".md")
     }
     if current_markdown != receipt_markdown:
         failures.append("post-validation-markdown-set-mismatch")
@@ -209,7 +229,7 @@ def validate(root: Path) -> dict[str, Any]:
     expected_snapshot = {
         key: value
         for key, value in artifacts.items()
-        if key != REPORT_RELATIVE.as_posix()
+        if Path(key).name != REPORT_NAME
     }
     if snapshot_artifacts != expected_snapshot:
         failures.append("report-artifact-snapshot-mismatch")
@@ -244,9 +264,11 @@ def validate(root: Path) -> dict[str, Any]:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--repo-root", required=True, type=Path)
+    parser.add_argument("--system-spec-dir", default=None)
     args = parser.parse_args(argv)
     try:
-        report = validate(args.repo_root)
+        system_spec_dir = resolve_system_spec_dir(args.repo_root, args.system_spec_dir)
+        report = validate(args.repo_root, system_spec_dir)
     except (OSError, ValueError) as exc:
         report = {
             "schema_version": SCHEMA_VERSION,

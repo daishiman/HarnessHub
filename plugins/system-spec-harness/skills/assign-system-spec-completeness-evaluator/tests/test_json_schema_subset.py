@@ -10,17 +10,28 @@
 # write-scope: none
 # dependencies: []
 # ///
-"""`json_schema_subset.py` の Draft 7 subset 契約テスト。"""
+"""`validate-json-schema-subset.py` の Draft 7 subset 契約テスト。"""
 from __future__ import annotations
 
+import importlib.util
 import itertools
 import json
 import re
+import sys
 
 import pytest
 
-from completeness_test_support import SKILL_DIR, golden_report
-from json_schema_subset import Draft7SubsetValidator, SchemaDefinitionError
+from completeness_test_support import SCRIPTS_DIR, SKILL_DIR, golden_report
+
+_SPEC = importlib.util.spec_from_file_location(
+    "json_schema_subset", SCRIPTS_DIR / "validate-json-schema-subset.py"
+)
+assert _SPEC and _SPEC.loader
+_MODULE = importlib.util.module_from_spec(_SPEC)
+sys.modules["json_schema_subset"] = _MODULE
+_SPEC.loader.exec_module(_MODULE)
+Draft7SubsetValidator = _MODULE.Draft7SubsetValidator
+SchemaDefinitionError = _MODULE.SchemaDefinitionError
 
 
 PUBLIC_SCHEMA = SKILL_DIR / "schemas" / "completeness-findings.schema.json"

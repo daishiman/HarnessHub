@@ -44,7 +44,7 @@ C04 に system-spec snapshot validator を足した。
 | 層 | 判定 | 内容 |
 |---|---|---|
 | `system-spec/` | 反映済み | qa-232 以降、I15、D9–D12、章本文、fetched-references、completeness PASS、resume-receipt |
-| `specs/` | 反映済み | C19 が `specs/system-spec-index.md` を登録 |
+| `specs/` | 反映済み | C19 が `specs/system-spec-index.md` を登録。実装契約の要約は docs 追補に置く |
 | `architecture/` | 反映済み | `architecture/system-spec-overview.md` を登録。frontend/backend/dev-workflow に I15 / schema 1.3 を追記 |
 | `features/` | 追跡のみ | `feat-feedback-loop` の exact-13 目的は不変。I15 は追補として related_nodes に接続 |
 | `docs/` | 反映済み | 本受領書と I15 addendum。P01 baseline は書き換えない |

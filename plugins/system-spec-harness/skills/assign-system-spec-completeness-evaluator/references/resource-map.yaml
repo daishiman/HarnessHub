@@ -13,8 +13,8 @@ scripts:
   - id: aggregate
     path: scripts/aggregate-completeness.py
     read_when: レポート形状検証と全 6 観点→総合 fail-closed 集約を機械実行する時
-  - id: json_schema_subset
-    path: scripts/json_schema_subset.py
+  - id: json-schema-subset
+    path: scripts/validate-json-schema-subset.py
     read_when: 外部 package 無しで公開 completeness schema の Draft 7 部分集合検証と未知 schema 語彙の fail-closed 拒否を確認する時
   - id: audit_fork_attribution
     path: scripts/audit_fork_attribution.py

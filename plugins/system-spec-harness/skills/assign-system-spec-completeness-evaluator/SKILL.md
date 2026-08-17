@@ -42,7 +42,7 @@ reference_refs:
   - references/aspect-criteria.md
 script_refs:
   - scripts/aggregate-completeness.py
-  - scripts/json_schema_subset.py
+  - scripts/validate-json-schema-subset.py
   - scripts/audit_fork_attribution.py
   - scripts/build-resume-receipt.py
   - ../../scripts/validate-coverage-matrix.py
@@ -226,7 +226,7 @@ python3 "$CLAUDE_PLUGIN_ROOT/skills/assign-system-spec-completeness-evaluator/sc
 - `references/aspect-criteria.md` — 観点別意味判定の詳細基準 + 観点↔監査 agent 対応
 - `schemas/completeness-findings.schema.json` — 評価レポート出力スキーマ
 - `scripts/aggregate-completeness.py` — 公開 schema によるレポート形状検証 + 総合 fail-closed 集約 + 帰属の fork 証跡接地検証 (決定論、外部 Python package 不要)
-- `scripts/json_schema_subset.py` — `completeness-findings.schema.json` が出荷する Draft 7 語彙だけを stdlib で解釈する import 専用 module。未知 keyword / 非対応形状 / 非 local または未解決 `$ref` は schema 構築時に fail-closed で拒否する。`pattern` は edge anchor + ASCII literal + 正の英数字 class/range + 基本 quantifier の portable subset のみで、escape / dot / group / alternation / lookaround / negated class は受理しない
+- `scripts/validate-json-schema-subset.py` — `completeness-findings.schema.json` が出荷する Draft 7 語彙だけを stdlib で解釈する import 専用 module。未知 keyword / 非対応形状 / 非 local または未解決 `$ref` は schema 構築時に fail-closed で拒否する。`pattern` は edge anchor + ASCII literal + 正の英数字 class/range + 基本 quantifier の portable subset のみで、escape / dot / group / alternation / lookaround / negated class は受理しない
 - `scripts/audit_fork_attribution.py` — fork 台帳集計・schema 1.2 の tool-use ID を含む receipt 照合・run/session 束縛、および schema 1.1 legacy 互換を担う import 専用モジュール。公開 CLI と総合判定は `aggregate-completeness.py` が継続して所有する
 - `scripts/build-resume-receipt.py` / `schemas/resume-receipt.schema.json` — canonical PASS report、gate 結果、fork ledger session、固定ゲート入力と `system-spec/` 全 Markdown の artifact digest に束縛した再利用 receipt の production writer / schema
 - `../../hooks/record-audit-fork.py` — 監査 fork 台帳 writer。PostToolUse (`Task|Agent`) が dispatch 行 (schema 1.2: top-level `tool_use_id` / `verdict_state` / whole per-call response digest) を、`SubagentStop` が completion 行 (schema 1.3) を書き、`AUDIT_DISPATCH` token で 2 行を接合する帰属検証の証跡正本

@@ -11,7 +11,7 @@
 # contexts: [E, C]
 # network: false
 # write-scope: none
-# dependencies: [audit_fork_attribution.py, json_schema_subset.py]
+# dependencies: [audit_fork_attribution.py, validate-json-schema-subset.py]
 # requires-python: ">=3.9"
 # ///
 """C05 完成度レポートを検証・集約する CLI。
@@ -23,6 +23,7 @@ report 形状、全 6 観点の fail-closed verdict、high finding、独立監�
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import re
 import subprocess
@@ -53,7 +54,14 @@ from audit_fork_attribution import (  # noqa: E402,F401
     required_delegations,
     validate_attribution,
 )
-from json_schema_subset import Draft7SubsetValidator, SchemaDefinitionError  # noqa: E402
+_JSON_SCHEMA_SUBSET = Path(__file__).with_name("validate-json-schema-subset.py")
+_SPEC = importlib.util.spec_from_file_location("json_schema_subset", _JSON_SCHEMA_SUBSET)
+assert _SPEC and _SPEC.loader
+_MODULE = importlib.util.module_from_spec(_SPEC)
+sys.modules["json_schema_subset"] = _MODULE
+_SPEC.loader.exec_module(_MODULE)
+Draft7SubsetValidator = _MODULE.Draft7SubsetValidator
+SchemaDefinitionError = _MODULE.SchemaDefinitionError
 
 
 SNAPSHOT_SCHEMA_VERSION = "system-spec-artifact-snapshot/v1"

@@ -226,7 +226,7 @@ Route Handler、入力検証、OpenAPI、状態遷移、共通エラー契約を
 fetch 薄 client。token は Workers Secret、Issues + Contents の read-write、対象 1 repo。
 起票は本文ハッシュで新規/更新/変更なしを導出する。診断は 32KB 上限。実装は未着手。
 正本は `system-spec/backend.md` と
-[実装契約追補](../specs/harness-hub-in-app-improvement-request-addendum.md)。
+[I15 追補](../docs/features/feat-feedback-loop/i15-in-app-improvement-request-addendum.md)。
 
 ## 2026-08-12 hearing-intake 用途プロファイル / 共有トークン (MVP)
 
