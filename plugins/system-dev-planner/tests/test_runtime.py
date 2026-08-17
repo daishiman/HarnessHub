@@ -273,6 +273,66 @@ AUDIT_DELEGATIONS = [
 ]
 
 
+# C05 producer schema / aggregate-completeness.py の PASS 契約。
+# artifact_snapshot と G-matrix / G-source-citation / G-knowledge-graph(4 profile) が無いと
+# C08 readiness probe が producer-verification-failed になる。
+PASS_GATE_RESULTS = [
+    {"id": "G-matrix", "name": "validate-coverage-matrix", "exit_code": 0},
+    {"id": "G-source-citation", "name": "validate-source-citation", "exit_code": 0},
+    {
+        "id": "G-knowledge-graph",
+        "name": "validate-knowledge-graph",
+        "exit_code": 0,
+        "subgates": [
+            {
+                "profile": profile,
+                "command": ["python3", "validate-knowledge-graph.py"],
+                "exit_code": 0,
+                "stderr": "",
+            }
+            for profile in ("knowledge", "doctrine", "required-info", "cross")
+        ],
+    },
+]
+
+
+def completeness_findings_payload() -> dict:
+    """検査対象 repo に置く C05 PASS レポート (readiness / promotion fixture 共用)。"""
+    aspects = {
+        "foundation_trace": ("assign-system-spec-completeness-evaluator", "C05"),
+        "decision_guidance": ("assign-system-spec-completeness-evaluator", "C05"),
+        "matrix_coverage": ("system-spec-matrix-auditor", "C07"),
+        "design_knowledge_reflection": ("assign-system-spec-completeness-evaluator", "C05"),
+        "doc_freshness": ("system-spec-doc-freshness-auditor", "C08"),
+        "prompt_quality": ("assign-system-spec-completeness-evaluator", "C05"),
+    }
+    return {
+        "evaluator": {
+            "name": "assign-system-spec-completeness-evaluator",
+            "version": "0.1.0",
+            "context": "fork",
+        },
+        "verdict": "PASS",
+        "artifact_snapshot": {
+            "schema_version": "system-spec-artifact-snapshot/v1",
+            "artifacts": {"system-spec/index.md": "0" * 64},
+        },
+        "audit_delegations": AUDIT_DELEGATIONS,
+        "aspects": {
+            key: {
+                "verdict": "PASS",
+                "auditor": owner,
+                "component": component,
+                "summary": "independently verified",
+            }
+            for key, (owner, component) in aspects.items()
+        },
+        "gate_results": PASS_GATE_RESULTS,
+        "findings": [{"severity": "info", "bucket": "coverage", "observation": "all aspects checked"}],
+        "gaps": [],
+    }
+
+
 def write_audit_fork_ledger(root: Path) -> None:
     """検査対象 repo 内の fork 台帳 (record-audit-fork hook の書式) を fixture として置く。"""
     ledger = root / "eval-log" / "system-spec-harness" / "audit-fork-ledger.jsonl"
@@ -296,24 +356,7 @@ def write_readiness_sources(root: Path) -> None:
         "# Requirements\n\nReady.\n", encoding="utf-8"
     )
     dump(root / "architecture/graph.json", {"nodes": [{"id": "A1"}]})
-    aspects = {
-        "foundation_trace": ("assign-system-spec-completeness-evaluator", "C05"),
-        "decision_guidance": ("assign-system-spec-completeness-evaluator", "C05"),
-        "matrix_coverage": ("system-spec-matrix-auditor", "C07"),
-        "design_knowledge_reflection": ("assign-system-spec-completeness-evaluator", "C05"),
-        "doc_freshness": ("system-spec-doc-freshness-auditor", "C08"),
-        "prompt_quality": ("assign-system-spec-completeness-evaluator", "C05"),
-    }
-    dump(root / "system-spec/completeness-findings.json", {
-        "evaluator": {"name": "assign-system-spec-completeness-evaluator", "version": "0.1.0", "context": "fork"},
-        "verdict": "PASS",
-        "audit_delegations": AUDIT_DELEGATIONS,
-        "aspects": {key: {"verdict": "PASS", "auditor": owner, "component": component,
-                           "summary": "independently verified"}
-                    for key, (owner, component) in aspects.items()},
-        "findings": [{"severity": "info", "bucket": "coverage", "observation": "all aspects checked"}],
-        "gaps": [],
-    })
+    dump(root / "system-spec/completeness-findings.json", completeness_findings_payload())
     write_audit_fork_ledger(root)
 
 
