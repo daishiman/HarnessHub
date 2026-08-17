@@ -78,6 +78,10 @@ run "lint-workflow-step-guard"             python3 scripts/lint-workflow-step-gu
 run "lint-ui-text-emoji --self-test"       python3 scripts/lint-ui-text-emoji.py --self-test
 run "lint-ui-text-emoji"                   python3 scripts/lint-ui-text-emoji.py --repo-root . --json
 run "lint-ci-local-check-parity"           python3 scripts/lint-ci-local-check-parity.py
+# features/<id>.context.json は writer の無い sidecar で、upsert-node.py が graph.json と
+# .md frontmatter だけを書くたびに 3 者 parity が片肺で崩れる。plan digest に束縛済み (凍結) の
+# feature は除外し、検査件数と除外件数を必ず出す (0 件検査で緑になるのを防ぐ)。
+run "build-feature-context --check"        python3 scripts/build-feature-context.py --all --check --skip-frozen
 # 必須ゲート台帳↔実 workflow の parity (HarnessHub-ic7w)。read-only・外部依存なしの静的検査で、
 # gh 認証を要する --check-protection は付けない (認証不在が緑になる経路を作らない)。
 run "validate-required-gates"              python3 scripts/validate-required-gates.py

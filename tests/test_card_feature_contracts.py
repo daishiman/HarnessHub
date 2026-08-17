@@ -108,8 +108,17 @@ def test_context_frontmatter_and_graph_have_exact_parity(
     context = _context(feature_id)
     graph = graph_nodes[feature_id]
     assert set(context) == set(PARITY_FIELDS), f"{feature_id}: context fields drifted"
+    # context.json には writer が無く upsert-node.py は graph.json と .md frontmatter しか
+    # 書かないため、この 3 者は upsert のたびに片肺で崩れる。落ちたときに「どう直すか」が
+    # 分からないと毎回 CI ログから手で照合する羽目になるので、修復コマンドを message に載せる。
+    repair = (
+        f"python3 scripts/build-feature-context.py --write --feature {feature_id}"
+        " (正本は .dev-graph/state/graph.json)"
+    )
     for field in PARITY_FIELDS:
-        assert context[field] == frontmatter[field] == graph[field], f"{feature_id}: {field} drifted"
+        assert context[field] == frontmatter[field] == graph[field], (
+            f"{feature_id}: {field} drifted / repair: {repair}"
+        )
 
 
 @pytest.mark.parametrize("feature_id", FEATURE_IDS)
