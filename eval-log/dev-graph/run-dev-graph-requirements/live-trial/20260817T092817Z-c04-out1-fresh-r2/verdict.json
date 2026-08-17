@@ -1,0 +1,145 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-requirements",
+  "args": "--repo-root /Users/dm/orca/workspaces/HarnessHub/改善要望を記録する/eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T092817Z-c04-out1-fresh-r2/fixture-repo --feature-id F-LIVE-001",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-5"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "goal_evaluation": {
+    "evidence_ref": "independent-verification.json",
+    "sha256": "30378e93d0277dc822c5c62709b28881afc1445abd6455a84a59620c0354796a",
+    "result": "PASS",
+    "blockers": [],
+    "evaluator": {
+      "mode": "fresh-independent-context",
+      "id": "fdd2a547-0f66-45c3-a2d5-3f43af177a92"
+    },
+    "transcript_sha256": "06055476c8e2a35cb8bb5f7d13557a7c29b873da6518f43dd760530a5183768d",
+    "evidence_refs": [
+      "independent-observations.json",
+      "transcript.jsonl",
+      "pane.txt",
+      "poll-state.json",
+      "out/status.json"
+    ]
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-requirements"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "84bfeb20cfd22076894ec599a6abc9a0c2aac4c11b2c9a9bd5a7e622845a9bcf",
+  "transcript_sha256": "06055476c8e2a35cb8bb5f7d13557a7c29b873da6518f43dd760530a5183768d",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.233",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": 3.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 411.1362478733063
+  },
+  "scenario_id": "C04-OUT1-positive-ready-handoff",
+  "scenario_contract": {
+    "scenario_file": "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
+    "scenario_id": "C04-OUT1-positive-ready-handoff",
+    "required_observations": [
+      "a capability-build task-graph handoff is emitted for the exact-13 package",
+      "the handoff remains bound to the feature and source digest",
+      "the handoff is bound to a current C19 resume receipt, completeness report, and full system-spec artifact snapshot",
+      "the requirements skill generates no implementation source file"
+    ],
+    "observed": [
+      {
+        "index": 1,
+        "observation": "a capability-build task-graph handoff is emitted for the exact-13 package",
+        "evidence_ref": "independent-observations.json#/observations/3"
+      },
+      {
+        "index": 2,
+        "observation": "the handoff remains bound to the feature and source digest",
+        "evidence_ref": "independent-observations.json#/observations/3"
+      },
+      {
+        "index": 3,
+        "observation": "the handoff is bound to a current C19 resume receipt, completeness report, and full system-spec artifact snapshot",
+        "evidence_ref": "independent-observations.json#/observations/4"
+      },
+      {
+        "index": 4,
+        "observation": "the requirements skill generates no implementation source file",
+        "evidence_ref": "independent-observations.json#/observations/5"
+      }
+    ],
+    "unobserved": [],
+    "args_divergence": {
+      "task_args_template": "--repo-root <contained-fixture-repo> --feature-id F-LIVE-001 (package は fixture 内 system-plan/F-LIVE-001/ を skill が解決する)",
+      "template_flags": [
+        "--feature-id",
+        "--repo-root"
+      ],
+      "actual_flags": [
+        "--feature-id",
+        "--repo-root"
+      ],
+      "missing_flags": [],
+      "extra_flags": [],
+      "matches": true
+    },
+    "task_contract": {
+      "declared": false,
+      "task_file": "task.md",
+      "task_file_exists": true,
+      "required_fragments": [],
+      "forbidden_fragments": [],
+      "missing_required_fragments": [],
+      "present_forbidden_fragments": [],
+      "matches": true
+    },
+    "invocation_contract": {
+      "forbidden_invoked_skills": [],
+      "present_forbidden_invoked_skills": [],
+      "matches": true
+    },
+    "resource_budget": {
+      "max_total_tokens": 5000000,
+      "max_wall_clock_s": 600
+    },
+    "resource_usage": {
+      "wall_clock_s": 411.1362478733063,
+      "poll_state_ref": "poll-state.json",
+      "poll_state_sha256": "5117865e3de12866fc674ede188d26fd474013c7a53a327288d9737ae377bdd9",
+      "tokens": {
+        "input_tokens": 58,
+        "cache_creation_input_tokens": 100825,
+        "cache_read_input_tokens": 2306278,
+        "output_tokens": 30490,
+        "total_tokens": 2437651,
+        "assistant_messages": 29,
+        "assistant_message_ids": 29,
+        "invalid_or_missing_usage_messages": 0,
+        "idless_assistant_records": 0,
+        "transcript_files": 1,
+        "measured": true
+      },
+      "violations": []
+    }
+  }
+}

@@ -3,7 +3,7 @@ status: confirmed
 category: testing-qa
 aggregate: 確定
 spec_cells: [testing-qa.web, testing-qa.mobile, testing-qa.tablet, testing-qa.desktop-windows, testing-qa.desktop-linux, testing-qa.desktop-macos]
-serves_goals: [G1, G4, G5]
+serves_goals: [G2, G5, G1]
 ---
 
 # テスト戦略・品質保証 (testing-qa)
@@ -15,87 +15,54 @@ serves_goals: [G1, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-217 |
+| Web (web) | 確定 | 確定質疑: qa-341 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリを持たず、モバイル端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の mobile 行と同根拠)。テスト実行は web 行 (CI) と desktop-windows/desktop-macos 行 (作者ローカル) でカバーする |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の tablet 行と同根拠)。テスト実行は web 行と desktop-windows/desktop-macos 行でカバーする |
-| デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-211 |
+| デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-282 |
 | デスクトップ (Linux) (desktop-linux) | 対象外 | 理由: Linux desktop を開発者クライアント環境として使わない (作者環境は macOS + Windows。dev-workflow の desktop-linux 行と同根拠)。GitHub Actions の ubuntu-latest runner 上のテスト実行は CI 実行基盤として web 行の品質ゲート要件でカバーする |
-| デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-211 |
+| デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-282 |
 
 ## 確定内容 (質疑録)
 
-### qa-217 (対応セル: web)
+### qa-341 (対応セル: web)
 
-**質問**: testing-qa.web の full / critical 表記ずれを、閉じた tier 語彙とどう整合させるか。
+**質問**: GitHub Issue 出口の前提で、改善要望機能の検証範囲をどう確定するか。何を自動テストで固定し、何を固定しないか。
 
-**回答**: 【本 entry の位置づけ】
-本 entry は qa-215 を全面継承し、tier 語彙を mvp / standard / critical に統一した自己完結版である。仕様章 (compile-spec-doc.py) は確定セルの現 qa_ref に対応する節だけを出力するため、追補のみを持つ entry でセルを再確定すると、基礎となる契約本文が章から消える。章が仕様の中核を語らなくなるのを防ぐため、追補を重ねるときは基礎契約を丸ごと引き継いだ統合 entry を作る。以下、統合元ごとに節を分ける。
+**回答**: [appr-061 による再確定] 出口は GitHub Issue。appr-048 で導入した「Claude Code への指示文を配信する Hub 独自 API」は発想ごと撤回し、Issue は人間が読む従来型の不具合・要望票として書く。Claude Code から改善へ繋ぐ導線は独自 API ではなく既存の gh CLI (gh issue list / gh issue view) が担う。
 
-===== production coverage smoke (統合元: qa-205 / `HarnessHub-p0lr`) =====
-ユーザーの 2026-08-08 最終レビュー・仕様反映指示を明示承認として、既存の test pyramid、production rollout、credential 最小権限、rollback 契約を全面維持し、次の production coverage smoke 契約を追加確定する。
+[appr-061 Q2 / appr-063 で変わった点] スクリーンショットと診断情報を GitHub 側へ出す。appr-048 以前の設計 (qa-255(b)3) は「画像の所在として管理画面の詳細 URL だけを載せ、実体は認可の内側に置く」だったが、これを改める。対応する側が Issue だけを見れば状況を再現できる状態を優先する。ただし GitHub は Issue への画像添付を公式 API として提供していない。公式ドキュメントが案内するのはブラウザ UI からのドラッグ&ドロップだけで、ブラウザが内部で使う uploads.github.com / user-attachments は文書化されていない経路である (https://docs.github.com/en/rest/issues/issues, https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/attaching-files を 2026-08-16 に確認)。したがってサーバ側から「添付」する公式手段は存在しない。appr-063 で利用者が選んだ実現方法は **GitHub Contents API で対象リポジトリへ画像と診断ファイルを commit し、その raw URL を Issue 本文へ Markdown の画像参照・リンクとして書く** ことである。保存先 path は要望 ID から決まる固定形 `improvement-requests/<要望 ID>/screenshot.png` および `improvement-requests/<要望 ID>/diagnostics.json` とする。以降この章で「添付」と書く場合は、この commit + 本文参照を指す。
 
-【1. 実行順序】Worker deploy、health、配信版 identity / freshness、OIDC・既存 data・hearing smoke の後に coverage smoke を毎デプロイ実行する。coverage smoke の失敗は既存 smoke と同じ rollback 判断へ入力し、deploy freshness または配信版再確認だけで停止した場合は未実行 smoke を失敗と誤認して rollback しない。
+[Q2 / appr-063 の帰結として利用者が選択した扱い] 黒塗り (マスキング) は任意のままとし、未黒塗りでの送信を止めない。改善要望を上げる GitHub リポジトリの可視性も仕様では制約しない。したがって次の 3 点は仕様として受け入れたリスクであり、隠さず記録する: (i) 44 の業務画面の中身が黒塗りされないまま GitHub 側へ出る投稿が一定数生じうる。(ii) commit した画像と診断ファイルは対象リポジトリの git 履歴へ永久に残る。ファイルを削除する commit を積んでも履歴からは消えないため、qa-255(k) が持っていた「自分の側で消した情報を外部の複製から到達できないようにする」原則は、GitHub へ出したものについては成立しない。削除時に本文の差し替えとファイル削除 commit は行うが、履歴からの消去は保証しない (履歴の書き換えはリポジトリ全体に影響するため、仕組みとしては用意しない)。(iii) Hub が保持する GitHub トークンは、Issue の起票・更新に加えて対象リポジトリの contents 書込み権限を要する。トークンが漏れた場合の影響は Issue の改変にとどまらず、リポジトリの改変に及ぶ。権限は対象 1 リポジトリに限定し、Cloudflare Workers Secret から出さないことで抑える。なお raw URL の到達範囲はリポジトリの可視性に従い、public なら誰でも閲覧でき、private ならリポジトリへの権限が要る。可視性を仕様で制約しないという appr-061 の選択は維持する。
 
-【2. scope 判定】S1-S8 として unauthenticated、missing_tenant_scope、ambiguous_scope、tenant mismatch の存在秘匿 404、workspace 非所属、Bearer credential 不許可、scope 不足、provider-admin 越境の route 到達と監査を検査する。S8 は HTTP 200/204 に加え、対象 actor・tenant・workspace・requested action に一致する `provider.cross_tenant_access` の baseline=0 / delta=1 を要求する。サインインページ O5 は外部 returnTo が callbackUrl・href・action・content の遷移位置へ入らず、安全な既定 /dashboard へ落ちることを SSR 応答で検査する。
+[復元元] appr-048 以前の qa-248 の内容を正本として戻す。指示文 API の endpoint に対する検証は撤回し、GitHub Issue 起票経路の検証へ戻す。
 
-【3. Feedback / Docs】Feedback は create、service read、AI pull、complete writeback、status 遷移を同じ使い捨て tenant で往復し、Docs は document 作成、doc_draft enqueue、pull、complete writeback、別 tenant 非可視、Bearer read 拒否を往復する。session-only action は新しい Google OIDC secret を追加せず route と同じ server code と production DB adapter で実行し、HTTP 側では Bearer credential の拒否を実測する。token 経路は本番 Device Flow の access token を使う。
+既存の vitest 構成 (全パッケージ coverage 閾値 80%、契約横断は tests/、feature 単位は src/__tests__/) に載せる。閾値はパッケージ全体の集計なので、実装と同じ PR でテストを入れないと既存の緑を割る。
 
-【4. 隔離と後始末】2 個の使い捨て tenant を作り、成功・失敗にかかわらず feedbacks、documents、builds を含む関連行を削除して残数 0 を確認する。secret 値、token、本文をログへ出さない。
+自動テストで固定するもの:
+1. 冪等性 — 同じ submissionKey で順次 2 回・並行 2 回送っても行が 1 件であること。並行は unique 制約違反を捕まえて既存行を返す経路まで通す。
+2. 認可 — member が一覧・詳細・状態更新の各 API を叩くと拒否されること、workspace-admin が他 workspace の要望へ到達できないこと、provider-admin の越境が監査記録を残すこと。UI の出し分けではなく API 応答で確かめる。
+3. 状態遷移 — 見送りに理由メモが無いと拒否されること、廃棄に廃棄理由が無いと拒否されること、同一状態かつ同一メモの更新が拒否されること、対応済みから未対応へ戻せること。
+4. 画像検証 — png/jpeg/webp の正しい magic bytes が通り、拡張子や MIME だけ偽装したものが落ちること。上限判定を復号後バイトで行うこと。
+5. route pattern 正規化 — 動的 route が pattern へ畳まれること、query と URL 断片が落ちること、台帳にない path が unknown へ落ちること。
+6. 診断情報のマスキング — トークン様文字列・メールアドレスが伏せ字になること、query string と request/response body が保持されないこと。
+7. 種別推定 — 未捕捉例外だけがある診断、console error だけがある診断、5xx の失敗リクエストだけがある診断のそれぞれで bug と推定されること。いずれも無い診断で request と推定されること。推定根拠 (kind_rationale) が判定条件と対応すること。
+8. 推定の上書き保護 — 管理者が種別を変えると kind_source が manual になり、以降の更新で推定が再適用されないこと。推定が管理者の判断を上書きし返す退行は画面上正常に見えたまま起きるため、明示的に固定する。
+9. 診断サマリ — 件数が診断情報の実内容と一致すること、全て 0 のとき「特記事項なし」と表示されること。
+10. GitHub Issue 起票 — 両種別で共通必須項目 (要望本文・発生画面・スクリーンショット参照・診断サマリ・実装の手掛かり・受入条件雛形・出典) が欠けないこと。bug では診断詳細と再現手順が本文に展開され、request では診断詳細が折りたたみ内にあること。起票失敗が pending_retry として残り再送で解消すること。GitHub API はモックする。
+11. 起票と更新の判定 — issue_number 無しで POST、ハッシュ一致で GitHub 未呼び出し (skipped)、ハッシュ不一致で PATCH、直前失敗の行でも同じ 3 分岐へ収束すること。この 4 ケースは仕様の中核であり、分岐が崩れると二重起票か更新漏れのどちらかが静かに起きる。
+12. 孤児 Issue の回収 — 本文マーカーを持つ既存 Issue がある状態で送信すると、新規作成せず番号を回収して更新経路へ回ること。DB 更新失敗を注入して二重起票が起きないことを確認する。
+13. 画像・診断ファイルの commit — スクリーンショットと (溢れた場合の) 診断 JSON が `improvement-requests/<要望 ID>/` 配下の固定 path へ commit され、本文にその raw URL が Markdown 参照として入ること。同じ path に同じ内容が既にある場合に Contents API を呼ばないこと (再送で commit が積み増されない)。commit だけが失敗した場合に本文の起票は成立し、commit が pending_retry へ積まれ、本文に画像が未反映である旨の 1 行が入ること。**raw URL は要望 ID から決まる固定 path なので、commit の成否によらず本文ハッシュが変わらないこと** を明示的に固定する (変わると再送のたびに本文更新が発生する)。
+14. ラベル排他 — improvement-request が常に付くこと、type:bug と type:request が同時に付かないこと、種別変更時に古い type ラベルが外れること。
+15. 一括送信 — 20 件超で 400、他社 ID 混入で要求全体が 403、1 件失敗でも残りが処理され行ごとの結果が返ること、同時実行で sending への条件付き更新により GitHub 呼び出しが 1 回に収束すること。
+16. 保持期間 — 対応完了から一定期間後、request の診断が削除され bug の診断が残ること。スクリーンショットは種別によらず削除され行は残ること。期限の直前・直後と種別の組み合わせという境界値で固定する。
+17. 削除 — 削除で本表の本文系列が NULL 化され子表の行が消えること、tombstone が一覧に ID と削除記録だけで現れること、削除の取り消し API が存在しないこと。
+18. 種別を含む一覧フィルタ — 種別フィルタが認可 (workspace 境界) と組み合わさっても他 workspace の行を返さないこと。
+19. route 台帳の網羅 — 認証済み画面の route が全て台帳に載っていることを機械検査する。画面追加時に台帳更新を忘れると unknown が増えるため、CI で落とす。
+20. Issue state の照合 — Issue が close されている行の対応状態が done へ寄ること、open のままの行が変化しないこと。GitHub API はモックする。
 
-【5. 完了境界】HarnessHub-stmx は案(a)を採用し、edge が provider-admin の API 越境を route へ委譲し、`withAuthz` が最終認可と監査を担う契約へ統一した。ローカル実装と回帰テストが緑でも、新 SHA の production smoke で S8 の 200/204、監査 baseline=0 / delta=1、cleanup 残数0を確認するまで stmx と関連 P13 task を完了扱いにしない。smoke:publish-production は HarnessHub-pf5o で本番 Device Flow の短命 publish:write token を取得する方式へ統一し、新規 PUBLISH_ACCESS_TOKEN と権限台帳更新なしで CI へ fail-closed 結線する。publish cleanup が完了した場合だけ identity tenant を削除する。
+自動テストで固定しないもの: (i) DOM 再描画スクリーンショットの見た目の忠実度と canvas 注釈の描画結果。ヘッドレス環境のフォント・アンチエイリアスの差でピクセル差分が常時発生し、偽陽性が続くとテスト全体が信用されなくなる。撮影は「例外を投げずに非空の画像を返す」ことだけを固定し、忠実度は目視で確認する。(ii) 黒塗りが行われたかどうか。appr-061 で黒塗りは任意と決まったため、未黒塗りの送信は仕様どおりの動作であり、テストで落とす対象にならない。投稿フォームに保存先を示す文言が存在することだけを固定する。
 
-【6. 製品境界】coverage smoke基盤は外部API、DB schema、UI、Cloudflare deploy unitを変更しない。後続stmxが変更するのはprovider-admin API越境のedge委譲だけで、routeの既存action規則・監査契約へ収束させる。その他の変更は品質ゲート、使い捨て試験データのcleanup、CI rollback判断への証拠追加に限定する。
-
-【旧契約の実測 (2026-08-08)】main `35a10b87` / hub-ci run `31253674292` で coverage smoke が `status: pass`、S1〜S8 / F1〜F5 / D1〜D6 SUCCESS、使い捨て 2 tenant の残存行 0 を確認した。ただし当該 S8 は edge 404・監査0という修正前挙動の診断であり、stmx 案(a)の本番成功証拠ではない。案(a)はローカル実装済み・新SHAの本番未検証である。
-
-===== tier 別必須ゲート集合と被覆の取りこぼし防止 (統合元: qa-210) =====
-【当該 entry の質問】タスク管理・要件定義・タスク仕様書 (exact-13) の各成果物について、完了条件を全ゲート PASS から tier 別の必須集合へ変えるとき、被覆の取りこぼしをどう防ぎますか?
-
-ユーザーの 2026-08-08 レビュー・仕様反映指示を明示承認として、qa-134 の task 仕様書の世代非依存 rerun command 契約と qa-076〜qa-132 の testing-qa.web 契約を全面維持したまま、成果物側の readiness 判定を tier 別へ変更する契約を追加確定する。
-
-【1. タスク管理 (bd / dev-graph)】task の close 条件を全ゲート PASS ではなく、算出 tier の blocking 集合の PASS とする。advisory 結果は close を妨げず、finding があれば deferred-verification issue として当該 task に blocks でない関連辺で紐づける。deferred issue が 0 件生成された場合と advisory を実行しなかった場合を同じ 0 に潰さず、zero_attribution (not-run / run-and-clean / downgraded) を記録して区別する。
-
-【2. 要件定義 (dev-graph requirements readiness)】readiness 判定を tier 別の必須項目集合へ変える。mvp の必須は 受入基準・影響範囲 (変更する path 集合)・検証コマンド の 3 項目のみとし、それ以外の項目は任意として不足を readiness 不成立にしない。standard は加えて 非機能要件・依存関係、critical は従来の全項目を必須とする。任意扱いにした項目は空欄のまま放置せず deferred-verification issue へ落とす。
-
-【3. タスク仕様書 (exact-13)】intra-feature DAG が壊れるため 13 package の骨格 (P01-P13 の存在と依存辺) は tier に依らず維持する。一方 promotion 条件は tier 別とし、mvp では実装に直接必要なコア package の本文完成のみを必須とする。本文未完の package は空欄ではなく deferred_body として理由と再開コマンド付きで明示し、同名の deferred-verification issue を持つ。feature epic の rollup gate は exact-13 closed を要求し続けるが、deferred_body を持つ package は closed 到達前に本文を埋める必要があるため、MVP の高速化と最終的な完全性が両立する。
-
-【4. 完成度 evaluator の aspect 分離】assign-system-spec-completeness-evaluator の 6 aspect を、tier=mvp / standard では foundation_trace と matrix_coverage を blocking、doc_freshness・design_knowledge_reflection・decision_guidance・prompt_quality を advisory とする。tier=critical では従来どおり 6 aspect 全てを blocking とする。advisory の FAIL は verdict を FAIL にせず ADVISORY_FAIL として区別し、deferred-verification issue を起票する。依存 version の世代落ちのような時間経過由来の finding が MVP 実装を止める現状の詰まりは、この分離で解消する。
-
-【5. 回帰と証跡】tier 別 readiness の正負例、deferred_body を含む package の validate/projection、zero_attribution の 3 値、advisory FAIL が verdict を落とさないこと、deferred issue 起票失敗時の fail-closed を自動テストする。結果と仕様反映範囲を受領書および Beads notes へ残す。
-
-【再採番・rebase 追記 (2026-08-09)】本 entry は当初 qa-146 として起票したが、並行セッションが 同一番号を別論点 (サインイン後のスコープ解決とルーティング結線) で先に確定させていたため qa-210 へ 再採番した。回答内容は変更していない。本文が「維持する」と述べる既存契約の参照点は、main 取込後の 最新確定 (dev-workflow.web=qa-199 / testing-qa.web=qa-205) まで含めて読むこと。本 entry はそれらを 覆さず、その上へ tier 別の検証深度契約を重ねる。
-
-===== blocking 軸と execution 軸の分離 (統合元: qa-213) =====
-【当該 entry の質問】web セルの検査は現状「実行する / しない」の 2 値で語られているが、advisory 検査を実行したまま blocking 集合だけ縮めても wall-clock は縮まない (F-0003)。検査の扱いをどう表現し直すべきか。
-
-【1. execution 軸の導入 (施策3)】
-検査の扱いを「blocking か advisory か」の 1 軸で語るのをやめ、**blocking 軸と execution 軸の 2 軸**で表現する。
-
-- `blocking` 軸: `blocking` | `advisory`。失敗が run を止めるかどうかだけを決める。
-- `execution` 軸: `sync` | `async` | `skip`。いつ実行するか (あるいは実行しないか) を決める。
-
-| execution | 意味 | wall-clock への寄与 |
-|---|---|---|
-| `sync` | 当該 run の中で実行し、完了を待つ | 加算される |
-| `async` | 実行はするが完了を待たず、結果は後続 run か issue で回収する | 加算されない |
-| `skip` | この tier では実行しない | 加算されない |
-
-従来「advisory にして高速化する」と述べていた箇所は、実際には `blocking=advisory, execution=sync` を意味しており、待ち時間は一切減っていなかった。高速化を意図する場合は `execution` を `async` か `skip` へ落とすこと。`blocking` を緩めるのは失敗時の停止可否を変えるだけで、速度の施策ではない。
-
-【2. tier ごとの既定】
-- mvp: 主要検査は `sync`、重い横断検査 (E2E・full matrix・rubric 全周) は `async`。`skip` は「この tier で恒久的に不要」と説明できるものだけに限る。
-- standard: 全検査 `sync`。
-- critical: 全検査 `sync` かつ全て `blocking`。
-
-`async` にした検査は `tier-decision.json` の `checks[].disposition` を `deferred` とし、`deferred_issue_refs` に回収先 issue を必ず持たせる (qa-212【1】と同一契約)。`async` は「後で必ず実行する」約束であり、回収先のない `async` は実質 `skip` なので、そう書くこと。
-
-【3. 適用範囲】
-本 entry は testing-qa の web セルに対する契約である。desktop-windows / desktop-macos は qa-211 の契約 (検証深度の tier 別契約) を維持し、execution 軸は web の実測で有効性を確認してから展開する。先に全 platform へ広げない理由は、`async` の回収機構が未実装であり、回収されない `deferred` を 3 platform 分同時に生むリスクを避けるためである。
-
-【4. tier 語彙の正本 (2026-08-09 補正)】
-検証 tier の閉じた語彙は `mvp` / `standard` / `critical` の 3 値だけとする。qa-213 に残っていた `full` は `critical` の旧表記であり、新規の第 4 tier ではない。台帳・CLI・CI・仕様本文では `critical` だけを生成・受理し、過去記録の `full` を読む必要がある場合だけ legacy alias として `critical` へ正規化する。
-
-### qa-211 (対応セル: desktop-windows, desktop-macos)
+### qa-282 (対応セル: desktop-windows, desktop-macos)
 
 **質問**: ローカル desktop でテストを実行するとき、mvp tier の focused test をどう選び、広域回帰をどう扱いますか?
 
@@ -112,6 +79,10 @@ serves_goals: [G1, G4, G5]
 【5. platform と製品境界】同じ Python / pnpm 実装と同じコマンドを desktop-windows / desktop-macos で利用する。変更は repository 内の開発品質ゲートに限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
 
 【再採番・rebase 追記 (2026-08-09)】本 entry は当初 qa-147 として起票したが、並行セッションが 同一番号を別論点 (サインイン後のスコープ解決とルーティング結線) で先に確定させていたため qa-211 へ 再採番した。回答内容は変更していない。本文が「維持する」と述べる既存契約の参照点は、main 取込後の 最新確定 (dev-workflow.web=qa-199 / testing-qa.web=qa-205) まで含めて読むこと。本 entry はそれらを 覆さず、その上へ tier 別の検証深度契約を重ねる。
+
+【本 entry の位置づけ (2026-08-15)】
+本 entry は qa-211 を **回答本文について逐語で全面継承した自己完結版** である。第 4 回 completeness evaluator が medium finding (`design_knowledge_reflection`) として、legacy_backfill 経路 4 章 (backend / dev-workflow / infrastructure / testing-qa) の `design_applications` が『〜という責務分離に適用した』のように原則名の言い換えに留まり、dialogue 経路より具体性が低いと指摘した。writer (`set-qa-design-applications`) は完了済み backfill と異なる解釈の再適用を構造的に拒否するため、既存 entry を書き換える経路が無い。そこで reopen → 本 entry で再確定という正規経路を採る。
+**変更したのは設計解釈 (`design_applications`) だけであり、上記の回答本文が定める要件は 一切変更していない。** 仕様章 (compile-spec-doc.py) は確定セルの現 qa_ref に対応する節だけを 出力するため、追補のみの entry で再確定すると基礎契約が章から消える。それを防ぐため本文を 丸ごと引き継いでいる (qa-216 / qa-217 と同じ方式)。
 
 ## 上流指針 (doctrine anchor)
 
@@ -172,121 +143,65 @@ serves_goals: [G1, G4, G5]
 
 #### 本章での適用
 
-##### 確定内容 qa-217 (対応セル: web)
+##### 確定内容 qa-341 (対応セル: web)
 
-- 確定要件: 【本 entry の位置づけ】
-本 entry は qa-215 を全面継承し、tier 語彙を mvp / standard / critical に統一した自己完結版である。仕様章 (compile-spec-doc.py) は確定セルの現 qa_ref に対応する節だけを出力するため、追補のみを持つ entry でセルを再確定すると、基礎となる契約本文が章から消える。章が仕様の中核を語らなくなるのを防ぐため、追補を重ねるときは基礎契約を丸ごと引き継いだ統合 entry を作る。以下、統合元ごとに節を分ける。
-
-===== production coverage smoke (統合元: qa-205 / `HarnessHub-p0lr`) =====
-ユーザーの 2026-08-08 最終レビュー・仕様反映指示を明示承認として、既存の test pyramid、production rollout、credential 最小権限、rollback 契約を全面維持し、次の production coverage smoke 契約を追加確定する。
-
-【1. 実行順序】Worker deploy、health、配信版 identity / freshness、OIDC・既存 data・hearing smoke の後に coverage smoke を毎デプロイ実行する。coverage smoke の失敗は既存 smoke と同じ rollback 判断へ入力し、deploy freshness または配信版再確認だけで停止した場合は未実行 smoke を失敗と誤認して rollback しない。
-
-【2. scope 判定】S1-S8 として unauthenticated、missing_tenant_scope、ambiguous_scope、tenant mismatch の存在秘匿 404、workspace 非所属、Bearer credential 不許可、scope 不足、provider-admin 越境の route 到達と監査を検査する。S8 は HTTP 200/204 に加え、対象 actor・tenant・workspace・requested action に一致する `provider.cross_tenant_access` の baseline=0 / delta=1 を要求する。サインインページ O5 は外部 returnTo が callbackUrl・href・action・content の遷移位置へ入らず、安全な既定 /dashboard へ落ちることを SSR 応答で検査する。
-
-【3. Feedback / Docs】Feedback は create、service read、AI pull、complete writeback、status 遷移を同じ使い捨て tenant で往復し、Docs は document 作成、doc_draft enqueue、pull、complete writeback、別 tenant 非可視、Bearer read 拒否を往復する。session-only action は新しい Google OIDC secret を追加せず route と同じ server code と production DB adapter で実行し、HTTP 側では Bearer credential の拒否を実測する。token 経路は本番 Device Flow の access token を使う。
-
-【4. 隔離と後始末】2 個の使い捨て tenant を作り、成功・失敗にかかわらず feedbacks、documents、builds を含む関連行を削除して残数 0 を確認する。secret 値、token、本文をログへ出さない。
-
-【5. 完了境界】HarnessHub-stmx は案(a)を採用し、edge が provider-admin の API 越境を route へ委譲し、`withAuthz` が最終認可と監査を担う契約へ統一した。ローカル実装と回帰テストが緑でも、新 SHA の production smoke で S8 の 200/204、監査 baseline=0 / delta=1、cleanup 残数0を確認するまで stmx と関連 P13 task を完了扱いにしない。smoke:publish-production は HarnessHub-pf5o で本番 Device Flow の短命 publish:write token を取得する方式へ統一し、新規 PUBLISH_ACCESS_TOKEN と権限台帳更新なしで CI へ fail-closed 結線する。publish cleanup が完了した場合だけ identity tenant を削除する。
-
-【6. 製品境界】coverage smoke基盤は外部API、DB schema、UI、Cloudflare deploy unitを変更しない。後続stmxが変更するのはprovider-admin API越境のedge委譲だけで、routeの既存action規則・監査契約へ収束させる。その他の変更は品質ゲート、使い捨て試験データのcleanup、CI rollback判断への証拠追加に限定する。
-
-【旧契約の実測 (2026-08-08)】main `35a10b87` / hub-ci run `31253674292` で coverage smoke が `status: pass`、S1〜S8 / F1〜F5 / D1〜D6 SUCCESS、使い捨て 2 tenant の残存行 0 を確認した。ただし当該 S8 は edge 404・監査0という修正前挙動の診断であり、stmx 案(a)の本番成功証拠ではない。案(a)はローカル実装済み・新SHAの本番未検証である。
-
-===== tier 別必須ゲート集合と被覆の取りこぼし防止 (統合元: qa-210) =====
-【当該 entry の質問】タスク管理・要件定義・タスク仕様書 (exact-13) の各成果物について、完了条件を全ゲート PASS から tier 別の必須集合へ変えるとき、被覆の取りこぼしをどう防ぎますか?
-
-ユーザーの 2026-08-08 レビュー・仕様反映指示を明示承認として、qa-134 の task 仕様書の世代非依存 rerun command 契約と qa-076〜qa-132 の testing-qa.web 契約を全面維持したまま、成果物側の readiness 判定を tier 別へ変更する契約を追加確定する。
-
-【1. タスク管理 (bd / dev-graph)】task の close 条件を全ゲート PASS ではなく、算出 tier の blocking 集合の PASS とする。advisory 結果は close を妨げず、finding があれば deferred-verification issue として当該 task に blocks でない関連辺で紐づける。deferred issue が 0 件生成された場合と advisory を実行しなかった場合を同じ 0 に潰さず、zero_attribution (not-run / run-and-clean / downgraded) を記録して区別する。
-
-【2. 要件定義 (dev-graph requirements readiness)】readiness 判定を tier 別の必須項目集合へ変える。mvp の必須は 受入基準・影響範囲 (変更する path 集合)・検証コマンド の 3 項目のみとし、それ以外の項目は任意として不足を readiness 不成立にしない。standard は加えて 非機能要件・依存関係、critical は従来の全項目を必須とする。任意扱いにした項目は空欄のまま放置せず deferred-verification issue へ落とす。
-
-【3. タスク仕様書 (exact-13)】intra-feature DAG が壊れるため 13 package の骨格 (P01-P13 の存在と依存辺) は tier に依らず維持する。一方 promotion 条件は tier 別とし、mvp では実装に直接必要なコア package の本文完成のみを必須とする。本文未完の package は空欄ではなく deferred_body として理由と再開コマンド付きで明示し、同名の deferred-verification issue を持つ。feature epic の rollup gate は exact-13 closed を要求し続けるが、deferred_body を持つ package は closed 到達前に本文を埋める必要があるため、MVP の高速化と最終的な完全性が両立する。
-
-【4. 完成度 evaluator の aspect 分離】assign-system-spec-completeness-evaluator の 6 aspect を、tier=mvp / standard では foundation_trace と matrix_coverage を blocking、doc_freshness・design_knowledge_reflection・decision_guidance・prompt_quality を advisory とする。tier=critical では従来どおり 6 aspect 全てを blocking とする。advisory の FAIL は verdict を FAIL にせず ADVISORY_FAIL として区別し、deferred-verification issue を起票する。依存 version の世代落ちのような時間経過由来の finding が MVP 実装を止める現状の詰まりは、この分離で解消する。
-
-【5. 回帰と証跡】tier 別 readiness の正負例、deferred_body を含む package の validate/projection、zero_attribution の 3 値、advisory FAIL が verdict を落とさないこと、deferred issue 起票失敗時の fail-closed を自動テストする。結果と仕様反映範囲を受領書および Beads notes へ残す。
-
-【再採番・rebase 追記 (2026-08-09)】本 entry は当初 qa-146 として起票したが、並行セッションが 同一番号を別論点 (サインイン後のスコープ解決とルーティング結線) で先に確定させていたため qa-210 へ 再採番した。回答内容は変更していない。本文が「維持する」と述べる既存契約の参照点は、main 取込後の 最新確定 (dev-workflow.web=qa-199 / testing-qa.web=qa-205) まで含めて読むこと。本 entry はそれらを 覆さず、その上へ tier 別の検証深度契約を重ねる。
-
-===== blocking 軸と execution 軸の分離 (統合元: qa-213) =====
-【当該 entry の質問】web セルの検査は現状「実行する / しない」の 2 値で語られているが、advisory 検査を実行したまま blocking 集合だけ縮めても wall-clock は縮まない (F-0003)。検査の扱いをどう表現し直すべきか。
-
-【1. execution 軸の導入 (施策3)】
-検査の扱いを「blocking か advisory か」の 1 軸で語るのをやめ、**blocking 軸と execution 軸の 2 軸**で表現する。
-
-- `blocking` 軸: `blocking` | `advisory`。失敗が run を止めるかどうかだけを決める。
-- `execution` 軸: `sync` | `async` | `skip`。いつ実行するか (あるいは実行しないか) を決める。
-
-| execution | 意味 | wall-clock への寄与 |
-|---|---|---|
-| `sync` | 当該 run の中で実行し、完了を待つ | 加算される |
-| `async` | 実行はするが完了を待たず、結果は後続 run か issue で回収する | 加算されない |
-| `skip` | この tier では実行しない | 加算されない |
-
-従来「advisory にして高速化する」と述べていた箇所は、実際には `blocking=advisory, execution=sync` を意味しており、待ち時間は一切減っていなかった。高速化を意図する場合は `execution` を `async` か `skip` へ落とすこと。`blocking` を緩めるのは失敗時の停止可否を変えるだけで、速度の施策ではない。
-
-【2. tier ごとの既定】
-- mvp: 主要検査は `sync`、重い横断検査 (E2E・full matrix・rubric 全周) は `async`。`skip` は「この tier で恒久的に不要」と説明できるものだけに限る。
-- standard: 全検査 `sync`。
-- critical: 全検査 `sync` かつ全て `blocking`。
-
-`async` にした検査は `tier-decision.json` の `checks[].disposition` を `deferred` とし、`deferred_issue_refs` に回収先 issue を必ず持たせる (qa-212【1】と同一契約)。`async` は「後で必ず実行する」約束であり、回収先のない `async` は実質 `skip` なので、そう書くこと。
-
-【3. 適用範囲】
-本 entry は testing-qa の web セルに対する契約である。desktop-windows / desktop-macos は qa-211 の契約 (検証深度の tier 別契約) を維持し、execution 軸は web の実測で有効性を確認してから展開する。先に全 platform へ広げない理由は、`async` の回収機構が未実装であり、回収されない `deferred` を 3 platform 分同時に生むリスクを避けるためである。
-
-【4. tier 語彙の正本 (2026-08-09 補正)】
-検証 tier の閉じた語彙は `mvp` / `standard` / `critical` の 3 値だけとする。qa-213 に残っていた `full` は `critical` の旧表記であり、新規の第 4 tier ではない。台帳・CLI・CI・仕様本文では `critical` だけを生成・受理し、過去記録の `full` を読む必要がある場合だけ legacy alias として `critical` へ正規化する。
-- 設計解釈の記録経路: `legacy_backfill` (`set-qa-design-applications`)
-- 原則: 層別の責務配分 (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/test-strategy.md#中核概念`)
+- 確定要件: 「[appr-061 による再確定] 出口は GitHub Issue。appr-048 で導入した「Claude Code への指示文を配信する Hub 独自 …」 (全文は本章「確定内容 (質疑録)」の `qa-341` を正本とする)
+- 設計解釈の記録経路: `dialogue`
+- 原則: 壊れても画面上は正常に見える不変則を優先してテストする (risk-based testing) (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/test-strategy.md#中核概念`)
   - 採否: `applied`
-  - 章固有の根拠: production coverage smoke、tier 別 readiness、exact-13、完成度 evaluator をそれぞれの境界と責務で検証し、主要経路だけを E2E に担わせる契約に適用した。
+  - 章固有の根拠: 認可漏れ・二重登録・推定が管理者の手動上書きを踏み潰す退行・commit を本文ハッシュに含めたことによる再送ループは、いずれも画面が正常に見えたまま損害が出るため手動確認では見つからない。逆に注釈の見た目はレビューで気づける。前者を自動テストへ、後者を目視へ振り分ける。
   - トレードオフ:
-    - 複数の検査層と証跡を横断して整合させる必要がある
-    - 境界の分類を誤ると必要な回帰が deferred 側へ漏れる
+    - 注釈描画の退行が自動検知できず、リリース後に気づく可能性が残る
+    - 認可と推定規則が変わるたびにテストの追随コストが乗る。規則が仕様であることの裏返しとして受け入れる
+- 原則: スクリーンショット差分による視覚回帰テスト (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/test-strategy.md#非適用条件`)
+  - 採否: `not_applicable`
+  - 章固有の根拠: 検証対象が「スクリーンショットを撮る機能」であり、ヘッドレス環境のフォント・アンチエイリアスの差でピクセル差分が常時発生する。偽陽性が続くとテスト全体が信用されなくなるため導入しない。
+  - トレードオフ:
+    - 撮影の忠実度に関する退行を機械的に捉えられない。撮影不能ノード (canvas/iframe) の検出を実装側の警告で補う
+- 原則: 境界値で削除条件を固定し、分岐を入れたら両側で共通必須項目を検査する (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/test-strategy.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: 保持期間による削除は条件を 1 つ誤るだけで消してはいけないデータを消し、しかも消えた後では検証できない。Issue 本文の種別分岐も、片方で必須項目を落とす退行が起きやすい。どちらも「消えていないこと」を明示的に検査する。
+  - トレードオフ:
+    - 時刻依存のテストになるため、時刻を注入できる形に実装を作る制約が生じる
+    - Issue 本文の構成を変えるたびに必須項目リストの更新が要る。情報の完全性要求を守る仕掛けとして必要なコストとする
+- 原則: 台帳の網羅性を CI で機械検査する (drift の自動検出) (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/test-strategy.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: route pattern 台帳は画面追加のたびに更新が要るが、忘れても機能は動いてしまい集計だけが静かに壊れる。人の注意に頼らず CI で落とす。
+  - トレードオフ:
+    - 画面追加のたびに台帳更新が必須になり開発の摩擦がわずかに増える。集計が壊れる代償より小さいと判断する
+- 原則: 決定が「やらない」であるものを、テストで暗黙に「やる」へ戻さない (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/test-strategy.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: appr-061 で黒塗りは任意と決まった。未黒塗りの送信を落とすテストを書くと、テストが仕様を上書きして必須化を実現してしまい、利用者の決定と食い違う実装になる。固定するのは文言の存在だけに留める。
+  - トレードオフ:
+    - 未黒塗り投稿を機械的に検出する手段が無い。仕組みでの防護を利用者が選ばなかった以上、テストで代替しない
+##### 確定内容 qa-282 (対応セル: desktop-windows, desktop-macos)
+
+- 確定要件: 「ユーザーの 2026-08-08 レビュー・仕様反映指示を明示承認として、qa-095 の skill 構造 lint の生成物境界契約と層別テスト方針を全面維…」 (全文は本章「確定内容 (質疑録)」の `qa-282` を正本とする)
+- 設計解釈の記録経路: `dialogue`
 - 原則: テストサイズ (実行環境の制約) (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/test-strategy.md#中核概念`)
   - 採否: `applied`
-  - 章固有の根拠: blocking 軸と execution 軸を分離し、mvp の重い検査を async、standard / critical を sync として wall-clock と risk を別々に制御する判断に適用した。
+  - 章固有の根拠: 本回答の【1. focused test の決定論的選択】が定める『変更 path から到達する package の focused test に 限定する。選択は scripts/select-verification-tier.py が出力する影響 package 集合を入力とし、実行者の勘で選ばない』および『該当 package が特定できない変更 (共有 utility や設定) は standard へ 自動昇格させ、選択不能を暗黙の省略にしない』の部分へ効く。この章で特に効く理由は、desktop ローカルが待ち時間を人の集中で直接支払う場所であり、テストサイズの制約が最も強く現れるからである。設計の要点は『選択不能なら重くする』という向きにあり、代替案 1 の『選択不能時は全件実行』は ローカルでは実質的に実行されなくなって mvp の意味が消えるため、代替案 2 の『選択不能時は mvp のまま skip』は最も影響範囲の広い変更 (共有 utility) が最も薄く検査される逆転を生むため、いずれも採らなかった。
   - トレードオフ:
-    - async 検査は merge 後に失敗を発見する可能性がある
-    - 回収先のない deferred を拒否する fail-closed 実装が必要になる
-##### 確定内容 qa-211 (対応セル: desktop-windows, desktop-macos)
-
-- 確定要件: ユーザーの 2026-08-08 レビュー・仕様反映指示を明示承認として、qa-095 の skill 構造 lint の生成物境界契約と層別テスト方針を全面維持したまま、tier 別のテスト選択契約を追加確定する。
-
-【1. focused test の決定論的選択】mvp tier の blocking テストは、変更 path から到達する package の focused test に限定する。選択は scripts/select-verification-tier.py が出力する影響 package 集合を入力とし、実行者の勘で選ばない。該当 package が特定できない変更 (共有 utility や設定) は standard へ自動昇格させ、選択不能を暗黙の省略にしない。
-
-【2. 広域回帰の非同期化】実際の実行順序を再現する広域回帰は mvp tier の blocking から外し、CI の非同期 job として実行する。失敗は当該変更の merge を止めず deferred-verification issue として起票し、次の standard 以上の実行または Stage 1 公開判定ゲートで回収する。critical tier では従来どおり広域回帰を同期 blocking として維持する。
-
-【3. 層別方針の維持】frontend は behavior ベース、backend は API 契約 / ロジック単体 / DB 結合、infrastructure と repository tooling は静的契約 / 実行順序 / fail-closed 境界という層別方針は tier に依らず維持する。pixel・DOM 内部構造・一時生成物の物理配置へ品質判定を密結合させない方針も維持する。tier が変えるのは検証の量と同期性であって、検証の当たり所ではない。
-
-【4. 生成物境界の維持】skill 構造 lint が dot cache および __pycache__ / .pyc を構造判定から除外する qa-095 の契約は tier に依らず維持する。
-
-【5. platform と製品境界】同じ Python / pnpm 実装と同じコマンドを desktop-windows / desktop-macos で利用する。変更は repository 内の開発品質ゲートに限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
-
-【再採番・rebase 追記 (2026-08-09)】本 entry は当初 qa-147 として起票したが、並行セッションが 同一番号を別論点 (サインイン後のスコープ解決とルーティング結線) で先に確定させていたため qa-211 へ 再採番した。回答内容は変更していない。本文が「維持する」と述べる既存契約の参照点は、main 取込後の 最新確定 (dev-workflow.web=qa-199 / testing-qa.web=qa-205) まで含めて読むこと。本 entry はそれらを 覆さず、その上へ tier 別の検証深度契約を重ねる。
-- 設計解釈の記録経路: `legacy_backfill` (`set-qa-design-applications`)
-- 原則: テストサイズ (実行環境の制約) (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/test-strategy.md#中核概念`)
-  - 採否: `applied`
-  - 章固有の根拠: mvp は変更 path から決定論的に到達する focused test を同期実行し、選択不能時は standard へ昇格、広域回帰は追跡付き非同期へ分ける契約に適用した。
-  - トレードオフ:
-    - mvp merge 時点では広域回帰の結果が未確定になり得る
-    - 非同期 finding を回収する issue 運用が必須になる
+    - 影響 package 集合の算出精度に検証の妥当性が完全に依存する
+    - 自動昇格が頻発すると mvp の短縮効果が実質的に失われる
 - 原則: 層別の責務配分 (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/test-strategy.md#中核概念`)
   - 採否: `applied`
-  - 章固有の根拠: frontend、backend、infrastructure、repository tooling の検査対象を観測可能な責務へ分け、tier が変えるのは量と同期性だけとする方針に適用した。
+  - 章固有の根拠: 本回答の【3. 層別方針の維持】が定める『tier が変えるのは検証の量と同期性であって、検証の当たり所では ない』と『pixel・DOM 内部構造・一時生成物の物理配置へ品質判定を密結合させない』の部分へ効く。frontend は behavior、backend は API 契約 / ロジック単体 / DB 結合、infrastructure と repository tooling は静的契約 / 実行順序 / fail-closed 境界、という当たり所を tier から独立させたことが本章の 設計上の核心である。代替案として『tier ごとに検査対象そのものを変える (低 tier では frontend を見ない等)』方式を検討したが、低 tier で『そもそも見ない層』が生まれ、その層のバグは tier が上がるまで一切検出 されず、しかも検出されなかった事実が記録に残らないため採らなかった。
   - トレードオフ:
-    - 変更 path と package の対応台帳を正確に保つ必要がある
-    - 複数層へまたがる変更は focused test だけに収まらない
-- 資するゴール: G1, G4, G5
+    - 全層の検査を薄くでも維持するため、最小構成でも検査の種類は減らせない
+    - 複数層へまたがる変更は focused test の枠に収まらず昇格を招きやすい
+- 原則: 観測可能性 (延期と放棄の区別) (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/site-reliability-engineering.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: 本回答の【2. 広域回帰の非同期化】が定める『失敗は当該変更の merge を止めず deferred-verification issue として起票し、次の standard 以上の実行または Stage 1 公開判定ゲートで回収する』の部分へ効く。非同期化とは『実行しない』ではなく『実行結果の到着を待たない』ことであり、両者を分ける唯一の担保が 回収先の実在である。したがって issue 起票は付随的な記録ではなく非同期化の成立条件そのものとして 位置づけている。代替案として『非同期 job の失敗を通知だけで済ませる』方式を検討したが、通知は既読になれば消え、回収されたか否かが事後に検証できないため採らなかった。【4. 生成物境界の維持】が dot cache や __pycache__ / .pyc を構造判定から除外するのも同じ理由で、観測対象に実行の副産物が混ざると、検査結果が『何を見た結果か』を追えなくなる。
+  - トレードオフ:
+    - mvp で merge した時点では広域回帰の結果が未確定のまま残る
+    - issue を回収する運用が滞ると deferred が積み上がり Stage 1 の直前に集中する
+- 資するゴール: G2, G5, G1
 
 ## 最新ドキュメント出典
 
 | 対象 | バージョン | 公式発行元 | 出典URL | 取得 | 最新確認 |
 |---|---|---|---|---|---|
-| vitest | 4.1.10 | VoidZero / Vitest team (vitest.dev) | https://vitest.dev/blog/vitest-4-1.html | 2026-08-07T03:26:46Z | 2026-08-07T03:26:46Z |
-| playwright | 1.62.1 | Microsoft (playwright.dev) | https://playwright.dev/docs/release-notes | 2026-08-07T03:26:57Z | 2026-08-07T03:26:57Z |
-| testing-library | @testing-library/react 16.3.2 | Testing Library (OSS) (testing-library.com) | https://testing-library.com/docs/react-testing-library/intro/ | 2026-08-07T03:27:06Z | 2026-08-07T03:27:06Z |
+| vitest | 4.1.10 | VoidZero / Vitest team (vitest.dev) | https://vitest.dev/blog/vitest-4-1.html | 2026-08-15T00:15:16Z | 2026-08-15T00:15:16Z |
+| playwright | 1.62.1 | Microsoft (playwright.dev) | https://playwright.dev/docs/release-notes | 2026-08-16T02:49:50Z | 2026-08-16T02:49:50Z |
+| testing-library | @testing-library/react 16.3.2 | Testing Library (OSS) (testing-library.com) | https://testing-library.com/docs/react-testing-library/intro/ | 2026-08-15T00:15:16Z | 2026-08-15T00:15:16Z |

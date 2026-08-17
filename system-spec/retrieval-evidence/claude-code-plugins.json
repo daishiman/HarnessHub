@@ -3,23 +3,56 @@
     "code.claude.com"
   ],
   "findings": [
-    "marketplace は .claude-plugin/marketplace.json を持つ repository",
-    "plugin entry の source は ref (branch/tag) と sha (commit) を独立に指定でき、両方あれば sha が有効な pin",
-    "git 系 source type は github / url / git-subdir",
-    "marketplace source と plugin source は別 repository を指せる",
-    "公式を騙る名称 (official-claude-plugins 等) は登録が阻止される",
-    "plugin dependency の version 制約を扱う plugin-dependencies ページが存在する"
+    "plugin は skill / hook / subagent / MCP server を 1 つの導入単位へ束ねる。plugin skill は /my-plugin:review のように名前空間化される",
+    ".claude-plugin/plugin.json は任意。省略時は既定位置から component を自動検出し、plugin 名は directory 名から導出する",
+    "commands/ agents/ skills/ workflows/ output-styles/ themes/ monitors/ hooks/ は plugin root 直下に置く (.claude-plugin/ の内側ではない)",
+    "plugin root の CLAUDE.md は project context として読み込まれない。context へ載せる指示は skill に置く",
+    "marketplace plugin source は relative path・github・url (Git URL)・git-subdir・npm・archive・command の 7 種を正式サポートする",
+    "archive source は HTTPS の zip を url と任意 sha256 で取得し、Claude Code v2.1.224 以降を要求する",
+    "command source は local command が plugin directory を生成し、command と任意 timeout/mode を取り、Claude Code v2.1.229 以降を要求する",
+    "git-subdir は url/path を必須とし ref/sha で固定でき、monorepo の subdirectory を sparse clone する",
+    "marketplace entry の strict は既定 true (plugin 自身が component を管理)。false では marketplace entry 側が skill/agent/hook の露出を定義する",
+    "install 時に plugin directory は cache へ複製される。plugin 内の file 参照は ${CLAUDE_PLUGIN_ROOT} を使い、../ で plugin root の外へ出る path は install 後に解決できない",
+    "更新をまたいで残す state は ${CLAUDE_PLUGIN_DATA} を使う",
+    "hook は settings / plugin のほか skill と subagent の frontmatter でも定義でき、skill hook は skill 起動時に登録され以降 session 中は有効 (once: true で 1 回限り)",
+    "hook の exit 2 は stderr message 付きの block。schema 検証を通った JSON を返した場合は exit code より JSON が優先される",
+    "SKILL.md の変更は現行 session へ即時反映されるが、hooks/ .mcp.json agents/ output-styles/ の変更は /reload-plugins か再起動が要る",
+    "claude plugin validate ./plugins/<name> で plugin.json と skill/agent/command/hook を検証できる"
   ],
-  "retrieval_channel": "web-search-official-host-restricted",
-  "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と要約から読み取れた事実だけを記録する。retrieved_at は本 record 作成時に読んだ実時刻で、同一 turn 内で発行した検索の記録時刻 (個別応答の受信時刻ではない)。",
-  "retrieval_query": "Claude Code plugin marketplaces documentation",
-  "retrieved_at": "2026-08-07T03:30:09Z",
+  "retrieval_channel": "web-fetch-official-page",
+  "retrieval_method_disclosure": "C08 の真正 fresh session が Anthropic 公式ページを WebFetch (GET-only) で直接取得した。Plugin sources 表の実応答で従来 5 種に加えて archive と command、および各 required version/field を確認した。検索要約や第三者記事を新規 claim の根拠にしていない。retrieved_at は当該 WebFetch 応答の受信時刻である。",
+  "retrieval_query": "GET https://code.claude.com/docs/en/plugin-marketplaces#plugin-sources",
+  "retrieved_at": "2026-08-16T12:29:34Z",
   "returned_official_urls": [
-    "https://code.claude.com/docs/en/plugin-marketplaces",
-    "https://code.claude.com/docs/en/discover-plugins",
-    "https://code.claude.com/docs/en/plugins",
-    "https://code.claude.com/docs/en/plugins-reference",
-    "https://code.claude.com/docs/en/plugin-dependencies"
+    "https://code.claude.com/docs/en/plugin-marketplaces"
+  ],
+  "retrieval_events": [
+    {
+      "retrieved_at": "2026-08-15T01:35:54Z",
+      "channel": "web-search-official-host-restricted",
+      "query": "Claude Code plugins marketplace skills hooks reference",
+      "official_urls": [
+        "https://code.claude.com/docs/en/plugins-reference",
+        "https://code.claude.com/docs/en/plugin-marketplaces",
+        "https://code.claude.com/docs/en/plugins",
+        "https://code.claude.com/docs/en/hooks",
+        "https://code.claude.com/docs/en/skills"
+      ]
+    },
+    {
+      "retrieved_at": "2026-08-16T12:29:34Z",
+      "channel": "web-fetch-official-page",
+      "url": "https://code.claude.com/docs/en/plugin-marketplaces",
+      "observed_source_types": [
+        "relative path",
+        "github",
+        "url",
+        "git-subdir",
+        "npm",
+        "archive",
+        "command"
+      ]
+    }
   ],
   "target_id": "claude-code-plugins"
 }

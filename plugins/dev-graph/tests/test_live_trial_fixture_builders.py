@@ -38,6 +38,9 @@ VALIDATOR = PLUGIN / "scripts" / "validate-graph-schema.py"
 CONFIG_VALIDATOR = PLUGIN / "scripts" / "validate-repo-config.py"
 SOURCE_DIGEST_VALIDATOR = PLUGIN / "scripts" / "validate-source-digest.py"
 SYSTEM_PLAN_VALIDATOR = PLUGIN.parent / "system-dev-planner" / "scripts" / "validate-system-plan.py"
+REQUIREMENTS_SNAPSHOT_VALIDATOR = (
+    PLUGIN / "scripts" / "validate-requirements-system-spec-snapshot.py"
+)
 
 
 def _load_builder():
@@ -251,11 +254,47 @@ def test_requirements_fixture_does_not_preseed_c04_outputs(built: dict[str, Path
         assert "validate-system-plan.py" in baseline["inputs"][relative]["provenance"], relative
         assert relative in baseline["name_collision_warning"], relative
 
-    # C04 が goal-spec/progress/intermediate を書く eval-log は、骨格層
-    # (build_live_trial_fixture.py:522) が空 dir として用意するだけで中身は 0 件である。
-    # ファイルが 1 件でもあれば実走前から成果物が置かれていることになる。
-    assert [path for path in (out / "eval-log").rglob("*") if path.is_file()] == []
-    assert baseline["subject_outputs_absent_at_baseline"]
+    # C19 evaluator ledger は digest-bound upstream 入力として存在するが、C04 自身の
+    # goal-spec/progress/intermediate は実走前 0 件である。
+    assert not list((out / "eval-log").glob("run-dev-graph-requirements-*"))
+    assert (
+        out / "eval-log/system-spec-harness/audit-fork-ledger.jsonl"
+    ).is_file()
+    subject_outputs = baseline["subject_outputs_absent_at_baseline"]
+    assert subject_outputs
+    assert {
+        "C19 resume_receipt_sha256 digest binding",
+        "C19 completeness_report_sha256 digest binding",
+        "C19 artifact_snapshot_sha256 digest binding",
+    }.issubset(subject_outputs)
+
+
+def test_requirements_fixture_binds_current_c19_four_gate_snapshot(
+    built: dict[str, Path],
+) -> None:
+    """C04 live trial が C19 の current receipt なしで PASS できない形を固定する。"""
+    out = built["requirements"]
+    process = subprocess.run(
+        [sys.executable, str(REQUIREMENTS_SNAPSHOT_VALIDATOR), "--repo-root", str(out)],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert process.returncode == 0, process.stdout + process.stderr
+    result = json.loads(process.stdout)
+    assert result["valid"] is True
+    assert "system-spec/backend.md" in result["artifacts"]
+
+    receipt = json.loads(
+        (out / "system-spec/resume-receipt.json").read_text(encoding="utf-8")
+    )
+    assert set(receipt["gates"]) == {
+        "coverage",
+        "source_citation",
+        "knowledge_graph",
+        "evaluator",
+    }
+    assert set(receipt["gates"].values()) == {"PASS"}
 
 
 def test_requirements_fixture_scope_closure_passes_source_digest(

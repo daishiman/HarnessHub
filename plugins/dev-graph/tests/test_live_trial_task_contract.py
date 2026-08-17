@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import shlex
 import subprocess
 import sys
 from pathlib import Path
@@ -135,7 +136,7 @@ def test_scenario_id_omission_is_rejected_as_contract_violation(tmp_path: Path) 
     """単一 shape では scenario 記載漏れを一般エラーでなく LT-001 として返す。"""
     task = _mutated(
         tmp_path,
-        ("C19-OUT1-positive-system-spec-lineage-r3-bounded", "C19-OUT1-redacted"),
+        ("C19-OUT1-positive-system-spec-lineage-r6-bounded", "C19-OUT1-redacted"),
     )
     code, report = _lint("--task", str(task))
     assert code == 2
@@ -231,6 +232,61 @@ def test_emitted_premise_contains_every_required_task_fragment() -> None:
         assert fragment in premise
 
 
+def test_resume_runner_failure_is_terminal_without_self_healing() -> None:
+    """runner 初回失敗後の診断・依存導入・再実行を task 契約自体が禁ずる。"""
+    required = set(_scenario()["task_contract"]["required_fragments"])
+
+    assert "初回 runner の終了状態を終端結果とする" in required
+    assert (
+        "診断コマンド・個別 validator・依存 package 導入・runner 再実行を行わない"
+        in required
+    )
+
+
+def test_resume_runner_command_is_literal_and_shell_standalone() -> None:
+    """task/shape 正本が canonical raw command 完全一致を要求する。"""
+    required = set(_scenario()["task_contract"]["required_fragments"])
+
+    assert "canonical runner command の1行を文字どおり単独実行する" in required
+    assert _contract()["runner_argv_template"] == (
+        "python3",
+        "plugins/dev-graph/scripts/build-system-spec-resume-import.py",
+        "--repo-root",
+        "<contained-fixture-repo>",
+    )
+
+
+def test_emitted_premise_contains_exact_canonical_runner_command() -> None:
+    fixture_path = "/tmp/改善 fixture|repo"
+    premise = _emit_premise(fixture_path)
+    canonical = shlex.join([
+        "python3",
+        "plugins/dev-graph/scripts/build-system-spec-resume-import.py",
+        "--repo-root",
+        fixture_path,
+    ])
+
+    assert canonical in premise.splitlines()
+    assert "この1行を文字どおり単独実行" in premise
+
+
+def test_alternate_runner_quoting_is_rejected_by_task_lint(tmp_path: Path) -> None:
+    canonical = (
+        "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py "
+        "--repo-root /tmp/fixture"
+    )
+    alternate = (
+        'python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py '
+        '--repo-root "/tmp/fixture"'
+    )
+    task = _mutated(tmp_path, (canonical, alternate))
+
+    code, report = _lint("--task", str(task))
+
+    assert code == 2
+    assert "LT-012" in _rules(report)
+
+
 @pytest.mark.parametrize(
     "fragment",
     _scenario()["task_contract"]["required_fragments"],
@@ -299,7 +355,9 @@ def test_all_mode_reports_real_repo_state_without_fixed_run_id() -> None:
     assert code in {0, 2}
     assert isinstance(report["violations"], list)
     if code == 2:
-        assert {finding["rule"] for finding in report["violations"]} <= {"LT-003", "LT-011"}
+        assert {finding["rule"] for finding in report["violations"]} <= {
+            "LT-001", "LT-003", "LT-011", "LT-012"
+        }
         assert all(
             "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/" in finding["task"]
             for finding in report["violations"]

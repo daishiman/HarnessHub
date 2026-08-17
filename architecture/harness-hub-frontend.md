@@ -292,6 +292,14 @@ PR #700 の G13 回復では超過画面の client 本体を route-local `next/d
 
 S10 を7画面へ分割し S12 に引き渡し UI・form_snapshot 全項目・作成時添付 (画像/動画/CSV/Excel・25MB) を追加。S15 一覧は category/tag/thumbnail/excerpt/予約 badge と権限別 empty CTA。配色境界は [デザインシステム](harness-hub-design-system.md)、breakpoint 正本は `480 / 641 / 1025`。
 
+## 2026-08-17 画面内改善要望 I15（仕様のみ）
+
+認証済み業務画面の右下に常設ボタンを置く。画面遷移なし。投稿者入力は本文と注釈のみ。
+画面キャプチャは D9 `modern-screenshot` の DOM 再描画で、許可ダイアログを出さない。
+widget 自身は撮影対象から外す。実装は未着手。正本は `system-spec/frontend.md` /
+`system-spec/ui-ux.md` と
+[I15 追補](../docs/features/feat-feedback-loop/i15-in-app-improvement-request-addendum.md)。
+
 ## 2026-08-13 表示設定の再読み込み復元 (HarnessHub-sj20)
 
 root layout が `resolveUiPreferences()` でサーバ側から `user_settings` を読み、theme / density / locale を `UiProvider` の初期値として渡す。client からの後追い取得は行わない (初期描画のちらつきと、client 部品追加による共通 chunk 分割を避けるため)。未認証・取得失敗では既定値へ落とし、シェルは落とさない。配色トークンは不変。

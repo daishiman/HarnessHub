@@ -1,25 +1,24 @@
 {
-  "allowed_domains": [
-    "docs.github.com"
-  ],
-  "findings": [
-    "workflow は .github/workflows 配下の .yml/.yaml で定義する",
-    "trigger は on キー。branches/tags 系は glob pattern を受ける",
-    "後続 step への環境変数受け渡しは GITHUB_ENV への追記 (生成 step 自身には反映されない)",
-    "custom action の metadata は action.yml (action.yaml も可、action.yml が推奨)",
-    "reference は Workflow syntax / Events / Workflow commands / Contexts / Metadata syntax 等へ分割されている"
-  ],
-  "retrieval_channel": "web-search-official-host-restricted",
-  "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と要約から読み取れた事実だけを記録する。retrieved_at は本 record 作成時に読んだ実時刻で、同一 turn 内で発行した検索の記録時刻 (個別応答の受信時刻ではない)。",
-  "retrieval_query": "GitHub Actions workflow syntax documentation",
-  "retrieved_at": "2026-08-07T03:30:09Z",
-  "returned_official_urls": [
-    "https://docs.github.com/actions/using-workflows/workflow-syntax-for-github-actions",
-    "https://docs.github.com/en/actions",
-    "https://docs.github.com/en/actions/reference",
-    "https://docs.github.com/en/actions/reference/workflows-and-actions/contexts",
-    "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands",
-    "https://docs.github.com/en/actions/reference/workflows-and-actions/metadata-syntax"
-  ],
-  "target_id": "github-actions"
+ "allowed_domains": [
+  "docs.github.com"
+ ],
+ "findings": [
+  "runs-on の -latest ラベルは GitHub が提供する最新の安定 image を指し、OS ベンダの最新版とは限らない (ubuntu-latest は最新 Ubuntu より遅れる)",
+  "runner image は actions/runner-images で管理され、収録ツールは週次で更新される (反映に数日)",
+  "Ubuntu 26.04 は x64 / arm64 とも public preview (runs-on: ubuntu-26.04 / ubuntu-26.04-arm)。収録ツールの版は従来 image と異なる",
+  "macOS 26 image は macos-26-large として利用可能。Windows は VS 2026 が 2026-05-04 の GA で windows-2025 image へ統合",
+  "GitHub-hosted runner の custom image が public preview (jobs.<job_id>.snapshot)。larger runner 限定で、課金は同一の分単位レート",
+  "beta / deprecated image は as-is 提供で SLA と保証の対象外。CI の正本経路では -latest ではなく明示バージョンの固定を検討する"
+ ],
+ "retrieval_channel": "web-search-official-host-restricted",
+ "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と要約から読み取れた事実だけを記録する。retrieved_at は本 record 作成時に読んだ実時刻で、同一 turn 内で発行した検索の記録時刻 (個別応答の受信時刻ではない)。",
+ "retrieval_query": "GitHub Actions workflow syntax runner images latest",
+ "retrieved_at": "2026-08-15T01:35:54Z",
+ "returned_official_urls": [
+  "https://docs.github.com/actions/using-workflows/workflow-syntax-for-github-actions",
+  "https://docs.github.com/en/actions/concepts/runners/github-hosted-runners",
+  "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands",
+  "https://github.blog/changelog/2026-06-11-new-runner-images-in-public-preview/"
+ ],
+ "target_id": "github-actions"
 }

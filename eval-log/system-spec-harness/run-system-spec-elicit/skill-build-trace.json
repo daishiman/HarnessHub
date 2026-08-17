@@ -1,0 +1,617 @@
+{
+  "skill_name": "run-system-spec-elicit",
+  "skill_kind": "run",
+  "build_mode": "update",
+  "skill_path": "plugins/system-spec-harness/skills/run-system-spec-elicit",
+  "source_docs": [
+    "plugins/system-spec-harness/skills/run-system-spec-elicit/SKILL.md",
+    "plugins/system-spec-harness/skills/run-system-spec-elicit/prompts/R0-foundation.md",
+    "plugins/system-spec-harness/skills/run-system-spec-elicit/prompts/R6-audit-hearing.md",
+    "plugins/system-spec-harness/skills/run-system-spec-elicit/references/spec-state-contract.md",
+    "plugins/harness-creator/skills/run-build-skill/SKILL.md",
+    "plugins/harness-creator/skills/run-build-skill/prompts/R4-trace-write.md",
+    "plugins/harness-creator/skills/run-build-skill/schemas/skill-build-trace.schema.json",
+    "plugins/harness-creator/skills/run-build-skill/references/skill-factory-reproducibility.md",
+    "plugins/harness-creator/skills/run-build-skill/references/reproducibility-trace-schema.md",
+    "eval-log/system-spec-harness/run-system-spec-elicit/content-review/elegance-verdict.json",
+    "eval-log/system-spec-harness/run-system-spec-elicit/content-review/rubric-verdict.json"
+  ],
+  "context_map_decision": {
+    "map": "run-build-skill Step 3.5 reproducibility trace contract",
+    "task_category": "existing run skill build-evidence closure for foundation provenance and historical-QA governance",
+    "selected_docs": [
+      "plugins/system-spec-harness/skills/run-system-spec-elicit/SKILL.md",
+      "plugins/system-spec-harness/skills/run-system-spec-elicit/prompts/R0-foundation.md",
+      "plugins/system-spec-harness/skills/run-system-spec-elicit/prompts/R6-audit-hearing.md",
+      "plugins/system-spec-harness/skills/run-system-spec-elicit/references/spec-state-contract.md",
+      "plugins/harness-creator/skills/run-build-skill/SKILL.md",
+      "plugins/harness-creator/skills/run-build-skill/prompts/R4-trace-write.md",
+      "plugins/harness-creator/skills/run-build-skill/schemas/skill-build-trace.schema.json",
+      "plugins/harness-creator/skills/run-build-skill/references/skill-factory-reproducibility.md",
+      "plugins/harness-creator/skills/run-build-skill/references/reproducibility-trace-schema.md",
+      "eval-log/system-spec-harness/run-system-spec-elicit/content-review/elegance-verdict.json",
+      "eval-log/system-spec-harness/run-system-spec-elicit/content-review/rubric-verdict.json"
+    ]
+  },
+  "design_model": {
+    "intent": "上位概念 U1-U9 の現行値を利用者一次入力と承認へ遡及可能にし、初回 canonical 履歴を改変せずに仕様ヒアリングを再開可能な状態へ収束させる",
+    "contract": "schema 1.1 confirmed state は effective_source_refs.U1-U9 の qa_ref/approval_ref を必須化し、各 QA が対象 U を明示する一次入力であること、非 retired であること、現行 approval と整合することを writer と coverage validator の双方が fail-closed に検証する。原則はU別一論点QAとし、明示的な共有QAだけconsumer別 evidence_quote/hash・対象U集合・独立quote・同一approvalを必須化する。exact schema 1.0 だけ canonical fallback を許す",
+    "boundary": "spec-state 変更は apply-spec-transition.py の単一 writer に限定する。R0 は収集、R6/C06 はconsumer別quoteがAI要約でなく利用者の逐語決定として現行U値を意味的に裏付けるかをread-only監査し、C05は最終完了判定を担当する。古いQAのquestion/answer/sourceは削除・改変しない",
+    "execution": "run skill と R0/R6 seven-layer prompts、stdlib-only transition modules、coverage validator、retire-qa metadata writer を組み合わせる",
+    "feedback": "価値だけを変える旧証拠再利用、U間binding流用、対象U marker欠落、shared quote欠落/改変/hash不一致/同一・包含、dangling/retired/non-primary source、古いtop-level approvalの反例を固定。production qa-267はU3=利用者決定1〜2、U4=利用者決定3の直接excerptへ再bindingした。独立対象134 tests、実装全体810 testsがPASS。current SKILL.md sha256=8da45b6d39f2f439a57b6303cd5e9ae83cc8deee15907428482a0a4cbf1e22c3"
+  },
+  "doc_coverage": [
+    {
+      "doc": "02-skill-structure",
+      "status": "PASS",
+      "evidence": "SKILL.md から prompts/references/scripts/schema へ責務を分離し、frontmatter refs の実体が存在する"
+    },
+    {
+      "doc": "03-frontmatter",
+      "status": "PASS",
+      "evidence": "validate-frontmatter.py exit 0: ok run-system-spec-elicit"
+    },
+    {
+      "doc": "04-invocation-permissions",
+      "status": "PASS",
+      "evidence": "Read/Write/Bash/Glob/Grep/WebSearch/WebFetch/AskUserQuestion/Task の実行面を frontmatter に明示"
+    },
+    {
+      "doc": "05-layering",
+      "status": "PASS",
+      "evidence": "Skill=orchestration、R0=収集、R6=read-only audit、script=決定論 writer/validator の依存方向を明示"
+    },
+    {
+      "doc": "06-classification-naming",
+      "status": "PASS",
+      "evidence": "directory/name/kind/prefix は run-system-spec-elicit/run/run で一致し lint-skill-name.py exit 0"
+    },
+    {
+      "doc": "07-progressive-disclosure",
+      "status": "PASS",
+      "evidence": "上位概念規律は R0、監査規律は R6、共有 state 形状は spec-state-contract、状態遷移は scripts へ分離"
+    },
+    {
+      "doc": "08-skill-writing-guidelines",
+      "status": "PASS",
+      "evidence": "SKILL.md は 217 行で本文 300 行上限内、Purpose/Contract/Goal-seek/Gotchas/Resources を保持"
+    },
+    {
+      "doc": "09-evaluation-orchestration",
+      "status": "PASS",
+      "evidence": "収集者 C01 と監査起動所有 C05 を分離し、R6/R7 を自身の goal-seek 母集合から除外"
+    },
+    {
+      "doc": "10-subagents-hooks-integration",
+      "status": "PASS",
+      "evidence": "R6/R7 prompt 所有と completeness evaluator 側 audit agent 起動所有の境界を SKILL.md に明記"
+    },
+    {
+      "doc": "11-templates",
+      "status": "N/A",
+      "reason": "既存 run skill の provenance/retirement 更新であり template の生成・更新は行っていない"
+    },
+    {
+      "doc": "13-checklists",
+      "status": "PASS",
+      "evidence": "R0 は全 U effective binding と承認、R6 は全 binding/retirement consumer 判定を停止条件へ持つ"
+    },
+    {
+      "doc": "14-dynamic-context-injection",
+      "status": "PASS",
+      "evidence": "project/plugin/spec-state path は $CLAUDE_PROJECT_DIR と $CLAUDE_PLUGIN_ROOT で実行時解決し固定ユーザーパスを持たない"
+    },
+    {
+      "doc": "15-official-source-notes",
+      "status": "N/A",
+      "reason": "今回の変更は repository-local state provenance 契約であり外部製品仕様の更新を含まない"
+    },
+    {
+      "doc": "16-official-skills-reference",
+      "status": "N/A",
+      "reason": "既存の run skill/frontmatter/Agent 境界を維持する更新で公式 Skill API の新規判断を要しない"
+    },
+    {
+      "doc": "26-meta-skill-dogfooding",
+      "status": "PASS",
+      "evidence": "writer/validator 反例、prompt content lint、current target test suite、build trace 両 validator で自己適用し、current SHA の独立 semantic review も PASS"
+    },
+    {
+      "doc": "27-rubric-governance-runbook",
+      "status": "PASS",
+      "evidence": "rubric 自体は変更せず L0/L2 version 1.3.2 の同期済み正本を参照し、current SHA の evaluator verdict は score 100 / high 0 / PASS"
+    },
+    {
+      "doc": "28-script-execution-model",
+      "status": "PASS",
+      "evidence": "CLI entrypoint、pure/import modules、single writer、read-only validator の実行文脈と fail-closed 境界を script_execution_model に記録"
+    },
+    {
+      "doc": "29-multi-project-rubric-composition",
+      "status": "PASS",
+      "evidence": "L0 1.3.2 と L2 1.3.2 の deep-merge/most-specific-wins/composition hash を記録"
+    },
+    {
+      "doc": "30-paradigm-analogy-map",
+      "status": "PASS",
+      "evidence": "canonical QA を immutable history、effective_source_refs を current pointer、retirement を tombstone metadata とする event-history 類推の限界と配置を記録"
+    },
+    {
+      "doc": "31-output-routing-adapter-architecture",
+      "status": "PASS",
+      "evidence": "対話/prompt は payload を作り、単一 writer が canonical spec-state へ route、validator/auditor は read-only に分離"
+    },
+    {
+      "doc": "32-creator-kit-implementation-ledger",
+      "status": "PASS",
+      "evidence": "SKILL、R0/R6、spec-state contract、transition modules、coverage validator、tests、本 trace を実在確認"
+    },
+    {
+      "doc": "33-change-governance",
+      "status": "PASS",
+      "evidence": "変更は foundation lineage と historical QA retirement に限定し、commit/push/Beads 操作を本 trace 作成では行わない"
+    },
+    {
+      "doc": "34-plugin-governance-roadmap",
+      "status": "PASS",
+      "evidence": "trace を eval-log/system-spec-harness/run-system-spec-elicit に配置し plugin/skill 境界を維持"
+    },
+    {
+      "doc": "35-meta-harness-feedback-loop",
+      "status": "PASS",
+      "evidence": "value-only rewriteとcross-U binding reuseのREDに加え、shared quote欠落/改変/hash不一致/流用とproduction AI合成要約bindingの回帰を追加し、独立対象134 passed・system-spec-harness全810 passedへ収束"
+    }
+  ],
+  "build_flow_coverage": [
+    {
+      "step": "problem-definition",
+      "status": "PASS",
+      "evidence": "REG-001 trace 欠落に加え、確定済み foundation の value-only rewrite と全 U binding 再利用という反例を問題として固定"
+    },
+    {
+      "step": "execution-layer",
+      "status": "PASS",
+      "evidence": "semantic hearing=Skill/prompts、mutation=single writer、shape/provenance=deterministic validator、independent audit=R6/C05 に分離"
+    },
+    {
+      "step": "classification",
+      "status": "PASS",
+      "evidence": "frontmatter kind=run"
+    },
+    {
+      "step": "naming",
+      "status": "PASS",
+      "evidence": "lint-skill-name.py exit 0: run-system-spec-elicit"
+    },
+    {
+      "step": "frontmatter",
+      "status": "PASS",
+      "evidence": "validate-frontmatter.py exit 0: run-system-spec-elicit"
+    },
+    {
+      "step": "body",
+      "status": "PASS",
+      "evidence": "current SKILL.md sha256=8da45b6d39f2f439a57b6303cd5e9ae83cc8deee15907428482a0a4cbf1e22c3。schema 1.1 effective bindings、shared consumer evidence、exact 1.0 fallback、fresh evidence、retire-qaを明示"
+    },
+    {
+      "step": "support-files",
+      "status": "PASS",
+      "evidence": "R0/R6 prompts、spec-state contract、transition modules、foundation validator、retirement tests の実体を確認"
+    },
+    {
+      "step": "permissions-hooks",
+      "status": "PASS",
+      "evidence": "R6 は read-only、canonical state mutation は apply-spec-transition.py のみ、audit adapter/hook ownership は C05 に分離"
+    },
+    {
+      "step": "validation",
+      "status": "PASS",
+      "evidence": "independent shared-foundation superset 134 passed、implementation system-spec-harness suite 810 passed。frontmatter/name/prompt content lint exit 0。canonical/root validate-build-traceは本traceへexit 0"
+    },
+    {
+      "step": "operation-improvement",
+      "status": "PASS",
+      "evidence": "初回 canonical history と現行 effective evidence を分離し、値変更は fresh QA+approval+top-level approval、歴史的誘導 QA は consumer 0 の retirement で非 blocking 化"
+    }
+  ],
+  "layer_decisions": [
+    {
+      "layer": "Skill",
+      "decision": "use",
+      "reason": "U1-U9 収集から matrix 完了までの goal-seek と単一 writer 契約の利用者入口",
+      "placement_evidence": "plugins/system-spec-harness/skills/run-system-spec-elicit/SKILL.md",
+      "fallback": "未充足なら complete=false と next_question を保存して resume",
+      "dependency_direction_ok": true,
+      "macos_stdlib_ok": true,
+      "deterministic": false
+    },
+    {
+      "layer": "Subagent",
+      "decision": "use",
+      "reason": "R6/R7 の監査を収集実行 context と分離し、自己採点を避ける",
+      "placement_evidence": "plugins/system-spec-harness/agents/system-spec-hearing-auditor.md and system-spec-matrix-auditor.md",
+      "fallback": "監査不能は C05 で INDETERMINATE/FAIL とし PASS を推測しない",
+      "dependency_direction_ok": true,
+      "macos_stdlib_ok": true,
+      "deterministic": false
+    },
+    {
+      "layer": "Hook",
+      "decision": "skip",
+      "reason": "C01 は canonical state writer と prompt 契約を所有し、監査 fork receipt hook は C05 の所有",
+      "placement_evidence": "SKILL.md の監査 fork ownership boundary",
+      "fallback": "C05 completeness evaluator の append-only audit ledger を利用",
+      "dependency_direction_ok": true,
+      "macos_stdlib_ok": true,
+      "deterministic": true
+    },
+    {
+      "layer": "MCP",
+      "decision": "skip",
+      "reason": "repository-local JSON state と利用者対話で完結し MCP 依存は不要",
+      "placement_evidence": "SKILL.md allowed-tools に MCP を宣言しない",
+      "fallback": "Read/Bash/Task と local artifacts のみ使用",
+      "dependency_direction_ok": true,
+      "macos_stdlib_ok": true,
+      "deterministic": true
+    },
+    {
+      "layer": "CLI",
+      "decision": "use",
+      "reason": "transition、coverage、knowledge refs、pytest を再実行可能な exit code で観測",
+      "placement_evidence": "apply-spec-transition.py subcommands and deterministic_checks",
+      "fallback": "各 stdlib Python entrypoint を repo-root cwd で個別実行",
+      "dependency_direction_ok": true,
+      "macos_stdlib_ok": true,
+      "deterministic": true
+    },
+    {
+      "layer": "script",
+      "decision": "use",
+      "reason": "foundation binding、fresh evidence、retirement consumer、schema version boundary を全呼出経路で機械強制",
+      "placement_evidence": "skills/run-system-spec-elicit/scripts and scripts/validate-coverage-matrix.py",
+      "fallback": "不正 state/参照/承認は TransitionError または nonzero exit で停止",
+      "dependency_direction_ok": true,
+      "macos_stdlib_ok": true,
+      "deterministic": true
+    }
+  ],
+  "pattern_decisions": [
+    {
+      "decision": "use",
+      "pattern_ref": "immutable canonical history + explicit effective pointer",
+      "reason": "初回逐語証跡を保持しつつ現在値の根拠を一意に差し替え可能にする",
+      "reuse_target": "requirements_foundation U1-U9 provenance"
+    },
+    {
+      "decision": "use",
+      "pattern_ref": "append-only retirement tombstone",
+      "reason": "歴史的な誘導 QA を削除・改変せず active consumer 0 のときだけ非 blocking にする",
+      "reuse_target": "qa_log historical evidence governance"
+    },
+    {
+      "decision": "use",
+      "pattern_ref": "double-entry provenance gate",
+      "reason": "production writer と read-only coverage validator の双方で binding/approval/source/retirement を検査する",
+      "reuse_target": "confirmed foundation mutation and resume validation"
+    }
+  ],
+  "reproducibility_gates": {
+    "lint": "PASS",
+    "evaluator": "PASS",
+    "elegant_review": "PASS",
+    "governance": "PASS"
+  },
+  "four_conditions": {
+    "C1": "PASS",
+    "C2": "PASS",
+    "C3": "PASS",
+    "C4": "PASS"
+  },
+  "feedback_contract": {
+    "max_iterations": 5,
+    "criteria": [
+      {
+        "id": "IN1",
+        "loop_scope": "inner",
+        "text": "coverage/design-knowledge validators が current schema と foundation provenance を fail-closed に検証して exit 0",
+        "verify_by": "script"
+      },
+      {
+        "id": "OUT1",
+        "loop_scope": "outer",
+        "text": "全セルが確定または理由付き対象外となり、resume を含む受入テストが再現する",
+        "verify_by": "test"
+      },
+      {
+        "id": "OUT2",
+        "loop_scope": "outer",
+        "text": "実対話 live trial が foundation 確定から未収集 0 までを完走する",
+        "verify_by": "live-trial"
+      }
+    ],
+    "hook_triggers": [
+      "manual build-evidence closure",
+      "post-change independent content review"
+    ]
+  },
+  "variable_contract": [
+    {
+      "name": "$CLAUDE_PROJECT_DIR",
+      "meaning": "利用者 project root と canonical system-spec directory の解決元",
+      "default": "runtime project root",
+      "required": true,
+      "not_applicable_when": "test が明示的な一時 project root を引数で渡す場合",
+      "source_trace": "SKILL.md Purpose/IN1 and references/spec-state-contract.md canonical location"
+    },
+    {
+      "name": "$CLAUDE_PLUGIN_ROOT",
+      "meaning": "system-spec-harness plugin assets と validator の self-contained 解決元",
+      "default": "installed system-spec-harness plugin root",
+      "required": true,
+      "not_applicable_when": "repository tests が相対 module path を明示して直接起動する場合",
+      "source_trace": "R0 Layer 3 and SKILL.md deterministic checks"
+    },
+    {
+      "name": "<spec-state>",
+      "meaning": "single writer が読み書きする spec-state.json path",
+      "default": "$CLAUDE_PROJECT_DIR/system-spec/spec-state.json",
+      "required": false,
+      "not_applicable_when": "canonical project state path を既定利用する場合",
+      "source_trace": "SKILL.md argument-hint and spec-state-contract canonical location"
+    }
+  ],
+  "variant_support": {
+    "prefix": "run",
+    "role_suffix": "elicit",
+    "subagent": "inline goal-seek may fork collection work; R6/R7 audit prompts are launched by the independent C05 evaluator adapters",
+    "hook": "C01 does not own audit ledger hooks; C05 records genuine audit fork receipts"
+  },
+  "script_execution_model": {
+    "contexts": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "responsibility_matrix": "Skill/prompts=question and goal-seek semantics; apply-spec-transition=single CLI writer; state_transition modules=domain invariants; validate-coverage-matrix=read-only deterministic proof; R6 agent=read-only semantic challenge",
+    "priority_order": "schema/version gate -> immutable history and fresh evidence gate -> mutation -> coverage revalidation -> independent audit",
+    "permission_boundary": "only apply-spec-transition.py writes spec-state; imported modules have no CLI mutation authority; validators/auditors are read-only",
+    "scripts": [
+      {
+        "path": "plugins/system-spec-harness/skills/run-system-spec-elicit/scripts/apply-spec-transition.py",
+        "type": "python-writer-cli",
+        "allowed_contexts": [
+          "A",
+          "B",
+          "C",
+          "E"
+        ],
+        "frontmatter_status": "PASS"
+      },
+      {
+        "path": "plugins/system-spec-harness/skills/run-system-spec-elicit/scripts/state_transition_common.py",
+        "type": "python-import-module",
+        "allowed_contexts": [
+          "A",
+          "B",
+          "C",
+          "E"
+        ],
+        "frontmatter_status": "N/A: import module"
+      },
+      {
+        "path": "plugins/system-spec-harness/skills/run-system-spec-elicit/scripts/state_transition_foundation.py",
+        "type": "python-import-module",
+        "allowed_contexts": [
+          "A",
+          "B",
+          "C",
+          "E"
+        ],
+        "frontmatter_status": "N/A: import module"
+      },
+      {
+        "path": "plugins/system-spec-harness/skills/run-system-spec-elicit/scripts/state_transition_matrix.py",
+        "type": "python-import-module",
+        "allowed_contexts": [
+          "A",
+          "B",
+          "C",
+          "E"
+        ],
+        "frontmatter_status": "N/A: import module"
+      },
+      {
+        "path": "plugins/system-spec-harness/scripts/validate-coverage-matrix.py",
+        "type": "python-validator-cli",
+        "allowed_contexts": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "frontmatter_status": "PASS"
+      }
+    ]
+  },
+  "governance_model": {
+    "rubric_version": "1.3.2",
+    "rubric_hash": "sha256:8ae7f9ed9e597ffbaf48c41f2dcd25562d865fef493e4e2eea70630dce36d6d0",
+    "proposal_required": "false: rubric text/version/weights were not changed by this provenance update",
+    "impact_assessment": "foundation provenance behavior is covered by counterexample tests; rubric scoring semantics are unchanged; current target independent content review is PASS with unresolved critical/high 0/0",
+    "roles": {
+      "proposer": "foundation provenance implementation owner",
+      "reviewer": "independent elegance and rubric evaluators for current target SHA",
+      "approver": "project operator under existing rubric governance",
+      "tooling": "pytest, prompt/frontmatter/name lints, canonical and root validate-build-trace.py"
+    },
+    "newly_failing_count": 0
+  },
+  "dogfooding_model": {
+    "artifact_type": "run skill",
+    "adapter": "run-build-skill Step 3.5 trace writer contract",
+    "forked_evaluator": "PASS: current SHA 8da45b6d was independently reviewed with 30/30 thinking methods, C1-C4 PASS, rubric score 100, and unresolved critical/high 0/0",
+    "eval_log_path": "eval-log/system-spec-harness/run-system-spec-elicit",
+    "recursive_checks": [
+      "foundation value-only rewrite and cross-U binding counterexamples",
+      "effective source dangling/duplicate/non-primary/retired/current-approval checks",
+      "retire-qa active-consumer and immutable payload checks",
+      "shared-foundation independent target suite 134 passed",
+      "current system-spec-harness implementation suite 810 passed",
+      "prompt content lint scanned 18 files and passed",
+      "frontmatter and skill-name lints passed",
+      "canonical and root build-trace validators"
+    ]
+  },
+  "rubric_composition_model": {
+    "status": "PASS",
+    "ordered_refs": [
+      "plugins/harness-creator/skills/ref-skill-design-rubric/references/rubric.json@1.3.2",
+      "plugins/harness-creator/skills/assign-skill-design-evaluator/references/rubric.json@1.3.2"
+    ],
+    "merge_strategy": "deep-merge",
+    "conflict_policy": "most-specific-wins",
+    "composition_hash_evidence": "sha256:3381c7cfcf0eb50c89e7f764ef78e6a5f29f1d4423dda8042bc7f766cfb62b64"
+  },
+  "paradigm_analogy_model": {
+    "status": "PASS",
+    "primary_analogy": "append-only event history with an explicit current pointer",
+    "matched_skill_concept": "canonical QA is immutable history, effective_source_refs is current provenance, retirement is a non-deleting tombstone",
+    "limits": "spec-state is not a general event store; state_transition writer remains the contractual SSOT and coverage/audit rules decide blocking semantics",
+    "placement_decision": "keep history/current/retirement invariants in transition modules and expose their meaning through R0/R6/spec-state contract"
+  },
+  "output_routing_model": {
+    "status": "PASS",
+    "task_kind": "system-spec elicitation state transition",
+    "payload_schema_version": "spec-state schema 1.1 with exact 1.0 legacy read/migration boundary",
+    "route_ref": "SKILL.md single transition writer defense and references/spec-state-contract.md canonical location",
+    "adapter_registry_ref": "plugins/system-spec-harness/skills/run-system-spec-elicit/references/resource-map.yaml",
+    "fallback": "invalid or insufficient provenance remains unconfirmed or returns TransitionError/nonzero validation instead of mutating canonical state",
+    "secret_boundary": "requirements_foundation excludes secrets; all paths are contained project/plugin-relative references"
+  },
+  "prompt_generation_model": {
+    "policy_resolution": {
+      "brief_policy": "required",
+      "resolved_policy": "required",
+      "resolved_via": "skill_kind=run and SKILL.md frontmatter declares eight prompt_required responsibilities"
+    },
+    "per_responsibility": [
+      {
+        "id": "R0-foundation",
+        "name": "elicit-foundation",
+        "owner_agent": null,
+        "layer_yaml_path": "plugins/system-spec-harness/skills/run-system-spec-elicit/prompts/R0-foundation.md",
+        "path_convention": "skill-local-v1",
+        "layers_generated": ["L1", "L2", "L3", "L4", "L5", "L6", "L7"],
+        "sha256": "67a2b02a5ec6fc70598270350d3d9291202b126bbdd0bf326f04185fa29ded71",
+        "lint_status": "PASS",
+        "iteration_count": 1,
+        "escalation": "none"
+      },
+      {
+        "id": "R1-init",
+        "name": "init-matrix",
+        "owner_agent": null,
+        "layer_yaml_path": "plugins/system-spec-harness/skills/run-system-spec-elicit/prompts/R1-init.md",
+        "path_convention": "skill-local-v1",
+        "layers_generated": ["L1", "L2", "L3", "L4", "L5", "L6", "L7"],
+        "sha256": "58b6fa0e2fa4a1800ad62da6df0550c7e2a2d75440a64b517eacbf314db55e7c",
+        "lint_status": "PASS",
+        "iteration_count": 1,
+        "escalation": "none"
+      },
+      {
+        "id": "R2-interview",
+        "name": "interview",
+        "owner_agent": null,
+        "layer_yaml_path": "plugins/system-spec-harness/skills/run-system-spec-elicit/prompts/R2-interview.md",
+        "path_convention": "skill-local-v1",
+        "layers_generated": ["L1", "L2", "L3", "L4", "L5", "L6", "L7"],
+        "sha256": "0ab5d4816c0fc64e230e90de4f1255ff6f10b1461d3d690d6bf22c0f968dee6b",
+        "lint_status": "PASS",
+        "iteration_count": 1,
+        "escalation": "none"
+      },
+      {
+        "id": "R3-reask",
+        "name": "reask",
+        "owner_agent": null,
+        "layer_yaml_path": "plugins/system-spec-harness/skills/run-system-spec-elicit/prompts/R3-reask.md",
+        "path_convention": "skill-local-v1",
+        "layers_generated": ["L1", "L2", "L3", "L4", "L5", "L6", "L7"],
+        "sha256": "b32f3cd257160fb485b0c54121525d534ea253edbf0bafb0d15f609db6890276",
+        "lint_status": "PASS",
+        "iteration_count": 1,
+        "escalation": "none"
+      },
+      {
+        "id": "R4-reopen",
+        "name": "reopen",
+        "owner_agent": null,
+        "layer_yaml_path": "plugins/system-spec-harness/skills/run-system-spec-elicit/prompts/R4-reopen.md",
+        "path_convention": "skill-local-v1",
+        "layers_generated": ["L1", "L2", "L3", "L4", "L5", "L6", "L7"],
+        "sha256": "f2d169287f26f30a6c75036c99efb2e6ea7f1054f2aeb91712c6723fa42261a2",
+        "lint_status": "PASS",
+        "iteration_count": 1,
+        "escalation": "none"
+      },
+      {
+        "id": "R5-decision-guide",
+        "name": "guide-decision",
+        "owner_agent": null,
+        "layer_yaml_path": "plugins/system-spec-harness/skills/run-system-spec-elicit/prompts/R5-decision-guide.md",
+        "path_convention": "skill-local-v1",
+        "layers_generated": ["L1", "L2", "L3", "L4", "L5", "L6", "L7"],
+        "sha256": "c54d5996c07efe5edae1546783d067e965c6a912e1bbd167bb3d2084251839a8",
+        "lint_status": "PASS",
+        "iteration_count": 1,
+        "escalation": "none"
+      },
+      {
+        "id": "R6-audit-hearing",
+        "name": "audit-hearing",
+        "owner_agent": "system-spec-hearing-auditor",
+        "layer_yaml_path": "plugins/system-spec-harness/skills/run-system-spec-elicit/prompts/R6-audit-hearing.md",
+        "path_convention": "skill-local-v1",
+        "layers_generated": ["L1", "L2", "L3", "L4", "L5", "L6", "L7"],
+        "sha256": "10140fb17797f73d95c9c4de3185ddf1e1e4f9f8aa7ef5d2f81c86e230b4bd36",
+        "lint_status": "PASS",
+        "iteration_count": 1,
+        "escalation": "none"
+      },
+      {
+        "id": "R7-audit-matrix",
+        "name": "audit-matrix",
+        "owner_agent": "system-spec-matrix-auditor",
+        "layer_yaml_path": "plugins/system-spec-harness/skills/run-system-spec-elicit/prompts/R7-audit-matrix.md",
+        "path_convention": "skill-local-v1",
+        "layers_generated": ["L1", "L2", "L3", "L4", "L5", "L6", "L7"],
+        "sha256": "8fa44c875ff4c656f7fae52934933643a4c79b7b2a2a5cf60aba55f030fcd143",
+        "lint_status": "PASS",
+        "iteration_count": 1,
+        "escalation": "none"
+      }
+    ],
+    "anchor_coverage": {
+      "agent_files_checked": [
+        "plugins/system-spec-harness/agents/system-spec-hearing-auditor.md",
+        "plugins/system-spec-harness/agents/system-spec-matrix-auditor.md"
+      ],
+      "missing_anchors": [],
+      "extra_anchors": []
+    }
+  },
+  "prompt_provenance": {
+    "prompt_creator_invocation": true,
+    "source_contract_ref": "plugins/prompt-creator/skills/run-prompt-creator-7layer/references/seven-layer-format.md",
+    "content_lint": {
+      "mode": "prompt",
+      "status": "PASS",
+      "evidence": "lint-agent-prompt-content.py --mode prompt --plugins-dir plugins/system-spec-harness: scanned=18, exit 0"
+    }
+  }
+}

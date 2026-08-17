@@ -32,6 +32,7 @@ import pytest
 SKILL_DIR = Path(__file__).resolve().parent.parent
 PLUGIN_ROOT = SKILL_DIR.parent.parent  # plugins/system-spec-harness
 FIXTURES = Path(__file__).resolve().parent
+REPO_ROOT = Path(__file__).resolve().parents[5]
 
 
 def _load(name: str, path: Path):
@@ -154,6 +155,78 @@ def test_host_helpers():
     assert bfr.host_of("https://www.React.dev/x") == "react.dev"
     assert bfr.host_of("") == ""
     assert bfr.norm_host("") == ""
+
+
+# --------------------------------------------------------------------------- #
+# prose_version_drift: 散文の版表記が version から取り残されるのを塞ぐ           #
+# --------------------------------------------------------------------------- #
+def _pnpm_rec(summary: str) -> dict:
+    return {
+        "target_id": "pnpm",
+        "retrieved_at": "2026-08-16T00:00:00Z",
+        "source_url": "https://pnpm.io/",
+        "official_publisher": "pnpm",
+        "version": "11.22.0",
+        "latest_checked_at": "2026-08-16T00:00:00Z",
+        "evidence_ref": "evidence/pnpm.json",
+        "evidence_sha256": "c" * 64,
+        "summary": summary,
+    }
+
+
+def test_prose_version_drift_detects_stale_head():
+    # 実際に起きた欠陥: version は更新されたが summary 先頭が旧版を現在形で主張し続けた。
+    rec = _pnpm_rec("現行安定版は 11.16.0。\n\n鮮度再照合 (2026-08-16): latest=11.22.0")
+    assert "11.16.0" in bfr.prose_version_drift(rec)
+    with pytest.raises(bfr.RecordError, match="食い違う"):
+        bfr.build_record(rec)
+
+
+def test_prose_version_drift_detects_stale_head_across_major_upgrade():
+    rec = _pnpm_rec("現行安定版は 11.22.0。")
+    rec["version"] = "12.0.0"
+    assert "11.22.0" in bfr.prose_version_drift(rec)
+
+
+def test_prose_version_drift_allows_current_head():
+    rec = _pnpm_rec("現行安定版は 11.22.0。\n\n[以下は履歴] 2026-07 の照合では 11.16.0 だった")
+    assert bfr.prose_version_drift(rec) is None
+    assert bfr.build_record(rec)["version"] == "11.22.0"
+
+
+def test_prose_version_drift_ignores_history_region():
+    # 履歴・訂正・再照合の段落に旧版が残るのは正しい記録なので違反にしない。
+    rec = _pnpm_rec("現行安定版は 11.22.0。\n[訂正] 旧 summary は 11.16.0 と書いていた")
+    assert bfr.prose_version_drift(rec) is None
+
+
+def test_prose_version_drift_allows_series_notation():
+    # version=7.0.2 に対する散文の「現行メジャーは 7.0」は取り残しではない。
+    rec = _pnpm_rec("現行メジャーは 11.22 系")
+    assert bfr.prose_version_drift(rec) is None
+
+
+def test_prose_version_drift_accepts_v_prefix():
+    rec = _pnpm_rec("最新パッチは v11.22.0")
+    assert bfr.prose_version_drift(rec) is None
+
+
+def test_prose_version_drift_ignores_other_products_versions():
+    # 依存要件や対応ブラウザの版 (別 major) を自製品の版と取り違えない。
+    rec = _pnpm_rec("Node.js 20 以上と TypeScript 5.5 以降、Safari 16.4 以降を要求する")
+    assert bfr.prose_version_drift(rec) is None
+
+
+def test_prose_version_drift_skips_non_semver_version():
+    # 日付運用の record (version 無し / last_updated のみ) は対象外。
+    rec = _postgres_rec()
+    assert bfr.prose_version_drift(rec) is None
+
+
+def test_version_compatible_prefix_rule():
+    assert bfr._version_compatible("7.0.2", "7.0")
+    assert bfr._version_compatible("7.0", "7.0.2")
+    assert not bfr._version_compatible("7.0.2", "7.1")
 
 
 # --------------------------------------------------------------------------- #
@@ -292,3 +365,22 @@ def test_c02_contract_owns_seed_outside_candidate_qualification():
     assert "official_or_primary:true" in fetch
     assert "set-knowledge-candidate" in record
     assert "二次ブログだけではqualifiedにしない" in fetch
+
+
+def test_production_claude_plugin_reference_covers_current_source_types():
+    """C08 finding: current source type一覧からarchive/commandを落とさない。"""
+    references = json.loads(
+        (REPO_ROOT / "system-spec" / "fetched-references.json").read_text(encoding="utf-8")
+    )
+    record = next(
+        item for item in references["references"] if item["target_id"] == "claude-code-plugins"
+    )
+    evidence_path = REPO_ROOT / record["evidence_ref"]
+    evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+
+    assert record["source_url"] == "https://code.claude.com/docs/en/plugin-marketplaces"
+    assert "archive" in record["summary"]
+    assert "command" in record["summary"]
+    assert any("archive" in finding for finding in evidence["findings"])
+    assert any("command" in finding for finding in evidence["findings"])
+    assert record["evidence_sha256"] == hashlib.sha256(evidence_path.read_bytes()).hexdigest()

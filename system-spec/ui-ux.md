@@ -3,7 +3,7 @@ status: confirmed
 category: ui-ux
 aggregate: 確定
 spec_cells: [ui-ux.web, ui-ux.mobile, ui-ux.tablet, ui-ux.desktop-windows, ui-ux.desktop-linux, ui-ux.desktop-macos]
-serves_goals: [G1, G2, G3, G5]
+serves_goals: [G1, G2, G5, G6, G7]
 ---
 
 # UI-UX (ui-ux)
@@ -15,44 +15,106 @@ serves_goals: [G1, G2, G3, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-226 |
+| Web (web) | 確定 | 確定質疑: qa-344 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリは作らない。モバイルブラウザ閲覧は web 行のレスポンシブ対応でカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリは作らない。タブレットブラウザ閲覧は web 行のレスポンシブ対応でカバー |
-| デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-007 |
+| デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-345 |
 | デスクトップ (Linux) (desktop-linux) | 対象外 | 理由: 作者環境は macOS + Windows のみ。非エンジニアの業務 PC に Linux desktop が存在しないため対象外 |
-| デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-007 |
+| デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-345 |
 
 ## 確定内容 (質疑録)
 
-### qa-226 (対応セル: web)
+### qa-344 (対応セル: web)
 
-**質問**: ui-ux/webの承認済み現行契約を、旧値と訂正文を併記せず一つの無矛盾な仕様として統合するとどうなるか。
+**質問**: Web の UI/UX を、GitHub Issue 出口の前提と appr-060 の /dashboard 決定を踏まえてどう確定するか。
 
-**回答**: [出所] 利用者の2026-08-10逐語回答「推奨案3点を承認。」（appr-043）と、既存確定qa-218〜qa-222のうち矛盾しない契約を統合した現行正本である。
+**回答**: [appr-061 による再確定] 出口は GitHub Issue。appr-048 で導入した「Claude Code への指示文を配信する Hub 独自 API」は発想ごと撤回し、Issue は人間が読む従来型の不具合・要望票として書く。Claude Code から改善へ繋ぐ導線は独自 API ではなく既存の gh CLI (gh issue list / gh issue view) が担う。
 
-【1 共通UI基盤】
-Webはmd=768pxを境界にdesktopのsidebar+header+content+footerとmobileのheader+主要slot+その他を使い分ける。ScreenHeader、Panel、ConfirmDialog、Modal、BottomSheet、light/dark、comfortable/compact、contrast、responsive overflowの既存契約を維持する。空状態・読込中・権限不足・取得失敗を別状態として表現し、seed dataは実測と区別できるラベルを必須とする。
+[appr-061 Q2 / appr-063 で変わった点] スクリーンショットと診断情報を GitHub 側へ出す。appr-048 以前の設計 (qa-255(b)3) は「画像の所在として管理画面の詳細 URL だけを載せ、実体は認可の内側に置く」だったが、これを改める。対応する側が Issue だけを見れば状況を再現できる状態を優先する。ただし GitHub は Issue への画像添付を公式 API として提供していない。公式ドキュメントが案内するのはブラウザ UI からのドラッグ&ドロップだけで、ブラウザが内部で使う uploads.github.com / user-attachments は文書化されていない経路である (https://docs.github.com/en/rest/issues/issues, https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/attaching-files を 2026-08-16 に確認)。したがってサーバ側から「添付」する公式手段は存在しない。appr-063 で利用者が選んだ実現方法は **GitHub Contents API で対象リポジトリへ画像と診断ファイルを commit し、その raw URL を Issue 本文へ Markdown の画像参照・リンクとして書く** ことである。保存先 path は要望 ID から決まる固定形 `improvement-requests/<要望 ID>/screenshot.png` および `improvement-requests/<要望 ID>/diagnostics.json` とする。以降この章で「添付」と書く場合は、この commit + 本文参照を指す。
 
-【2 画面とnavigation】
-正規routeはS09=/dashboard、S13=/pipeline、S16=/tracking。desktop sidebarはdashboard / sheets / pipeline / catalog / docs / feedback / tracking / users / settingsの業務順とする。mobile主要navigationは既存正本のdashboard / harness / sheets / notifications / その他を維持し、pipeline / tracking / users等は「その他」から到達可能にする。未実装routeは表示せず、実装と認可が揃った時点だけ露出する。
+[Q2 / appr-063 の帰結として利用者が選択した扱い] 黒塗り (マスキング) は任意のままとし、未黒塗りでの送信を止めない。改善要望を上げる GitHub リポジトリの可視性も仕様では制約しない。したがって次の 3 点は仕様として受け入れたリスクであり、隠さず記録する: (i) 44 の業務画面の中身が黒塗りされないまま GitHub 側へ出る投稿が一定数生じうる。(ii) commit した画像と診断ファイルは対象リポジトリの git 履歴へ永久に残る。ファイルを削除する commit を積んでも履歴からは消えないため、qa-255(k) が持っていた「自分の側で消した情報を外部の複製から到達できないようにする」原則は、GitHub へ出したものについては成立しない。削除時に本文の差し替えとファイル削除 commit は行うが、履歴からの消去は保証しない (履歴の書き換えはリポジトリ全体に影響するため、仕組みとしては用意しない)。(iii) Hub が保持する GitHub トークンは、Issue の起票・更新に加えて対象リポジトリの contents 書込み権限を要する。トークンが漏れた場合の影響は Issue の改変にとどまらず、リポジトリの改変に及ぶ。権限は対象 1 リポジトリに限定し、Cloudflare Workers Secret から出さないことで抑える。なお raw URL の到達範囲はリポジトリの可視性に従い、public なら誰でも閲覧でき、private ならリポジトリへの権限が要る。可視性を仕様で制約しないという appr-061 の選択は維持する。
 
-【3 閲覧権限】
-S09/S16のtenant・harness・department・project集計はmember以上が閲覧できる。user次元の金額だけをusers.read_salaryを持つworkspace-admin/provider-adminへ限定する。pipelineはmemberも閲覧可、工程変更はworkspace-admin以上。role projectionはdeny-by-defaultとする。
+[復元元] appr-048 以前の qa-256 の内容を正本として戻す。指示文 API の配信状況を見せる画面は撤回し、Issue 状態列・一括送信・トークン投入導線へ戻す。あわせて appr-060 の /dashboard 3 決定を反映する。
 
-【4 KPI】
-完了率は、期間末snapshotの対象HearingSheet総数を分母、同snapshotでstatus=completedの件数を分子とする。利用率は、期間末snapshotの対象公開済みHarness総数を分母、その集合のうち期間内に1回以上利用されたHarness数を分子とする。分母ownerはそれぞれHearingSheetとCatalog/Releaseであり、Metrics eventだけから分母を作らない。分母0は0%でなく「—」を表示する。
+■ /dashboard の着地画面 (appr-060)
+(1) 最近の作業 — 自分が最後に触ったものを種別横断で並べる (qa-284)。ヒアリングシートだけに限定せず、ドキュメントを編集している利用者にも空でない画面を返す。件数が増えたときの優先順は別途詰める。
+(2) テナント表示 — 現在いるテナント／ワークスペースを常時表示し、そこから切替もできる (qa-285)。誤操作で別テナントへ飛ぶ経路が生まれるため、切替は確認を 1 段挟む。
+(3) 稼働状況 — **小さく常時表示する** (qa-286)。appr-035 の当初決定は「通常時は出さず異常時だけ出す」だったが、appr-060 の中立形式での再確認で反転した。運用担当が常に状態を把握でき障害の後追いがしやすいことを優先する。ただし主役ではないので、画面上部の目立つ位置ではなく小さく置き、業務の中身(最近の作業・テナント表示) が先に目に入る配置にする。当初の症状「サインインしても稼働状況しか見えない」の是正は、稼働状況を消すことではなく業務の中身を置くことで達成する。
 
-【5 anomaly】
-同一user・scopeの過去4完了週が全て揃い、その中央値が0でない場合だけ10倍超を評価する。履歴不足と中央値0は評価不能として区別し、異常なしへ潰さない。通知専用でingestを止めない。
+■ 改善要望の投稿 UI
+全 44 の認証済み業務画面の右下に「改善要望」ボタンを常設する。押すと現在の画面を離れずに投稿フォームが開き、スクリーンショットの撮影・注釈・黒塗りを行える。**黒塗りは任意である** (appr-061)。未黒塗りのまま送信でき、送信は止めない。ただし保存先が GitHub のリポジトリであることは投稿フォームに 1 行で明示し、「この画像は GitHub のリポジトリに保存され、Issue から参照されます」と分かる状態で送信させる。何が起きるか分からないまま送るのと、分かったうえで送るのとでは、同じ結果でも意味が違う。
 
-【6 図表と操作】
-chartはpackages/ui所有のserver-rendered inline SVGとし、色だけで系列を区別しない。各SVG直後に同じ数値・単位・期間・系列名を持つ同値HTML tableを初期DOMへ常時配置し、JavaScript・追加通信・tooltip・展開操作なしで読めるようにする。pipelineの7工程はdrag-and-dropを唯一の操作にせず、各cardの明示actionとConfirmDialogから遷移する。
+■ 管理画面 — 診断の見せ方
+(a) 段階的開示 — 診断は 3 段で見せる。1 段目は一覧の行に置くサマリ (error 件数・失敗 request 件数・truncated バッジ)。2 段目は詳細の『診断』節に置く畳んだグループ一覧 (指紋の要約と count のみ)。3 段目はグループを開いたときに出る stack と発生時刻。一度に全部を出さない。
+(b) 一覧では取りに行かない — 一覧は診断本体を取得しない。行のサマリはサーバの非正規化列から来る。
+(c) 切り詰めの明示 — truncated=true の投稿には『一部省略』を明示し、省略した件数を出す。省略があることを隠して全量のように見せると、管理者は『error は 3 件だけ』と誤って読む。
+(d) 種別による既定の開閉 — bug は詳細を開いた時点で診断節を開いた状態、request は畳んだ状態を既定にする。
+(e) 長い本文 — 一覧の本文は先頭 200 文字 + 省略記号。詳細では全文。
+(f) 画像 — 一覧はサムネイルを出さず件数のみ。詳細で認可付き API 経由の実画像を表示する。一覧に 50 枚の画像を並べると、量の問題が診断ではなく画像側から再発する。
+(g) コピー導線 — 詳細に『診断を JSON でコピー』を置く。コピーされるのは保存済みの診断そのもの (32KB 以内) で、画面表示のために切った分は含まない。
 
-### qa-007 (対応セル: desktop-windows, desktop-macos)
+■ 管理画面 — 一覧テーブルと一括操作
+(h) 一覧を、選択して操作できるテーブルにする。先頭にチェックボックス列を置き、ヘッダのチェックで表示中のページ全件を選択できる (全ページの全件ではない。見えていないものをまとめて操作させない)。選択があるとテーブル上部に操作バーが出て、選択件数と「GitHub へ送信」「廃棄」を表示する。
+Issue 状態列を設ける。表示は 4 値で、未送信 / 送信済み #123 (番号は Issue へのリンク) / 要更新 / 送信失敗。「要更新」は詳細画面で本文・対応メモ・種別・状態のいずれかが変わり、まだ GitHub へ反映していない行に出る。
+送信時の 20 件上限は選択の時点で示す。20 件を超えて選択された場合は送信ボタンを押せなくし、「一度に送信できるのは 20 件までです (現在 25 件選択中)」と理由と現在値を出す。
+送信後は、テーブル上部に結果サマリ「新規 3 / 更新 2 / 変更なし 14 / 失敗 1」を出し、各行の Issue 状態列を結果で更新する。「変更なし」は失敗ではないので警告色を使わない。失敗行だけを選び直す「失敗した 1 件を選択」を結果サマリに置く。
+(i) テーブルの共有 — 選択行を Markdown テーブルとしてコピーする操作を操作バーに置く。列は要望 ID・画面名・種別・状態・Issue 番号・本文冒頭とし、CSV も同じ列で書き出せるようにする。診断本体はこの書き出しに含めない。
 
-**質問**: フロントエンド構成 (クライアント構成・状態管理・レンダリング・ビルド) は?
+■ 管理画面 — 廃棄と削除
+(j) 詳細画面と一覧の操作バーの双方に「廃棄」を置く。廃棄は理由の入力を必須とし、選択肢 (誤投稿 / 重複 / テスト投稿 / その他) と自由記述を組み合わせる。重複を選んだ場合だけ、重複先の要望を検索して指定できる欄を出す。廃棄した行は既定の一覧から消え、上部に「1 件を廃棄しました (取り消す)」を数秒間出す。
+見送り (対応しない) と廃棄 (要望として成立していない) は、状態変更の選択肢として並べて出し、それぞれの意味を 1 行で添える。見送りには理由メモを必須とする。
+削除は詳細画面にだけ置き、provider-admin にのみ表示する。対象は廃棄済みの行だけ。確認では、消える対象 (Hub 側のスクリーンショット・診断・本文・対応メモ) と残る対象 (要望 ID・削除記録・Issue は close されるが残る) を列挙し、復元できない旨を明示する。**あわせて「GitHub のリポジトリへ保存した画像と診断ファイルは、最新の状態からは消えますが git 履歴からは消えません」と明記する** (appr-063 の帰結)。消えると誤解させたまま実行させない。一括削除は用意しない。
+(k) 廃棄済み・削除済みの閲覧 — 一覧の絞り込みに「廃棄済みを表示」「削除済みを表示」を置く。既定はどちらも off。削除済みは tombstone として ID・code・削除者・削除日時・削除理由だけの行で表示し、本文の位置には「削除済み」と出す。
 
-**回答**: ユーザー直接指定: Next.js + TypeScript、パッケージマネージャは pnpm (npm 不使用、packageManager フィールドで pin)。Hub Web は Next.js App Router を Workers 上 (@opennextjs/cloudflare) で SSR し、初期 4 画面 (業務ツール一覧 / 詳細 / 公開状態・修正内容 / Workspace 設定・Release 履歴) をレスポンシブ実装。作者向けクライアントは専用 desktop GUI を作らず、Claude Code / Codex plugin (slash command + skill + スクリプト) を Publisher の操作面とする (§5.1: Web に会話型 Creator を作らない)。
+■ 管理画面 — GitHub 連携設定
+(l) provider-admin だけが見られる設定画面に『GitHub 連携』セクションを置く。表示するのは、連携の有効/無効、対象リポジトリ (owner/repo)、トークンの投入状態 (未設定 / 設定済み / 直近の起票失敗あり)、および必要権限 (Issues: Read and write / Contents: Read and write) の 4 点で、トークンの値そのものは入力させず表示もしない。値は Cloudflare Workers Secret として投入するため、画面はその投入を案内する場所として機能する。
+案内の内容は、`wrangler secret put GITHUB_ISSUE_TOKEN` のコマンド文字列 (コピーボタン付き)、取得先リンク https://github.com/settings/personal-access-tokens/new 、必要権限『対象リポジトリのみを選択し、Issues = Read and write、Metadata = Read-only』、有効期限を必ず設定する旨、classic token を使う場合のリンク https://github.com/settings/tokens/new?scopes=repo と repo scope が過大である旨の注記。文言は dev-workflow (l) の共有定数から読み、画面側で書き直さない。
+リンクは新しいタブで開き、離脱前の入力を失わせない。未設定のときは案内を折りたたまずに開いた状態で出し、設定済みのときは折りたたむ。
+**リポジトリの可視性は仕様では制約しない** (appr-061)。ただし対象リポジトリが public の場合、この設定セクションに「このリポジトリは public です。保存されたスクリーンショットは誰でも閲覧できます」と事実として表示する。あわせて可視性によらず「保存した画像は git 履歴に残り、削除しても履歴からは消えません」を常時表示する (appr-063)。設定を止めはしないが、状態を伏せない。
+
+■ タッチ端末
+タッチ端末では最小タップ領域を 44×44px とする。ポインタ種別の照会 (pointer: coarse) で判定し、画面幅だけで決めない。
+
+■ 熟練度 (初回利用者と習熟利用者の扱い)
+初回利用者と習熟利用者で UI を出し分けない。投稿 Widget・管理画面のいずれも、表示する要素・その位置・操作の手数を、利用者の利用回数によって変えない。
+理由は 2 つある。1 つは、改善要望の投稿が業務の主目的ではなく頻度も低いため、同一利用者が習熟して手数を削りたくなる領域ではないこと。もう 1 つは、出し分けを入れると同じ機能が利用者ごとに別の位置・別の手数になり、問い合わせを受けたときに「相手の画面がどちらの状態か」を確かめる工程が増えることである。後者は、ui-ux が別途採っている「同じ意味は同じ語・同じ位置・同じ操作で表す」方針を、利用者間で崩すことにあたる。
+したがって次のものは置かない: 初回限定のオンボーディングツアー、利用回数に応じて出し入れするヒント枠、習熟者向けに項目を隠した簡略表示、習熟者だけが到達できる隠し操作。
+そのうえで、単一の UI が初回利用者にも自明であることを次の 3 点で担保する。
+(1) ラベルは機能名ではなく行為で書く (「送信」ではなく「改善要望を送る」)。
+(2) 必須項目は入力前から必須と分かる形で示し、送信時に初めて知らせない。
+(3) 送信の直前に、何が一緒に送られるか (スクリーンショット・画面 URL・画面種別・診断情報) を利用者が確認できる形で列挙する。これは初回利用者にとっては説明として、習熟利用者にとっては送信内容の最終確認として働くため、両者に同じ表示を使える。
+キーボード操作の割当てのように、知っていれば速いが知らなくても同じ操作へ到達できる補助は、表示を変えないため出し分けにあたらない。管理画面にはこれを置いてよい。
+
+### qa-345 (対応セル: desktop-windows, desktop-macos)
+
+**質問**: デスクトップ環境 (macOS / Windows) の ui-ux は何を正本とするか。(appr-061 による ui-ux/web の再確定に伴う再集約)
+
+**回答**: [appr-061 による再確定] 出口は GitHub Issue。appr-048 で導入した「Claude Code への指示文を配信する Hub 独自 API」は発想ごと撤回し、Issue は人間が読む従来型の不具合・要望票として書く。Claude Code から改善へ繋ぐ導線は独自 API ではなく既存の gh CLI (gh issue list / gh issue view) が担う。
+
+[appr-061 Q2 / appr-063 で変わった点] スクリーンショットと診断情報を GitHub 側へ出す。appr-048 以前の設計 (qa-255(b)3) は「画像の所在として管理画面の詳細 URL だけを載せ、実体は認可の内側に置く」だったが、これを改める。対応する側が Issue だけを見れば状況を再現できる状態を優先する。ただし GitHub は Issue への画像添付を公式 API として提供していない。公式ドキュメントが案内するのはブラウザ UI からのドラッグ&ドロップだけで、ブラウザが内部で使う uploads.github.com / user-attachments は文書化されていない経路である (https://docs.github.com/en/rest/issues/issues, https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/attaching-files を 2026-08-16 に確認)。したがってサーバ側から「添付」する公式手段は存在しない。appr-063 で利用者が選んだ実現方法は **GitHub Contents API で対象リポジトリへ画像と診断ファイルを commit し、その raw URL を Issue 本文へ Markdown の画像参照・リンクとして書く** ことである。保存先 path は要望 ID から決まる固定形 `improvement-requests/<要望 ID>/screenshot.png` および `improvement-requests/<要望 ID>/diagnostics.json` とする。以降この章で「添付」と書く場合は、この commit + 本文参照を指す。
+
+[Q2 / appr-063 の帰結として利用者が選択した扱い] 黒塗り (マスキング) は任意のままとし、未黒塗りでの送信を止めない。改善要望を上げる GitHub リポジトリの可視性も仕様では制約しない。したがって次の 3 点は仕様として受け入れたリスクであり、隠さず記録する: (i) 44 の業務画面の中身が黒塗りされないまま GitHub 側へ出る投稿が一定数生じうる。(ii) commit した画像と診断ファイルは対象リポジトリの git 履歴へ永久に残る。ファイルを削除する commit を積んでも履歴からは消えないため、qa-255(k) が持っていた「自分の側で消した情報を外部の複製から到達できないようにする」原則は、GitHub へ出したものについては成立しない。削除時に本文の差し替えとファイル削除 commit は行うが、履歴からの消去は保証しない (履歴の書き換えはリポジトリ全体に影響するため、仕組みとしては用意しない)。(iii) Hub が保持する GitHub トークンは、Issue の起票・更新に加えて対象リポジトリの contents 書込み権限を要する。トークンが漏れた場合の影響は Issue の改変にとどまらず、リポジトリの改変に及ぶ。権限は対象 1 リポジトリに限定し、Cloudflare Workers Secret から出さないことで抑える。なお raw URL の到達範囲はリポジトリの可視性に従い、public なら誰でも閲覧でき、private ならリポジトリへの権限が要る。可視性を仕様で制約しないという appr-061 の選択は維持する。
+
+[復元元] appr-048 以前の qa-258 の内容を正本として戻す。desktop の ui-ux は新規決定を含まず、既確定の qa-007 / qa-233 / qa-238 および再確定後の qa-293 (ui-ux/web) の desktop 該当部分を専用正本として集約確定する。web 側が appr-061 で再確定されたため、従属する desktop も同時に集約し直す。
+
+(1) 入力手段の前提 — desktop の主たる入力はマウス (またはトラックパッド) とキーボードであり、hover が成立する。タッチ端末向けに定めた 44×44px の最小タップ領域は desktop では過大なため、desktop 幅では 32×32px 以上を最小とし、押しやすさは間隔 (最低 8px) で確保する。ポインタ種別は入力手段の照会 (pointer: fine / coarse) で判定し、画面幅だけで決めない (タッチ対応 desktop がある)。
+
+(2) 右下の常設ボタン — desktop では画面下部に固定要素が少ないため、右下 24px の余白に配置する。既存の固定要素 (通知トーストなど) と重なる場合はボタンを優先し、トースト側をずらす。ボタンは hover で説明ラベルを出し、キーボード操作では Tab 順の最後に置く (業務操作の邪魔をしない)。
+
+(3) 注釈エディタ — desktop では中央ダイアログとし、矩形選択・黒塗り・矢印はドラッグで行う。Shift でのまっすぐな線、Esc での選択解除、Cmd/Ctrl+Z での取り消しをキーボードから使えるようにする。取り消しは 1 段でよい (作業が短いため)。黒塗りは任意であり (appr-061)、黒塗りせずに送信する経路を desktop でも塞がない。保存先が GitHub のリポジトリである旨の文言は web と同じものをダイアログ内に置く。
+
+(4) 管理画面の一覧 — desktop の画面幅で、テーブルの全列 (チェックボックス・要望 ID・画面名・種別・状態・Issue 状態・更新日時・本文冒頭) を横スクロールなしで表示できることを配置の条件とする。本文冒頭は残り幅を占める可変列とする。行の選択は Shift + クリックで範囲選択、Cmd/Ctrl + クリックで個別追加ができる (一括送信の対象を素早く作れる)。
+
+(5) キーボードだけで完結する経路 — 投稿 (ボタン → 本文 → 送信) と、管理画面の主要操作 (選択 → 一括送信 → 結果確認) を、マウスなしで到達できるようにする。フォーカスの可視化を desktop で省略しない。
+
+(6) 表示密度 — 管理画面は 1 画面あたりの行数を優先し、行の高さを詰めた密度で表示する。desktop 利用者の主タスクは多数の要望を見比べることであり、余白の多い配置は比較の妨げになる。
+
+(7) /dashboard の着地画面 — appr-060 の 3 決定 (最近の作業を種別横断・テナントの常時表示と切替・稼働状況を小さく常時表示) は desktop でも同じとする。desktop は画面が広く、稼働状況の常時表示が業務の中身を押し出す度合いが web より小さい。
+
+(8) desktop-linux — 対象外の既存判断 (利用者の業務 PC に Linux desktop が存在しない) を維持する。
+
+■ 熟練度 (初回利用者と習熟利用者の扱い)
+デスクトップ環境でも熟練度による UI の出し分けは行わない。web と同一の方針を採り、正本は ui-ux/web (qa-336) の「熟練度」節とする。デスクトップ固有の追加規定は置かない。
 
 ## 上流指針 (doctrine anchor)
 
@@ -64,147 +126,13 @@ chartはpackages/ui所有のserver-rendered inline SVGとし、色だけで系�
 
 ## 適用された設計知識
 
-### Usability & Accessibility — deep knowledge card
-
-- 出典カード: `ref-system-design-knowledge/references/usability-accessibility.md`
-
-#### 目的
-
-画面と操作フローを、能力・利用文脈・支援技術の差にかかわらず、対象利用者が目的のタスクを最後まで完了できる形にする。
-
-#### 解決する問題
-
-- システム状態 (処理中・失敗・権限不足) が画面に出ず、利用者が自分の操作が効いたか判断できない。
-- 失敗時に行き止まりが生じ、回復導線 (再試行・戻り先・問い合わせ) が無い。
-- キーボードのみ・スクリーンリーダー・拡大表示の利用者が主要タスクの一部に到達できない。
-- 認証・権限・エラーの表現が画面ごとに揺れ、同じ状態が別の意味に読める。
-- アクセシビリティを最後の是正項目として扱い、情報構造の作り直しになる。
-
-#### 適用条件
-
-- 人が直接操作する画面があり、利用者の範囲を組織が選べない (公開サービス・社内全員向け等)。
-- 認証・権限・非同期処理など、状態によって表示が変わる画面を含む。
-- 適合水準と検証手段を要件として確定でき、受入時に検査できる。
-
-#### 非適用条件
-
-- 人が操作しない機械間インターフェイス (API・バッチ) には UI 原則をそのまま適用しない (契約設計側の知識を使う)。
-- 利用者も端末も固定された短命の内部ツールでは、全達成基準の先行適用より主要タスクの完了性を優先することがある。
-- 支援技術での実機確認ができない段階で「AA 適合」と確定しない (未確認として残す)。
-
-#### トレードオフ・失敗モード
-
-- 自動検査の合格を適合と読み替え、実際には到達できない導線を見逃す (自動検査が捕捉できるのは達成基準の一部)。
-- 一貫性を絶対視して、当該画面に固有の重要な差異まで平板化する。
-- 情報を出し切ることを可視性と誤解し、優先度の無い画面にして判断を遅らせる。
-- コントラストや文字サイズをブランド表現より後回しにし、後から情報階層ごと作り直す。
-- 「アクセシビリティ対応済み」を機能名として扱い、対象利用者・支援技術・確認方法を記録しない。
-
-#### goalへの寄与
-
-- 主要タスクの完了率・失敗からの回復率・問い合わせ発生率を、UI 判断の成否指標として要件へ接続する。
-- 適合水準を受入基準に落とすことで、「配慮した」という自己申告ではなく検査可能な証跡で確定できる。
-- 状態表示と回復導線の規約を先に確定すると、後続の画面追加が既存規律の機械適用で済み、判断の再発明を減らす。
-
----
-
-#### 本章での適用
-
-##### 確定内容 qa-226 (対応セル: web)
-
-- 確定要件: [出所] 利用者の2026-08-10逐語回答「推奨案3点を承認。」（appr-043）と、既存確定qa-218〜qa-222のうち矛盾しない契約を統合した現行正本である。
-
-【1 共通UI基盤】
-Webはmd=768pxを境界にdesktopのsidebar+header+content+footerとmobileのheader+主要slot+その他を使い分ける。ScreenHeader、Panel、ConfirmDialog、Modal、BottomSheet、light/dark、comfortable/compact、contrast、responsive overflowの既存契約を維持する。空状態・読込中・権限不足・取得失敗を別状態として表現し、seed dataは実測と区別できるラベルを必須とする。
-
-【2 画面とnavigation】
-正規routeはS09=/dashboard、S13=/pipeline、S16=/tracking。desktop sidebarはdashboard / sheets / pipeline / catalog / docs / feedback / tracking / users / settingsの業務順とする。mobile主要navigationは既存正本のdashboard / harness / sheets / notifications / その他を維持し、pipeline / tracking / users等は「その他」から到達可能にする。未実装routeは表示せず、実装と認可が揃った時点だけ露出する。
-
-【3 閲覧権限】
-S09/S16のtenant・harness・department・project集計はmember以上が閲覧できる。user次元の金額だけをusers.read_salaryを持つworkspace-admin/provider-adminへ限定する。pipelineはmemberも閲覧可、工程変更はworkspace-admin以上。role projectionはdeny-by-defaultとする。
-
-【4 KPI】
-完了率は、期間末snapshotの対象HearingSheet総数を分母、同snapshotでstatus=completedの件数を分子とする。利用率は、期間末snapshotの対象公開済みHarness総数を分母、その集合のうち期間内に1回以上利用されたHarness数を分子とする。分母ownerはそれぞれHearingSheetとCatalog/Releaseであり、Metrics eventだけから分母を作らない。分母0は0%でなく「—」を表示する。
-
-【5 anomaly】
-同一user・scopeの過去4完了週が全て揃い、その中央値が0でない場合だけ10倍超を評価する。履歴不足と中央値0は評価不能として区別し、異常なしへ潰さない。通知専用でingestを止めない。
-
-【6 図表と操作】
-chartはpackages/ui所有のserver-rendered inline SVGとし、色だけで系列を区別しない。各SVG直後に同じ数値・単位・期間・系列名を持つ同値HTML tableを初期DOMへ常時配置し、JavaScript・追加通信・tooltip・展開操作なしで読めるようにする。pipelineの7工程はdrag-and-dropを唯一の操作にせず、各cardの明示actionとConfirmDialogから遷移する。
-- 設計解釈の記録経路: `dialogue`
-- 原則: 知覚可能・操作可能・理解可能・堅牢 (POUR) (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/usability-accessibility.md#中核概念`)
-  - 採否: `applied`
-  - 章固有の根拠: 同値表を初期DOMへ常在させ、分母0と評価不能理由を明示して、色・JavaScript・推測に依存せず同じ判断へ到達可能にした。
-  - トレードオフ:
-    - 縦方向の情報量が増える
-    - SVGと表の同値性をcontract testで維持する必要がある
-
-##### 追補 (2026-08-11 / 画面情報設計 / `HarnessHub-f6ix`)
-
-- qa-226 と UI 基盤契約 (shell / surface / 状態 / responsive) は全面維持する。本追補は *どの部品を使うか* の後段に、*何を載せ・何を省き・何を強調するか* の情報設計層を積む。
-- mockup (`harness-studio-v2`) は確定済み画面の初期 visual/reference であり、画面横断の情報設計規範の正本ではない。規範正本は [画面情報設計追補](../specs/harness-hub-information-design-addendum.md)、実装手順は [画面情報設計ガイド](../docs/frontend-information-design-guide.md)、`role × task-mode × breakpoint` profile 割当の SSOT は [screen-inventory](../docs/screen-inventory.md)。
-- 情報顕著度は `lead / context / metadata`。構築 phase の P0〜P5 および frontend-spec のレスポンシブ pattern P1〜P10 と語彙を混ぜない。
-- ラベルの一律全外しを禁止し、form control・初見/破壊操作・状態・金額・日時・PII・略語は可視ラベルを既定とする。狭幅への pattern 変換でも比較・filter・選択・一括操作・完全値への到達を落とさない。
-- 公開 API / DB schema / 認可判定 / Cloudflare deploy unit は変更しない。
-- 原則: Information Design (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/information-design.md`)
-  - 採否: `applied`
-  - 章固有の根拠: 利用文脈先行の 10 工程と要素別意味契約を製品規範へ固定し、保存項目の直写や装飾の後付けを防ぐ。
-  - トレードオフ:
-    - 新画面・情報設計変更 PR に情報設計シートと profile 更新が必須になる
-    - profile/pattern の将来 machine gate は未実装で、現行は manual gate + 既存 UI 基盤 gate を使う
-
-##### 確定内容 qa-007 (対応セル: desktop-windows, desktop-macos)
-
-- 確定要件: ユーザー直接指定: Next.js + TypeScript、パッケージマネージャは pnpm (npm 不使用、packageManager フィールドで pin)。Hub Web は Next.js App Router を Workers 上 (@opennextjs/cloudflare) で SSR し、初期 4 画面 (業務ツール一覧 / 詳細 / 公開状態・修正内容 / Workspace 設定・Release 履歴) をレスポンシブ実装。作者向けクライアントは専用 desktop GUI を作らず、Claude Code / Codex plugin (slash command + skill + スクリプト) を Publisher の操作面とする (§5.1: Web に会話型 Creator を作らない)。
-- 設計解釈の記録経路: `legacy_backfill` (`set-qa-design-applications`)
-- 原則: 一貫性と標準準拠 (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/usability-accessibility.md#中核概念`)
-  - 採否: `applied`
-  - 章固有の根拠: 利用者向け画面は responsive な Next.js Web に統一し、作者向け操作面は既存の Claude Code / Codex plugin 規約へ揃えることで、専用 desktop GUI という別操作体系を増やさない判断に適用した。
-  - トレードオフ:
-    - 作者は terminal と plugin 操作を学ぶ必要がある
-    - OS native GUI 固有の操作性は提供しない
-- 資するゴール: G1, G2, G3, G5
+- [設計知識付録](./ui-ux-design-knowledge.md) — deep card と qa_ref / knowledge_ref に束縛した章固有の適用記録
 
 ## 最新ドキュメント出典
 
-- (このカテゴリに割り当てた取得済みドキュメントなし。全体出典は index.md 参照)
-
-## Post-compile writeback: UI MVP wave 2026-08-12
-
-- DateTimeText（相対併記）、ListState / FilterBar、screen-pattern gate は UI 契約の追補。新規 qa 番号なし。R4-reopen 不要。
-- route-local 遅延読込は既存画面の初期JSだけを減らし、loading文言と操作契約を維持する。screen-pattern gate は動的 import 先も検査するため、新規 qa 番号なし。R4-reopen 不要。
-- 正本: [ui-mvp-wave-20260812-spec-reflection-receipt.md](../docs/features/feat-hub-foundation/ui-mvp-wave-20260812-spec-reflection-receipt.md)。
-
-## 2026-08-12 MVP 実装追記 (hearing-sheet-overhaul)
-
-- S10 は 7 画面ウィザード + 作成時添付ステージング。S12 は申請時入力の全項目表示。
-- S17 個別詳細は email / 最終ログインを読み取り表示。
-- 情報設計の正本: `docs/features/feat-hearing-intake/information-design/` と `docs/features/feat-user-org-admin/information-design/S17-detail.md`。
-
-## Post-compile writeback: disclosure / dismissible / Docs empty (2026-08-13)
-
-- navigation disclosure（Workspace 切替・アカウント・モバイル「その他」）は `details/summary` を土台に、外側クリック・Escape・別メニュー排他だけを小さな client island が担う。modal 契約・focus trap は適用しない。新規 qa 番号なし。R4-reopen 不要。
-- Modal / BottomSheet は既定 light dismiss。未保存面は `dismissible=false` で背景・Escape・閉じる操作を遮断する。公開 API / 認可 / DB は不変。
-- S15 一覧 0 件は「真の 0 件」と「絞込 0 件」を分け、作成権限に応じた CTA または絞込解除を出す。
-- 正本: [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md) FR-UIF-012/013、[受領書](../docs/features/feat-hub-foundation/ui-disclosure-empty-state-20260813-spec-reflection-receipt.md)。
-
-## Post-compile writeback: 配色仕様書 v2 (2026-08-13)
-
-- 見た目の正本をグラファイト × アンバー、IBM Plex Sans + 日本語システムフォント + JetBrains Mono へ更新する。AI専用色は持たず、アンバー `accent` は動作中専用とする。
-- `breakpointTokens` は `md=641` / `lg=1025`。shell の sidebar / ボトムタブ契約は維持し、「〜640 / 641〜1024 / 1025〜」を重複なく表す。
-- 公開 API / DB / 認可は不変。新規 qa 番号なし。確定質疑 qa-226 の「md=768」逐語は本 writeback と [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md) FR-UIF-003/014 が実装正本として上書きする。
-- 正本: [受領書](../docs/features/feat-hub-foundation/visual-system-v2-20260813-spec-reflection-receipt.md)。
-
-## Post-compile writeback: 共通ヘッダー履歴・現在地 (2026-08-13)
-
-- 認証後の全業務画面は共通 `ShellHeader` に戻る/進むを 1 組だけ持ち、現在 route の画面タイトルを wide / middle / narrow の全帯で表示する。
-- narrow では Workspace 文脈を上段、履歴・タイトル・必要操作を下段に分け、360px でも履歴 2 操作を各 44px、タイトルを 48px 以上で保つ。
-- ブラウザ履歴操作だけを小さな client island とし、シェル・route title 解決・本文は server-first のまま維持する。履歴の有無を誤推定して無効化せず、ブラウザの標準動作へ委ねる。
-- route title は exact → dynamic → 最長一致 nav fallback の順に解決する。公開 shell、`ScreenHeader`、ボトムタブには同じ操作を重複配置しない。
-- 公開 API / DB / 認可 / Cloudflare deploy unit は不変。正本は [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md) FR-UIF-015 / AC-UIF-017。
-
-## Post-compile writeback: 着地ダッシュボード (2026-08-13 / HarnessHub-1cno)
-
-- サインイン後の唯一の着地面は `/dashboard`。読む順は要対応 → 業務開始導線 → 本人の最近。分析 KPI は出さない。
-- visible=false の機能は件数 0・recent 空を型で強制し、0 件として見せない。
-- 新規 qa 番号なし。R4-reopen 不要。正本: [情報設計](../docs/features/feat-hub-foundation/information-design/dashboard.md)、[受領書](../docs/features/feat-hub-foundation/elegant-home-review-20260813-spec-reflection-receipt.md)。
+| 対象 | バージョン | 公式発行元 | 出典URL | 取得 | 最新確認 |
+|---|---|---|---|---|---|
+| tailwindcss-v4 | 4.3.3 | Tailwind Labs (github.com) | https://github.com/tailwindlabs/tailwindcss/blob/v4.3.3/packages/tailwindcss/package.json | 2026-08-16T09:11:03Z | 2026-08-16T09:11:03Z |
+| shadcn-ui | 2026-07 (公式 changelog エントリ『July 2026 - Base UI as the Default』の表示月。2026-08-16 に再照合し、後続の『July 2026 - React Aria』でも Base UI 既定が維持されていることを確認した) | shadcn (ui.shadcn.com) | https://ui.shadcn.com/docs/changelog/2026-07-base-ui-default | 2026-08-16T03:19:23Z | 2026-08-16T03:19:23Z |
+| radix-primitives | 2026-08-10 | WorkOS (www.radix-ui.com) | https://www.radix-ui.com/primitives/docs/overview/introduction | 2026-08-16T03:19:23Z | 2026-08-16T03:19:23Z |
+| wcag-2-2 | 2.2 | W3C (www.w3.org) | https://www.w3.org/TR/WCAG22/ | 2026-08-10T11:54:59Z | 2026-08-10T11:54:59Z |

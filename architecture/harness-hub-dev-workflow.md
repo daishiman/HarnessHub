@@ -254,6 +254,19 @@ per-call 行と最終 receipt を実証するまでは **1 message = 1 foregroun
 [uypz 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/uypz-audit-fork-schema12-spec-reflection-receipt.md)
 とする。
 
+## 監査 fork 台帳 schema 1.3 境界 (2026-08-17 / `HarnessHub-uypz`)
+
+非同期監査 fork では PostToolUse が観測できるのは起動受理だけである。schema 1.2 の
+ままでは行が `verdict_state=pending` で残る。`record-audit-fork.py` v0.4.0 は
+`SubagentStop` を第 2 writer とし、`record_kind=completion` の schema 1.3 行を
+append-only で追記する。pending 行は書き換えない。
+
+親の `tool_use_id` と子の `agent_id` をハーネスは繋がない。対応付けは prompt / 応答の
+`AUDIT_DISPATCH: <token>` 完全一致だけとする。token が欠ける・複数ある場合は
+ambiguous として join しない。製品 runtime は非変更。I15 仕様確定の検証経路でも
+この台帳を使う。正本は
+[I15 受領書](../docs/features/feat-feedback-loop/i15-in-app-improvement-request-spec-reflection-receipt.md)。
+
 ## 検証 tier の責務境界 (2026-08-09 / qa-216)
 
 `select-verification-tier.py` は変更 path と規則表だけから `mvp / standard / critical` の最高一致 tier を返し、規則/source digest を証拠へ残す。`verification-gate-ledger.json` は gate 定義の SSOT（正本）で、plan builder が blocking・advisory・deferred を導出する。decision validator は selector absent、非仕様語彙、受け皿の無い延期を拒否する。

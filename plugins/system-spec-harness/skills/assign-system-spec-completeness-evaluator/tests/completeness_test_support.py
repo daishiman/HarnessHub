@@ -97,9 +97,30 @@ def golden_report(verdict="PASS", verdicts=None, findings=None, gaps=None, deleg
     return {
         "evaluator": {"name": AGGREGATE.EVALUATOR_NAME, "version": "0.1.0", "context": "fork"},
         "verdict": verdict,
+        "artifact_snapshot": {
+            "schema_version": "system-spec-artifact-snapshot/v1",
+            "artifacts": {"system-spec/index.md": "0" * 64},
+        },
         "aspects": golden_aspects(verdicts),
         "audit_delegations": golden_delegations(verdicts) if delegations is None else delegations,
-        "gate_results": [{"id": "G-matrix", "name": "validate-coverage-matrix", "exit_code": 0}],
+        "gate_results": [
+            {"id": "G-matrix", "name": "validate-coverage-matrix", "exit_code": 0},
+            {"id": "G-source-citation", "name": "validate-source-citation", "exit_code": 0},
+            {
+                "id": "G-knowledge-graph",
+                "name": "validate-knowledge-graph",
+                "exit_code": 0,
+                "subgates": [
+                    {
+                        "profile": profile,
+                        "command": ["python3", "validate-knowledge-graph.py"],
+                        "exit_code": 0,
+                        "stderr": "",
+                    }
+                    for profile in ("knowledge", "doctrine", "required-info", "cross")
+                ],
+            },
+        ],
         "findings": findings if findings is not None else [{"severity": "info", "bucket": "matrix_coverage", "observation": "全観点 PASS"}],
         "gaps": gaps if gaps is not None else [],
     }

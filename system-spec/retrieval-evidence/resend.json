@@ -1,24 +1,22 @@
 {
-  "allowed_domains": [
-    "resend.com"
-  ],
-  "findings": [
-    "Free: $0/mo で 3,000 通/月、かつ 100 通/日の日次上限あり。domain 1 件",
-    "Pro: $20/mo で 50,000 通/月 (超過 $0.90/1,000通)。domain 10 件",
-    "Scale: $90/mo で 100,000 通/月 以上の段階制。dedicated IP は $30/mo",
-    "To / CC / BCC の複数宛先はそれぞれ別の 1 通として計上される",
-    "有料プランに日次送信上限は無い",
-    "marketing plan は送信数ではなく contact 数課金 (Free 1,000 contacts)"
-  ],
-  "retrieval_channel": "web-search-official-host-restricted",
-  "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と要約から読み取れた事実だけを記録する。retrieved_at は本 record 作成時に読んだ実時刻で、同一 turn 内で発行した検索の記録時刻 (個別応答の受信時刻ではない)。",
-  "retrieval_query": "Resend pricing plans emails per month",
-  "retrieved_at": "2026-08-07T03:30:09Z",
-  "returned_official_urls": [
-    "https://resend.com/pricing",
-    "https://resend.com/docs/knowledge-base/what-is-resend-pricing",
-    "https://resend.com/changelog/pay-as-you-go-pricing",
-    "https://resend.com/blog/new-free-tier"
-  ],
-  "target_id": "resend"
+ "allowed_domains": [
+  "resend.com"
+ ],
+ "findings": [
+  "Free: 3,000 通/月かつ 100 通/日、domain 1 件、data retention 30 日、automation runs 10,000/月 (超過課金なし)、AI credits 5/月",
+  "domain 数は Pro が 10 件、Scale が 1,000 件",
+  "従量課金 (overage / pay-as-you-go) は有料プランのみで、Free では利用できない",
+  "marketing email は送信数ではなく contact 数で課金され、Free は contact 1,000 件。Pro marketing は 5,000 contact で $40/mo から",
+  "To / CC / BCC の宛先は 1 件ずつ別の email として計上されるため、1 回の API 呼出しでも複数宛先なら月次枠を宛先数ぶん消費する"
+ ],
+ "retrieval_channel": "web-search-official-host-restricted",
+ "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と要約から読み取れた事実だけを記録する。retrieved_at は本 record 作成時に読んだ実時刻で、同一 turn 内で発行した検索の記録時刻 (個別応答の受信時刻ではない)。",
+ "retrieval_query": "Resend pricing free tier emails per month domains",
+ "retrieved_at": "2026-08-15T01:35:54Z",
+ "returned_official_urls": [
+  "https://resend.com/pricing",
+  "https://resend.com/docs/knowledge-base/what-is-resend-pricing",
+  "https://resend.com/blog/new-free-tier"
+ ],
+ "target_id": "resend"
 }

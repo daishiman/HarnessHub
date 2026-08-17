@@ -1,24 +1,25 @@
 {
-  "allowed_domains": [
-    "turso.tech"
-  ],
-  "findings": [
-    "Free (Starter): 5GB storage / 500M rows read per month / 10M rows written per month",
-    "Developer: $4.99/mo。旧 Hobby ($9/mo) を置換。AWS region 限定",
-    "Scaler / Pro / Enterprise の上位段があり、有料プラン全体で database 数は無制限",
-    "embedded database としての利用は無償",
-    "料金体系は複数回変更されており、確定値は turso.tech/pricing の再確認が必要"
-  ],
-  "retrieval_channel": "web-search-official-host-restricted",
-  "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と要約から読み取れた事実だけを記録する。retrieved_at は本 record 作成時に読んだ実時刻で、同一 turn 内で発行した検索の記録時刻 (個別応答の受信時刻ではない)。",
-  "retrieval_query": "Turso pricing plans database",
-  "retrieved_at": "2026-08-07T03:30:09Z",
-  "returned_official_urls": [
-    "https://turso.tech/pricing",
-    "https://turso.tech/blog/turso-cloud-debuts-the-new-developer-plan",
-    "https://turso.tech/blog/unlimited-databases-are-here",
-    "https://turso.tech/blog/turso-introduces-new-hobby-plan-for-9-dollar-a-month",
-    "https://turso.tech/what-is-turso"
-  ],
-  "target_id": "turso"
+ "allowed_domains": [
+  "turso.tech"
+ ],
+ "findings": [
+  "Free: $0 / database 100 / storage 5GB / rows read 500M per month / rows written 10M per month / monthly sync 3GB / クレジットカード不要",
+  "Developer: $4.99/mo (storage 9GB +$0.75/GB、rows read 2.5B +$1/B、rows written 25M +$1/M)",
+  "Scaler: $24.92/mo (storage 24GB、rows read 100B、rows written 100M)。Pro: $416.58/mo (storage 50GB、rows read 250B、rows written 250M)",
+  "2025-07-04 以降、有料 Cloud プランは database 数が無制限",
+  "月次上限 (rows read / written / storage) を超えると query は BLOCKED エラーで失敗する",
+  "SQLite の row read は row scan を意味し、index が効かない query は全行 scan、集計関数 (count/avg/min/max/sum) も対象行ごとに scan を計上する",
+  "embedded database としての利用は無償"
+ ],
+ "retrieval_channel": "web-search-official-host-restricted",
+ "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と要約から読み取れた事実だけを記録する。retrieved_at は本 record 作成時に読んだ実時刻で、同一 turn 内で発行した検索の記録時刻 (個別応答の受信時刻ではない)。",
+ "retrieval_query": "Turso pricing plans free tier storage rows",
+ "retrieved_at": "2026-08-15T01:35:54Z",
+ "returned_official_urls": [
+  "https://turso.tech/pricing",
+  "https://docs.turso.tech/help/usage-and-billing",
+  "https://turso.tech/blog/unlimited-databases-are-here",
+  "https://turso.tech/blog/turso-cloud-debuts-the-new-developer-plan"
+ ],
+ "target_id": "turso"
 }
