@@ -12,7 +12,7 @@ iteration: null
 title: "文書化・runbook・引き継ぎ — カタログ利用者/管理者向け手順・marketplace.json形式文書・障害時縮退runbook・更新通知導線の文書化"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:13:14Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
+updated_at: "2026-08-16T07:15:30Z"
 status: "active"
 depends_on: ["SYS-DUAL-CATALOG-WEB-P11"]
 related_nodes: ["feat-dual-catalog-web"]
@@ -75,3 +75,7 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 ## 2026-08-10 文書追補
 
 validator load boundary を `system-spec/`・`specs/`・`architecture/`・`features/`・`tasks/`・`docs/` へ反映し、受領書を追加した。既存の「CWV は計測不能」「catalog nav が無い」という記述は現行 main に合わせて訂正した。
+
+## 運用追記 (2026-08-16)
+
+S01 一覧のカード操作は [list-shell 運用](../../docs/features/feat-card-list-shell/operations.md)。
