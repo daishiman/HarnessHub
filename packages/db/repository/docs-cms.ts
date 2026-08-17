@@ -11,17 +11,30 @@
  */
 import { and, asc, desc, eq, isNotNull, isNull, lt, lte, or, type SQL, sql } from 'drizzle-orm';
 
+import { auditEvents } from '../schema/core/security';
 import { documents } from '../schema/docs-cms/schema';
 import { aiJobs } from '../schema/hearing-intake/schema';
+import { mutationCreateIdempotency } from '../schema/mutation-safety/schema';
 import { isTransactionalAdapter } from '../src/adapter';
 import { EntityNotFoundError, RepositoryError } from '../src/errors';
 import type { RepositoryContext } from '../src/types';
+import { prepareAuditAppendOn } from './audit';
 import { canonicalJson, sha256Hex } from './bytes';
 import { guardedWrite } from './conflict';
 import type { CoreAdapter, CoreDb } from './db';
 import type { AiJobRow, QueueWriteback } from './hearing-intake-queue';
 import { claimNextJob, completeJob, failJob } from './hearing-intake-queue';
-import { containsTermInAny } from './search';
+import {
+  buildMutationWireResponse,
+  cleanupExpiredMutationIdempotency,
+  type IdempotentCreateResult,
+  type MutationIdempotencyInput,
+  type MutationWireResponseBuilder,
+  mutationIdempotencyScope,
+  parseMutationWireResponse,
+  prepareMutationIdempotency,
+} from './mutation-safety';
+import { containsTermInAny, toContainsPattern } from './search';
 import { serverNow } from './time';
 import { newUlid } from './ulid';
 
@@ -40,6 +53,7 @@ export interface DocumentRow {
   readonly externalDocumentId: string | null;
   readonly externalContentHash: string | null;
   readonly externalRevision: number | null;
+  readonly entityRevision: number;
   readonly createdBy: string;
   readonly updatedBy: string;
   readonly createdAt: number;
@@ -132,7 +146,10 @@ export interface UpdateDocumentInput {
 export interface ListDocumentsInput {
   readonly scope?: DocumentScope;
   readonly status?: DocumentStatus;
-  /** タイトルに含まれる語での絞り込み。対象を title だけにする理由は契約側 (documentListQuerySchema) に記載。 */
+  /**
+   * タイトルに含まれる語での絞り込み。対象を title だけにする理由は契約側
+   * (`documentListQuerySchema`) に記載。他の filter (scope/status/category/tag) とは AND で合成される。
+   */
   readonly query?: string;
   readonly category?: string;
   /** tags JSON 配列の要素に対する完全一致。 */
@@ -141,9 +158,25 @@ export interface ListDocumentsInput {
   readonly limit: number;
 }
 
+/**
+ * 状態タブに出す件数。
+ *
+ * **status 絞り込みと cursor を外した集合**から数える。cursor を残すと「このページの件数」に、
+ * status を残すと選択中のタブ以外が常に 0 になる。可視条件 (`visibilityCondition`) だけは外さない
+ * — 外すと権限の無い行が件数に混ざる。
+ * `unknown` は status が NULL の行 (状態不明) で、個別の状態タブへは混ぜない。
+ */
+export interface DocumentStatusCounts {
+  readonly all: number;
+  readonly published: number;
+  readonly draft: number;
+  readonly unknown: number;
+}
+
 export interface DocumentPage {
   readonly items: readonly DocumentRow[];
   readonly nextCursor: string | null;
+  readonly statusCounts: DocumentStatusCounts;
 }
 
 export interface PublishedDueDocument {
@@ -158,11 +191,33 @@ export interface PublishDueDocumentsResult {
   readonly publishedDocuments: readonly PublishedDueDocument[];
 }
 
+export interface DocumentCreateAuditInput {
+  readonly actorType: 'user' | 'publisher_token' | 'system';
+  readonly actorId: string;
+  readonly summary: Readonly<Record<string, unknown>>;
+}
+
 export interface DocsCmsRepository {
   listDocuments(context: RepositoryContext, input: ListDocumentsInput): Promise<DocumentPage>;
   getDocument(context: RepositoryContext, id: string): Promise<DocumentRow | null>;
   createDocument(context: RepositoryContext, input: CreateDocumentInput): Promise<DocumentRow>;
+  createDocumentIdempotent(
+    context: RepositoryContext,
+    input: CreateDocumentInput,
+    idempotency: MutationIdempotencyInput,
+    buildResponse: MutationWireResponseBuilder<DocumentRow>,
+    audit: DocumentCreateAuditInput,
+  ): Promise<IdempotentCreateResult<DocumentRow, 'document'>>;
   updateDocument(context: RepositoryContext, id: string, input: UpdateDocumentInput): Promise<DocumentRow>;
+  updateDocumentCas(
+    context: RepositoryContext,
+    id: string,
+    input: UpdateDocumentInput,
+    expectedEntityRevision: number,
+  ): Promise<
+    | { readonly outcome: 'updated'; readonly document: DocumentRow }
+    | { readonly outcome: 'conflict'; readonly current: DocumentRow | null }
+  >;
   /** 日次 cron 用。予約日時と ID の安定順で、上限付き・再実行安全に公開する。 */
   publishDueDocuments(now: number, limit?: number): Promise<PublishDueDocumentsResult>;
   getExternalDocument(
@@ -212,6 +267,24 @@ function assertFuturePublishAt(publishAt: number | null | undefined, now: number
   }
 }
 
+function assertDocumentCreateAuditActor(
+  context: RepositoryContext,
+  input: CreateDocumentInput,
+  audit: DocumentCreateAuditInput,
+): void {
+  if (
+    context.actorId === undefined ||
+    context.actorId.trim().length === 0 ||
+    context.actorId !== input.actorId ||
+    context.actorId !== audit.actorId
+  ) {
+    throw new RepositoryError(
+      'invalid-context',
+      '冪等 document create は context、input、audit で同一の actorId が必要です',
+    );
+  }
+}
+
 function normalizePublishDueLimit(limit: number | undefined): number {
   const normalized = limit ?? DEFAULT_PUBLISH_DUE_LIMIT;
   if (!Number.isSafeInteger(normalized) || normalized < 1 || normalized > MAX_PUBLISH_DUE_LIMIT) {
@@ -236,6 +309,7 @@ function docDraftWriteback(): QueueWriteback {
           publishAt: null,
           externalContentHash: null,
           externalRevision: sql<number>`CASE WHEN ${documents.externalRevision} IS NULL THEN NULL ELSE ${documents.externalRevision} + 1 END`,
+          entityRevision: sql<number>`${documents.entityRevision} + 1`,
         };
       },
       buildWhere: (context, job) => and(eq(documents.tenantId, context.tenantId), eq(documents.id, job.refId)) as SQL,
@@ -246,21 +320,105 @@ function docDraftWriteback(): QueueWriteback {
   };
 }
 
+function newDocumentRow(context: RepositoryContext, input: CreateDocumentInput, id: string, now: number): DocumentRow {
+  return {
+    id,
+    tenantId: context.tenantId,
+    scope: input.scope,
+    title: input.title,
+    bodyMarkdown: input.bodyMarkdown,
+    status: 'draft',
+    externalSource: null,
+    externalDocumentId: null,
+    externalContentHash: null,
+    externalRevision: null,
+    entityRevision: 1,
+    createdBy: input.actorId,
+    updatedBy: input.actorId,
+    createdAt: now,
+    updatedAt: now,
+    category: input.category ?? null,
+    tags: input.tags ?? null,
+    thumbnailUrl: input.thumbnailUrl ?? null,
+    thumbnailSource: input.thumbnailSource ?? 'auto',
+    excerpt: input.excerpt ?? null,
+    excerptSource: input.excerptSource ?? 'auto',
+    assetSummary: input.assetSummary ?? null,
+    publishAt: input.publishAt ?? null,
+  };
+}
+
+function documentUpdatePatch(existing: DocumentRow, input: UpdateDocumentInput, now: number) {
+  const patch: Partial<typeof documents.$inferInsert> = {
+    updatedAt: now,
+    updatedBy: input.actorId,
+    entityRevision: existing.entityRevision + 1,
+  };
+  if (input.title !== undefined) patch.title = input.title;
+  if (input.bodyMarkdown !== undefined) patch.bodyMarkdown = input.bodyMarkdown;
+  if (input.status !== undefined) patch.status = input.status;
+  if (input.category !== undefined) patch.category = input.category;
+  if (input.tags !== undefined) patch.tags = input.tags;
+  if (input.thumbnailUrl !== undefined) patch.thumbnailUrl = input.thumbnailUrl;
+  if (input.thumbnailSource !== undefined) patch.thumbnailSource = input.thumbnailSource;
+  if (input.excerpt !== undefined) patch.excerpt = input.excerpt;
+  if (input.excerptSource !== undefined) patch.excerptSource = input.excerptSource;
+  if (input.assetSummary !== undefined) patch.assetSummary = input.assetSummary;
+  const titleChanged = input.title !== undefined && input.title !== existing.title;
+  const bodyChanged = input.bodyMarkdown !== undefined && input.bodyMarkdown !== existing.bodyMarkdown;
+
+  if (input.status !== undefined) {
+    patch.publishAt = null;
+  } else if (input.publishAt !== undefined) {
+    patch.publishAt = input.publishAt;
+    if (input.publishAt !== null) patch.status = 'draft';
+  } else if (titleChanged || bodyChanged) {
+    patch.publishAt = null;
+  }
+
+  const nextStatus = patch.status ?? existing.status;
+  const nextPublishAt = patch.publishAt === undefined ? existing.publishAt : patch.publishAt;
+  if (
+    existing.externalSource !== null &&
+    (titleChanged || bodyChanged || nextStatus !== existing.status || nextPublishAt !== existing.publishAt)
+  ) {
+    if (existing.externalRevision === null) {
+      throw new RepositoryError('invalid-context', '外部同期文書のrevisionがありません');
+    }
+    patch.externalContentHash = null;
+    patch.externalRevision = existing.externalRevision + 1;
+  }
+  return patch;
+}
+
 export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository {
   return {
     async listDocuments(context, input) {
-      const predicates = [visibilityCondition(context)];
-      if (input.scope !== undefined) predicates.push(eq(documents.scope, input.scope));
-      if (input.status !== undefined) predicates.push(eq(documents.status, input.status));
+      // status と cursor を含まない述語。件数集計はこちらを使う (page 内の件数にしないため)。
+      const scopePredicates = [visibilityCondition(context)];
+      if (input.scope !== undefined) scopePredicates.push(eq(documents.scope, input.scope));
       if (input.query !== undefined) {
-        const search = containsTermInAny(input.query, [documents.title]);
-        if (search !== undefined) predicates.push(search);
+        // 検索対象は title / body / tags の OR (他の filter とは AND)。
+        // title だけだと、本文にしか出てこない語やタグ名で探した利用者に「0 件」を返す。
+        // 一覧に出ている情報で探せることが利用者側の期待なので、カードに出る 3 つを見る。
+        const textMatch = containsTermInAny(input.query, [documents.title, documents.bodyMarkdown]);
+        // tags は JSON 配列文字列 (`["設計","API"]`)。列へ直接 LIKE を当てると引用符や
+        // 角括弧まで検索対象に入り、`",` のような入力がタグを持つ全行に一致してしまう。
+        // 完全一致の tag filter と同じ骨格で要素へ展開してから当てる。json_valid を先に
+        // 置くのも同じ理由で、壊れた値は fail-closed で非一致にする。
+        const tagMatch = sql`EXISTS (
+          SELECT 1 FROM json_each(
+            CASE WHEN json_valid(${documents.tags}) THEN ${documents.tags} ELSE '[]' END
+          ) AS tag_item
+          WHERE tag_item.value LIKE ${toContainsPattern(input.query)} ESCAPE '\\'
+        )`;
+        scopePredicates.push(textMatch === undefined ? tagMatch : sql`(${textMatch} OR ${tagMatch})`);
       }
-      if (input.category !== undefined) predicates.push(eq(documents.category, input.category));
+      if (input.category !== undefined) scopePredicates.push(eq(documents.category, input.category));
       if (input.tag !== undefined) {
         // LIKE では `API` が `GraphAPI` にも当たる。json_valid を先に置いて既存の壊れた値は
         // fail-closed で非一致とし、json_each の配列要素単位で完全一致させる。
-        predicates.push(
+        scopePredicates.push(
           sql`EXISTS (
             SELECT 1 FROM json_each(
               CASE WHEN json_valid(${documents.tags}) THEN ${documents.tags} ELSE '[]' END
@@ -269,6 +427,8 @@ export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository
           )`,
         );
       }
+      const predicates = [...scopePredicates];
+      if (input.status !== undefined) predicates.push(eq(documents.status, input.status));
       // ULID primary key is monotonic, so it is a stable cursor even when a document's
       // updated_at changes while the user is paging.  Ordering by updated_at here would
       // make the ID cursor repeat or skip rows after an edit.
@@ -283,7 +443,29 @@ export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository
       const items = rows as DocumentRow[];
       const hasMore = items.length > input.limit;
       const page = hasMore ? items.slice(0, input.limit) : items;
-      return { items: page, nextCursor: hasMore ? (page[page.length - 1]?.id ?? null) : null };
+
+      // 状態別の件数は「認可を通した後・cursor を当てる前」の集合から数える (受入条件 6)。
+      // status 述語も外すので、選択中のタブ以外の件数もそのまま出る。
+      const countRows = (await adapter.client
+        .select({ status: documents.status, count: sql<number>`count(*)` })
+        .from(documents)
+        .where(and(...scopePredicates))
+        .groupBy(documents.status)) as readonly { status: string | null; count: number }[];
+      const statusCounts = countRows.reduce<{ all: number; published: number; draft: number; unknown: number }>(
+        (accumulator, row) => {
+          const count = Number(row.count);
+          accumulator.all += count;
+          // 状態が読めない行は個別タブへ振り分けず unknown に寄せる。「すべて」にだけ現れる
+          // ようにして、published/draft の件数を静かに水増ししない (受入条件 5)。
+          if (row.status === 'published') accumulator.published += count;
+          else if (row.status === 'draft') accumulator.draft += count;
+          else accumulator.unknown += count;
+          return accumulator;
+        },
+        { all: 0, published: 0, draft: 0, unknown: 0 },
+      );
+
+      return { items: page, nextCursor: hasMore ? (page[page.length - 1]?.id ?? null) : null, statusCounts };
     },
 
     async getDocument(context, id) {
@@ -305,32 +487,96 @@ export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository
           const now = serverNow();
           assertFuturePublishAt(input.publishAt, now);
           const id = newUlid(now);
-          const base = {
-            id,
-            tenantId: context.tenantId,
-            scope: input.scope,
-            title: input.title,
-            bodyMarkdown: input.bodyMarkdown,
-            status: 'draft' as const,
-            externalSource: null,
-            externalDocumentId: null,
-            externalContentHash: null,
-            externalRevision: null,
-            createdBy: input.actorId,
-            updatedBy: input.actorId,
-            createdAt: now,
-            updatedAt: now,
-            category: input.category ?? null,
-            tags: input.tags ?? null,
-            thumbnailUrl: input.thumbnailUrl ?? null,
-            thumbnailSource: input.thumbnailSource ?? 'auto',
-            excerpt: input.excerpt ?? null,
-            excerptSource: input.excerptSource ?? 'auto',
-            assetSummary: input.assetSummary ?? null,
-            publishAt: input.publishAt ?? null,
-          } satisfies DocumentRow;
+          const base = newDocumentRow(context, input, id, now);
           await db.insert(documents).values(base);
           return base;
+        }),
+      );
+    },
+
+    async createDocumentIdempotent(context, input, idempotencyInput, buildResponse, audit) {
+      assertDocumentCreateAuditActor(context, input, audit);
+      const idempotency = prepareMutationIdempotency(context, 'documents', idempotencyInput);
+      return guardedWrite(adapter, () =>
+        transactional(adapter).transaction(async (tx) => {
+          const db = tx.client as CoreDb;
+          const scope = mutationIdempotencyScope(idempotency);
+          await cleanupExpiredMutationIdempotency(db, idempotency.now, (where) =>
+            db.delete(mutationCreateIdempotency).where(where),
+          );
+          await db
+            .delete(mutationCreateIdempotency)
+            .where(and(scope, lte(mutationCreateIdempotency.expiresAt, idempotency.now)));
+
+          const now = serverNow();
+          const id = newUlid(now);
+          const claimed = await db
+            .insert(mutationCreateIdempotency)
+            .values({
+              tenantId: idempotency.tenantId,
+              workspaceId: idempotency.workspaceId,
+              resource: idempotency.resource,
+              operation: idempotency.operation,
+              key: idempotency.key,
+              payloadHash: idempotency.payloadHash,
+              resourceId: id,
+              responseStatus: null,
+              responseHeadersJson: null,
+              responseBody: null,
+              expiresAt: idempotency.expiresAt,
+              createdAt: idempotency.now,
+            })
+            .onConflictDoNothing()
+            .returning({ key: mutationCreateIdempotency.key });
+
+          if (claimed.length === 0) {
+            const existingRows = await db.select().from(mutationCreateIdempotency).where(scope).limit(1);
+            const existing = existingRows[0];
+            if (existing === undefined) {
+              throw new RepositoryError('conflict', '冪等作成 claim の競合を解決できません');
+            }
+            if (existing.payloadHash !== idempotency.payloadHash) {
+              return { outcome: 'conflict' as const, expiresAt: existing.expiresAt };
+            }
+            return {
+              outcome: 'replayed' as const,
+              expiresAt: existing.expiresAt,
+              wireResponse: parseMutationWireResponse(existing),
+            };
+          }
+
+          // replay は初回作成時の判定をそのまま再生する。24h 内に publishAt が
+          // 過去になっても再検証で拒否せず、新規作成の勝者だけをここで検証する。
+          assertFuturePublishAt(input.publishAt, now);
+          const document = newDocumentRow(context, input, id, now);
+          await db.insert(documents).values(document);
+          const wireResponse = buildMutationWireResponse(buildResponse, document, idempotency.expiresAt);
+          const ledgerRows = await db
+            .update(mutationCreateIdempotency)
+            .set({
+              responseStatus: wireResponse.status,
+              responseHeadersJson: canonicalJson(wireResponse.headers),
+              responseBody: wireResponse.body,
+            })
+            .where(scope)
+            .returning({ key: mutationCreateIdempotency.key });
+          if (ledgerRows.length !== 1) throw new RepositoryError('conflict', '冪等作成結果を保存できません');
+          const auditValues = await prepareAuditAppendOn(db, context, {
+            workspaceId: idempotency.workspaceId,
+            actorType: audit.actorType,
+            actorId: audit.actorId,
+            action: 'docs.create',
+            entityType: 'document',
+            entityId: document.id,
+            summary: audit.summary,
+          });
+          await db.insert(auditEvents).values(auditValues);
+          return {
+            outcome: 'created' as const,
+            document,
+            expiresAt: idempotency.expiresAt,
+            wireResponse,
+          };
         }),
       );
     },
@@ -351,56 +597,60 @@ export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository
             .limit(1);
           const existing = existingRows[0] as DocumentRow | undefined;
           if (existing === undefined) throw new EntityNotFoundError('documents', id);
-          const patch: Partial<typeof documents.$inferInsert> = { updatedAt: now, updatedBy: input.actorId };
-          if (input.title !== undefined) patch.title = input.title;
-          if (input.bodyMarkdown !== undefined) patch.bodyMarkdown = input.bodyMarkdown;
-          if (input.status !== undefined) patch.status = input.status;
-          if (input.category !== undefined) patch.category = input.category;
-          if (input.tags !== undefined) patch.tags = input.tags;
-          if (input.thumbnailUrl !== undefined) patch.thumbnailUrl = input.thumbnailUrl;
-          if (input.thumbnailSource !== undefined) patch.thumbnailSource = input.thumbnailSource;
-          if (input.excerpt !== undefined) patch.excerpt = input.excerpt;
-          if (input.excerptSource !== undefined) patch.excerptSource = input.excerptSource;
-          if (input.assetSummary !== undefined) patch.assetSummary = input.assetSummary;
-          const titleChanged = input.title !== undefined && input.title !== existing.title;
-          const bodyChanged = input.bodyMarkdown !== undefined && input.bodyMarkdown !== existing.bodyMarkdown;
-
-          // 明示的な公開/非公開は予約を解除する。予約日時の明示設定は draft に戻す。
-          // title/body の実変更だけがあり予約指定が無い場合は、古い内容のまま予約公開されないよう解除する。
-          if (input.status !== undefined) {
-            patch.publishAt = null;
-          } else if (input.publishAt !== undefined) {
-            patch.publishAt = input.publishAt;
-            if (input.publishAt !== null) patch.status = 'draft';
-          } else if (titleChanged || bodyChanged) {
-            patch.publishAt = null;
-          }
-
-          const nextStatus = patch.status ?? existing.status;
-          const nextPublishAt = patch.publishAt === undefined ? existing.publishAt : patch.publishAt;
-          if (
-            existing.externalSource !== null &&
-            (titleChanged || bodyChanged || nextStatus !== existing.status || nextPublishAt !== existing.publishAt)
-          ) {
-            if (existing.externalRevision === null) {
-              throw new RepositoryError('invalid-context', '外部同期文書のrevisionがありません');
-            }
-            patch.externalContentHash = null;
-            patch.externalRevision = existing.externalRevision + 1;
-          }
-
-          const writeCondition =
-            existing.externalRevision === null
-              ? and(visibilityCondition(context), eq(documents.id, id))
-              : and(
-                  visibilityCondition(context),
-                  eq(documents.id, id),
-                  eq(documents.externalRevision, existing.externalRevision),
-                );
+          const patch = documentUpdatePatch(existing, input, now);
+          const writeCondition = and(
+            visibilityCondition(context),
+            eq(documents.id, id),
+            eq(documents.entityRevision, existing.entityRevision),
+          );
           const updated = await db.update(documents).set(patch).where(writeCondition).returning();
           const row = updated[0] as DocumentRow | undefined;
           if (row === undefined) throw new RepositoryError('conflict', 'ドキュメントが同時に更新されました');
           return row;
+        }),
+      );
+    },
+
+    async updateDocumentCas(context, id, input, expectedEntityRevision) {
+      if (!Number.isSafeInteger(expectedEntityRevision) || expectedEntityRevision < 1) {
+        throw new RepositoryError('invalid-context', 'expectedEntityRevision は正の整数である必要があります');
+      }
+      return guardedWrite(adapter, () =>
+        transactional(adapter).transaction(async (tx) => {
+          const db = tx.client as CoreDb;
+          const now = serverNow();
+          assertFuturePublishAt(input.publishAt, now);
+          if (input.status === 'published' && input.publishAt != null) {
+            throw new RepositoryError('invalid-context', 'published と未来の publishAt は同時に指定できません');
+          }
+          const existingRows = await db
+            .select()
+            .from(documents)
+            .where(and(visibilityCondition(context), eq(documents.id, id)))
+            .limit(1);
+          const existing = existingRows[0] as DocumentRow | undefined;
+          if (existing === undefined) return { outcome: 'conflict' as const, current: null };
+          const patch = documentUpdatePatch(existing, input, now);
+          const updatedRows = await db
+            .update(documents)
+            .set(patch)
+            .where(
+              and(
+                visibilityCondition(context),
+                eq(documents.id, id),
+                eq(documents.entityRevision, expectedEntityRevision),
+              ),
+            )
+            .returning();
+          const document = updatedRows[0] as DocumentRow | undefined;
+          if (document !== undefined) return { outcome: 'updated' as const, document };
+
+          const currentRows = await db
+            .select()
+            .from(documents)
+            .where(and(visibilityCondition(context), eq(documents.id, id)))
+            .limit(1);
+          return { outcome: 'conflict' as const, current: (currentRows[0] as DocumentRow | undefined) ?? null };
         }),
       );
     },
@@ -419,6 +669,7 @@ export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository
               tenantId: documents.tenantId,
               publishAt: documents.publishAt,
               externalRevision: documents.externalRevision,
+              entityRevision: documents.entityRevision,
             })
             .from(documents)
             .where(and(eq(documents.status, 'draft'), isNotNull(documents.publishAt), lte(documents.publishAt, now)))
@@ -442,6 +693,7 @@ export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository
                 updatedBy: 'scheduled-publish-cron',
                 externalContentHash: null,
                 externalRevision: sql<number>`CASE WHEN ${documents.externalRevision} IS NULL THEN NULL ELSE ${documents.externalRevision} + 1 END`,
+                entityRevision: sql<number>`${documents.entityRevision} + 1`,
               })
               .where(
                 and(
@@ -451,6 +703,7 @@ export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository
                   eq(documents.publishAt, candidate.publishAt),
                   lte(documents.publishAt, now),
                   revisionCondition,
+                  eq(documents.entityRevision, candidate.entityRevision),
                 ),
               )
               .returning({ id: documents.id, tenantId: documents.tenantId });
@@ -520,6 +773,7 @@ export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository
                 externalDocumentId: input.externalDocumentId,
                 externalContentHash: contentHash,
                 externalRevision: 1,
+                entityRevision: 1,
                 thumbnailUrl: input.autoThumbnailUrl,
                 thumbnailSource: 'auto',
                 excerpt: input.autoExcerpt,
@@ -569,6 +823,7 @@ export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository
               publishAt: null,
               externalContentHash: contentHash,
               externalRevision: existing.externalRevision + 1,
+              entityRevision: existing.entityRevision + 1,
               ...(existing.thumbnailSource === 'auto'
                 ? { thumbnailUrl: input.autoThumbnailUrl, thumbnailSource: 'auto' as const }
                 : {}),
@@ -584,6 +839,7 @@ export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository
                 eq(documents.tenantId, context.tenantId),
                 eq(documents.id, existing.id),
                 eq(documents.externalRevision, existing.externalRevision),
+                eq(documents.entityRevision, existing.entityRevision),
               ),
             )
             .returning();

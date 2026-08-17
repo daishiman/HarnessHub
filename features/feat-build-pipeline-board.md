@@ -126,6 +126,13 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
   - [evidence/index.md](../docs/features/feat-build-pipeline-board/evidence/index.md) (P11)
   - [runbook.md](../docs/features/feat-build-pipeline-board/runbook.md) (P12)
 - 追加テスト: `apps/hub/src/__tests__/build-pipeline-board/authz-shared-table-consistency.test.ts` (B9 共有認可表)
-- 現行実装面: **3 endpoint**（`GET /builds`, `GET /builds/:id`, `POST /builds/:id/stage`）。ADR 目標の 5 endpoint 完成は P05 残課題。
+- 現行実装面 (2026-08-16): 5 endpoint（GET list/detail、POST stage、POST create、PATCH metadata）。
 - 仕様反映受領: [p04-p12-final-review-spec-reflection-receipt.md](../docs/features/feat-build-pipeline-board/p04-p12-final-review-spec-reflection-receipt.md)
+
+## 実装追記 (2026-08-16 / Build カード編集)
+
+- ADR 目標だった `POST /api/v1/builds` と `PATCH /api/v1/builds/:id` を MVP として追加した。
+- 認可は `builds.create` / `builds.update` (workspace-admin 以上)。閲覧は従来どおり member。
+- migration `0017_build-card-authoring.sql` で title_override / risk_override / assignee_user_id / note と `builds_sheet_id_uq` を純増する。
+- 詳細は [カード wave 受領書](../docs/features/feat-card-list-shell/card-family-20260816-spec-reflection-receipt.md)。
 

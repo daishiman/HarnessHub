@@ -1,0 +1,1106 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+  "parent_feature": "feat-semantic-emphasis-icons",
+  "repo_context": {
+    "config_path": ".dev-graph/config.json",
+    "repo_identity": "github:daishiman/HarnessHub",
+    "root_resolution_source": "explicit-cli"
+  },
+  "source_lineage": {
+    "source_plugin": "system-spec-harness",
+    "source_version": "0.1.0",
+    "compile_entrypoint": "run-system-spec-compile",
+    "completeness_entrypoint": "assign-system-spec-completeness-evaluator",
+    "source_paths": [
+      "goal-spec.json",
+      "features/feat-semantic-emphasis-icons.context.json",
+      "architecture/harness-hub-design-system.md",
+      "architecture/harness-hub-frontend.md",
+      "system-spec/spec-state.json"
+    ],
+    "confirmed": false
+  },
+  "p01_entry_gate": {
+    "selector": "parent_feature.depends_on",
+    "operator": "all",
+    "required_statuses": [
+      "done",
+      "closed"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "SYS-EMPHASIS-ICONS-P01",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "title": "要件ベースライン確定 — 絵文字禁止 semantic token/icon 表現の要件確定",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "documentation",
+        "phase-p01"
+      ],
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "frontend",
+        "quality"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P01",
+      "depends_on": [],
+      "write_scope": [
+        "docs/features/feat-semantic-emphasis-icons/requirements-baseline.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.9,
+        "reason": "goal-spec.json を入力に P01 の単一責務 (documentation) を実行する task",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.9,
+            "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p01.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-semantic-emphasis-icons/requirements-baseline.md に goal-spec.json の purpose/goal/scope_in 5 件/scope_out 4 件/acceptance 5 件が逐語一致で転記されている",
+        "quality_constraints 5 件 (emoji-ban-semantic-token-qa232-5 / icon-lint-ci-fail-closed-qa233-6 / icon-ownership-boundary-qa233-3 / design-system-token-and-contrast-gate / state-value-visible-label-qa232-2) が個別の充足条件として書き下されている",
+        "既存実装 (packages/ui/src/icons/index.tsx の callout 4 アイコン、packages/ui/src/components/Markdown.tsx の remarkCallouts、packages/ui/src/tokens/tokens.ts の infoBlue/infoBlueSoft) が『すでに存在する部分』として明記され、本 feature の残作業が絵文字 lint 未整備・一覧/カード状態表現の token 監査・可視ラベル併置監査に限定されることが要件として確定している"
+      ],
+      "graph_node_registration": {
+        "graph_node_id": "SYS-EMPHASIS-ICONS-P01",
+        "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p01.md",
+        "parent_feature": "feat-semantic-emphasis-icons",
+        "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+        "phase_ref": "P01"
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T00:20:00Z"
+      },
+      "rollback": "requirements-baseline.md を作成前状態 (ファイル未作成) へ戻し、goal-spec 側の再確定を dev-graph へ差し戻す",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-semantic-emphasis-icons"
+      ]
+    },
+    {
+      "id": "SYS-EMPHASIS-ICONS-P02",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "title": "アーキテクチャ設計 — 既存 callout/icon/token 実装の再利用範囲と絵文字 lint の配置・CI 組込み位置の決定",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "documentation",
+        "phase-p02"
+      ],
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "frontend",
+        "quality"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P02",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P01"
+      ],
+      "write_scope": [
+        "docs/features/feat-semantic-emphasis-icons/architecture-decision.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.9,
+        "reason": "goal-spec.json を入力に P02 の単一責務 (documentation) を実行する task",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.9,
+            "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p02.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "architecture-decision.md に、既存の packages/ui/src/icons/index.tsx (Icon コンポーネント・iconNames)・packages/ui/src/components/Markdown.tsx (CalloutKind/remarkCallouts/Callout)・packages/ui/src/tokens/tokens.ts (infoBlue/infoBlueSoft 等) を変更せず再利用する範囲が明記されている",
+        "絵文字 lint の配置先スクリプト名 (scripts/lint- prefix の flat 構成に合わせた命名) と、CI ワークフロー (.github/workflows/ci.yml の static-gates 相当ジョブ) への fail-closed 組込み位置が決定されている",
+        "resource_scope の packages/ui/src/markdown という表記が実際には packages/ui/src/components/Markdown.tsx を指すこと、scripts/lint という表記が実際には scripts/lint- prefix のフラットなスクリプト群を指すことが、実在パスとの対応として明記されている",
+        "一覧・カードの状態表現 (Badge.tsx 等) を同じ token 体系へ揃えるための監査範囲 (対象コンポーネント一覧) が決定されている"
+      ],
+      "graph_node_registration": {
+        "graph_node_id": "SYS-EMPHASIS-ICONS-P02",
+        "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p02.md",
+        "parent_feature": "feat-semantic-emphasis-icons",
+        "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+        "phase_ref": "P02"
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T00:20:00Z"
+      },
+      "rollback": "architecture-decision.md を作成前状態へ戻し、P01 の要件確定内容を再検討する",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-semantic-emphasis-icons"
+      ]
+    },
+    {
+      "id": "SYS-EMPHASIS-ICONS-P03",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "title": "独立設計レビュー — lint 検査対象範囲・所有境界・token 適用範囲の妥当性確認",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "documentation",
+        "phase-p03"
+      ],
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "quality"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P03",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P02"
+      ],
+      "write_scope": [
+        "docs/features/feat-semantic-emphasis-icons/design-review.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.9,
+        "reason": "goal-spec.json を入力に P03 の単一責務 (documentation) を実行する task",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.9,
+            "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p03.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "design-review.md に P02 の architecture-decision.md の内容に対する独立レビュー結果 (合格/要修正の判定と根拠) が記録されている",
+        "絵文字 lint の検査対象範囲 (UI 文言・callout ラベル・空状態文言) が scope_in の記述と過不足なく一致することが確認されている",
+        "packages/ui を唯一のアイコン供給元とする所有境界が、apps/hub 側で再実装や別アイコンライブラリ導入をしない制約として明記され、レビューで承認されている"
+      ],
+      "graph_node_registration": {
+        "graph_node_id": "SYS-EMPHASIS-ICONS-P03",
+        "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p03.md",
+        "parent_feature": "feat-semantic-emphasis-icons",
+        "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+        "phase_ref": "P03"
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T00:20:00Z"
+      },
+      "rollback": "design-review.md を作成前状態へ戻し、P02 のアーキテクチャ決定を再設計に差し戻す",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-semantic-emphasis-icons"
+      ]
+    },
+    {
+      "id": "SYS-EMPHASIS-ICONS-P04",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "title": "テストファースト設計 — 絵文字 lint・callout 描き分け・可視ラベル併置・ライトモード背景のテストスタブ作成",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "quality",
+        "phase-p04"
+      ],
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "frontend"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P04",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P03"
+      ],
+      "write_scope": [
+        "scripts/lint-ui-text-emoji.test.ts",
+        "packages/ui/src/components/Markdown.test.tsx",
+        "packages/ui/src/tokens/tokens.test.ts"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.9,
+        "reason": "goal-spec.json を入力に P04 の単一責務 (quality) を実行する task",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.9,
+            "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p04.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "絵文字 lint の失敗系 (絵文字混入時に非ゼロ終了) と成功系 (混入なしで正常終了) のテストスタブが scripts/lint-ui-text-emoji.test.ts に作成されている",
+        "callout 4 種それぞれで異なる Icon name と calloutStyle トークンが適用されることを確認するテストスタブが packages/ui/src/components/Markdown.test.tsx に作成されている",
+        "ライトモードで callout point/note の背景色が infoBlueSoft (グレー系トークンではない) になることを確認するテストスタブが作成されている",
+        "状態・日時・金額・PII・略語の表現でアイコン単体ではなく可視ラベルが併置されることを確認するテストスタブが作成されている"
+      ],
+      "graph_node_registration": {
+        "graph_node_id": "SYS-EMPHASIS-ICONS-P04",
+        "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p04.md",
+        "parent_feature": "feat-semantic-emphasis-icons",
+        "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+        "phase_ref": "P04"
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T00:20:00Z"
+      },
+      "rollback": "追加したテストスタブファイルを削除し、テストファースト設計を P03 のレビュー結果へ差し戻す",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-semantic-emphasis-icons"
+      ]
+    },
+    {
+      "id": "SYS-EMPHASIS-ICONS-P05",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "title": "実装 — 絵文字 lint script・CI fail-closed 組込み・一覧/カード状態表現の token 統一・可視ラベル併置の実装",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "frontend",
+        "phase-p05"
+      ],
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "frontend",
+      "secondary_workstreams": [
+        "quality",
+        "infrastructure"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P05",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P04"
+      ],
+      "write_scope": [
+        "scripts/lint-ui-text-emoji.py",
+        ".github/workflows/ci.yml",
+        "packages/ui/src/components/Badge.tsx"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.9,
+        "reason": "goal-spec.json を入力に P05 の単一責務 (frontend) を実行する task",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.9,
+            "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p05.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "scripts/lint-ui-text-emoji.py が packages/ui/src 配下の文言・callout ラベル・空状態文言中の絵文字を検出し、検出時に非ゼロ終了する",
+        ".github/workflows/ci.yml の static-gates 相当ジョブに絵文字 lint が fail-closed で組み込まれている (lint 未実行では CI が成功しない)",
+        "一覧・カードの状態表現 (Badge.tsx 等) が packages/ui/src/tokens/tokens.ts の semantic token のみで色付けされ、token 外の色指定が残っていない",
+        "P04 のテストスタブが実装に対して green で通過する"
+      ],
+      "graph_node_registration": {
+        "graph_node_id": "SYS-EMPHASIS-ICONS-P05",
+        "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p05.md",
+        "parent_feature": "feat-semantic-emphasis-icons",
+        "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+        "phase_ref": "P05"
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T00:20:00Z"
+      },
+      "rollback": "scripts/lint-ui-text-emoji.py と .github/workflows/ci.yml への変更、Badge.tsx への変更を revert し、実装前の状態に戻す",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-semantic-emphasis-icons"
+      ]
+    },
+    {
+      "id": "SYS-EMPHASIS-ICONS-P06",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "title": "テスト実行 — 単体/lint/a11y/コントラストテストの実行と結果記録",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "quality",
+        "phase-p06"
+      ],
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "frontend"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P06",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P05"
+      ],
+      "write_scope": [
+        "docs/features/feat-semantic-emphasis-icons/test-run-report.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.9,
+        "reason": "goal-spec.json を入力に P06 の単一責務 (quality) を実行する task",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.9,
+            "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p06.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "P04 で作成したテストスタブと P05 の実装に対する単体テストの実行結果 (pass/fail 件数) が test-run-report.md に記録されている",
+        "scripts/lint-ui-text-emoji.py を意図的な絵文字混入サンプルに対して実行した結果 (fail する) と、混入なしサンプルに対して実行した結果 (pass する) が記録されている",
+        "callout の a11y 属性 (role/aria-label) とライトモード背景のコントラスト測定結果が記録されている"
+      ],
+      "graph_node_registration": {
+        "graph_node_id": "SYS-EMPHASIS-ICONS-P06",
+        "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p06.md",
+        "parent_feature": "feat-semantic-emphasis-icons",
+        "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+        "phase_ref": "P06"
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T00:20:00Z"
+      },
+      "rollback": "test-run-report.md を作成前状態へ戻し、P05 の実装差分を修正対象として P05 へ差し戻す",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-semantic-emphasis-icons"
+      ]
+    },
+    {
+      "id": "SYS-EMPHASIS-ICONS-P07",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "title": "受入 — goal-spec acceptance 5 項目の確認",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "documentation",
+        "phase-p07"
+      ],
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "quality"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P07",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P06"
+      ],
+      "write_scope": [
+        "docs/features/feat-semantic-emphasis-icons/acceptance-review.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.9,
+        "reason": "goal-spec.json を入力に P07 の単一責務 (documentation) を実行する task",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.9,
+            "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p07.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "goal-spec.json の acceptance 5 項目それぞれについて、充足の根拠 (対応する実装ファイル・テスト結果) が acceptance-review.md に個別に記録されている",
+        "5 項目全てが充足と判定され、未充足の項目がある場合はその項目が明示され P05/P06 への差し戻しが記録されている"
+      ],
+      "graph_node_registration": {
+        "graph_node_id": "SYS-EMPHASIS-ICONS-P07",
+        "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p07.md",
+        "parent_feature": "feat-semantic-emphasis-icons",
+        "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+        "phase_ref": "P07"
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T00:20:00Z"
+      },
+      "rollback": "acceptance-review.md を作成前状態へ戻し、未充足項目を P05/P06 へ差し戻す",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-semantic-emphasis-icons"
+      ]
+    },
+    {
+      "id": "SYS-EMPHASIS-ICONS-P08",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "title": "リファクタリング/マイグレーション — N/A (DB schema 変更なし)",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "documentation",
+        "phase-p08"
+      ],
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [],
+      "build_target_kind": "application-code",
+      "phase_ref": "P08",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P07"
+      ],
+      "write_scope": [
+        "docs/features/feat-semantic-emphasis-icons/refactor-migration-note.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.9,
+        "reason": "goal-spec.json を入力に P08 の単一責務 (documentation) を実行する task",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.9,
+            "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p08.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "refactor-migration-note.md に、本 feature が公開 API・DB schema・認可判定・Cloudflare deploy unit を変更しない scope_out 対象であり、リファクタリング/マイグレーション作業が不要であることが明記されている",
+        "P05 で行った Badge.tsx 等の token 置換が、既存の呼び出し側インターフェース (props) を変更しない非破壊的変更であることが確認されている"
+      ],
+      "graph_node_registration": {
+        "graph_node_id": "SYS-EMPHASIS-ICONS-P08",
+        "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p08.md",
+        "parent_feature": "feat-semantic-emphasis-icons",
+        "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+        "phase_ref": "P08"
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T00:20:00Z"
+      },
+      "rollback": "refactor-migration-note.md を作成前状態へ戻す (実装済みコードへの影響はない)",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-semantic-emphasis-icons"
+      ]
+    },
+    {
+      "id": "SYS-EMPHASIS-ICONS-P09",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "title": "品質保証 — CI 品質ゲート (絵文字 lint fail-closed/axe/コントラスト/VRT) の確認",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "quality",
+        "phase-p09"
+      ],
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "frontend"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P09",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P08"
+      ],
+      "write_scope": [
+        "docs/features/feat-semantic-emphasis-icons/quality-gate-report.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.9,
+        "reason": "goal-spec.json を入力に P09 の単一責務 (quality) を実行する task",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.9,
+            "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p09.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "絵文字 lint が CI 上で fail-closed に機能していること (lint step 自体が skip/失敗した場合も CI 全体が失敗すること) が quality-gate-report.md に記録されている",
+        "callout の a11y (axe 等) とライトモード背景のコントラスト・VRT (Visual Regression Test) 相当の確認結果が記録されている",
+        "quality_constraints 5 件それぞれについて CI 品質ゲートでの充足確認結果が記録されている"
+      ],
+      "graph_node_registration": {
+        "graph_node_id": "SYS-EMPHASIS-ICONS-P09",
+        "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p09.md",
+        "parent_feature": "feat-semantic-emphasis-icons",
+        "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+        "phase_ref": "P09"
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T00:20:00Z"
+      },
+      "rollback": "quality-gate-report.md を作成前状態へ戻し、未充足のゲートを P05/P06 へ差し戻す",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-semantic-emphasis-icons"
+      ]
+    },
+    {
+      "id": "SYS-EMPHASIS-ICONS-P10",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "title": "最終独立レビュー — quality_constraints 5 件の充足判定",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "documentation",
+        "phase-p10"
+      ],
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "quality"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P10",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P09"
+      ],
+      "write_scope": [
+        "docs/features/feat-semantic-emphasis-icons/final-review.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.9,
+        "reason": "goal-spec.json を入力に P10 の単一責務 (documentation) を実行する task",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.9,
+            "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p10.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "final-review.md に quality_constraints 5 件 (emoji-ban-semantic-token-qa232-5 / icon-lint-ci-fail-closed-qa233-6 / icon-ownership-boundary-qa233-3 / design-system-token-and-contrast-gate / state-value-visible-label-qa232-2) それぞれの充足判定 (合格/不合格) と根拠が記録されている",
+        "P01〜P09 の全成果物 (requirements-baseline.md 〜 quality-gate-report.md) への参照リンクが final-review.md に列挙されている",
+        "5 件全てが合格と判定されている (不合格がある場合は当該フェーズへの差し戻しが final-review.md に明記されている)"
+      ],
+      "graph_node_registration": {
+        "graph_node_id": "SYS-EMPHASIS-ICONS-P10",
+        "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p10.md",
+        "parent_feature": "feat-semantic-emphasis-icons",
+        "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+        "phase_ref": "P10"
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T00:20:00Z"
+      },
+      "rollback": "final-review.md を作成前状態へ戻し、不合格項目を該当フェーズへ差し戻す",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-semantic-emphasis-icons"
+      ]
+    },
+    {
+      "id": "SYS-EMPHASIS-ICONS-P11",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "title": "エビデンス収集 — 再現可能な検証証跡の集約",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "documentation",
+        "phase-p11"
+      ],
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "quality"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P11",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P10"
+      ],
+      "write_scope": [
+        "docs/features/feat-semantic-emphasis-icons/evidence-bundle.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.9,
+        "reason": "goal-spec.json を入力に P11 の単一責務 (documentation) を実行する task",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.9,
+            "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p11.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "evidence-bundle.md に P06 のテスト実行ログ、P09 の CI 品質ゲート実行結果、絵文字 lint の実行コマンドと出力が再実行可能な形式 (コマンド全文+出力抜粋) で集約されている",
+        "各証跡が生成された日時・実行環境 (ローカル/CI) が記録され、第三者が同じコマンドで再現できる状態になっている"
+      ],
+      "graph_node_registration": {
+        "graph_node_id": "SYS-EMPHASIS-ICONS-P11",
+        "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p11.md",
+        "parent_feature": "feat-semantic-emphasis-icons",
+        "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+        "phase_ref": "P11"
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T00:20:00Z"
+      },
+      "rollback": "evidence-bundle.md を作成前状態へ戻し、不足している証跡を P06/P09 へ差し戻して再収集する",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-semantic-emphasis-icons"
+      ]
+    },
+    {
+      "id": "SYS-EMPHASIS-ICONS-P12",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "title": "ドキュメント/運用 — アイコン追加手順・絵文字 lint 運用・所有境界の runbook 作成",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "documentation",
+        "phase-p12"
+      ],
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "frontend"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P12",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P11"
+      ],
+      "write_scope": [
+        "docs/features/feat-semantic-emphasis-icons/runbook.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.9,
+        "reason": "goal-spec.json を入力に P12 の単一責務 (documentation) を実行する task",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.9,
+            "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p12.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "runbook.md に、新しい callout 種別やアイコンを packages/ui/src/icons/index.tsx へ追加する際の手順 (iconNames への追加・iconPaths への SVG 追加・aria-label 方針) が記載されている",
+        "絵文字 lint (scripts/lint-ui-text-emoji.py) が誤検知した場合の対処手順と、CI で fail した場合の切り分け手順が記載されている",
+        "packages/ui を唯一のアイコン供給元とする所有境界 (apps/hub 側で新規アイコンライブラリを追加しない旨) が運用ルールとして明記されている"
+      ],
+      "graph_node_registration": {
+        "graph_node_id": "SYS-EMPHASIS-ICONS-P12",
+        "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p12.md",
+        "parent_feature": "feat-semantic-emphasis-icons",
+        "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+        "phase_ref": "P12"
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T00:20:00Z"
+      },
+      "rollback": "runbook.md を作成前状態へ戻す (実装済みコードへの影響はない)",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-semantic-emphasis-icons"
+      ]
+    },
+    {
+      "id": "SYS-EMPHASIS-ICONS-P13",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "title": "リリース判定と確定仕様・アーキテクチャへの書き戻し",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "documentation",
+        "phase-p13"
+      ],
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "quality",
+        "frontend"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P13",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P12"
+      ],
+      "write_scope": [
+        "features/feat-semantic-emphasis-icons.md",
+        "features/feat-semantic-emphasis-icons.context.json",
+        "architecture/harness-hub-design-system.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.9,
+        "reason": "goal-spec.json を入力に P13 の単一責務 (documentation) を実行する task",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.9,
+            "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p13.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "P01〜P12 の全成果物が揃い、P10 final-review.md で quality_constraints 5 件が全て合格判定されていることを前提にリリース可否が判定されている",
+        "features/feat-semantic-emphasis-icons.md と .context.json に本 feature の実装完了状態 (絵文字 lint 稼働・token 統一・可視ラベル併置) が書き戻されている",
+        "architecture/harness-hub-design-system.md へ、ライトモード強調ブロック背景が semantic token 由来であることの確定事項が書き戻されている"
+      ],
+      "graph_node_registration": {
+        "graph_node_id": "SYS-EMPHASIS-ICONS-P13",
+        "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p13.md",
+        "parent_feature": "feat-semantic-emphasis-icons",
+        "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+        "phase_ref": "P13"
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T00:20:00Z"
+      },
+      "rollback": "features/feat-semantic-emphasis-icons.md・.context.json・architecture/harness-hub-design-system.md への書き戻しを revert し、P10 の最終レビュー結果を再確認する",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-semantic-emphasis-icons"
+      ]
+    }
+  ]
+}

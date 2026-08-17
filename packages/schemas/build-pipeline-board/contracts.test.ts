@@ -87,6 +87,12 @@ describe('BPB-SCHEMA: 応答契約', () => {
     publish_request_id: null,
     title: '検索結果の並び順改善',
     risk: 'none' as const,
+    // カード編集の手入力列。実効値 (title / risk) と併記する契約なので、
+    // 「上書きなし」の null も含めて 1 件の完全な形として固定する。
+    title_override: null,
+    risk_override: null,
+    assignee_user_id: null,
+    note: null,
     created_at: 1_760_000_000_000,
     updated_at: 1_760_000_100_000,
   };

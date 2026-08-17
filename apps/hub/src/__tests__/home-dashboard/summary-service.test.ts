@@ -19,6 +19,7 @@ const context = createRepositoryContext({ tenantId: 'tenant-1', workspaceId: 'ws
 
 const sheetItem: SheetListItem = {
   id: 'hs-1',
+  revision: 1,
   code: 'HS-0001',
   status: 'review',
   title: '見積作成の自動化',
@@ -52,6 +53,10 @@ const buildItem: BuildListItem = {
   publish_request_id: null,
   title: '改善要望対応',
   risk: 'blocked',
+  title_override: null,
+  risk_override: null,
+  assignee_user_id: null,
+  note: null,
   created_at: 800,
   updated_at: 1_200,
 };

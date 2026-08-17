@@ -12,8 +12,8 @@ iteration: null
 title: "dev-graph: render の registration receipt が sync 後に必ず stale になる"
 owners: ["daishiman"]
 created_at: "2026-08-04T00:00:00Z"
-updated_at: "2026-08-04T04:54:05Z"
-status: "active"
+updated_at: "2026-08-08T05:03:37Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-render-registration-stale-digest-20260803","feat-dev-pipeline-improvement","arch-harness-hub-testing-qa"]
 resource_scope: ["tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13-registration-stale-digest-handoff.md","docs/features/feat-dev-pipeline-improvement/render-registration-stale-digest-spec-reflection-receipt.md","plugins/dev-graph/scripts/render-graph-html.py","plugins/dev-graph/tests/test_render_registration_verification.py","plugins/dev-graph/skills/run-dev-graph-render/SKILL.md","system-spec/testing-qa.md","specs/harness-hub-system-specification.md","architecture/harness-hub-testing-qa.md","features/feat-dev-pipeline-improvement.md","eval-log/dev-graph/run-dev-graph-render/"]

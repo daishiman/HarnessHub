@@ -9,10 +9,10 @@ priority: "medium"
 start_date: null
 target_date: null
 iteration: "Studio 拡張"
-title: "Studio: 効果測定 (実行ログ ingest・週次 rollup・KPI ダッシュボード)"
+title: "[SUPERSEDED→HarnessHub-eur8] Studio: 効果測定 (実行ログ ingest・週次 rollup・KPI ダッシュボード)"
 owners: ["daishiman"]
 created_at: "2026-07-17T10:44:09Z"
-updated_at: "2026-08-02T20:54:14.294507Z"
+updated_at: "2026-08-14T10:41:43Z"
 status: "active"
 depends_on: ["feat-hub-foundation","feat-domain-model-db","feat-auth-tenancy","feat-user-org-admin"]
 related_nodes: []
@@ -31,7 +31,7 @@ template_id: "feature"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/plan-findings.json"}
+confirmation_evidence: {"evaluated_digest":"85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-metrics-tracking/85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef/plan-findings.json"}
 source_lineage: {"imported_at":"2026-07-18T22:35:48Z","origin_kind":"generated","source_digest":"7e1a6753bec43aa5e758f148039c1af71517142bb6e039dc8b1de20638018d77","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (Studio mockup 反映で確定した U7 拡張スコープ + I10-I14 から導出)"
@@ -110,7 +110,8 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 
 - Beads: `HarnessHub-lm7`（P01 closed、P02 in_progress、P03〜P13 は merge 後に順次）
 - package digest: `sha256:85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef`
-- 実装: ingest/summary/rollups API、cron rollup、estimation metrics module、S09/S16 UI（path `/metrics`・`/metrics/usage`）
+- 実装: ingest/summary/rollups API、cron rollup、estimation metrics module、S09/S16 UI
+- 2026-08-16 route 収束: S09 は `/dashboard` へ S00 と同居。S16 は `/tracking`。旧 `/metrics`・`/metrics/usage` は 308 転送のみ (ADR §37)。
 - 仕様反映: [mvp-implementation-spec-reflection-receipt.md](../docs/features/feat-metrics-tracking/mvp-implementation-spec-reflection-receipt.md)
 - 最終レビュー: [mvp-final-review.md](../docs/features/feat-metrics-tracking/mvp-final-review.md)
 - P02 で owner を確定: `packages/estimation` 境界は foundation、metrics domain module は本 feature

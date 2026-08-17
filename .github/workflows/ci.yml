@@ -73,6 +73,19 @@ jobs:
         run: |
           node scripts/ci/check-required-package-script.mjs apps/hub/package.json check:auth-gates
           node apps/hub/scripts/check-auth-gates.mjs --json artifacts/auth-gates.json
+      # feat-semantic-emphasis-icons: 共通 UI 層への絵文字混入を遮断する。絵文字は OS/フォントで
+      # 字形と色が変わり、tokens.ts の contrast 保証の外側で描画されるため、dark テーマで
+      # 「意味を担う印だけが読めない」状態を作る。強調・状態表現は inline SVG アイコンと
+      # semantic color token に限定する (local 側の同一入口は `python3 scripts/lint-ui-text-emoji.py`)。
+      - name: G19 共通 UI 層の絵文字混入検査 (semantic emphasis icons)
+        run: |
+          mkdir -p artifacts
+          python3 scripts/lint-ui-text-emoji.py --repo-root . --json > artifacts/ui-text-emoji.json
+      # 上の lint が判定を失っても緑になる無音の失効を防ぐ。probe ツリーの組み立てと
+      # 期待 exit の判定は lint 自身の --self-test が持つ。shell 手続きを CI にだけ置くと
+      # run-ci-checks.sh から同じ検査を呼べず、lint-ci-local-check-parity が落ちる。
+      - name: G19 detector 実効性 (意図的な絵文字を検出できること)
+        run: python3 scripts/lint-ui-text-emoji.py --self-test
       # feat-publish-pipeline P08/P09: test が green でも公開経路から secret scan の合成が
       # 外れたり、Hub が packages/db の schema 内部へ直接依存したりする退行を静的に遮断する。
       - name: G15 publish pipeline 境界・検査結線ゲート (I2 / qa-006 / owner 境界)

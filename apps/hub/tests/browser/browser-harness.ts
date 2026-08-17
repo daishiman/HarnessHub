@@ -46,6 +46,11 @@ export interface BrowserRoute {
   theme?: 'light' | 'dark' | undefined;
   /** 表示密度。`compact` を渡すと `data-density="compact"` を付ける。 */
   density?: 'comfortable' | 'compact' | undefined;
+  /**
+   * 配色。既定 (`gray`) 以外を渡すと `data-palette="<name>"` を付ける。
+   * 配色規則は `[data-palette][data-theme]` の 2 属性で当たるため、指定時は `theme` も併せて渡す。
+   */
+  palette?: string | undefined;
 }
 
 export interface ElementMetrics {
@@ -94,6 +99,7 @@ export function renderDocument(route: BrowserRoute): string {
     'lang="ja"',
     route.theme === 'dark' ? `data-theme="dark"` : '',
     route.density === 'compact' ? `data-density="compact"` : '',
+    route.palette === undefined ? '' : `data-palette="${escapeHtml(route.palette)}"`,
   ]
     .filter((value) => value !== '')
     .join(' ');

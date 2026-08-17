@@ -11,6 +11,15 @@ import { assetSummaryToStorage, tagsToStorage, toDocumentDetail } from '../../..
 import { parseJsonRequest, problemResponse } from '../../../../../features/docs-cms/http.js';
 import { docsCmsRuntime } from '../../../../../features/docs-cms/runtime.js';
 import { AuthzError, authRuntime, requestScopedResource, withAuthz } from '../../../../../lib/authz/index.js';
+import {
+  entityJsonResponse,
+  MutationRequestError,
+  mutationErrorResponse,
+  parseEntityIfMatch,
+  revisionConflictResponse,
+} from '../../../../../lib/http/mutation-safety.js';
+
+const DOCS_MUTATION_JSON_MAX_BYTES = 250_000;
 
 interface DocParams {
   readonly id: string;
@@ -30,7 +39,7 @@ export const GET = withAuthz<DocParams>(
     if (doc === null) {
       return problemResponse(problemDetails({ title: 'ドキュメントが見つかりません', status: 404 }));
     }
-    return Response.json(toDocumentDetail(doc));
+    return entityJsonResponse(toDocumentDetail(doc), { namespace: 'docs', revision: doc.entityRevision });
   },
 );
 
@@ -41,7 +50,16 @@ export const PATCH = withAuthz<DocParams>(
     resolveResource: async (request, params) => requestScopedResource(request, { type: 'document', id: params.id }),
   },
   async (request, authz, params) => {
-    const parsed = await parseJsonRequest(request, updateDocumentRequestSchema);
+    let expectedRevision: number;
+    try {
+      expectedRevision = parseEntityIfMatch(request.headers.get('if-match'), 'docs');
+    } catch (error) {
+      if (error instanceof MutationRequestError) return mutationErrorResponse(error);
+      throw error;
+    }
+    const parsed = await parseJsonRequest(request, updateDocumentRequestSchema, {
+      maxBytes: DOCS_MUTATION_JSON_MAX_BYTES,
+    });
     if (!parsed.ok) return parsed.response;
 
     const existing = await docsCmsRuntime().repository.getDocument(
@@ -75,7 +93,7 @@ export const PATCH = withAuthz<DocParams>(
       derive: () => extractExcerpt(effectiveBody),
     });
 
-    const updated = await docsCmsRuntime().repository.updateDocument(
+    const result = await docsCmsRuntime().repository.updateDocumentCas(
       createRepositoryContext({ tenantId: authz.resource.tenantId, actorId: authz.principal.userId }),
       params.id,
       {
@@ -96,7 +114,19 @@ export const PATCH = withAuthz<DocParams>(
           : { publishAt: parsed.data.publish_at }),
         actorId: authz.principal.userId,
       },
+      expectedRevision,
     );
+
+    if (result.outcome === 'conflict') {
+      if (result.current === null) {
+        return problemResponse(problemDetails({ title: 'ドキュメントが見つかりません', status: 404 }));
+      }
+      return revisionConflictResponse(toDocumentDetail(result.current), {
+        namespace: 'docs',
+        revision: result.current.entityRevision,
+      });
+    }
+    const updated = result.document;
 
     await authRuntime().authz.audit.record({
       actorSubject: authz.principal.userId,
@@ -108,6 +138,9 @@ export const PATCH = withAuthz<DocParams>(
       metadata: { scope: updated.scope, credential: authz.principal.credential },
     });
 
-    return Response.json(toDocumentDetail(updated));
+    return entityJsonResponse(toDocumentDetail(updated), {
+      namespace: 'docs',
+      revision: updated.entityRevision,
+    });
   },
 );

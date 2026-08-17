@@ -12,8 +12,8 @@ iteration: null
 title: "文書化・runbook・引き継ぎ — orphan_candidate 処理・rollback 手順・ポーリング監視の運用手順確立"
 owners: ["daishiman"]
 created_at: "2026-07-30T12:25:36Z"
-updated_at: "2026-08-04T03:43:14.099294Z"
-status: "active"
+updated_at: "2026-08-07T02:52:38Z"
+status: "closed"
 depends_on: ["SYS-PUBLISH-PIPELINE-P11"]
 related_nodes: ["feat-publish-pipeline","arch-harness-hub-backend","arch-harness-hub-security"]
 resource_scope: ["docs/features/feat-publish-pipeline/runbook.md"]

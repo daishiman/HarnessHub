@@ -219,8 +219,35 @@ N/A: 今回の分冊に伴う製品判断はない。
 - 公開 API、DB schema、role 語彙、JIT の `member` 固定は変更しない。確定章は reopen せず、本分冊と運用追補へ写す。
 - 正本の接続は [database](../system-spec/database.md) / [auth](../system-spec/auth.md)、判断と検証は [仕様反映受領書](../docs/features/feat-auth-tenancy/s8oe-spec-reflection-receipt.md)。
 
+## UI 崩れ縦切り writeback (2026-08-15 / `HarnessHub-s36m`)
+
+- 確認用データ、実ブラウザ監査の母数分離、意味境界改行、製品所有印刷導線 0 件、公開操作域 44px を実装した。
+- 確定章 `ui-ux.md` / `testing-qa.md` の web セルは reopen しない。qa-226 / qa-217 を消す compile 差分は採用しない。
+- 正本は architecture の testing-qa / frontend / design-system 章末と [仕様反映受領書](../docs/features/feat-ui-integrity-audit-harness/ui-integrity-remediation-slice-spec-reflection-receipt.md)。
+
 ## hearing-sheet-overhaul writeback (2026-08-12 / `HarnessHub-a70b`)
 
 - S10 を 7 画面へ統合し、profile/priority enum を既存値破壊なしで加算する。作成時添付ステージングと S12 form_snapshot 全項目表示、S17 email/最終ログイン表示を含む。
 - 製品 API path・tenant 認可・AI キュー kind・DB テーブル集合は不変。フィールド数 FormData 30 / snapshot 29 を維持。
 - 詳細正本は `docs/frontend-spec.md` と [仕様反映受領書](../docs/features/feat-hearing-intake/mvp-sheet-overhaul-spec-reflection-receipt.md)。
+
+## 成果物カード一覧 / 強調アイコン / 編集安全化 writeback (2026-08-15)
+
+- ui-ux / frontend / security へ qa-232 / qa-233 / qa-234 を確定反映した。一覧のカード既定・
+  カードブロック記法・編集/プレビュー 2 ペインは仕様として確定し、製品実装は list-shell /
+  block-authoring が後続する。
+- 強調表現は絵文字を使わず、packages/ui の inline SVG と semantic token に限定する。
+  絵文字混入は CI G19 で fail-closed。
+- Docs / Sheets 通常 CRUD は Idempotency-Key と entity revision ETag/If-Match を純増する。
+  Catalog / PublishRequest と外部 import 専用 revision は非変更。
+- 判断と検証は [仕様反映受領書](../docs/features/feat-semantic-emphasis-icons/card-family-20260815-spec-reflection-receipt.md)。
+
+## 成果物カード一覧 製品実装 writeback (2026-08-16)
+
+- qa-232 / qa-233 の確定契約は reopen しない。一覧カード既定・`:::cards`・2 ペインを製品コードへ落とした。
+- Docs / Sheets / Catalog は URL query を絞込の正本、sessionStorage は view mode だけ。
+  `status_counts` と title/body/tags 検索は repository 応答への純増。
+- sanitize allowlist の差分は `hh-cards` / `hh-card` と正規化済み `data-cols` だけ。
+- S09 は `/dashboard` へ同居、S16 は `/tracking`。旧 `/metrics` 系は 308 転送のみ。
+- 配色 5 種と Build create/update は確定 QA を変えず、本分冊と architecture 差分へ写す。
+- 判断と検証は [カード wave 受領書](../docs/features/feat-card-list-shell/card-family-20260816-spec-reflection-receipt.md)。

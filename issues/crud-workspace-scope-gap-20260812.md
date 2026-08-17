@@ -12,8 +12,8 @@ iteration: null
 title: "汎用 CRUD が Workspace の絞り込みを無視する (渡しても効かない)"
 owners: ["daishiman"]
 created_at: "2026-08-12T00:00:00Z"
-updated_at: "2026-08-11T16:31:20.492611Z"
-status: "active"
+updated_at: "2026-08-12T03:37:47Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["packages/db/repository/crud.ts","packages/db/src/types.ts"]

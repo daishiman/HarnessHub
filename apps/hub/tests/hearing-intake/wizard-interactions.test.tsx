@@ -194,6 +194,7 @@ describe('HI-WIZ: 送信と添付アップロード', () => {
       if (url === '/api/v1/sheets') {
         return jsonResponse({
           id: 'sheet-1',
+          revision: 1,
           code: 'HS-0001',
           status: 'generating',
         } satisfies CreateSheetResponse);
@@ -247,6 +248,38 @@ describe('HI-WIZ: 送信と添付アップロード', () => {
 
     const screenshotCalls = fetchMock.mock.calls.filter(([url]) => String(url).includes('/screenshots'));
     expect(screenshotCalls).toHaveLength(1);
+    const createCall = fetchMock.mock.calls.find(([url]) => String(url) === '/api/v1/sheets');
+    expect(new Headers(createCall?.[1]?.headers).get('idempotency-key')).toMatch(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
+    );
+  });
+
+  it('CARD-MUTATION-UI-SHEETS-001: 通信失敗後の再送でフォーム開始時の Idempotency-Key を保持する', async () => {
+    vi.stubGlobal('sessionStorage', {
+      getItem: () => null,
+      setItem: () => undefined,
+      removeItem: () => undefined,
+    });
+    let attempts = 0;
+    const fetchMock = vi.fn(async (input: RequestInfo | URL, _init?: RequestInit) => {
+      if (String(input) !== '/api/v1/sheets') return jsonResponse({});
+      attempts += 1;
+      if (attempts === 1) throw new TypeError('network error');
+      return jsonResponse({ id: 'sheet-1', revision: 1, code: 'HS-0001', status: 'generating' });
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    await render(<HearingIntakeWizard tenantId={TENANT_ID} workspaceId={WORKSPACE_ID} />);
+    await reachReviewWithAttachment();
+    await clickButton('完了');
+    expect(container.textContent).toContain('network error');
+    await clickButton('完了');
+
+    const createCalls = fetchMock.mock.calls.filter(([url]) => String(url) === '/api/v1/sheets');
+    expect(createCalls).toHaveLength(2);
+    const keys = createCalls.map(([, init]) => new Headers(init?.headers).get('idempotency-key'));
+    expect(keys[0]).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
+    expect(keys[1]).toBe(keys[0]);
   });
 
   it('HI-WIZ-004: 添付アップロードが失敗しても、シート作成自体は成功として扱い失敗ファイル名を知らせる', async () => {

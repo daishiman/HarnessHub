@@ -360,6 +360,7 @@ export function PublishWizard({
             aria-describedby={`${fileFieldId}-description`}
             type="file"
             accept=".zip,application/zip"
+            data-hh-focusable=""
             required
             disabled={submitting}
             onChange={(event) => onArchiveChange(event.currentTarget.files?.[0] ?? null)}

@@ -12,8 +12,8 @@ iteration: null
 title: "品質・セキュリティ・運用保証 — レート制限・Idempotency-Key・tenant 分離・secret scan CI ゲート確立"
 owners: ["daishiman"]
 created_at: "2026-07-30T12:25:36Z"
-updated_at: "2026-08-04T03:41:40.099750Z"
-status: "active"
+updated_at: "2026-08-07T02:52:31Z"
+status: "closed"
 depends_on: ["SYS-PUBLISH-PIPELINE-P08"]
 related_nodes: ["feat-publish-pipeline","arch-harness-hub-backend","arch-harness-hub-security"]
 resource_scope: [".github/workflows/ci.yml","apps/hub/scripts/check-db-schema-boundary.mjs","apps/hub/scripts/check-publish-boundary-gates.mjs","apps/hub/scripts/check-publish-inspection-gate.mjs","apps/hub/src/app/api/v1/publish/","docs/features/feat-publish-pipeline/quality-assurance-report.md"]

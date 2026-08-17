@@ -96,8 +96,17 @@ export function ShellSidebar({ groups, items, currentHref, label, brand }: Shell
                       {...(current ? { 'aria-current': 'page' as const } : {})}
                     >
                       <Icon name={item.icon} />
-                      <span className="hh-shell__nav-label" style={{ flex: 1 }}>
-                        {item.label}
+                      <span
+                        className={`hh-shell__nav-label${item.labelSegments === undefined ? '' : ' hh-shell__nav-label--segmented'}`}
+                        style={{ flex: 1 }}
+                      >
+                        {item.labelSegments === undefined
+                          ? item.label
+                          : item.labelSegments.map((segment) => (
+                              <span data-hh-meaning-segment="" key={segment}>
+                                {segment}
+                              </span>
+                            ))}
                       </span>
                       {item.badgeCount === undefined || item.badgeCount <= 0 ? null : (
                         <span

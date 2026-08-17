@@ -12,8 +12,8 @@ iteration: null
 title: "HEAD 由来の dev-graph artifact 7 件を現 template 契約へ移行する"
 owners: ["daishiman"]
 created_at: "2026-08-09T04:10:00Z"
-updated_at: "2026-08-09T04:02:01.436145Z"
-status: "draft"
+updated_at: "2026-08-11T13:53:58Z"
+status: "closed"
 depends_on: []
 related_nodes: ["spec-harness-hub-verification-tiering-20260809","task-verification-tiering-final-review-handoff-20260809"]
 resource_scope: ["specs/harness-hub-build-identity-deploy-freshness-addendum.md","specs/harness-hub-plugin-hook-governance-addendum.md","specs/harness-hub-worktree-mtime-diagnostic-addendum.md","specs/post-signin-landing-observability.md","specs/post-signin-workspace-scope.md","tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-hooks-parity-final-review-handoff.md","tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13-registration-stale-digest-handoff.md"]

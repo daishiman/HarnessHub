@@ -28,6 +28,7 @@ const LIST_RESPONSE: DocumentListResponse = {
   items: [
     {
       id: 'doc-1',
+      revision: 1,
       scope: 'tenant',
       title: '導入ガイド',
       status: 'draft',
@@ -50,6 +51,7 @@ const LIST_RESPONSE: DocumentListResponse = {
 
 const DOC: DocumentDetail = {
   id: 'doc-1',
+  revision: 1,
   scope: 'tenant',
   title: '導入ガイド',
   body_markdown: '# 導入ガイド\n\n手順。',
@@ -147,11 +149,11 @@ async function fillField(input: HTMLInputElement | HTMLTextAreaElement, value: s
 
 /** dynamic() import の解決を待つ (next/dynamic の module 解決は microtask だけでは終わらないため)。 */
 async function waitUntil(predicate: () => boolean): Promise<void> {
-  for (let attempt = 0; attempt < 20; attempt += 1) {
-    if (predicate()) return;
-    await act(async () => new Promise((resolve) => setTimeout(resolve, 0)));
+  const deadline = Date.now() + 2_000;
+  while (!predicate()) {
+    if (Date.now() >= deadline) throw new Error('条件が満たされないまま待機がタイムアウトしました');
+    await act(async () => new Promise((resolve) => setTimeout(resolve, 10)));
   }
-  if (!predicate()) throw new Error('条件が満たされないまま待機がタイムアウトしました');
 }
 
 function inputByLabel(text: string): HTMLInputElement {
@@ -289,12 +291,16 @@ describe('DOCS-UI: DocumentList の一覧取得と操作', () => {
     vi.stubGlobal('fetch', fetchMock);
     await render(<DocumentList tenantId="tenant-a" workspaceId="ws-1" />);
 
-    const statusSelect = container.querySelectorAll('select')[1] as HTMLSelectElement;
-    const selectValueSetter = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value')?.set;
-    if (selectValueSetter === undefined) throw new Error('select value setter がありません');
+    // 状態は選択欄から状態タブへ移した (feat-card-list-shell)。タブは押した時点で即適用される。
+    const statusTabs = container.querySelector('fieldset[aria-label="状態で絞り込み"]');
+    if (statusTabs === null) throw new Error('状態タブがありません');
+    // 「非公開」と取り違えないよう前方一致で選ぶ (件数が付くとラベルは「公開3」になる)。
+    const publishedTab = [...statusTabs.querySelectorAll('button')].find((button) =>
+      (button.textContent ?? '').startsWith('公開'),
+    );
+    if (publishedTab === undefined) throw new Error('公開タブがありません');
     await act(async () => {
-      selectValueSetter.call(statusSelect, 'published');
-      statusSelect.dispatchEvent(new Event('change', { bubbles: true }));
+      publishedTab.click();
     });
 
     const categoryInput = fieldByLabel(container, 'カテゴリ');
@@ -439,6 +445,26 @@ describe('DOCS-UI: DocumentCreateForm の作成', () => {
 
     expect(fetchMock).not.toHaveBeenCalled();
     expect(container.textContent).toContain('タイトルを入力してください。');
+  });
+
+  it('CARD-MUTATION-UI-DOCS-001: フォーム開始時のUUID v4を通信失敗後の再送で保持する', async () => {
+    const fetchMock = vi.fn().mockImplementation(async () => jsonResponse({}, { ok: false, status: 503 }));
+    vi.stubGlobal('fetch', fetchMock);
+    await render(<DocumentCreateForm tenantId="tenant-a" workspaceId="ws-1" canWriteCommon={false} />);
+    await fillTitle(container, '再送するガイド');
+
+    const form = container.querySelector('form');
+    if (form === null) throw new Error('作成 form がありません');
+    await act(async () => form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));
+    await flush();
+    await act(async () => form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));
+    await flush();
+
+    const postCalls = fetchMock.mock.calls.filter(([, init]) => init?.method === 'POST');
+    expect(postCalls).toHaveLength(2);
+    const keys = postCalls.map(([, init]) => new Headers(init?.headers).get('idempotency-key'));
+    expect(keys[0]).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
+    expect(keys[1]).toBe(keys[0]);
   });
 
   it('DOCS-UI-029: docs.write_common を持つ role では「共通」スコープを選べ、選択すると作成リクエストへ含まれる', async () => {
@@ -723,10 +749,50 @@ describe('DOCS-UI: DocumentEditPage の保存', () => {
     );
     if (patchCall === undefined) throw new Error('PATCH リクエストが送信されていません');
     const body = JSON.parse(String((patchCall[1] as RequestInit).body)) as Record<string, unknown>;
+    expect(new Headers((patchCall[1] as RequestInit).headers).get('if-match')).toBe('"docs-1"');
     expect(body.category).toBe('運用');
     expect(body.tags).toEqual(['セットアップ', '手順書']);
     expect(body.thumbnail_url).toBe('https://example.com/thumb.png');
     expect(body.excerpt).toBe('導入手順の要約です。');
+  });
+
+  it('CARD-MUTATION-UI-DOCS-002: 412で未保存入力を保ち、current revisionで明示的に再試行する', async () => {
+    const current = { ...DOC, revision: 2, title: '他の利用者の更新' };
+    const succeeded = { ...DOC, revision: 3, title: '自分の未保存タイトル' };
+    let patchCount = 0;
+    const fetchMock = vi.fn().mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      if (String(input) === '/api/v1/me/notion-integration') return jsonResponse(null);
+      if (String(input) === `/api/v1/docs/${DOC.id}` && init?.method === 'PATCH') {
+        patchCount += 1;
+        return patchCount === 1
+          ? jsonResponse({ error: 'revision_conflict', message: '競合しました', current }, { ok: false, status: 412 })
+          : jsonResponse(succeeded);
+      }
+      return jsonResponse(DOC);
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    await render(
+      <DocumentEditPage
+        params={resolved({ id: 'doc-1' })}
+        searchParams={resolved({ tenant: 'tenant-a', workspace: 'ws-1' })}
+      />,
+    );
+
+    const titleInput = inputByLabel('タイトル');
+    await setInput(titleInput, '自分の未保存タイトル');
+    await act(async () => (await findButtonByText('保存する')).click());
+    await flush();
+
+    expect(titleInput.value).toBe('自分の未保存タイトル');
+    expect(container.textContent).toContain('他の利用者の更新');
+    expect(container.textContent).toContain('未保存の入力は保持');
+
+    await act(async () => (await findButtonByText('現在の内容に対して再試行')).click());
+    await flush();
+    const patchCalls = fetchMock.mock.calls.filter(([, init]) => init?.method === 'PATCH');
+    expect(new Headers(patchCalls[0]?.[1]?.headers).get('if-match')).toBe('"docs-1"');
+    expect(new Headers(patchCalls[1]?.[1]?.headers).get('if-match')).toBe('"docs-2"');
+    expect(JSON.parse(String(patchCalls[1]?.[1]?.body))).toMatchObject({ title: '自分の未保存タイトル' });
   });
 
   it('DOCS-UI-028: 状態と予約日時の相互解除 (公開にすると予約日時をクリア/予約日時を入れると下書きに戻す)', async () => {
@@ -906,6 +972,7 @@ describe('DOCS-UI: DocumentEditPanel (一覧からの分類編集)', () => {
     );
     if (patchCall === undefined) throw new Error('PATCH リクエストが送信されていません');
     const body = JSON.parse(String((patchCall[1] as RequestInit).body)) as Record<string, unknown>;
+    expect(new Headers((patchCall[1] as RequestInit).headers).get('if-match')).toBe('"docs-1"');
     expect(body.category).toBe('運用強化');
 
     const closeButton = [...container.querySelectorAll('button')].find((button) => button.textContent === '閉じる');

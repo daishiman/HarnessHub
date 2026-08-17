@@ -4,11 +4,19 @@
 import { createContext, type ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import { translateUiMessage, type UiLocale, type UiMessageKey } from '../i18n/dictionaries.js';
-import type { Density, ThemeName, ThemePreference } from '../tokens/token-names.js';
+import {
+  type Density,
+  defaultPaletteName,
+  type PaletteName,
+  type ThemeName,
+  type ThemePreference,
+} from '../tokens/token-names.js';
 
 /** 利用者の表示設定。正本はサーバの `user_settings` (PATCH /me) で、ここはその写し。 */
 export interface UiPreferences {
   theme: ThemePreference;
+  /** 配色。明るさ (`theme`) と直交する軸で、`data-palette` として適用する。 */
+  palette: PaletteName;
   density: Density;
   locale: UiLocale;
 }
@@ -17,6 +25,7 @@ export interface UiContextValue extends UiPreferences {
   /** `auto` を OS 設定で解決した実効テーマ。 */
   resolvedTheme: ThemeName;
   setTheme: (theme: ThemePreference) => void;
+  setPalette: (palette: PaletteName) => void;
   setDensity: (density: Density) => void;
   setLocale: (locale: UiLocale) => void;
   /** 文言解決。画面側での文字列直書きを避けるための唯一の入口。 */
@@ -25,6 +34,7 @@ export interface UiContextValue extends UiPreferences {
 
 export const defaultUiPreferences: UiPreferences = {
   theme: 'auto',
+  palette: defaultPaletteName,
   density: 'comfortable',
   locale: 'ja',
 };
@@ -56,7 +66,7 @@ function useSystemTheme(enabled: boolean): ThemeName {
 export interface UiProviderProps {
   children: ReactNode;
   // 省略可能な prop は `| undefined` を明示する (理由は FormFieldProps のコメント)
-  /** 初期表示設定。省略時は ja / comfortable / auto。 */
+  /** 初期表示設定。省略時は ja / comfortable / auto / gray。 */
   defaultPreferences?: Partial<UiPreferences> | undefined;
   /** 設定変更の通知先。サーバへの保存 (PATCH /me) は consumer 側の責務。 */
   onPreferencesChange?: ((preferences: UiPreferences) => void) | undefined;
@@ -92,6 +102,7 @@ export function UiProvider({ children, defaultPreferences, onPreferencesChange }
       ...preferences,
       resolvedTheme,
       setTheme: (theme) => update({ theme }),
+      setPalette: (palette) => update({ palette }),
       setDensity: (density) => update({ density }),
       setLocale: (locale) => update({ locale }),
       t: (key) => translateUiMessage(preferences.locale, key),
@@ -104,6 +115,7 @@ export function UiProvider({ children, defaultPreferences, onPreferencesChange }
       <div
         data-theme={preferences.theme}
         data-resolved-theme={resolvedTheme}
+        data-palette={preferences.palette}
         data-density={preferences.density}
         lang={preferences.locale}
       >

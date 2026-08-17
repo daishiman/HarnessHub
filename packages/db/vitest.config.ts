@@ -15,6 +15,9 @@ export default defineConfig({
         'registry/**/*.ts',
         'repository/**/*.ts',
         'schema/**/*.ts',
+        // 網羅確認用デモデータ。表と fixture が計測対象外だと、
+        // 参照されなくなった宣言が残っても誰も気付かない。
+        'scripts/demo-coverage/**/*.ts',
       ],
       exclude: [
         '**/*.test.ts',

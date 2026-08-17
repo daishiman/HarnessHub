@@ -39,6 +39,8 @@ const INSIGHT_SCOPED = ['ダッシュボード', 'パイプライン', '使用�
 const TENANT_SCOPED = ['ユーザー管理', 'アカウント設定', '認証設定', '見積係数設定'] as const;
 /** 管理カテゴリに置くが、設定の所有範囲は workspace。 */
 const WORKSPACE_SETTINGS = ['Notion連携'] as const;
+/** 製品全体の傾向 (配色の採用状況)。tenant にも workspace にも属さないので scope を付けない。 */
+const PROVIDER_SETTINGS = ['システム'] as const;
 
 describe('TID-PNAV: 共通シェルのナビゲーション href 生成', () => {
   it('TID-PNAV-01: 主要導線を過不足なく 1 本ずつ出す', () => {
@@ -50,6 +52,7 @@ describe('TID-PNAV: 共通シェルのナビゲーション href 生成', () => 
       ...INSIGHT_SCOPED,
       ...TENANT_SCOPED,
       ...WORKSPACE_SETTINGS,
+      ...PROVIDER_SETTINGS,
     ]);
   });
 
@@ -58,7 +61,17 @@ describe('TID-PNAV: 共通シェルのナビゲーション href 生成', () => 
 
     expect(links.get('ダッシュボード')).toBe('/metrics?tenant=tenant-a&workspace=ws-1');
     expect(links.get('パイプライン')).toBe('/builds?tenant=tenant-a&workspace=ws-1');
-    expect(links.get('使用状況・削減効果')).toBe('/metrics/usage?tenant=tenant-a&workspace=ws-1');
+    expect(links.get('使用状況・削減効果')).toBe('/tracking?tenant=tenant-a&workspace=ws-1');
+  });
+
+  it('TID-PNAV-01c: 使用状況の導線は完全 label と意味境界の宣言を別々に保つ', () => {
+    const item = sidebarNavItems({ tenantId: 'tenant-a', workspaceId: 'ws-1' }, 'provider-admin').find((candidate) =>
+      candidate.href.startsWith('/tracking'),
+    );
+
+    expect(item?.label).toBe('使用状況・削減効果');
+    expect(item?.labelSegments).toEqual(['使用状況・', '削減効果']);
+    expect(item?.labelSegments?.join('')).toBe(item?.label);
   });
 
   it('TID-PNAV-02: workspace 単位の画面へは tenant と workspace の両方を引き継ぐ', () => {

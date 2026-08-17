@@ -84,8 +84,9 @@ sources: [system-spec/backend.md, system-spec/security.md, system-spec/database.
 | G10 | duplicate implementation detector | 登録共通層 (§1〜§2) の owner package 外の同名 export / 境界迂回 import を検出 | 1 件以上で fail | 静的ゲート | A4 |
 | G11 | Core Web Vitals 計測 | main 反映後の定期 Lighthouse 計測で LCP ≤ 2.5s / CLS ≤ 0.1 / TBT ≤ 200ms (INP ≤ 200ms の lab 代理指標) を確認 | good を外れたら是正起票 | main 反映後 定期 | qa-018, R-05 |
 | G12 | 認証・認可 静的検査 | `apps/hub/scripts/check-auth-gates.mjs` が束ねる 3 検査 — Auth.js 境界隔離 (D3 / T-BND-01・02) / 認可判定の単一集約 + route 例外の厳密一致 (SEC2 / AD-4) / dev 専用 provider の非存在 (I7 / T-BND-03・04) | 1 本でも違反で非ゼロ終了 | 静的ゲート | qa-020, SEC2, D3, I7 |
-| G13 | client JS 予算 | `next build` 出力から route ごとの First Load JS (page entry + route 固有 client reference manifest の和集合) を gzip 実測。運用値 120 KiB / route (frontend-spec §8 の上限 250KB の内側) | 超過で非ゼロ終了 | build & test | qa-018, R-05 |
+| G13 | client JS 予算 | `next build` 出力から route ごとの First Load JS (page entry + route 固有 client reference manifest の和集合) を gzip 実測。運用値 126 KiB / route (frontend-spec §8 の上限 250KB の内側) | 超過で非ゼロ終了 | build & test | qa-018, R-05 |
 | G14 | OIDC / owner 認可 release contract | `apps/hub` の `test:auth-release-contract` を名指し実行 — Auth.js handler・tenant 別 OIDC start-flow (CSRF form)・`owner` を含む全 action × role 認可表・tenant 分離・本番 OIDC smoke。`owner` を DB role として持たず tenant 境界確認後に資源との関係から合成する契約を、G4 の `pnpm -r test` に含まれるだけの状態から名指しへ引き上げる (test の移動・skip で契約が無言で消えるのを防ぐ) | 1 本でも失敗で fail | build & test | qa-020, SEC2, D3, [infrastructure-spec.md §7](infrastructure-spec.md) |
+| G19 | 共通 UI 層の絵文字混入検査 | `scripts/lint-ui-text-emoji.py` が `packages/ui/src` と `apps/hub/src` の UI 文言・callout ラベル・空状態文言への絵文字混入を検出する。同じジョブに detector 実効性ステップを置き、意図的な絵文字 probe が exit 1 ちょうどでなければ落とす | 違反または detector 失効で fail | 静的ゲート | qa-232【5】, qa-233【6】 |
 
 - **G11 を PR 単位に置かない理由**: PR ごとの Lighthouse は GitHub Actions 無料枠 (2,000 分/月) を圧迫し C2 に反するため、main 反映後の定期計測で確保する (ADR §6 R-05)。よって G11 は merge ブロック対象の「8 種」に数えない。
 - **G6 の第 2 consumer は CI 自身** (ADR §6 R-07): Publisher が未実装で workspace member でもないため、A4-1「実在 consumer のみ対象」規則により CI を実在 consumer として成立させる。

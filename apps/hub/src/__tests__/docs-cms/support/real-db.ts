@@ -5,6 +5,8 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   applyDdlStatements,
+  type CoreRepositories,
+  createCoreRepositories,
   createDocsCmsRepository,
   createTursoClient,
   type DocsCmsRepository,
@@ -15,6 +17,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const MIGRATIONS_DIR = join(HERE, '..', '..', '..', '..', '..', '..', 'packages', 'db', 'migrations');
 
 export interface DocsDbHarness {
+  readonly audit: CoreRepositories['audit'];
   readonly repository: DocsCmsRepository;
   close(): void;
 }
@@ -29,7 +32,12 @@ export async function createDocsDbHarness(): Promise<DocsDbHarness> {
     'PRAGMA journal_mode=WAL',
     ...migrations.flatMap((name) => splitMigrationSql(readFileSync(join(MIGRATIONS_DIR, name), 'utf8'))),
   ]);
+  const audit = createCoreRepositories({
+    adapter,
+    kekBase64: Buffer.alloc(32, 7).toString('base64'),
+  }).audit;
   return {
+    audit,
     repository: createDocsCmsRepository(adapter),
     close() {
       adapter.close();

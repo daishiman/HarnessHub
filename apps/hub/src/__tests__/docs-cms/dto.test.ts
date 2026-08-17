@@ -9,6 +9,7 @@ import { toDocumentDetail, toDocumentListItem } from '../../features/docs-cms/dt
 
 const ROW: DocumentRow = {
   id: 'doc-1',
+  entityRevision: 1,
   tenantId: 'tenant-a',
   scope: 'tenant',
   title: '導入ガイド',
@@ -48,6 +49,7 @@ describe('DOCS-DTO: toDocumentDetail', () => {
   it('DOCS-DTO-001: body_markdown を含む全フィールドを snake_case へ変換する', () => {
     expect(toDocumentDetail(ROW)).toEqual({
       id: 'doc-1',
+      revision: 1,
       scope: 'tenant',
       title: '導入ガイド',
       body_markdown: '# 導入ガイド\n\n手順。',
@@ -84,6 +86,7 @@ describe('DOCS-DTO: toDocumentListItem', () => {
     expect(item).not.toHaveProperty('body_markdown');
     expect(item).toEqual({
       id: 'doc-1',
+      revision: 1,
       scope: 'tenant',
       title: '導入ガイド',
       status: 'draft',

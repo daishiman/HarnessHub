@@ -24,6 +24,23 @@ export const densityNames = ['comfortable', 'compact'] as const;
 export type Density = (typeof densityNames)[number];
 
 /**
+ * 配色 (palette)。明るさ (`ThemeName`) と直交する軸で、`data-palette` 属性で切り替える。
+ *
+ * `gray` が基準で、`:root` / `[data-theme='dark']` が出す値そのもの。残る 4 種は
+ * **面と罫線と主色だけを差し替える上書き**で、状態色 (success / warning / danger / accent) と
+ * チャート系列は全配色で同じにする。状態の意味が配色で変わると「緑=完了」の学習が壊れるため。
+ */
+export const paletteNames = ['gray', 'blue', 'beige', 'green', 'navy'] as const;
+export type PaletteName = (typeof paletteNames)[number];
+
+/**
+ * 基準配色。`:root` が出す値そのものなので、これを選んだときだけ `data-palette` の上書きが要らない。
+ * 「既定はどれか」を利用側 (VRT の撮影対象選定・provider の初期値) が各自で `'gray'` と書くと、
+ * 基準を変えたときに片方だけ追従しない。名前をここに 1 つ置いて全員がそれを読む。
+ */
+export const defaultPaletteName: PaletteName = 'gray';
+
+/**
  * 色 token の名前一覧。値 (hex) は tokens.ts の `colorTokens` が持つ。
  * 名前と値を別モジュールにしても取りこぼしが起きないよう、tokens.ts 側の
  * light/dark は `satisfies Record<ColorTokenName, string>` で全数を型検査する。
@@ -62,6 +79,8 @@ export const colorTokenNames = [
   'onDanger',
   'infoCyan',
   'infoSoft',
+  'infoBlue',
+  'infoBlueSoft',
   'magenta',
   'magentaSoft',
   'neutralSoft',

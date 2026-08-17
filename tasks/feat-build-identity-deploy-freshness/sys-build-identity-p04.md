@@ -12,8 +12,8 @@ iteration: null
 title: "テスト設計 — 埋込・公開読出・鮮度検出の実行可能テスト定義"
 owners: ["daishiman"]
 created_at: "2026-08-07T12:10:05Z"
-updated_at: "2026-08-07T14:11:41.203754Z"
-status: "active"
+updated_at: "2026-08-08T01:58:24Z"
+status: "closed"
 depends_on: ["SYS-BUILD-IDENTITY-P03"]
 related_nodes: ["feat-build-identity-deploy-freshness","arch-harness-hub-infrastructure","arch-harness-hub-testing-qa"]
 resource_scope: ["docs/features/feat-build-identity-deploy-freshness/test-design.md"]

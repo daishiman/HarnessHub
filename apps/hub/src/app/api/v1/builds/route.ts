@@ -9,14 +9,16 @@
  */
 import { createRepositoryContext } from '@harness-hub/db';
 import {
+  type BuildDetailResponse,
   type BuildListResponse,
+  buildCreateRequestSchema,
   buildListQuerySchema,
   problemDetails,
   problemDetailsFromZodError,
 } from '@harness-hub/schemas';
 
-import { buildListProblem } from '../../../../features/build-pipeline-board/errors.js';
-import { problemResponse } from '../../../../features/build-pipeline-board/http.js';
+import { buildListProblem, buildMutationProblem } from '../../../../features/build-pipeline-board/errors.js';
+import { parseJsonRequest, problemResponse } from '../../../../features/build-pipeline-board/http.js';
 import { buildPipelineBoardRuntime } from '../../../../features/build-pipeline-board/runtime.js';
 import { authRuntime, requestScopedResource, withAuthz } from '../../../../lib/authz/index.js';
 
@@ -75,5 +77,75 @@ export const GET = withAuthz(
     // 表示側へ role 名や認可表を複製しない。API が同じ認可判定から capability を投影し、
     // member の DOM には押しても必ず 403 になる操作を最初から出さない。
     return Response.json({ ...result, can_manage: authz.can('builds.stage_change') });
+  },
+);
+
+/**
+ * POST /api/v1/builds — 手動起票 (連携が落ちたときの復旧経路)。
+ *
+ * 二重起票の防止は route の事前 SELECT ではなく `builds.sheet_id` の一意制約に置く。
+ * 事前確認は SELECT と INSERT の隙間で同時要求が両方通る (TOCTOU) ため、
+ * repository が driver の一意制約違反を `DuplicateBuildSourceError` へ写し、ここは 409 に写すだけにする。
+ */
+export const POST = withAuthz(
+  {
+    action: 'builds.create',
+    deps: () => authRuntime().authz,
+    resolveResource: async (request) => requestScopedResource(request, { type: 'build_collection' }),
+  },
+  async (request, authz) => {
+    const workspaceId = authz.resource.workspaceId;
+    if (workspaceId === null) {
+      return problemResponse(
+        problemDetails({
+          title: 'Workspace を指定してください',
+          status: 400,
+          detail: 'x-harness-workspace-id ヘッダーが必要です。',
+        }),
+      );
+    }
+
+    const parsed = await parseJsonRequest(request, buildCreateRequestSchema);
+    if (!parsed.ok) return parsed.response;
+
+    const instance = new URL(request.url).pathname;
+    let detail: BuildDetailResponse;
+    try {
+      detail = await buildPipelineBoardRuntime().service.createBuild({
+        context: createRepositoryContext({
+          tenantId: authz.resource.tenantId,
+          workspaceId,
+          actorId: authz.principal.userId,
+        }),
+        workspaceId,
+        actorUserId: authz.principal.userId,
+        request: parsed.data,
+        canManage: authz.can('builds.stage_change'),
+      });
+    } catch (error) {
+      const problem = buildMutationProblem(error, instance);
+      if (problem === null) throw error;
+      return problemResponse(problem);
+    }
+
+    // 成功後にのみ記録する (SEC6)。失敗経路は早期 return で到達しないので、
+    // 「試みたが弾かれた」が成功として台帳へ残らない。
+    await authRuntime().authz.audit.record({
+      actorSubject: authz.principal.userId,
+      tenantId: authz.resource.tenantId,
+      workspaceId,
+      action: 'build.create',
+      resourceType: 'build',
+      resourceId: detail.id,
+      metadata: {
+        type: detail.type,
+        stage: detail.stage,
+        sheet_id: detail.sheet_id,
+        feedback_id: detail.feedback_id,
+        credential: authz.principal.credential,
+      },
+    });
+
+    return Response.json(detail, { status: 201 });
   },
 );

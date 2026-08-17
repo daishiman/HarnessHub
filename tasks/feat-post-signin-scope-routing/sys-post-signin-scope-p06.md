@@ -12,8 +12,8 @@ iteration: null
 title: "テスト実行 — P04 が定義したテスト ID の実行と結果証跡の収集"
 owners: ["daishiman"]
 created_at: "2026-08-02T12:47:00Z"
-updated_at: "2026-08-04T03:52:50.375403Z"
-status: "active"
+updated_at: "2026-08-04T07:32:10Z"
+status: "closed"
 depends_on: ["SYS-POST-SIGNIN-SCOPE-P05"]
 related_nodes: ["feat-post-signin-scope-routing","arch-harness-hub-frontend","arch-harness-hub-security"]
 resource_scope: ["docs/features/feat-post-signin-scope-routing/test-run-record.md","apps/hub/test/authz/scope-resolution.test.ts","apps/hub/test/routing/post-signin-landing.test.ts","apps/hub/test/auth/session-workspace-binding.test.ts"]

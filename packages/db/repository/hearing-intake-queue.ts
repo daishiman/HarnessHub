@@ -4,7 +4,7 @@
  * claim/complete/fail は tenant_id と workspace_id の両方を CAS 条件へ含め、
  * 同一 tenant 内の別 workspace にあるジョブを取得・更新できないようにする。
  */
-import { and, asc, eq, lte, or, type SQL } from 'drizzle-orm';
+import { and, asc, eq, lte, or, type SQL, sql } from 'drizzle-orm';
 import type { SQLiteTable } from 'drizzle-orm/sqlite-core';
 
 import { type AI_JOB_STATUSES, aiJobs, hearingSheets } from '../schema/hearing-intake/schema';
@@ -75,6 +75,8 @@ export interface QueueWriteSpec {
 
 export interface QueueWriteback {
   readonly onComplete: QueueWriteSpec | null;
+  /** processing → queued で公開 representation が変わる ref 先だけ指定する。 */
+  readonly onRetry?: QueueWriteSpec | null;
   readonly onDead: QueueWriteSpec | null;
 }
 
@@ -84,6 +86,7 @@ export async function claimNextJob(
   kind: AiJobRow['kind'],
   tokenId: string,
   leaseMilliseconds: number = DEFAULT_LEASE_MS,
+  claimWriteback: QueueWriteSpec | null = null,
 ): Promise<AiJobRow | null> {
   const workspaceId = requiredWorkspace(context);
   return guardedWrite(adapter, () =>
@@ -127,7 +130,19 @@ export async function claimNextJob(
           ),
         )
         .returning();
-      return (updated[0] as AiJobRow | undefined) ?? null;
+      const updatedJob = updated[0] as AiJobRow | undefined;
+      if (updatedJob === undefined) return null;
+
+      // lease切れ processing の再claimは公開statusが変わらないためrevisionを進めない。
+      if (job.status !== updatedJob.status && claimWriteback !== null) {
+        const wrote = await db
+          .update(claimWriteback.table)
+          .set(claimWriteback.buildSet(updatedJob, now))
+          .where(claimWriteback.buildWhere(context, updatedJob))
+          .returning();
+        if (wrote.length === 0) throw new RepositoryError('conflict', claimWriteback.conflictMessage);
+      }
+      return updatedJob;
     }),
   );
 }
@@ -238,8 +253,9 @@ export async function failJob(
       if (updated[0] === undefined) throw new RepositoryError('conflict', 'AI job の失敗 CAS に失敗しました');
       const updatedJob = updated[0] as AiJobRow;
 
-      if (dead && writeback.onDead !== null) {
-        const spec = writeback.onDead;
+      const writeSpec = dead ? writeback.onDead : (writeback.onRetry ?? null);
+      if (writeSpec !== null) {
+        const spec = writeSpec;
         const wrote = await db
           .update(spec.table)
           .set(spec.buildSet(updatedJob, now))
@@ -274,10 +290,29 @@ function requiredWorkspace(context: RepositoryContext): string {
 
 const SHEET_GENERATION_EXPECT = { kind: 'sheet_generation' as const, refType: 'hearing_sheet' };
 
+function sheetQueueWriteWhere(context: RepositoryContext, job: AiJobRow): SQL {
+  return and(
+    eq(hearingSheets.tenantId, context.tenantId),
+    eq(hearingSheets.workspaceId, job.workspaceId),
+    eq(hearingSheets.id, job.refId),
+    eq(hearingSheets.aiJobId, job.id),
+  ) as SQL;
+}
+
+const SHEET_QUEUE_REVISION_WRITE: QueueWriteSpec = {
+  table: hearingSheets,
+  buildSet: (_job, now) => ({
+    updatedAt: now,
+    entityRevision: sql<number>`${hearingSheets.entityRevision} + 1`,
+  }),
+  buildWhere: sheetQueueWriteWhere,
+  conflictMessage: 'AI job の ref_id と現在の hearing sheet が一致しません',
+};
+
 export function createHearingQueueRepository(adapter: CoreAdapter): HearingQueueRepository {
   return {
     claimNextSheetGenerationJob(context, tokenId, leaseMilliseconds = DEFAULT_LEASE_MS) {
-      return claimNextJob(adapter, context, 'sheet_generation', tokenId, leaseMilliseconds);
+      return claimNextJob(adapter, context, 'sheet_generation', tokenId, leaseMilliseconds, SHEET_QUEUE_REVISION_WRITE);
     },
     findJob(context, id) {
       return findJob(adapter, context, id);
@@ -286,32 +321,30 @@ export function createHearingQueueRepository(adapter: CoreAdapter): HearingQueue
       return completeJob(adapter, context, id, tokenId, resultJson, SHEET_GENERATION_EXPECT, {
         onComplete: {
           table: hearingSheets,
-          buildSet: (_job, now) => ({ status: 'review', updatedAt: now }),
-          buildWhere: (context, job) =>
-            and(
-              eq(hearingSheets.tenantId, context.tenantId),
-              eq(hearingSheets.workspaceId, job.workspaceId),
-              eq(hearingSheets.id, job.refId),
-              eq(hearingSheets.aiJobId, job.id),
-            ) as SQL,
+          buildSet: (_job, now) => ({
+            status: sql`CASE WHEN ${hearingSheets.status} = 'completed' THEN ${hearingSheets.status} ELSE 'review' END`,
+            updatedAt: now,
+            entityRevision: sql<number>`${hearingSheets.entityRevision} + 1`,
+          }),
+          buildWhere: sheetQueueWriteWhere,
           conflictMessage: 'AI job の ref_id と現在の hearing sheet が一致しません',
         },
+        onRetry: null,
         onDead: null,
       });
     },
     async failSheetGenerationJob(context, id, tokenId, error) {
       return failJob(adapter, context, id, tokenId, error, SHEET_GENERATION_EXPECT, {
         onComplete: null,
+        onRetry: SHEET_QUEUE_REVISION_WRITE,
         onDead: {
           table: hearingSheets,
-          buildSet: (_job, now) => ({ status: 'received', updatedAt: now }),
-          buildWhere: (context, job) =>
-            and(
-              eq(hearingSheets.tenantId, context.tenantId),
-              eq(hearingSheets.workspaceId, job.workspaceId),
-              eq(hearingSheets.id, job.refId),
-              eq(hearingSheets.aiJobId, job.id),
-            ) as SQL,
+          buildSet: (_job, now) => ({
+            status: sql`CASE WHEN ${hearingSheets.status} = 'completed' THEN ${hearingSheets.status} ELSE 'received' END`,
+            updatedAt: now,
+            entityRevision: sql<number>`${hearingSheets.entityRevision} + 1`,
+          }),
+          buildWhere: sheetQueueWriteWhere,
           conflictMessage: 'AI job の ref_id と現在の hearing sheet が一致しません',
         },
       });

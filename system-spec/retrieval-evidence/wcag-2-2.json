@@ -1,18 +1,34 @@
 {
-  "allowed_domains": [
-    "www.w3.org"
-  ],
-  "findings": [
-    "Web Content Accessibility Guidelines 2.2 は W3C Recommendation である",
-    "公開日は 2024-12-12 である",
-    "WCAG 2.2 は知覚可能、操作可能、理解可能、堅牢の4原則で検証可能な達成基準を定める",
-    "WCAG 2.2 への適合方針は WCAG 2.1 までの要件を含めて評価できる"
-  ],
-  "retrieval_channel": "WebSearch/WebFetch",
-  "retrieval_method_disclosure": "W3C 公式 host に限定して検索し、WCAG 2.2 Recommendation 本文を取得・確認した。",
-  "retrieved_at": "2026-08-10T11:54:59Z",
-  "returned_official_urls": [
-    "https://www.w3.org/TR/WCAG22/"
-  ],
-  "target_id": "wcag-2-2"
+ "allowed_domains": [
+  "www.w3.org"
+ ],
+ "findings": [
+  "Web Content Accessibility Guidelines 2.2 は W3C Recommendation である",
+  "公開日は 2024-12-12 である",
+  "WCAG 2.2 は知覚可能、操作可能、理解可能、堅牢の4原則で検証可能な達成基準を定める",
+  "WCAG 2.2 への適合方針は WCAG 2.1 までの要件を含めて評価できる"
+ ],
+ "freshness_rechecks": [
+  {
+   "checked_at": "2026-08-13T15:44:32Z",
+   "http_status": 200,
+   "method": "python3 urllib.request GET (User-Agent 明示)",
+   "observation": "HTTP Last-Modified = Thu, 12 Dec 2024 10:36:22 GMT。W3C Recommendation 2.2 のままで後継勧告なし。",
+   "page_last_updated_extracted": [],
+   "reason": "C08 独立監査 (2026-08-13 / verdict FAIL) の finding F6/F8/F9/F10 対応。F9 (先行 recheck の checked_at 12 件が 2026-08-13T15:34:43Z で秒まで一括一致し実測でない) を受け、同じ照合を request 単位の実測時刻付きで再実行し、先行エントリを本エントリへ差し替えた。",
+   "request_started_at": "2026-08-13T15:44:32Z",
+   "response_body_sha256": "6e3c5fe397257cae509a2fb4752b73062cf8cbeb92c2cec618989b17e4cf7057",
+   "response_bytes": 512457,
+   "response_last_modified_header": "Thu, 12 Dec 2024 10:36:22 GMT",
+   "retrieval_channel": "primary-http-get",
+   "url": ""
+  }
+ ],
+ "retrieval_channel": "WebSearch/WebFetch",
+ "retrieval_method_disclosure": "W3C 公式 host に限定して検索し、WCAG 2.2 Recommendation 本文を取得・確認した。",
+ "retrieved_at": "2026-08-10T11:54:59Z",
+ "returned_official_urls": [
+  "https://www.w3.org/TR/WCAG22/"
+ ],
+ "target_id": "wcag-2-2"
 }

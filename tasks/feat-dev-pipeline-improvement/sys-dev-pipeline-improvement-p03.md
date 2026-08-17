@@ -12,8 +12,8 @@ iteration: null
 title: "設計レビュー — 単一 writer・choke-point・sync authority との整合検証"
 owners: ["daishiman"]
 created_at: "2026-07-25T16:38:15Z"
-updated_at: "2026-08-04T03:23:18.483865Z"
-status: "active"
+updated_at: "2026-08-08T02:53:22Z"
+status: "closed"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P02"]
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
 resource_scope: ["docs/features/feat-dev-pipeline-improvement/design-review.md"]

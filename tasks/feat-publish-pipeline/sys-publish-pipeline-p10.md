@@ -12,8 +12,8 @@ iteration: null
 title: "独立最終レビュー — quality_constraints 9 件・acceptance 3 件・cross-feature 境界判断の独立確認"
 owners: ["daishiman"]
 created_at: "2026-07-30T12:25:36Z"
-updated_at: "2026-08-04T03:42:11.361422Z"
-status: "active"
+updated_at: "2026-08-07T02:52:33Z"
+status: "closed"
 depends_on: ["SYS-PUBLISH-PIPELINE-P09"]
 related_nodes: ["feat-publish-pipeline","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security"]
 resource_scope: ["docs/features/feat-publish-pipeline/final-review-record.md"]

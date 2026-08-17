@@ -7,20 +7,31 @@ import {
   colorVariableName,
   type Density,
   kebab,
+  type PaletteName,
+  paletteNames,
   type ThemeName,
   themeNames,
 } from './token-names.js';
 
 // 名前だけの葉モジュール (token-names.ts) を正本として再輸出する。公開 API の形は従来どおり
 // `@harness-hub/ui` から同じ識別子で参照できる (HarnessHub-vwxc の client bundle 削減)。
-export type { BreakpointName, ColorTokenName, Density, ThemeName, ThemePreference } from './token-names.js';
+export type {
+  BreakpointName,
+  ColorTokenName,
+  Density,
+  PaletteName,
+  ThemeName,
+  ThemePreference,
+} from './token-names.js';
 export {
   breakpointTokens,
   chartSeriesTokens,
   colorVariableName,
+  defaultPaletteName,
   densityNames,
   mediaDown,
   mediaUp,
+  paletteNames,
   themeNames,
 } from './token-names.js';
 
@@ -85,6 +96,13 @@ const lightColors = {
   /** チャート系列・タグ専用 (UI の面・文字には使わない) */
   infoCyan: '#006d75',
   infoSoft: '#e0f2f1',
+  /**
+   * 本文コールアウト (ポイント・補足) 専用のブルー。
+   * `primary` が無彩色グラファイトなので `primarySoft` を本文の注記面に使うと、
+   * light では `neutralSoft` と見分けが付かないグレーの箱になる。
+   */
+  infoBlue: '#1d4ed8',
+  infoBlueSoft: '#e7effb',
   magenta: '#a3125f',
   magentaSoft: '#f6e3ed',
   /** 中立チップの背景 */
@@ -128,17 +146,188 @@ const darkColors: Record<ColorTokenName, string> = {
   onDanger: '#1c1305',
   infoCyan: '#5cdbd3',
   infoSoft: '#112123',
+  infoBlue: '#93c5fd',
+  infoBlueSoft: '#152845',
   magenta: '#ff85c0',
   magentaSoft: '#291321',
   neutralSoft: '#33333a',
   focusRing: '#fafafa',
 };
 
-/** テーマ別の色 token。 */
+/** テーマ別の色 token。`palette=gray` の値そのもの。 */
 export const colorTokens: Record<ThemeName, Record<ColorTokenName, string>> = {
   light: lightColors,
   dark: darkColors,
 };
+
+/**
+ * 配色ごとに差し替える token の範囲。
+ *
+ * ここに**入れていない** token (success / warning / danger / accent / infoCyan / magenta / chart 系列、
+ * および text / textMuted) は全配色で同一にする。状態色が配色で変わると「緑=完了・赤=エラー」という
+ * 学習が配色を変えた瞬間に無効になり、色を意味の担い手として使えなくなるため。
+ * 配色が持ち替えるのは「面・罫線・主色」= 地の性格だけに限る。
+ */
+export const paletteTokenNames = [
+  'pageBg',
+  'bg',
+  'surface',
+  'surfaceMuted',
+  'border',
+  'borderStrong',
+  'primary',
+  'primaryHover',
+  'primarySoft',
+  'onPrimary',
+  'neutralSoft',
+  'focusRing',
+] as const satisfies readonly ColorTokenName[];
+
+export type PaletteTokenName = (typeof paletteTokenNames)[number];
+
+type PaletteColors = Record<PaletteTokenName, string>;
+
+/** `gray` は基準なので base の値をそのまま写す (表を全配色で同じ形にして、検証を 1 本の loop にする)。 */
+function basePaletteColors(theme: ThemeName): PaletteColors {
+  return Object.fromEntries(paletteTokenNames.map((token) => [token, colorTokens[theme][token]])) as PaletteColors;
+}
+
+/**
+ * 配色 × 明るさの色 token。
+ *
+ * 値は「gray と同じ明度段を保ったまま色相を寄せる」方針で決めている。面の 3 段
+ * (pageBg → bg → surface → surfaceMuted) の明度差と、`borderStrong` が弱い面の上で 3:1 を
+ * 満たすことは配色を変えても崩さない。`checkContrastRequirements()` が全 5 配色 × 2 明るさを
+ * 走査するので、ここを触ると自動で AA 契約が再検査される。
+ */
+export const paletteColorTokens: Record<PaletteName, Record<ThemeName, PaletteColors>> = {
+  gray: { light: basePaletteColors('light'), dark: basePaletteColors('dark') },
+  blue: {
+    light: {
+      pageBg: '#dde4ee',
+      bg: '#eef2f9',
+      surface: '#ffffff',
+      surfaceMuted: '#e5ebf5',
+      border: '#d5deea',
+      borderStrong: '#6f798c',
+      primary: '#1e3a8a',
+      primaryHover: '#2b4ba6',
+      primarySoft: '#dde5f3',
+      onPrimary: '#ffffff',
+      neutralSoft: '#e3e9f3',
+      focusRing: '#1e3a8a',
+    },
+    dark: {
+      pageBg: '#0d1220',
+      bg: '#131a2a',
+      surface: '#1c2436',
+      surfaceMuted: '#263046',
+      border: '#38445c',
+      borderStrong: '#8593ad',
+      primary: '#dbe7ff',
+      primaryHover: '#b9cdf5',
+      primarySoft: '#2b3852',
+      onPrimary: '#101828',
+      neutralSoft: '#2c3850',
+      focusRing: '#dbe7ff',
+    },
+  },
+  beige: {
+    light: {
+      pageBg: '#e7e0d3',
+      bg: '#f6f2ea',
+      surface: '#fffefb',
+      surfaceMuted: '#ede7da',
+      border: '#ded6c6',
+      borderStrong: '#7d7466',
+      primary: '#3b3227',
+      primaryHover: '#574a38',
+      primarySoft: '#eae2d2',
+      onPrimary: '#fffefb',
+      neutralSoft: '#ebe4d6',
+      focusRing: '#3b3227',
+    },
+    dark: {
+      pageBg: '#17140f',
+      bg: '#1f1b15',
+      surface: '#2a251d',
+      surfaceMuted: '#353027',
+      border: '#474135',
+      borderStrong: '#948a76',
+      primary: '#f7f0e2',
+      primaryHover: '#ded6c4',
+      primarySoft: '#3a3428',
+      onPrimary: '#1a160f',
+      neutralSoft: '#3b3529',
+      focusRing: '#f7f0e2',
+    },
+  },
+  green: {
+    light: {
+      pageBg: '#dbe7dd',
+      bg: '#eef5f0',
+      surface: '#ffffff',
+      surfaceMuted: '#e4efe8',
+      border: '#d2e0d6',
+      borderStrong: '#69796e',
+      primary: '#14532d',
+      primaryHover: '#1f6b3d',
+      primarySoft: '#dcebe1',
+      onPrimary: '#ffffff',
+      neutralSoft: '#e2ece6',
+      focusRing: '#14532d',
+    },
+    dark: {
+      pageBg: '#0d1512',
+      bg: '#141d18',
+      surface: '#1d2721',
+      surfaceMuted: '#27332c',
+      border: '#3a473f',
+      borderStrong: '#88998e',
+      primary: '#e3f3e8',
+      primaryHover: '#c2ddcb',
+      primarySoft: '#2b3a31',
+      onPrimary: '#101a14',
+      neutralSoft: '#2d3c33',
+      focusRing: '#e3f3e8',
+    },
+  },
+  navy: {
+    light: {
+      pageBg: '#d7dded',
+      bg: '#eaeef8',
+      surface: '#ffffff',
+      surfaceMuted: '#e0e6f4',
+      border: '#ced7ea',
+      borderStrong: '#6a7590',
+      primary: '#172554',
+      primaryHover: '#24376f',
+      primarySoft: '#dce3f2',
+      onPrimary: '#ffffff',
+      neutralSoft: '#dee5f2',
+      focusRing: '#172554',
+    },
+    dark: {
+      pageBg: '#0a0f1e',
+      bg: '#101728',
+      surface: '#192134',
+      surfaceMuted: '#232d44',
+      border: '#35415a',
+      borderStrong: '#8390ab',
+      primary: '#dde6fb',
+      primaryHover: '#bac9ee',
+      primarySoft: '#28334d',
+      onPrimary: '#0c1322',
+      neutralSoft: '#2a344e',
+      focusRing: '#dde6fb',
+    },
+  },
+};
+
+/** 配色 × 明るさを重ねた実効の色 token。CSS 生成とコントラスト検証の唯一の解決経路。 */
+export function resolvePaletteColors(palette: PaletteName, theme: ThemeName): Record<ColorTokenName, string> {
+  return { ...colorTokens[theme], ...paletteColorTokens[palette][theme] };
+}
 
 /** 余白 (4px グリッド)。 */
 export const spacingTokens = {
@@ -270,6 +459,9 @@ export const contrastRequirements: readonly ContrastRequirement[] = [
   { foreground: 'onDanger', background: 'dangerHover', minRatio: AA_CONTRAST_TEXT, usage: '破壊的操作 hover の文字' },
   { foreground: 'infoCyan', background: 'surface', minRatio: AA_CONTRAST_TEXT, usage: '情報の文字' },
   { foreground: 'infoCyan', background: 'infoSoft', minRatio: AA_CONTRAST_TEXT, usage: '情報チップの文字' },
+  { foreground: 'infoBlue', background: 'surface', minRatio: AA_CONTRAST_TEXT, usage: 'コールアウト見出しの文字' },
+  { foreground: 'infoBlue', background: 'infoBlueSoft', minRatio: AA_CONTRAST_TEXT, usage: 'コールアウト面上の見出し' },
+  { foreground: 'text', background: 'infoBlueSoft', minRatio: AA_CONTRAST_TEXT, usage: 'コールアウト面上の本文' },
   { foreground: 'magenta', background: 'surface', minRatio: AA_CONTRAST_TEXT, usage: 'タグの文字' },
   { foreground: 'magenta', background: 'magentaSoft', minRatio: AA_CONTRAST_TEXT, usage: 'タグチップの文字' },
   { foreground: 'borderStrong', background: 'surface', minRatio: AA_CONTRAST_NON_TEXT, usage: '入力欄の輪郭' },
@@ -280,22 +472,35 @@ export const contrastRequirements: readonly ContrastRequirement[] = [
 
 export interface ContrastCheckResult extends ContrastRequirement {
   theme: ThemeName;
+  palette: PaletteName;
   ratio: number;
   passes: boolean;
 }
 
 /**
- * 指定テーマ (省略時は全テーマ) のコントラスト契約を検証する。
+ * 指定テーマ (省略時は全テーマ) × 指定配色 (省略時は全配色) のコントラスト契約を検証する。
  * consumer 側の CI からも同じ判定を再実行できるよう公開 API にしている。
+ *
+ * 既定を「全配色」にしているのは、配色を足したときに検査を足し忘れる余地を消すため。
+ * `paletteColorTokens` に 1 配色増やすだけで、その配色も自動で同じ契約に晒される。
  */
-export function checkContrastRequirements(theme?: ThemeName): ContrastCheckResult[] {
-  const targets: readonly ThemeName[] = theme ? [theme] : themeNames;
+export function checkContrastRequirements(theme?: ThemeName, palette?: PaletteName): ContrastCheckResult[] {
+  const themeTargets: readonly ThemeName[] = theme ? [theme] : themeNames;
+  const paletteTargets: readonly PaletteName[] = palette ? [palette] : paletteNames;
 
-  return targets.flatMap((name) =>
-    contrastRequirements.map((requirement) => {
-      const palette = colorTokens[name];
-      const ratio = contrastRatio(palette[requirement.foreground], palette[requirement.background]);
-      return { ...requirement, theme: name, ratio, passes: ratio >= requirement.minRatio };
+  return paletteTargets.flatMap((paletteName) =>
+    themeTargets.flatMap((name) => {
+      const colors = resolvePaletteColors(paletteName, name);
+      return contrastRequirements.map((requirement) => {
+        const ratio = contrastRatio(colors[requirement.foreground], colors[requirement.background]);
+        return {
+          ...requirement,
+          theme: name,
+          palette: paletteName,
+          ratio,
+          passes: ratio >= requirement.minRatio,
+        };
+      });
     }),
   );
 }
@@ -307,6 +512,12 @@ function declarations(entries: Record<string, string>, namespace?: string): stri
     .map(([key, value]) => `  ${prefix}${kebab(key)}: ${value};`)
     .join('\n');
 }
+
+/** 配色が差し替える token だけを宣言として出す (基準 `gray` との差分だけを CSS へ載せる)。 */
+const paletteBlock = (palette: PaletteName, theme: ThemeName, indent = ''): string =>
+  paletteTokenNames
+    .map((token) => `${indent}  ${colorVariableName(token)}: ${paletteColorTokens[palette][theme][token]};`)
+    .join('\n');
 
 const colorBlock = (theme: ThemeName, indent = ''): string =>
   Object.entries(colorTokens[theme])
@@ -343,6 +554,22 @@ export function buildThemeCss(): string {
     // auto の既定側は light。OS が dark のときだけ下の media が上書きする。
     `[data-theme='auto'] {\n  color-scheme: light;\n}`,
     `@media (prefers-color-scheme: dark) {\n  [data-theme='auto'] {\n${colorBlock('dark', '  ')}\n    color-scheme: dark;\n  }\n}`,
+    // 配色の上書き。`gray` は :root / [data-theme='dark'] そのものなので出さない。
+    //
+    // 詳細度の並びが要点:
+    //   [data-palette='X']                  (0,1,0) … light の面・主色
+    //   [data-theme='dark']                 (0,1,0) … 基準配色の dark (上より前に出るので、
+    //                                                  同点なら後勝ちで palette 側が勝つ)
+    //   [data-palette='X'][data-theme='dark'] (0,2,0) … palette の dark が最終的に勝つ
+    // palette の light 側と dark 側が **同じ token 集合**を出すことが前提で、
+    // 片方だけ足すと dark で light の面が残る。`paletteTokenNames` を両方の鍵にしている理由。
+    ...paletteNames
+      .filter((palette) => palette !== 'gray')
+      .flatMap((palette) => [
+        `[data-palette='${palette}'] {\n${paletteBlock(palette, 'light')}\n}`,
+        `[data-palette='${palette}'][data-theme='dark'] {\n${paletteBlock(palette, 'dark')}\n}`,
+        `@media (prefers-color-scheme: dark) {\n  [data-palette='${palette}'][data-theme='auto'] {\n${paletteBlock(palette, 'dark', '  ')}\n  }\n}`,
+      ]),
     `[data-density='compact'] {\n${declarations(densityTokens.compact)}\n}`,
     // 操作部品のフォーカス可視化。色のみに頼らず輪郭と余白でも示す (WCAG 2.2 の 2.4.11 対応)。
     // 宣言本体は focus-ring.ts が正本 (ネイティブ要素向けの base 層と見え方を揃えるため)。

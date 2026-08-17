@@ -89,6 +89,18 @@ describe('buildBaseCss', () => {
     expect(css).toContain(focusRingDeclarations);
   });
 
+  describe.each(stageBoardCssSources)('44px タップ領域契約: %s', (_label, source) => {
+    it('共通の焦点可能要素と DataTable の遷移リンクに同じ下限を配る', () => {
+      expect(source).toContain(':where([data-hh-focusable]),\n:where([data-hh-data-table]) a[href] {');
+      expect(source).toContain('min-block-size: 44px;');
+      expect(source).toContain('min-inline-size: 44px;');
+    });
+
+    it('StageBoard の label 操作域は compact 表示でも 44px を下回らない', () => {
+      expect(source).toMatch(/\[data-hh-stage-option\] \{[^}]*min-block-size: 44px;/s);
+    });
+  });
+
   /**
    * token 層と base 層でフォーカスリングの見え方が食い違わないことを固定する。
    * 片方だけ色や太さを変える改変が入ったらここで落ちる。

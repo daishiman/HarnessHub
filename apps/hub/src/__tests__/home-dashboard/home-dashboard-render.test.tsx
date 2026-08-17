@@ -20,6 +20,7 @@ const SUMMARY: HomeSummaryResponse = {
     recent_items: [
       {
         id: 'hs-1',
+        revision: 1,
         code: 'HS-0001',
         status: 'review',
         title: '見積作成の自動化',
@@ -143,5 +144,15 @@ describe('HD-UI: home-dashboard の表示', () => {
     renderHome();
     await screen.findByText(/ヒアリングシート: 2件が対応待ちです/);
     expect(screen.queryByText('表示してはいけない案件')).toBeNull();
+  });
+
+  it('HD-UI-006: 読み込み後に現れる全リンクも44px操作域の共通契約へ載せる', async () => {
+    stubFetch(SUMMARY);
+    const { container } = renderHome();
+    await screen.findByText(/ヒアリングシート: 2件が対応待ちです/);
+
+    const links = [...container.querySelectorAll('a[href]')];
+    expect(links.length).toBeGreaterThan(0);
+    expect(links.every((link) => link.hasAttribute('data-hh-focusable'))).toBe(true);
   });
 });

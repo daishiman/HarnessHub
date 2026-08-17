@@ -9,10 +9,10 @@ priority: "medium"
 start_date: "2026-08-09"
 target_date: null
 iteration: null
-title: "dev-workflow【2】の evaluator 結果 cache が未実装"
+title: "evaluator cache を実 evaluator 呼出元へ配線する"
 owners: ["daishiman"]
 created_at: "2026-08-09T00:00:00Z"
-updated_at: "2026-08-09T03:47:47.430749Z"
+updated_at: "2026-08-09T04:36:27Z"
 status: "draft"
 depends_on: []
 related_nodes: []

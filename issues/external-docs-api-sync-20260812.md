@@ -12,8 +12,8 @@ iteration: null
 title: "Claude Code等の外部環境からDocs CMSへ安全に同期する"
 owners: ["daishiman"]
 created_at: "2026-08-12T06:02:20Z"
-updated_at: "2026-08-12T06:51:18Z"
-status: "active"
+updated_at: "2026-08-12T09:52:37Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["apps/hub/src/app/api/v1/docs","apps/hub/src/lib/authz","packages/db/schema","packages/schemas","apps/publisher","plugins/harness-hub-publisher"]

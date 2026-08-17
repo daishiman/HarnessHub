@@ -31,8 +31,8 @@ import {
 } from '@harness-hub/ui';
 import { type ReactNode, useCallback, useEffect, useState } from 'react';
 
-import { AppliedFilterChips } from '../../../../components/filter/applied-filter-chips.js';
-import { fetchMetricsProjectNames } from '../../../../features/metrics-tracking/project-names.js';
+import { AppliedFilterChips } from '../../../components/filter/applied-filter-chips.js';
+import { fetchMetricsProjectNames } from '../../../features/metrics-tracking/project-names.js';
 import {
   buildSummaryQuery,
   formatAxisDate,
@@ -42,7 +42,7 @@ import {
   type MetricsDateRange,
   metricsDisplayLabel,
   resolvedMetricsName,
-} from '../../../../features/metrics-tracking/view-model.js';
+} from '../../../features/metrics-tracking/view-model.js';
 
 interface UsageSavingsReportProps {
   readonly tenantId: string;

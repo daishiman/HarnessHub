@@ -13,7 +13,7 @@ title: "Studio: 改善要望フィードバックループ (2 経路受付・AI 
 owners: ["daishiman"]
 created_at: "2026-07-17T10:44:09Z"
 updated_at: "2026-08-17T12:00:00Z"
-status: "active"
+status: "closed"
 depends_on: ["feat-auth-tenancy","feat-domain-model-db","feat-hub-foundation"]
 related_nodes: ["issue-in-app-improvement-request-spec-20260817","spec-system-spec-index"]
 resource_scope: ["features/feat-feedback-loop.md"]

@@ -12,8 +12,8 @@ iteration: null
 title: "画面ごとの表示形式 (profile) の正本が、参照先に存在しない"
 owners: ["daishiman"]
 created_at: "2026-08-12T00:00:00Z"
-updated_at: "2026-08-11T15:59:05.259558Z"
-status: "active"
+updated_at: "2026-08-12T03:37:48Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["docs/frontend-ui-foundation-spec.md","docs/screen-inventory.md"]

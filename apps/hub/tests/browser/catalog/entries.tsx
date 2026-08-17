@@ -18,6 +18,7 @@
 import {
   ActionLink,
   Alert,
+  AppearancePicker,
   AppShell,
   Button,
   buildShellCss,
@@ -26,6 +27,7 @@ import {
   DegradedBanner,
   EmptyState,
   ErrorState,
+  FilterTabs,
   FormField,
   Icon,
   ListState,
@@ -200,6 +202,24 @@ export const catalogEntries: readonly CatalogEntry[] = [
     ),
   },
   {
+    name: 'FilterTabs',
+    group: 'navigation',
+    render: () => (
+      // 件数ありと件数なしを並べる。件数は集計が届くまで省略できる契約なので、
+      // 「数が入った場合」だけを見本にすると省略時の見た目が VRT の網から外れる。
+      <FilterTabs
+        label="状態で絞り込み"
+        current="all"
+        onSelect={() => undefined}
+        items={[
+          { value: 'all', label: 'すべて', count: 12 },
+          { value: 'draft', label: '下書き', count: 3 },
+          { value: 'published', label: '公開済み' },
+        ]}
+      />
+    ),
+  },
+  {
     name: 'StepWizard',
     group: 'navigation',
     render: () => (
@@ -262,6 +282,13 @@ export const catalogEntries: readonly CatalogEntry[] = [
         <TextButton tone="muted">閉じる</TextButton>
       </Stack>
     ),
+  },
+  {
+    // 配色 (palette) と明るさ (theme) の 2 軸を選ぶ。VRT では既定の配色で描かれた見本を撮る
+    // (選択後の見た目は UiProvider が data-palette / data-theme を切り替えて全体へ効く)。
+    name: 'AppearancePicker',
+    group: 'form',
+    render: () => <AppearancePicker name="catalog-appearance" />,
   },
   {
     name: 'Select',

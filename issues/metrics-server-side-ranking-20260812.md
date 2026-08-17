@@ -12,11 +12,11 @@ iteration: null
 title: "効果測定の上位ランキングを画面側で切っている (件数が増えると破綻する)"
 owners: ["daishiman"]
 created_at: "2026-08-12T00:00:00Z"
-updated_at: "2026-08-11T16:51:06.717350Z"
-status: "active"
+updated_at: "2026-08-12T00:53:03Z"
+status: "closed"
 depends_on: []
 related_nodes: []
-resource_scope: ["apps/hub/src/features/metrics-tracking/view-model.ts","apps/hub/src/app/(dashboard)/metrics/metrics-dashboard.tsx"]
+resource_scope: ["apps/hub/src/features/metrics-tracking/view-model.ts","apps/hub/src/app/(dashboard)/dashboard/metrics-dashboard.tsx"]
 purpose: "表示に使わないデータを転送し続ける構造を、件数が育つ前に直す。"
 goal: "上位ランキングの並べ替えと件数の打ち切りをサーバ側へ移す。"
 scope_in: ["/api/v1/metrics/summary の応答仕様の変更","topRanking の役割の縮小","上位件数の正本の決定"]
@@ -106,7 +106,7 @@ N を API のクエリで受けるか固定にするかは、この課題で決�
 ## 関連グラフ
 
 - `apps/hub/src/features/metrics-tracking/view-model.ts:96-105` (`topRanking` / `toRankingChartData`)
-- `apps/hub/src/app/(dashboard)/metrics/metrics-dashboard.tsx:60-78` (取得)
+- `apps/hub/src/app/(dashboard)/dashboard/metrics-dashboard.tsx:60-78` (取得)
 - `packages/db/repository/metrics-tracking.ts` (集計の実体)
 
 ## 受入条件

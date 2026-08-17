@@ -12,8 +12,8 @@ iteration: null
 title: "公開画面のヘッダー固定を見直す"
 owners: ["daishiman"]
 created_at: "2026-08-11T00:00:00Z"
-updated_at: "2026-08-11T10:45:30Z"
-status: "active"
+updated_at: "2026-08-12T03:37:42Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["apps/hub/src/app/legal/page.tsx","apps/hub/src/app/device/page.tsx","packages/ui/src/shell"]

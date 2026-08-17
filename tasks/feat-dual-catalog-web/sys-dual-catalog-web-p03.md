@@ -12,8 +12,8 @@ iteration: null
 title: "独立設計レビュー — S01-S04画面構成・install descriptor契約・ポーリング設計・marketplace.json生成方式の妥当性確認"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:13:14Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-08T08:31:06Z"
+status: "closed"
 depends_on: ["SYS-DUAL-CATALOG-WEB-P02"]
 related_nodes: ["feat-dual-catalog-web","arch-harness-hub-frontend"]
 resource_scope: ["docs/features/feat-dual-catalog-web/design-review-notes.md"]

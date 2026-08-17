@@ -26,14 +26,18 @@ mode: `beads` = 実行タスクは bd のみ / `github` = GitHub Issues のみ /
 
 registration payloadの`tracker_binding="repo-config-default"` sentinelと`binding_intents[graph_node_id]`の解決ownerはC02。intentがexplicit `beads|github|none`ならrepo-config許容範囲と照合し、`auto`はmode=beads|githubだけで同値に解決する。mode=bothのautoは人/AI主体を機械判定できず誤投影になるためfail-closedし、明示intentを要求する。確定enumへ変換してからC11へ渡し、sentinelは永続化しない。
 
-| repo プロファイル | execution_tracker.mode 既定 | GitHub ミラー (beads束縛タスク) |
+**判定軸は repository の公開範囲ではなく「実行タスクを誰が起票し誰が読むか」である** (2026-08-15 是正)。public/private は課題の authority を決めない。
+
+| repo プロファイル (判定軸 = 起票主体と読み手) | execution_tracker.mode 既定 | GitHub ミラー (beads束縛タスク) |
 |---|---|---|
-| ソロ + AI エージェント開発の private repo (**既定**) | beads | 不要 (local_only) |
-| 人間の協力者/レビュアーへ進捗共有する private repo | both | `bd github sync --push-only` で beads→GitHub 一方向ミラー |
-| 外部コントリビュータを受け入れる public OSS repo | github | — (GitHub Issues が最初から正本) |
+| ソロ + AI エージェント開発 (public/private を問わない) (**既定**) | beads | 不要 (local_only) |
+| 人間の協力者/レビュアーへ進捗共有する repo | both | `bd github sync --push-only` で beads→GitHub 一方向ミラー |
+| 外部コントリビュータが GitHub 上で起票する OSS repo | github | — (GitHub Issues が最初から正本) |
 | 使い捨て実験/プロトタイプ repo | beads | 不要 (完了後は bd compact で要約保持) |
 
 - 本表はソロ AI エージェント開発を主とする運用の既定 (ユーザー委任により確定)。迷った場合は beads を選ぶ (公式 FAQ: AI エージェント実行は bd 優位)。
+- **public repository は 3 行目の条件を満たさない** — 公開されていても起票が owner と AI エージェントだけなら 1 行目 (beads / local_only) を選ぶ。public だからという理由だけで `github` を選ぶと、正本が bd にあるまま GitHub 側へ大量の投影が残り、以後は乖離するだけの死蔵 issue になる (HarnessHub 実例: `github_mirror=bd_github_push_only` の放置で open 490 件中 444 件が完了済み/役目終了となり、`HarnessHub-mx65` で `none` へ退役)。public repo で外部からの報告窓口が必要な場合も、mode は beads のままで GitHub Issues を「外部受付と CI 通知の入口」として併用でき、受け付けた報告を bd へ起票し直せばよい。
+- **push-only ミラーは逆流路を持たない** — `github_mirror=bd_github_push_only` は bd→GitHub の一方向で、bd 側の close は GitHub へ伝わらない。採用するなら定期 reconcile を運用に組み込むこと。組み込めないなら `none` を選ぶ。乖離は運用の怠慢ではなく設定の構造的帰結として単調増加する。
 - mode=both はtask単位の`tracker_binding_intent=beads|github|none`を必須とし、`auto`を禁止する。mode=beads|githubでは`auto`を同じbindingへ決定論解決できる。
 - Beads mirrorをGitHub Projectsへ載せる場合、Projectsはviewer-onlyとしGitHub native auto-add/Doneだけを使う。custom fieldを双方向管理したいtaskは`tracker_binding=github`を選ぶ。
 - mode 変更 (migration): mode を変更しても既存ノードの `tracker_binding` は自動変更しない (新 mode は新規ノードにのみ適用する)。既存束縛の移行は dry-run manifest 付きの明示 migration として実行する。旧 tracker 側の issue は `close --reason=migrated` で収束させる。

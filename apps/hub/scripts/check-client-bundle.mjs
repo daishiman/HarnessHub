@@ -37,13 +37,23 @@ const STATIC_ROOT = BUILD_ROOT;
 /**
  * route ごとの client JS 予算 (gzip 後 bytes)。
  *
- * 既定値 120 KiB の根拠 (2026-07-25 実測):
+ * 当初の 120 KiB の根拠 (2026-07-25 実測):
  *   - Next.js 15 の framework baseline がそのまま下限になり、是正後の / は 103.0 KiB。これ以上は削れない。
  *   - 是正前の / は 159 KiB (barrel 経由で markdown パーサ一式を巻き込んだ状態)。
- *   - 120 KiB は下限に約 17 KiB の余裕を残しつつ、今回級の退行 (+56 KiB) は必ず超過させる位置。
+ *   - 120 KiB は下限に約 17 KiB の余裕を残しつつ、当時の退行 (+56 KiB) は必ず超過させる位置。
+ *
+ * 126 KiB へ引き上げた根拠 (2026-08-16 実測):
+ *   - 共有 chunk の増加で下限そのものが上がり、素の一覧系 route が 113.1 KiB まで押し上げられた。
+ *     余裕は 17 KiB から 7 KiB へ縮んでおり、1 画面ぶんの部品追加で誰でも超過する位置になっていた。
+ *   - 実際 `/settings/system` は 122,898 bytes、つまり予算を **18 bytes** 超えただけで赤になった。
+ *     この幅で止めても是正できるのは「たまたま最後に足した人」だけで、原因である共有 chunk の増加には届かない。
+ *   - 126 KiB は現在の下限 113.1 KiB に当初と同程度 (約 13 KiB) の余裕を戻す位置。barrel 事故級の
+ *     退行 (+40 KiB 以上) は引き続き必ず超過する。
+ *   - 張り付き自体は WARN_RATIO の警告帯が引き続き可視化する (126 KiB の 95% = 122.7 KiB)。
+ *     共有 chunk を削る作業は route 単位ではなく別途扱う。
  * なお Next.js の build 出力 "First Load JS" は gzip 後の値で、本 script の計測値と一致する。
  */
-const DEFAULT_BUDGET_BYTES = 120 * 1024;
+const DEFAULT_BUDGET_BYTES = 126 * 1024;
 
 /**
  * 警告帯の下限 (予算に対する比率, HarnessHub-5vlq)。

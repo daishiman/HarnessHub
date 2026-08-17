@@ -79,8 +79,12 @@ const GENERATED = generatedSectionsSchema.parse({
   estimated_effect: '## 効果',
 });
 
+/** 状態タブの件数。この test の関心は一覧の中身なので、件数は 0 で固定する。 */
+const EMPTY_STATUS_COUNTS = { all: 0, active: 0, completed: 0, unknown: 0 } as const;
+
 const SHEET_ROW: HearingSheetRow = {
   id: 'sheet-1',
+  entityRevision: 1,
   tenantId: 'tenant-a',
   workspaceId: 'workspace-a',
   code: 'HS-0001',
@@ -121,9 +125,27 @@ function repository(overrides: Partial<HearingIntakeRepository> = {}): HearingIn
       input.buildPayloadJson(SHEET_ROW.id, SHEET_ROW.code);
       return SHEET_ROW;
     }),
-    listSheets: vi.fn(async () => ({ items: [SHEET_ROW], nextCursor: 'sheet-next' })),
+    createSheetAndEnqueueIdempotent: vi.fn(async (_context, input, _idempotency, buildResponse) => {
+      input.buildPayloadJson(SHEET_ROW.id, SHEET_ROW.code);
+      const expiresAt = 1_800_086_400_000;
+      return {
+        outcome: 'created' as const,
+        sheet: SHEET_ROW,
+        expiresAt,
+        wireResponse: buildResponse(SHEET_ROW, expiresAt),
+      };
+    }),
+    listSheets: vi.fn(async () => ({
+      items: [SHEET_ROW],
+      nextCursor: 'sheet-next',
+      statusCounts: EMPTY_STATUS_COUNTS,
+    })),
     findSheet: vi.fn(async () => SHEET_ROW),
     updateSheetStatus: vi.fn(async (_context, _id, status) => ({ ...SHEET_ROW, status })),
+    updateSheetStatusCas: vi.fn(async (_context, _id, status) => ({
+      outcome: 'updated' as const,
+      sheet: { ...SHEET_ROW, status, entityRevision: SHEET_ROW.entityRevision + 1 },
+    })),
     regenerate: vi.fn(async () => SHEET_ROW),
     claimNextSheetGenerationJob: vi.fn(async () => null),
     findJob: vi.fn(async () => null),
@@ -160,7 +182,7 @@ describe('HI-SVC: service の提出・参照・管理操作', () => {
         applicantUserId: 'user-a',
         request: FORM,
       }),
-    ).resolves.toEqual({ id: 'sheet-1', code: 'HS-0001', status: 'generating' });
+    ).resolves.toEqual({ id: 'sheet-1', revision: 1, code: 'HS-0001', status: 'generating' });
 
     expect(storedForm).not.toContain('salary');
     expect(queuedPayload).not.toContain('salary');
@@ -195,8 +217,46 @@ describe('HI-SVC: service の提出・参照・管理操作', () => {
     ).resolves.toMatchObject({ code: 'HS-0001' });
   });
 
+  it('冪等 replay では受付通知を再送しない', async () => {
+    const notifyReceipt = vi.fn(async () => undefined);
+    const service = createHearingIntakeService(
+      repository({
+        createSheetAndEnqueueIdempotent: vi.fn(async () => ({
+          outcome: 'replayed' as const,
+          expiresAt: 1_800_086_400_000,
+          wireResponse: {
+            status: 201,
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ id: 'sheet-1', revision: 1, code: 'HS-0001', status: 'generating' }),
+          },
+        })),
+      }),
+      { notifyReceipt },
+    );
+
+    await expect(
+      service.createSheetIdempotent({
+        context: CONTEXT,
+        workspaceId: 'workspace-a',
+        applicantUserId: 'user-a',
+        request: FORM,
+        idempotency: { key: '123e4567-e89b-42d3-a456-426614174000', payloadHash: 'a'.repeat(64) },
+        buildResponse: (response) => ({
+          status: 201,
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(response),
+        }),
+      }),
+    ).resolves.toMatchObject({ outcome: 'replayed', wireResponse: { status: 201 } });
+    expect(notifyReceipt).not.toHaveBeenCalled();
+  });
+
   it('一覧は本人用フィルタと管理者用フィルタを分け、snapshot から表示項目を作る', async () => {
-    const listSheets = vi.fn(async () => ({ items: [SHEET_ROW], nextCursor: 'sheet-next' }));
+    const listSheets = vi.fn(async () => ({
+      items: [SHEET_ROW],
+      nextCursor: 'sheet-next',
+      statusCounts: EMPTY_STATUS_COUNTS,
+    }));
     const service = createHearingIntakeService(repository({ listSheets }));
     const query = { status: 'generating' as const, department: '経理部', q: '請求', cursor: 'cursor-1', limit: 20 };
 
@@ -230,12 +290,41 @@ describe('HI-SVC: service の提出・参照・管理操作', () => {
     expect(listSheets).toHaveBeenLastCalledWith(CONTEXT, { limit: 10 });
   });
 
+  it('不正な保存行を除外する際もエラー詳細や業務データをログに出さない', async () => {
+    const secretSentinel = 'applicant-secret-sentinel';
+    const malformed = { ...SHEET_ROW, formJson: JSON.stringify({ secret: secretSentinel }) };
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    const service = createHearingIntakeService(
+      repository({
+        listSheets: vi.fn(async () => ({ items: [malformed], nextCursor: null, statusCounts: EMPTY_STATUS_COUNTS })),
+      }),
+    );
+
+    await expect(
+      service.listSheets({
+        context: CONTEXT,
+        workspaceId: 'workspace-a',
+        applicantUserId: 'user-a',
+        readAll: false,
+        query: { limit: 20 },
+      }),
+    ).resolves.toMatchObject({ items: [] });
+
+    expect(consoleError).toHaveBeenCalledWith(
+      '[hearing-intake] malformed stored row skipped',
+      expect.objectContaining({ operation: 'listSheets', errorName: expect.any(String) }),
+    );
+    expect(consoleError.mock.calls[0]?.[1]).not.toHaveProperty('error');
+    expect(JSON.stringify(consoleError.mock.calls)).not.toContain(secretSentinel);
+    consoleError.mockRestore();
+  });
+
   it('保存済み旧 11/12 項目 form_json を一覧・詳細で現行形式 (unknown/未回答) へ安全に正規化する', async () => {
     for (const legacy of [LEGACY_FORM_SNAPSHOT, { ...LEGACY_FORM_SNAPSHOT, salary: FORM.salary }]) {
       const legacyRow = { ...SHEET_ROW, formJson: JSON.stringify(legacy) };
       const service = createHearingIntakeService(
         repository({
-          listSheets: vi.fn(async () => ({ items: [legacyRow], nextCursor: null })),
+          listSheets: vi.fn(async () => ({ items: [legacyRow], nextCursor: null, statusCounts: EMPTY_STATUS_COUNTS })),
           findSheet: vi.fn(async () => legacyRow),
         }),
       );

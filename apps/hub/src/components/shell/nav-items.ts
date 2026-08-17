@@ -81,6 +81,8 @@ export function primaryNavItems(scope: ShellScope): readonly ShellNavItem[] {
 export function insightNavItems(scope: ShellScope): readonly ShellNavItem[] {
   return [
     {
+      // S09 の画面本体は `/dashboard` へ同居した。導線は旧 path のまま置き、
+      // 308 で正本へ寄せる。同じ href にすると「ホーム」と現在地が二重になる。
       href: scopedHref('/metrics', scope, true),
       label: 'ダッシュボード',
       icon: 'dashboard',
@@ -91,8 +93,9 @@ export function insightNavItems(scope: ShellScope): readonly ShellNavItem[] {
       icon: 'pipeline',
     },
     {
-      href: scopedHref('/metrics/usage', scope, true),
+      href: scopedHref('/tracking', scope, true),
       label: '使用状況・削減効果',
+      labelSegments: ['使用状況・', '削減効果'],
       icon: 'tracking',
     },
   ];
@@ -107,6 +110,7 @@ export function secondaryNavItems(scope: ShellScope, role: SessionRole | null): 
   const authSettingsVisible = sessionActionVisible(role, 'idp.connection_read');
   const coefficientsVisible = sessionActionVisible(role, 'coefficients.read');
   const notionIntegrationVisible = sessionActionVisible(role, 'notion-integration.read');
+  const systemVisible = sessionActionVisible(role, 'appearance.usage_read');
 
   return [
     ...(usersVisible
@@ -147,6 +151,17 @@ export function secondaryNavItems(scope: ShellScope, role: SessionRole | null): 
             // Notion 連携は tenant 全体ではなく workspace ごとの設定。
             href: scopedHref('/settings/notion', scope, true),
             label: 'Notion連携',
+            icon: 'settings' as const,
+          },
+        ]
+      : []),
+    ...(systemVisible
+      ? [
+          {
+            // 製品全体の傾向 (配色の採用状況) を見る画面。workspace には属さないので
+            // scopedHref の workspace 付与は false。
+            href: scopedHref('/settings/system', scope, false),
+            label: 'システム',
             icon: 'settings' as const,
           },
         ]

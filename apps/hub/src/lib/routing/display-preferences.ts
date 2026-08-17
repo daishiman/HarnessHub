@@ -11,7 +11,8 @@
  *
  * 注意: `next/headers` を使う Server Component 専用。
  */
-import type { Density, ThemePreference, UiLocale, UiPreferences } from '@harness-hub/ui';
+import { palettePreferenceSchema } from '@harness-hub/schemas';
+import type { Density, PaletteName, ThemePreference, UiLocale, UiPreferences } from '@harness-hub/ui';
 
 import { userOrgAdminRuntime } from '../../features/user-org-admin/runtime.js';
 import { resolveShellIdentity } from './shell-identity.js';
@@ -35,6 +36,16 @@ function toUiDensity(density: string): Density {
   return density === 'compact' ? 'compact' : 'comfortable';
 }
 
+/**
+ * 配色は明るさ (theme) と直交する別軸。値域の正本は wire contract
+ * (`palettePreferenceSchema`) に置き、ここでは許可集合を書き写さない。
+ * 未知の値 (古い保存値・手書き) は既定の `gray` へ倒す — 配色不明で画面を落とさない。
+ */
+function toUiPalette(palette: string): PaletteName {
+  const parsed = palettePreferenceSchema.safeParse(palette);
+  return parsed.success ? parsed.data : 'gray';
+}
+
 function toUiLocale(language: string): UiLocale {
   return language === 'en' ? 'en' : 'ja';
 }
@@ -54,6 +65,7 @@ export async function resolveUiPreferences(): Promise<UiPreferences | undefined>
     const settings = await userOrgAdminRuntime().service.getDisplaySettings(identity.subject);
     return {
       theme: toUiTheme(settings.theme),
+      palette: toUiPalette(settings.palette),
       density: toUiDensity(settings.density),
       locale: toUiLocale(settings.language),
     };

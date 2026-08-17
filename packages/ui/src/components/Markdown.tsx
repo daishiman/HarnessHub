@@ -16,6 +16,7 @@ import {
   useCallback,
   useEffect,
   useId,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -24,8 +25,10 @@ import rehypeRaw from 'rehype-raw';
 import rehypeSanitize, { defaultSchema } from 'rehype-sanitize';
 import remarkGfm from 'remark-gfm';
 
+import { Icon, type IconName } from '../icons/index.js';
 import { colorVar, radiusVar, spaceVar } from '../internal/style.js';
 import { useUi } from '../theme/UiProvider.js';
+import type { ColorTokenName } from '../tokens/token-names.js';
 import { Button } from './Button.js';
 import { Modal } from './Modal.js';
 import { Tabs } from './Tabs.js';
@@ -45,12 +48,23 @@ export const markdownSanitizeSchema = {
   // GFM タスクリスト用に `<input type="checkbox" disabled>` を許可しているが、
   // docs-cms ではタスクリストを使わないため、生 HTML 経由で `<input>` を混入させられる
   // 経路自体を閉じる (disabled な checkbox とはいえ、意図しない要素を通す面を増やさない)。
-  tagNames: [...(defaultSchema.tagNames ?? []).filter((name) => name !== 'input'), 'details', 'summary', 'hh-callout'],
+  tagNames: [
+    ...(defaultSchema.tagNames ?? []).filter((name) => name !== 'input'),
+    'details',
+    'summary',
+    'hh-callout',
+    'hh-cards',
+    'hh-card',
+  ],
   attributes: {
     ...defaultSchema.attributes,
     details: [...(defaultSchema.attributes?.details ?? []), 'open'],
     summary: [...(defaultSchema.attributes?.summary ?? [])],
     'hh-callout': ['dataCallout'],
+    // 列数は remark プラグインが 2|3 へ正規化済みの値だけを載せる。
+    // 利用者が書いた文字列がそのまま属性へ落ちる経路を作らない。
+    'hh-cards': ['dataCols'],
+    'hh-card': [],
   },
 };
 
@@ -134,6 +148,242 @@ interface MdastNode {
   children?: MdastNode[];
 }
 
+// --- カードブロック (`:::cards` / `:::card`) ------------------------------
+
+/** カード行の列数。契約は「大画面 2 or 3 列 / 中幅は最大 2 列 / 狭幅 1 列」。 */
+export type CardColumns = '2' | '3';
+
+/** 記法の書き間違いを、保存を止めずに編集画面へ返すための 1 件分。 */
+export interface CardBlockWarning {
+  /** 1 始まりの行番号。「どこを直すか」を利用者へ示すための唯一の手がかり。 */
+  readonly line: number;
+  /** 何が起きていて、どう直すか。 */
+  readonly message: string;
+}
+
+type CardMarker =
+  | { readonly kind: 'cards'; readonly cols: CardColumns; readonly rawCols: string | null }
+  | { readonly kind: 'card' }
+  | { readonly kind: 'close' };
+
+const CODE_FENCE_PATTERN = /^\s*(```|~~~)/;
+
+/** 未知の列指定は 2 列へ寄せる。記事が壊れるより、読める形で出すほうを優先する。 */
+function normalizeCardColumns(raw: string | null): CardColumns {
+  return raw === '3' ? '3' : '2';
+}
+
+/** 1 行をカードマーカーとして読む。マーカーでなければ null。 */
+function parseCardMarkerLine(line: string): CardMarker | null {
+  const text = line.trim();
+  if (text === ':::') return { kind: 'close' };
+  if (text === ':::card') return { kind: 'card' };
+  const cards = /^:::cards(?:\s+(.*))?$/.exec(text);
+  if (cards === null) return null;
+  const rawCols = /cols\s*=\s*(\S+)/.exec(cards[1] ?? '')?.[1] ?? null;
+  return { kind: 'cards', cols: normalizeCardColumns(rawCols), rawCols };
+}
+
+/**
+ * マーカー行の前後へ空行を入れて、必ず「マーカーだけの段落」になるようにする。
+ *
+ * Markdown は空行で区切らない限り連続行を 1 つの段落へまとめるため、
+ * `:::cards cols=2` と直後の `:::card` を素直に書くと 1 段落になり、
+ * 段落単位で組み立てる下の remark プラグインが構造を読めない。
+ * 記法を覚え直させる代わりに、こちらで整形してから解析する。
+ * コードフェンスの中は説明用に `:::` を書くことがあるので触らない。
+ */
+export function normalizeCardMarkers(source: string): string {
+  const lines = source.split('\n');
+  const out: string[] = [];
+  let inFence = false;
+  let previousWasMarker = false;
+
+  for (const line of lines) {
+    if (CODE_FENCE_PATTERN.test(line)) {
+      inFence = !inFence;
+      out.push(line);
+      previousWasMarker = false;
+      continue;
+    }
+    const marker = inFence ? null : parseCardMarkerLine(line);
+    const needsBlankBefore = marker !== null || (previousWasMarker && line.trim() !== '');
+    if (needsBlankBefore && (out.at(-1) ?? '').trim() !== '') out.push('');
+    out.push(line);
+    previousWasMarker = marker !== null;
+  }
+  return out.join('\n');
+}
+
+/** 段落ノードが「マーカーだけの段落」ならその内容を返す。 */
+function readCardMarker(node: MdastNode | undefined): CardMarker | null {
+  if (node?.type !== 'paragraph' || node.children?.length !== 1) return null;
+  const only = node.children[0];
+  if (only?.type !== 'text' || typeof only.value !== 'string') return null;
+  return parseCardMarkerLine(only.value);
+}
+
+function createCardNode(): MdastNode & { children: MdastNode[] } {
+  return { type: 'cardBlock', data: { hName: 'hh-card' }, children: [] };
+}
+
+/**
+ * `:::cards` と対になる `:::` の位置を返す。見つからなければ -1。
+ * 入れ子の `:::card` も深さに数えるので、内側の閉じで早合点しない。
+ */
+function findCardsClose(children: readonly MdastNode[], openIndex: number): number {
+  let depth = 0;
+  for (let index = openIndex; index < children.length; index += 1) {
+    const marker = readCardMarker(children[index]);
+    if (marker === null) continue;
+    if (marker.kind === 'close') {
+      depth -= 1;
+      if (depth === 0) return index;
+      continue;
+    }
+    depth += 1;
+  }
+  return -1;
+}
+
+/** `:::cards` と `:::` の間を、カード単位へ畳む。 */
+function buildCardsNode(inner: readonly MdastNode[], cols: CardColumns): MdastNode | null {
+  const cards: (MdastNode & { children: MdastNode[] })[] = [];
+  let current: (MdastNode & { children: MdastNode[] }) | null = null;
+  let depth = 0;
+
+  for (const node of inner) {
+    const marker = readCardMarker(node);
+    if (marker?.kind === 'card' && depth === 0) {
+      current = createCardNode();
+      cards.push(current);
+      depth = 1;
+      continue;
+    }
+    if (marker?.kind === 'close' && depth === 1) {
+      depth = 0;
+      current = null;
+      continue;
+    }
+    // 入れ子や余った本文はカードから追い出さず、そのまま中へ残す (safe degradation)。
+    if (marker?.kind === 'card' || marker?.kind === 'cards') depth += 1;
+    else if (marker?.kind === 'close') depth -= 1;
+    if (current === null) {
+      current = createCardNode();
+      cards.push(current);
+      depth = Math.max(depth, 1);
+    }
+    current.children.push(node);
+  }
+
+  if (cards.length === 0) return null;
+  return { type: 'cardsBlock', data: { hName: 'hh-cards', hProperties: { dataCols: cols } }, children: cards };
+}
+
+/**
+ * `:::cards cols=2|3` ... `:::` を `hh-cards` / `hh-card` 要素へ変換する remark プラグイン。
+ *
+ * 変換は「マーカー段落の並びをスタックで畳む」だけで、記法が壊れていれば何もしない。
+ * 閉じ忘れ・対応しない `:::card`・未知の cols のいずれでも例外は投げず、
+ * 該当箇所は素の Markdown (マーカーは文字列) として描画されるため、記事全体は必ず出る。
+ * 変換後も子ノードの順序は記述順のままなので、読上げ順と視覚順が一致する。
+ */
+function remarkCardBlocks() {
+  return (tree: MdastNode) => {
+    walk(tree);
+  };
+
+  function walk(node: MdastNode): void {
+    if (!Array.isArray(node.children)) return;
+    const out: MdastNode[] = [];
+    for (let index = 0; index < node.children.length; index += 1) {
+      const child = node.children[index];
+      if (child === undefined) continue;
+      const marker = readCardMarker(child);
+      if (marker?.kind !== 'cards') {
+        walk(child);
+        out.push(child);
+        continue;
+      }
+      const close = findCardsClose(node.children, index);
+      if (close === -1) {
+        // 閉じ忘れ。変換せず素の段落として残す (本文は全部描ける)。
+        out.push(child);
+        continue;
+      }
+      const inner = node.children.slice(index + 1, close);
+      for (const grandChild of inner) walk(grandChild);
+      const cardsNode = buildCardsNode(inner, marker.cols);
+      if (cardsNode === null) out.push(...inner);
+      else out.push(cardsNode);
+      index = close;
+    }
+    node.children = out;
+  }
+}
+
+/**
+ * 記法の書き間違いを行番号つきで集める。編集画面が非 blocking の注意として出すための入力で、
+ * ここが空でなくても保存や描画は止めない (描画側は safe degradation する)。
+ */
+export function collectCardBlockWarnings(source: string): CardBlockWarning[] {
+  const warnings: CardBlockWarning[] = [];
+  const stack: { readonly kind: 'cards' | 'card'; readonly line: number }[] = [];
+  let inFence = false;
+
+  source.split('\n').forEach((line, index) => {
+    if (CODE_FENCE_PATTERN.test(line)) {
+      inFence = !inFence;
+      return;
+    }
+    if (inFence) return;
+    const marker = parseCardMarkerLine(line);
+    if (marker === null) return;
+    const lineNumber = index + 1;
+
+    if (marker.kind === 'cards') {
+      if (marker.rawCols !== null && marker.rawCols !== '2' && marker.rawCols !== '3') {
+        warnings.push({
+          line: lineNumber,
+          message: `${lineNumber} 行目: cols=${marker.rawCols} は使えません。cols=2 または cols=3 と書いてください (いまは 2 列で表示しています)。`,
+        });
+      }
+      if (stack.some((entry) => entry.kind === 'cards')) {
+        warnings.push({
+          line: lineNumber,
+          message: `${lineNumber} 行目: :::cards の中に :::cards は入れられません。先に ::: で閉じてください。`,
+        });
+      }
+      stack.push({ kind: 'cards', line: lineNumber });
+      return;
+    }
+    if (marker.kind === 'card') {
+      if (stack.at(-1)?.kind !== 'cards') {
+        warnings.push({
+          line: lineNumber,
+          message: `${lineNumber} 行目: :::card は :::cards の中だけで使えます。上に :::cards cols=2 を足してください。`,
+        });
+      }
+      stack.push({ kind: 'card', line: lineNumber });
+      return;
+    }
+    if (stack.pop() === undefined) {
+      warnings.push({
+        line: lineNumber,
+        message: `${lineNumber} 行目: 対応する :::cards / :::card がない ::: です。余分なら削除してください。`,
+      });
+    }
+  });
+
+  for (const open of stack) {
+    warnings.push({
+      line: open.line,
+      message: `${open.line} 行目: :::${open.kind} が閉じられていません。行の最後に ::: を足してください。`,
+    });
+  }
+  return warnings.sort((a, b) => a.line - b.line);
+}
+
 /** children (React node 群) からプレーンテキストだけを取り出す。コードブロックのコピー用。 */
 function extractText(node: ReactNode): string {
   if (typeof node === 'string' || typeof node === 'number') return String(node);
@@ -147,14 +397,19 @@ function extractText(node: ReactNode): string {
 
 /**
  * コールアウトの種類ごとの色・アイコン・ラベルキー。
- * 依頼された 4 パターン (注意=赤系 / ポイント=青系 / 補足=グレー系 / 警告=黄系) にそれぞれ割り当てる。
- * `attention` の色は今回の改修で warning (黄) から danger (赤) へ変えている。変えたのは色だけで、
+ * 依頼された 4 パターン (注意=赤系 / ポイント=青系 / 補足=薄い青系 / 警告=黄系) にそれぞれ割り当てる。
+ * `attention` の色は過去の改修で warning (黄) から danger (赤) へ変えている。変えたのは色だけで、
  * `[!ATTENTION]` という記法自体は変えていないため既存記事は書き直し不要 (remarkCallouts のコメント参照)。
+ *
+ * `point` / `note` の面はかつて `primarySoft` / `neutralSoft` だった。`primary` が無彩色の
+ * グラファイトなので light では両者がほぼ同じグレー (#e5e5e2 / #e6e6e3) になり、読み物の中で
+ * 「要点」と「ただの引用」が見分けられなかった。専用の `infoBlueSoft` へ寄せて青系に統一し、
+ * 従属関係 (point = 主 / note = 副) は枠線の濃さとアイコンの形で表す。
  */
 const calloutStyle: Record<CalloutKind, CSSProperties> = {
   point: {
-    background: colorVar('primarySoft'),
-    borderLeft: `4px solid ${colorVar('primary')}`,
+    background: colorVar('infoBlueSoft'),
+    borderLeft: `4px solid ${colorVar('infoBlue')}`,
     color: colorVar('text'),
   },
   attention: {
@@ -168,17 +423,21 @@ const calloutStyle: Record<CalloutKind, CSSProperties> = {
     color: colorVar('text'),
   },
   note: {
-    background: colorVar('neutralSoft'),
+    background: colorVar('infoBlueSoft'),
     borderLeft: `4px solid ${colorVar('borderStrong')}`,
     color: colorVar('text'),
   },
 };
 
-const calloutIcon: Record<CalloutKind, string> = {
-  point: '💡',
-  attention: '⚠️',
-  warning: '🚨',
-  note: '📝',
+/**
+ * アイコンの図形と色。色は面の枠線と揃え、**形だけでも 4 種を区別できる**ようにする
+ * (色覚特性や単色印刷で色が落ちても意味が残るようにするため)。
+ */
+const calloutIcon: Record<CalloutKind, { name: IconName; color: ColorTokenName }> = {
+  point: { name: 'lightbulb', color: 'infoBlue' },
+  attention: { name: 'alertTriangle', color: 'danger' },
+  warning: { name: 'alertOctagon', color: 'warning' },
+  note: { name: 'infoCircle', color: 'textMuted' },
 };
 
 const calloutLabelKey: Record<
@@ -225,8 +484,10 @@ function Callout({ kind, children }: { kind: CalloutKind; children: ReactNode })
         ...calloutStyle[kind],
       }}
     >
-      <span aria-hidden="true">{icon}</span>
-      <div style={{ flex: 1 }}>{children}</div>
+      <span style={{ color: colorVar(icon.color), display: 'flex', flexShrink: 0, paddingTop: '2px' }}>
+        <Icon name={icon.name} size={18} />
+      </span>
+      <div style={{ flex: 1, minWidth: 0 }}>{children}</div>
     </div>
   );
 }
@@ -364,6 +625,36 @@ function ImageGroup({ children }: { children?: ReactNode }): ReactNode {
   );
 }
 
+/**
+ * カード行の見た目。列数の切替は media query が要るので inline style では書けず、
+ * かといって共通の tokens.css はこの機能の変更範囲外なので、規則をここに 1 つだけ置き、
+ * React 19 の style hoisting (`href` + `precedence`) で head へ 1 回だけ差し込む。
+ * 同じ `href` の style は React が重複排除するため、カード行が何行あっても 1 枚に収まる。
+ *
+ * 列数の契約: 狭幅 (〜640px) 1 列 / 中幅 (641〜1024px) 最大 2 列 / 大画面 (1025px〜) は cols のまま。
+ * 幅が変わっても DOM の順序は変えないので、読上げ順と視覚順がずれない。
+ */
+const CARD_GRID_CSS = `
+[data-hh-cards]{display:grid;grid-template-columns:1fr;gap:${spaceVar(3)};margin:${spaceVar(3)} 0;}
+[data-hh-card]{display:flex;flex-direction:column;min-width:0;gap:${spaceVar(2)};padding:${spaceVar(3)};border:1px solid ${colorVar('border')};border-radius:${radiusVar('card')};background:${colorVar('surface')};}
+[data-hh-card]>*{margin-top:0;margin-bottom:0;}
+@media (min-width:641px){[data-hh-cards]{grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media (min-width:1025px){[data-hh-cards][data-cols="3"]{grid-template-columns:repeat(3,minmax(0,1fr));}}
+`;
+
+function CardGrid({ cols, children }: { cols: CardColumns; children?: ReactNode }): ReactNode {
+  return (
+    <>
+      <style href="hh-card-grid" precedence="default">
+        {CARD_GRID_CSS}
+      </style>
+      <div data-hh-cards="" data-cols={cols}>
+        {children}
+      </div>
+    </>
+  );
+}
+
 function TableWrapper({ children }: { children?: ReactNode }): ReactNode {
   return (
     <div style={{ overflowX: 'auto', margin: `${spaceVar(2)} 0` }}>
@@ -463,6 +754,13 @@ function markdownComponents(): Components {
         const kind = normalizeCalloutKind(node?.properties?.dataCallout);
         return <Callout kind={kind}>{children}</Callout>;
       },
+      'hh-cards': ({ node, children }: { node?: { properties?: Record<string, unknown> }; children?: ReactNode }) => {
+        // sanitize を通った後にもう一度正規化する。属性を直接書いた生 HTML が
+        // 万一ここへ届いても、列数は 2|3 のどちらかにしかならない。
+        const raw = node?.properties?.dataCols;
+        return <CardGrid cols={normalizeCardColumns(typeof raw === 'string' ? raw : null)}>{children}</CardGrid>;
+      },
+      'hh-card': ({ children }: { children?: ReactNode }) => <article data-hh-card="">{children}</article>,
       // biome-ignore lint/suspicious/noExplicitAny: react-markdown の Components 型はカスタムタグ名を型付けできない
     } as any),
   };
@@ -482,11 +780,11 @@ export function MarkdownView({ content }: MarkdownViewProps): ReactNode {
   return (
     <div data-hh-markdown="" style={{ color: colorVar('text'), lineHeight: 'var(--hh-line-height-normal)' }}>
       <ReactMarkdown
-        remarkPlugins={[remarkGfm, remarkCallouts]}
+        remarkPlugins={[remarkGfm, remarkCallouts, remarkCardBlocks]}
         rehypePlugins={[rehypeRaw, [rehypeSanitize, markdownSanitizeSchema]]}
         components={markdownComponents()}
       >
-        {content}
+        {normalizeCardMarkers(content)}
       </ReactMarkdown>
     </div>
   );
@@ -517,6 +815,25 @@ export interface MarkdownEditorProps {
 interface InsertRange {
   readonly start: number;
   readonly end: number;
+}
+
+/**
+ * 大画面かどうか。カード行の列数と違い、ここは CSS の出し分け (両方 DOM へ描く) にできない。
+ * 入力欄を 2 つ描くと、フォーカス・IME・ラベルの対応が二重になって壊れるため、
+ * 編集面と確認面の配置だけは JS で 1 つに決める。
+ * 初期値は狭幅 (tab) 固定なので、SSR の出力と最初の描画がずれない。
+ */
+function useWideEditorPanes(): boolean {
+  const [wide, setWide] = useState(false);
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return;
+    const query = window.matchMedia('(min-width: 1025px)');
+    const sync = () => setWide(query.matches);
+    sync();
+    query.addEventListener('change', sync);
+    return () => query.removeEventListener('change', sync);
+  }, []);
+  return wide;
 }
 
 function insertAtSelection(
@@ -551,6 +868,7 @@ export function MarkdownEditor({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const calloutMenuRef = useRef<HTMLDivElement>(null);
   const toolbarId = useId();
+  const widePanes = useWideEditorPanes();
 
   useEffect(() => {
     if (!calloutMenuOpen) return;
@@ -592,6 +910,23 @@ export function MarkdownEditor({
     },
     [applyInsert],
   );
+
+  /**
+   * カード行の雛形を差し込む。挿入後はただの Markdown なので、
+   * 続きは通常どおり編集でき、外部 Docs 同期の対象にもそのまま乗る。
+   */
+  const insertCards = useCallback(
+    (cols: CardColumns) => {
+      const cards = Array.from(
+        { length: Number(cols) },
+        (_unused, index) => `:::card\n### 見出し${index + 1}\n\n本文\n:::`,
+      ).join('\n');
+      applyInsert(`\n:::cards cols=${cols}\n${cards}\n:::\n`, '', '');
+    },
+    [applyInsert],
+  );
+
+  const cardWarnings = useMemo(() => collectCardBlockWarnings(value), [value]);
 
   const insertImageMarkdown = useCallback(
     (url: string, alt: string) => {
@@ -709,6 +1044,22 @@ export function MarkdownEditor({
     [uploadGroupFiles],
   );
 
+  const writePane = (
+    <Textarea
+      ref={textareaRef}
+      label={label}
+      hideLabel
+      description={description}
+      error={error}
+      rows={rows}
+      value={value}
+      onChange={(event) => onValueChange(event.target.value)}
+      onPaste={handlePaste}
+      aria-describedby={toolbarId}
+    />
+  );
+  const previewPane = <MarkdownView content={value} />;
+
   return (
     <div style={{ display: 'grid', gap: spaceVar(2) }}>
       <div
@@ -750,6 +1101,12 @@ export function MarkdownEditor({
         </Button>
         <Button type="button" variant="ghost" onClick={() => applyInsert('\n```\n', '\n```\n', 'code')}>
           {t('editor.insertCode')}
+        </Button>
+        <Button type="button" variant="ghost" onClick={() => insertCards('2')}>
+          {t('editor.insertCards2')}
+        </Button>
+        <Button type="button" variant="ghost" onClick={() => insertCards('3')}>
+          {t('editor.insertCards3')}
         </Button>
         <Button
           type="button"
@@ -807,7 +1164,9 @@ export function MarkdownEditor({
                     cursor: 'pointer',
                   }}
                 >
-                  <span aria-hidden="true">{calloutIcon[kind]}</span>
+                  <span style={{ color: colorVar(calloutIcon[kind].color), display: 'flex' }}>
+                    <Icon name={calloutIcon[kind].name} size={16} />
+                  </span>
                   {t(calloutLabelKey[kind])}
                 </button>
               ))}
@@ -844,6 +1203,29 @@ export function MarkdownEditor({
           {uploadError}
         </p>
       ) : null}
+      {/* カード記法の書き間違いは保存を止めない (描画側が safe degradation する)。
+          alert ではなく status にして、入力のたびに読み上げへ割り込まないようにしている。 */}
+      {cardWarnings.length > 0 ? (
+        <div
+          role="status"
+          aria-label={t('editor.cardWarnings')}
+          style={{
+            display: 'grid',
+            gap: spaceVar(1),
+            padding: spaceVar(2),
+            borderRadius: radiusVar('md'),
+            border: `1px solid ${colorVar('border')}`,
+            color: colorVar('textMuted'),
+            fontSize: 'var(--hh-font-size-sm)',
+          }}
+        >
+          {cardWarnings.map((warning) => (
+            <p key={`${warning.line}:${warning.message}`} style={{ margin: 0 }}>
+              {warning.message}
+            </p>
+          ))}
+        </div>
+      ) : null}
       {/* biome-ignore lint/a11y/noStaticElementInteractions: ドラッグ&ドロップの受け皿。
           実体の操作可能要素は中の Tabs/Textarea/ボタン (いずれも role/tabIndex を持つ) が担い、
           この div はキーボード操作の代替経路 (画像ボタン/貼り付け) が既にあるため装飾的なドロップ枠でよい。 */}
@@ -861,36 +1243,27 @@ export function MarkdownEditor({
           outlineOffset: 2,
         }}
       >
-        <Tabs
-          label={`${label} — ${t('editor.viewSwitch')}`}
-          activeId={activeId}
-          onActiveIdChange={setActiveId}
-          items={[
-            {
-              id: 'write',
-              label: t('editor.write'),
-              content: (
-                <Textarea
-                  ref={textareaRef}
-                  label={label}
-                  hideLabel
-                  description={description}
-                  error={error}
-                  rows={rows}
-                  value={value}
-                  onChange={(event) => onValueChange(event.target.value)}
-                  onPaste={handlePaste}
-                  aria-describedby={toolbarId}
-                />
-              ),
-            },
-            {
-              id: 'preview',
-              label: t('editor.preview'),
-              content: <MarkdownView content={value} />,
-            },
-          ]}
-        />
+        {widePanes ? (
+          // 大画面は 2 ペイン。狭幅の tab と同じ要素をそのまま並べるので、
+          // draft の描画経路 (MarkdownView + sanitize) は 1 本のままになる。
+          <div
+            data-hh-editor-panes=""
+            style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: spaceVar(3) }}
+          >
+            <section aria-label={t('editor.write')}>{writePane}</section>
+            <section aria-label={t('editor.preview')}>{previewPane}</section>
+          </div>
+        ) : (
+          <Tabs
+            label={`${label} — ${t('editor.viewSwitch')}`}
+            activeId={activeId}
+            onActiveIdChange={setActiveId}
+            items={[
+              { id: 'write', label: t('editor.write'), content: writePane },
+              { id: 'preview', label: t('editor.preview'), content: previewPane },
+            ]}
+          />
+        )}
       </div>
     </div>
   );

@@ -3,6 +3,16 @@ import { createSheetRequestSchema, problemDetails, sheetListQuerySchema } from '
 import { parseJsonRequest, problemResponse } from '../../../../features/hearing-intake/http.js';
 import { hearingIntakeRuntime } from '../../../../features/hearing-intake/runtime.js';
 import { authRuntime, requestScopedResource, withAuthz } from '../../../../lib/authz/index.js';
+import {
+  buildEntityCreateWireResponse,
+  canonicalPayloadHash,
+  MutationRequestError,
+  mutationErrorResponse,
+  mutationWireResponse,
+  parseIdempotencyKey,
+} from '../../../../lib/http/mutation-safety.js';
+
+const SHEET_CREATE_JSON_MAX_BYTES = 250_000;
 
 function contextFor(tenantId: string, workspaceId: string | null, actorId: string) {
   return createRepositoryContext({
@@ -28,16 +38,37 @@ export const POST = withAuthz(
         }),
       );
     }
-    const parsed = await parseJsonRequest(request, createSheetRequestSchema);
+    let idempotencyKey: string;
+    try {
+      idempotencyKey = parseIdempotencyKey(request.headers.get('idempotency-key'));
+    } catch (error) {
+      if (error instanceof MutationRequestError) return mutationErrorResponse(error);
+      throw error;
+    }
+    const parsed = await parseJsonRequest(request, createSheetRequestSchema, {
+      maxBytes: SHEET_CREATE_JSON_MAX_BYTES,
+    });
     if (!parsed.ok) return parsed.response;
 
-    const result = await hearingIntakeRuntime().service.createSheet({
+    const result = await hearingIntakeRuntime().service.createSheetIdempotent({
       context: contextFor(authz.resource.tenantId, authz.resource.workspaceId, authz.principal.userId),
       workspaceId: authz.resource.workspaceId,
       applicantUserId: authz.principal.userId,
       request: parsed.data,
+      idempotency: { key: idempotencyKey, payloadHash: await canonicalPayloadHash(parsed.data) },
+      buildResponse: (response, expiresAt) =>
+        buildEntityCreateWireResponse(response, {
+          namespace: 'sheets',
+          revision: response.revision,
+          expiresAt,
+        }),
     });
-    return Response.json(result, { status: 201 });
+    if (result.outcome === 'conflict') {
+      return mutationErrorResponse(
+        new MutationRequestError(422, '同じ Idempotency-Key は別のリクエスト本文で使用済みです'),
+      );
+    }
+    return mutationWireResponse(result.wireResponse, result.outcome === 'replayed');
   },
 );
 
@@ -65,12 +96,20 @@ export const GET = withAuthz(
       return problemResponse(problemDetailsFromZodError(parsed.error, { instance: url.pathname }));
     }
 
+    // 状態タブの区分。schema (`sheetListQuerySchema`) は個々の状態名しか持たないので、
+    // 区分は query から直接読む。zod object は既定で契約外のキーを落とすため、
+    // これを足しても safeParse は通ったままになる。
+    const statusGroupParam = url.searchParams.get('status_group');
+    const statusGroup =
+      statusGroupParam === 'active' || statusGroupParam === 'completed' ? statusGroupParam : undefined;
+
     const result = await hearingIntakeRuntime().service.listSheets({
       context: contextFor(authz.resource.tenantId, authz.resource.workspaceId, authz.principal.userId),
       workspaceId: authz.resource.workspaceId,
       applicantUserId: authz.principal.userId,
       readAll: authz.can('sheets.read_all'),
       query: parsed.data,
+      ...(statusGroup === undefined ? {} : { statusGroup }),
     });
     return Response.json(result);
   },

@@ -212,8 +212,8 @@ Route Handler、入力検証、OpenAPI、状態遷移、共通エラー契約を
 - 工程は 7 値の隣接遷移のみ。stage 変更は workspace-admin 以上 + audit +
   `build_stage_events` を同一 transaction で確定する。
 - `publish` への遷移は同一 scope の PublishRequest が `published` のときだけ許す。
-- **MVP 面 (2026-08-13)**: 上記 3 endpoint が実装正本。ADR 目標の `POST /api/v1/builds`
-  (manual recovery) と `PATCH /api/v1/builds/:id` (metadata) は未実装 residual。
+- **MVP 面 (2026-08-16)**: 上記 3 endpoint に加え `POST /api/v1/builds` と
+  `PATCH /api/v1/builds/:id` を追加。認可は `builds.create` / `builds.update`。
   検証パッケージ: [P04–P12 受領書](../docs/features/feat-build-pipeline-board/p04-p12-final-review-spec-reflection-receipt.md)。
   運用: [runbook](../docs/features/feat-build-pipeline-board/runbook.md)。
 
@@ -257,3 +257,11 @@ fetch 薄 client。token は Workers Secret、Issues + Contents の read-write�
   actor=`system`の監査を順次追記する。監査失敗はジョブ失敗として記録するが、DB更新との原子性は主張しない。
 - 詳細正本: `docs/backend-spec-api-state.md` §4.8/§4.8.1、
   `docs/features/feat-docs-cms/architecture-decision-record.md` §8.1。
+
+## 2026-08-15 カード編集の安全化 writeback (feat-card-mutation-safety)
+
+- 通常 Docs / Sheets CRUD は共通 HTTP helper (`apps/hub/src/lib/http/mutation-safety.ts`)
+  と repository の原子 claim / CAS に閉じる。handler 後段で台帳を書く形にはしない。
+- 既存 create/edit caller はフォーム開始時の UUID v4 を再送で維持し、412 後も未保存 draft を保つ。
+- 詳細正本: `features/feat-card-mutation-safety.md` と
+  `docs/features/feat-card-mutation-safety/spec-reflection-receipt.md`。

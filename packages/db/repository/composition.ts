@@ -26,12 +26,15 @@ import {
   type BuildBoardColumnRows as BuildBoardColumnRowsShape,
   type BuildStageEventRow as BuildStageEventRowShape,
   type BuildStageRepository as BuildStageRepositoryShape,
+  type CreateBuildInput as CreateBuildInputShape,
   createBuildStageRepository as createBuildStageRepositoryLeaf,
+  DuplicateBuildSourceError as DuplicateBuildSourceErrorLeaf,
   InvalidStageTransitionError as InvalidStageTransitionErrorLeaf,
   PublishRequestNotPublishedError as PublishRequestNotPublishedErrorLeaf,
   StageCasConflictError as StageCasConflictErrorLeaf,
   type StageTransitionResult as StageTransitionResultShape,
   type TransitionStageInput as TransitionStageInputShape,
+  type UpdateBuildInput as UpdateBuildInputShape,
 } from './build-stage';
 import {
   type BuildRow as BuildRowShape,
@@ -151,6 +154,8 @@ import {
 } from './tenant-data';
 import { createTenantsRepo, type TenantRow as TenantRowShape, type TenantsRepo } from './tenants';
 import {
+  type AppearanceAggregate as AppearanceAggregateShape,
+  type AppearanceBucket as AppearanceBucketShape,
   createUserSettingsRepo,
   type UserSettingsRepo,
   type UserSettingsRow as UserSettingsRowShape,
@@ -163,6 +168,8 @@ import { createUserWorkspacesRepo, type UserWorkspacesRepo } from './workspaces'
 export type TenantRow = TenantRowShape;
 export type UserRow = UserRowShape;
 export type UserSettingsRow = UserSettingsRowShape;
+export type AppearanceAggregate = AppearanceAggregateShape;
+export type AppearanceBucket = AppearanceBucketShape;
 export type IdpConnectionRow = IdpConnectionRowShape;
 export type DeviceAuthorizationRow = DeviceAuthorizationRowShape;
 export type PublisherTokenRow = PublisherTokenRowShape;
@@ -184,6 +191,8 @@ export type BuildStageRepository = BuildStageRepositoryShape;
 export type TransitionStageInput = TransitionStageInputShape;
 export type StageTransitionResult = StageTransitionResultShape;
 export type BuildBoardColumnRows = BuildBoardColumnRowsShape;
+export type CreateBuildInput = CreateBuildInputShape;
+export type UpdateBuildInput = UpdateBuildInputShape;
 // feat-metrics-tracking。period/dimension の値域も同じ理由で公開しない。
 export type MetricsEventRow = MetricsEventRowShape;
 export type MetricsRollupRow = MetricsRollupRowShape;
@@ -270,6 +279,7 @@ export function createMetricsTrackingRepository(adapter: CoreAdapter): MetricsTr
 // (値域 enum とは違い、これは「境界での分岐に必要な型」であって二重定義にならない)。
 export const InvalidStageTransitionError = InvalidStageTransitionErrorLeaf;
 export const StageCasConflictError = StageCasConflictErrorLeaf;
+export const DuplicateBuildSourceError = DuplicateBuildSourceErrorLeaf;
 export const PublishRequestNotPublishedError = PublishRequestNotPublishedErrorLeaf;
 export const MetricsIdempotencyKeyReuseError = MetricsIdempotencyKeyReuseErrorLeaf;
 export const ExternalDocumentPreconditionError = ExternalDocumentPreconditionErrorLeaf;

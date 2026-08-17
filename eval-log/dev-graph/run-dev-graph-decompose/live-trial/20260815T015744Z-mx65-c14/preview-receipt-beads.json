@@ -1,0 +1,17 @@
+{
+  "binding": "beads",
+  "find_diff": 0,
+  "find_files_after_preview": 28,
+  "find_files_before_preview": 28,
+  "fixture": "fixture-beads",
+  "note": "preview graph existed only inside the shell pipe; only this receipt was persisted",
+  "path": "stdin (--graph -)",
+  "preview_exit_code": 0,
+  "preview_materialized_as_file": false,
+  "preview_node_count": 7,
+  "preview_valid": true,
+  "preview_validator_finished_at": "2026-08-15T02:06:56.695969000Z",
+  "preview_validator_started_at": "2026-08-15T02:06:55.890684000Z",
+  "preview_violation_count": 0,
+  "validator": "plugins/dev-graph/scripts/validate-graph-schema.py"
+}

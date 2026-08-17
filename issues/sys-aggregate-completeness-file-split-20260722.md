@@ -12,8 +12,8 @@ iteration: null
 title: "assign-system-spec-completeness-evaluator の aggregate-completeness.py (572 行) / test_aggregate_completeness.py (592 行) の 500 行超過を分割する"
 owners: ["daishiman"]
 created_at: "2026-07-22T00:45:56Z"
-updated_at: "2026-07-22T00:45:56Z"
-status: "draft"
+updated_at: "2026-08-08T05:03:42Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-bd-external-ref-orphan-nodes-20260725","issue-orphan-external-ref-backlog-disposition-20260726"]
 resource_scope: []

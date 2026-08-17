@@ -59,12 +59,21 @@ export { InlineEditTable } from './components/InlineEditTable.js';
 export type { ListStateProps } from './components/ListState.js';
 export { ListState } from './components/ListState.js';
 export type {
+  CardBlockWarning,
+  CardColumns,
   MarkdownEditorProps,
   MarkdownImageUploadResult,
   MarkdownViewProps,
 } from './components/Markdown.js';
 // --- Markdown ------------------------------------------------------------
-export { MarkdownEditor, MarkdownView, markdownSanitizeSchema, slugify } from './components/Markdown.js';
+export {
+  collectCardBlockWarnings,
+  MarkdownEditor,
+  MarkdownView,
+  markdownSanitizeSchema,
+  normalizeCardMarkers,
+  slugify,
+} from './components/Markdown.js';
 // --- 汎用モーダル / ボトムシート ------------------------------------------
 export type { ModalProps, ModalSize } from './components/Modal.js';
 export { Modal } from './components/Modal.js';
@@ -83,9 +92,9 @@ export type {
 export { StageBoard } from './components/StageBoard.js';
 export type { StepWizardProps, WizardStep } from './components/StepWizard.js';
 export { StepWizard } from './components/StepWizard.js';
-export type { TabItem, TabsProps } from './components/Tabs.js';
+export type { FilterTabItem, FilterTabsProps, TabItem, TabsProps } from './components/Tabs.js';
 // --- タブ / ウィザード / ステージボード -----------------------------------
-export { Tabs } from './components/Tabs.js';
+export { FilterTabs, Tabs } from './components/Tabs.js';
 export type { TextareaProps } from './components/Textarea.js';
 export { Textarea } from './components/Textarea.js';
 export type { TextButtonProps } from './components/TextButton.js';
@@ -169,6 +178,9 @@ export type { ActionLinkProps, PanelProps, ScreenHeaderProps } from './shell/sur
 export { ActionLink, Panel, ScreenHeader } from './shell/surfaces.js';
 export type { ShellWorkspaceOption, WorkspaceSwitcherProps } from './shell/WorkspaceSwitcher.js';
 export { WorkspaceSwitcher } from './shell/WorkspaceSwitcher.js';
+export type { AppearancePickerProps, AppearanceSelection } from './theme/AppearancePicker.js';
+// --- 外観切替 (配色 5 種 × 明るさ 3 種) ------------------------------------
+export { AppearancePicker } from './theme/AppearancePicker.js';
 export type { UiContextValue, UiPreferences, UiProviderProps } from './theme/UiProvider.js';
 // --- テーマ・表示密度・言語 ----------------------------------------------
 export { defaultUiPreferences, UiProvider, useUi, useUiText } from './theme/UiProvider.js';
@@ -193,6 +205,8 @@ export type {
   ContrastCheckResult,
   ContrastRequirement,
   Density,
+  PaletteName,
+  PaletteTokenName,
   RadiusTokenName,
   SpacingTokenName,
   ThemeName,
@@ -207,11 +221,16 @@ export {
   colorTokens,
   colorVariableName,
   contrastRequirements,
+  defaultPaletteName,
   densityNames,
   densityTokens,
   mediaDown,
   mediaUp,
+  paletteColorTokens,
+  paletteNames,
+  paletteTokenNames,
   radiusTokens,
+  resolvePaletteColors,
   shadowTokens,
   spacingTokens,
   themeNames,

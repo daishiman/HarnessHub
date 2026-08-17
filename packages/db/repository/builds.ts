@@ -9,7 +9,7 @@
  * context.workspaceId が指定されていれば書き込み対象と一致することを検査する。
  */
 import { and, eq } from 'drizzle-orm';
-import { type BUILD_STAGES, type BUILD_TYPES, builds } from '../schema/builds/schema';
+import { type BUILD_RISKS, type BUILD_STAGES, type BUILD_TYPES, builds } from '../schema/builds/schema';
 import { RepositoryError } from '../src/errors';
 import type { RepositoryContext } from '../src/types';
 import { guardedWrite } from './conflict';
@@ -20,6 +20,8 @@ import { newUlid } from './ulid';
 export type BuildRow = typeof builds.$inferSelect;
 export type BuildType = (typeof BUILD_TYPES)[number];
 export type BuildStage = (typeof BUILD_STAGES)[number];
+/** 手入力のリスク上書き値。通常表示は停滞日数からの算出値で、この型は上書き列の値域だけを表す。 */
+export type BuildRisk = (typeof BUILD_RISKS)[number];
 
 export interface BuildFeedbackRef {
   readonly id: string;

@@ -12,8 +12,8 @@ iteration: null
 title: "テスト実行 — P04 のテスト ID 実行と結果証跡の収集"
 owners: ["daishiman"]
 created_at: "2026-08-07T12:10:05Z"
-updated_at: "2026-08-07T14:12:45.608342Z"
-status: "active"
+updated_at: "2026-08-08T01:58:28Z"
+status: "closed"
 depends_on: ["SYS-BUILD-IDENTITY-P05"]
 related_nodes: ["feat-build-identity-deploy-freshness","arch-harness-hub-infrastructure","arch-harness-hub-testing-qa"]
 resource_scope: ["docs/features/feat-build-identity-deploy-freshness/test-results.md"]

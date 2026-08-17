@@ -3,9 +3,10 @@
 import type { CreateSheetResponse, HearingSheetFormInput } from '@harness-hub/schemas';
 import { Alert, Button, Panel, Stack, StatusChip, StepWizard, TagRow } from '@harness-hub/ui';
 import dynamic from 'next/dynamic';
-import { type ReactNode, useEffect, useState } from 'react';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
 
 import { hearingIntakeStepIsValid } from '../../../../features/hearing-intake/wizard-validation.js';
+import { newIdempotencyKey } from '../../../../lib/http/mutation-client.js';
 import { uploadStagedAttachments, useStagedAttachments } from './hearing-intake-wizard-attachments.js';
 import { canProceedAtStep, INITIAL_HEARING_FORM } from './hearing-intake-wizard-model.js';
 import { useHearingWizardFormState } from './hearing-intake-wizard-state.js';
@@ -34,6 +35,7 @@ export function HearingIntakeWizard({ tenantId, workspaceId }: HearingIntakeWiza
   const [attachmentFailures, setAttachmentFailures] = useState<readonly string[]>([]);
   // 入力途中で離脱すると下書きが消えるため、確認を挟んでから一覧へ戻す (§P6 / qa-013)
   const [exitOpen, setExitOpen] = useState(false);
+  const idempotencyKeyRef = useRef(newIdempotencyKey());
 
   useEffect(() => {
     const saved = sessionStorage.getItem(draftStorageKey);
@@ -74,6 +76,7 @@ export function HearingIntakeWizard({ tenantId, workspaceId }: HearingIntakeWiza
         credentials: 'same-origin',
         headers: {
           'content-type': 'application/json',
+          'idempotency-key': idempotencyKeyRef.current,
           'x-harness-tenant-id': tenantId,
           'x-harness-workspace-id': workspaceId,
         },
@@ -81,6 +84,8 @@ export function HearingIntakeWizard({ tenantId, workspaceId }: HearingIntakeWiza
       });
       if (!response.ok) throw new Error('送信できませんでした。入力内容と接続を確認してください。');
       const body = (await response.json()) as CreateSheetResponse;
+      // 後続の「続けてもう 1 件」は別操作。成功確定後だけ次の key へ進める。
+      idempotencyKeyRef.current = newIdempotencyKey();
       // シート作成が成功した直後に、ステージング済みの添付ファイルを順番にアップロードする。
       // 一部失敗しても、シート作成自体は取り消さず、失敗したファイル名だけ完了画面で知らせる。
       if (attachmentsState.attachments.length > 0) {

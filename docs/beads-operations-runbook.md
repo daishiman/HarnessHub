@@ -24,6 +24,35 @@ sources:
 
 重要なのは、**`.jsonl` を手で編集しても DB は変わらない**という点である。jsonl は DB の投影であり、逆流しない。したがって jsonl のコンフリクトは「ログの取りこぼしを防ぐ」問題であって、課題データそのものの損失ではない。
 
+### 1.1 GitHub Issues は課題の正本ではない（2026-08-15 確定）
+
+本リポジトリは public だが、実行タスクを起票するのは owner と AI エージェントだけである。したがって課題の正本は Dolt DB のままで、GitHub Issues は正本ではない。判定軸は公開範囲ではなく起票主体であり、根拠は [execution-tracker-contract §1](../plugins/dev-graph/references/execution-tracker-contract.md) を正とする。
+
+| 用途 | GitHub Issues を使うか |
+| --- | --- |
+| 日々の実行タスク管理 | **使わない**（`bd ready` / `bd show` / `bd close`） |
+| CI からの自動通知（`update-yaml-spec.yml` → #1） | **使う**。CI からローカルの Dolt DB へは書けないため、この用途は GitHub でなければ成立しない |
+| public repository として外部から報告を受ける窓口 | **使う**。受け付けた内容は bd へ起票し直して正本に載せる |
+
+`.dev-graph/config.json` の `execution_tracker.beads.github_mirror` は **`none`** である。以前の `bd_github_push_only`（bd から GitHub へ一方向にだけ送る設定）では bd 側の close が GitHub へ伝わらず、open 490 件のうち 444 件が完了済み／役目終了という乖離を生んだため退役させた。
+
+**投影を再開させてしまう操作（実行しないこと）:**
+
+```bash
+python3 plugins/dev-graph/scripts/bd-bridge.py --op github-push   # bd github sync --push-only を呼ぶ
+```
+
+この操作は open 課題を GitHub へ一括投影する。逆流路は無いので、走らせた瞬間から再び乖離が始まる。どうしても必要なら、先に定期 reconcile（突合して GitHub 側を閉じ直す手順）を運用へ組み込むこと。
+
+GitHub issue 側を一括で閉じる必要が生じた場合、`gh issue close` の直接実行は guard hook が遮断する。正規経路は次のとおり。
+
+```bash
+python3 plugins/dev-graph/scripts/gh-bridge.py --op issue-close \
+  --repo <owner>/<repo> --number <issue番号> [--dry-run]
+```
+
+この操作は冪等（べきとう＝何回実行しても結果が同じ）なので、途中で失敗しても同じコマンドを再実行してよい。beads の `external_ref` が GitHub issue の URL を参照しているため、**削除ではなく close を使う**こと。削除するとリンクが解決不能になる。
+
 ## 2. beads 変更操作は bd-bridge 経由に限定される
 
 `plugins/dev-graph/hooks/guard-graph-schema.py`（PreToolUse hook）が、beads の mutation（変更操作）を **`plugins/dev-graph/scripts/bd-bridge.py` の単一チョークポイント（choke-point＝唯一の通り道）** 経由に強制する。`bd create` / `bd update` / `bd close` を直接実行すると次のように遮断される。

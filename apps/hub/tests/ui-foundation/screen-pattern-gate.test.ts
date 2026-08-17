@@ -16,7 +16,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
-import { judgeRow, parseRouteSurfaces, readEvidence } from '../support/screen-pattern.js';
+import { isJudgeableWide, judgeRow, parseRouteSurfaces, readEvidence } from '../support/screen-pattern.js';
 
 const HUB_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const APP_DIR = path.join(HUB_ROOT, 'src/app');
@@ -119,8 +119,14 @@ describe('SPG: 画面の採用パターンと実装', () => {
     const judged = judgements.filter((judgement) => judgement.verdict !== 'not-judgeable').length;
     const skipped = judgements.filter((judgement) => judgement.verdict === 'not-judgeable').length;
 
-    // 判定件数が 0 でも SPG-GATE-001 は緑になる。それを緑と呼ばないための下限
-    expect(judged).toBeGreaterThanOrEqual(10);
+    // 表の側から数えた「判定できるはずの件数」と実際の判定件数を突き合わせる。
+    // 固定の下限だけだと、判定規則がある行を取りこぼしても件数が下限を超えていれば緑になる。
+    const judgeable = currentRows.filter((row) => isJudgeableWide(row.wide)).length;
+    expect(judged).toBe(judgeable);
+    // 判定件数が 0 でも SPG-GATE-001 は緑になる。それを緑と呼ばないための下限。
+    // ADR §37 で `/metrics` と `/metrics/usage` が `/dashboard` 同居と `/tracking` へ再編され、
+    // 判定できる route が 1 件減ったため 10 から 9 へ下げてある
+    expect(judged).toBeGreaterThanOrEqual(9);
     // 判定対象外 (form / content / settings-sections など) は必ず残る。
     // 0 になったら語彙の判定規則が実態からずれた合図なので、数を見て気付けるようにする
     expect(skipped).toBeGreaterThan(0);

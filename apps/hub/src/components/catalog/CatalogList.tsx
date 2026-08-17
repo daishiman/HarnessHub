@@ -12,15 +12,17 @@ import {
   DataTable,
   DegradedBanner,
   FilterBar,
+  FilterTabs,
   ListState,
   Select,
   StatusChip,
   StickyHeaderOffset,
   TextInput,
 } from '@harness-hub/ui';
-import { useCallback, useEffect, useState } from 'react';
+import { type ReactNode, useCallback, useEffect, useState } from 'react';
 import type { CatalogFailure, CatalogPort, CatalogScope } from '../../lib/catalog/index.js';
 import { catalogCapabilities, httpCatalogPort } from '../../lib/catalog/index.js';
+import { useRememberedViewMode, useUrlFilters, VIEW_MODE_STORAGE_KEYS } from '../../lib/list/remembered-filters.js';
 import { type AppliedFilter, AppliedFilterChips } from '../filter/applied-filter-chips.js';
 
 export interface CatalogListProps {
@@ -36,6 +38,88 @@ const TARGET_OPTIONS = [
   { value: 'skill', label: 'Skill' },
   { value: 'web_app', label: 'Web アプリ' },
 ] as const;
+
+/**
+ * 公開状態のタブ区分。
+ *
+ * `deprecated` (提供終了) を `suspended` (停止中) と同じ「停止」へ束ねるのは、
+ * 導入する側にとって「いま入れられるか」だけが分岐で、止まった理由の違いは
+ * 詳細画面で読めば足りるため。`null` はまだ公開処理が済んでいない行で、
+ * 停止と同じ扱いにすると「止められた」と誤読されるので `unknown` に分ける。
+ */
+export type CatalogStatusGroup = 'available' | 'suspended' | 'unknown';
+
+/** `release_status` → タブ区分。想定外の値も `unknown` に落として、勝手に available へ寄せない。 */
+export function catalogStatusGroup(releaseStatus: CatalogEntry['release_status']): CatalogStatusGroup {
+  if (releaseStatus === 'available') return 'available';
+  if (releaseStatus === 'suspended' || releaseStatus === 'deprecated') return 'suspended';
+  return 'unknown';
+}
+
+type CatalogTab = 'all' | CatalogStatusGroup;
+
+const CATALOG_TABS: readonly { readonly value: CatalogTab; readonly label: string }[] = [
+  { value: 'all', label: 'すべて' },
+  { value: 'available', label: '導入できる' },
+  { value: 'suspended', label: '停止' },
+  { value: 'unknown', label: '公開前' },
+];
+
+interface CatalogFilters extends Record<string, string> {
+  readonly tab: CatalogTab;
+  readonly target: string;
+  readonly query: string;
+}
+
+type CatalogFilterPatch = { readonly [K in keyof CatalogFilters]?: CatalogFilters[K] };
+
+const CATALOG_FILTER_PARAMS = { tab: 'tab', target: 'target', query: 'q' } as const;
+
+interface CatalogStatusCounts {
+  readonly all: number;
+  readonly available: number;
+  readonly suspended: number;
+  readonly unknown: number;
+}
+
+/**
+ * 状態タブの件数。
+ *
+ * この一覧は cursor を持たず、権限を通した全件をそのまま受け取るので、
+ * 受け取った集合を数えれば「認可後・cursor 適用前」の件数になる (受入条件 6)。
+ * ただし種別・キーワードの絞り込みは**外して**数える — 状態タブは
+ * 「いま見ている絞り込みの中の内訳」ではなく「状態ごとの総数」を出す欄なので。
+ */
+function countByStatus(entries: readonly CatalogEntry[]): CatalogStatusCounts {
+  const counts = { all: entries.length, available: 0, suspended: 0, unknown: 0 };
+  for (const entry of entries) counts[catalogStatusGroup(entry.release_status)] += 1;
+  return counts;
+}
+
+interface StatusTabsProps {
+  readonly current: CatalogTab;
+  readonly counts: CatalogStatusCounts;
+  readonly onSelect: (tab: CatalogTab) => void;
+}
+
+/** 状態で切り替えるタブ。押した瞬間に適用する (文字入力だけが submit を待つ)。 */
+function StatusTabs({ current, counts, onSelect }: StatusTabsProps): ReactNode {
+  return (
+    // 一覧本体との間合いだけがこの画面の関心。切替そのものの見た目は FilterTabs が持つ
+    <div style={{ padding: 'var(--hh-space-3) var(--hh-space-4) 0' }}>
+      <FilterTabs
+        label="公開状態で絞り込み"
+        current={current}
+        onSelect={onSelect}
+        items={CATALOG_TABS.filter((tab) => tab.value !== 'unknown' || counts.unknown > 0).map((tab) => ({
+          value: tab.value,
+          label: tab.label,
+          count: counts[tab.value],
+        }))}
+      />
+    </div>
+  );
+}
 
 /**
  * 詳細への遷移リンク。
@@ -54,12 +138,16 @@ export function CatalogList({ scope, port = httpCatalogPort, initialTarget, init
   const scopeKey = `${scope.tenantId}\u0000${scope.workspaceId}`;
   const [entries, setEntries] = useState<readonly CatalogEntry[]>([]);
   const [entriesScopeKey, setEntriesScopeKey] = useState<string>(scopeKey);
-  const [target, setTarget] = useState<string>(initialTarget ?? '');
-  const [query, setQuery] = useState<string>(initialQuery ?? '');
-  // 入力中の値と、実際に問い合わせへ適用した値を分ける。
+  // 入力中の値 (draft) と、実際に問い合わせへ適用した値 (filters) を分ける。
   // これを分けないと 1 文字入力するたび effect が走り、submit でも同じ要求を重ねてしまう。
-  const [appliedTarget, setAppliedTarget] = useState<string>(initialTarget ?? '');
-  const [appliedQuery, setAppliedQuery] = useState<string>(initialQuery ?? '');
+  // 適用済みの値の正本は URL なので、同じ URL を共有すれば相手にも同じ一覧が出る。
+  const { filters, draft, setDraft, apply, restored } = useUrlFilters<CatalogFilters>(
+    { tab: 'all', target: initialTarget ?? '', query: initialQuery ?? '' },
+    CATALOG_FILTER_PARAMS,
+  );
+  const [viewMode, setViewMode] = useRememberedViewMode(VIEW_MODE_STORAGE_KEYS.catalog);
+  const appliedTarget = filters.target;
+  const appliedQuery = filters.query;
   const [filterGeneration, setFilterGeneration] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [failure, setFailure] = useState<CatalogFailure | null>(null);
@@ -91,32 +179,69 @@ export function CatalogList({ scope, port = httpCatalogPort, initialTarget, init
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: filterGeneration は同じ条件で再送信するときにも effect を張り直す世代印
   useEffect(() => {
+    // URL からの復元が済むまで待つ。先に問い合わせると、条件なしの一覧が一瞬出てから
+    // 条件付きに差し替わり、件数が目の前で変わって見える
+    if (!restored) return;
     const controller = new AbortController();
     void load(controller.signal);
     return () => controller.abort();
-  }, [load, filterGeneration]);
+  }, [load, filterGeneration, restored]);
 
   const capabilities = failure === null ? null : catalogCapabilities(failure.kind);
   const showBanner = failure !== null && capabilities?.canBrowse === true;
   const showError = failure !== null && capabilities?.canBrowse === false;
   // scope が切り替わった瞬間に、前 tenant/workspace の取得結果を 1 frame も再利用しない。
-  const visibleEntries = entriesScopeKey === scopeKey ? entries : [];
+  const scopedEntries = entriesScopeKey === scopeKey ? entries : [];
+  // 件数は状態の絞り込みを外した集合から数える。数えた後で状態タブを当てる順にしないと、
+  // 選んでいるタブ以外が常に 0 件になる
+  const statusCounts = countByStatus(scopedEntries);
+  const visibleEntries =
+    filters.tab === 'all'
+      ? scopedEntries
+      : scopedEntries.filter((row) => catalogStatusGroup(row.release_status) === filters.tab);
+
+  const applyPatch = useCallback(
+    (patch: CatalogFilterPatch): void => {
+      apply({
+        tab: patch.tab ?? filters.tab,
+        target: patch.target ?? filters.target,
+        query: patch.query ?? filters.query,
+      });
+      setFilterGeneration((value) => value + 1);
+    },
+    [apply, filters],
+  );
+
   const appliedFilters: readonly AppliedFilter[] = [
+    ...(filters.tab === 'all'
+      ? []
+      : [
+          {
+            label: '公開状態',
+            value: CATALOG_TABS.find((tab) => tab.value === filters.tab)?.label ?? filters.tab,
+            onRemove: () => applyPatch({ tab: 'all' }),
+          },
+        ]),
     ...(appliedTarget === ''
       ? []
       : [
           {
             label: '種別',
             value: TARGET_OPTIONS.find((option) => option.value === appliedTarget)?.label ?? appliedTarget,
+            onRemove: () => applyPatch({ target: '' }),
           },
         ]),
-    ...(appliedQuery.trim() === '' ? [] : [{ label: 'キーワード', value: appliedQuery.trim() }]),
+    ...(appliedQuery.trim() === ''
+      ? []
+      : [{ label: 'キーワード', value: appliedQuery.trim(), onRemove: () => applyPatch({ query: '' }) }]),
   ];
+  const hasFilters = filters.tab !== 'all' || appliedTarget !== '' || appliedQuery !== '';
 
   return (
     <div>
       <StickyHeaderOffset />
       {showBanner ? <DegradedBanner description={failure.message} /> : null}
+      <StatusTabs current={filters.tab} counts={statusCounts} onSelect={(tab) => applyPatch({ tab })} />
 
       <FilterBar
         label="業務ツールの絞り込み"
@@ -124,22 +249,28 @@ export function CatalogList({ scope, port = httpCatalogPort, initialTarget, init
         appliedChips={appliedFilters.length === 0 ? undefined : <AppliedFilterChips items={appliedFilters} />}
         onSubmit={(event) => {
           event.preventDefault();
-          setAppliedTarget(target);
-          setAppliedQuery(query);
-          setFilterGeneration((value) => value + 1);
+          applyPatch({ target: draft.target, query: draft.query.trim() });
         }}
         actions={<Button type="submit">絞り込む</Button>}
       >
         <Select
           label="種別"
           options={TARGET_OPTIONS.map((option) => ({ value: option.value, label: option.label }))}
-          value={target}
-          onChange={(event) => setTarget(event.currentTarget.value)}
+          value={draft.target}
+          onChange={(event) => {
+            // currentTarget はハンドラを抜けると null に戻る。setDraft の更新関数は後で呼ばれるので、
+            // 値はここで取り出しておく (更新関数の中で読むと null 参照で落ちる)。
+            const { value } = event.target;
+            setDraft((current) => ({ ...current, target: value }));
+          }}
         />
         <TextInput
           label="キーワード"
-          value={query}
-          onChange={(event) => setQuery(event.currentTarget.value)}
+          value={draft.query}
+          onChange={(event) => {
+            const { value } = event.target;
+            setDraft((current) => ({ ...current, query: value }));
+          }}
           description="名前と説明から探します。"
         />
       </FilterBar>
@@ -151,15 +282,11 @@ export function CatalogList({ scope, port = httpCatalogPort, initialTarget, init
         onRetry={() => setFilterGeneration((value) => value + 1)}
         loading={loading}
         isEmpty={visibleEntries.length === 0}
-        emptyTitle={
-          appliedTarget === '' && appliedQuery === ''
-            ? '公開されている業務ツールはまだありません'
-            : '条件に合う業務ツールがありません'
-        }
+        emptyTitle={hasFilters ? '条件に合う業務ツールがありません' : '公開されている業務ツールはまだありません'}
         emptyDescription={
-          appliedTarget === '' && appliedQuery === ''
-            ? '公開が済むと、ここに導入できる業務ツールが並びます。'
-            : '種別やキーワードを変えてお試しください。'
+          hasFilters
+            ? '状態・種別・キーワードを変えるか、上の条件を解除してお試しください。'
+            : '公開が済むと、ここに導入できる業務ツールが並びます。'
         }
       >
         {/* 広い画面では表。導入数や版を行どうしで見比べて選ぶ一覧なので、縦の並びが要る
@@ -174,6 +301,8 @@ export function CatalogList({ scope, port = httpCatalogPort, initialTarget, init
           rowKey={(row) => row.project_id}
           stickyHeader
           narrowAs="card-collection"
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
           columns={[
             {
               key: 'name',

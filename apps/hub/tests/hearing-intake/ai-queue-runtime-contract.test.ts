@@ -93,9 +93,15 @@ describe('HI-QUEUE / HI-SEC8: P05 実装後の受入契約', () => {
       repo.indexOf('async completeSheetGenerationJob'),
       repo.indexOf('async failSheetGenerationJob'),
     );
-    expect(method).toContain('eq(hearingSheets.workspaceId, job.workspaceId)');
-    expect(method).toContain('eq(hearingSheets.id, job.refId)');
-    expect(method).toContain('eq(hearingSheets.aiJobId, job.id)');
-    expect(method).toContain('eq(hearingSheets.tenantId, context.tenantId)');
+    // 4 条件は sheetQueueWriteWhere へ集約済み。complete がその述語を使うことと、
+    // 述語が 4 条件を持つことの両方を検査する。
+    expect(method).toContain('buildWhere: sheetQueueWriteWhere');
+    const predicateStart = repo.indexOf('function sheetQueueWriteWhere(');
+    expect(predicateStart).toBeGreaterThan(-1);
+    const predicate = repo.slice(predicateStart, repo.indexOf('\n}\n', predicateStart));
+    expect(predicate).toContain('eq(hearingSheets.workspaceId, job.workspaceId)');
+    expect(predicate).toContain('eq(hearingSheets.id, job.refId)');
+    expect(predicate).toContain('eq(hearingSheets.aiJobId, job.id)');
+    expect(predicate).toContain('eq(hearingSheets.tenantId, context.tenantId)');
   });
 });

@@ -135,7 +135,8 @@ describe('DMDB-T13 canonical migration と schema harness の同値 (P08 後)', 
       // 32 → 33: workspace 単位の Notion 連携 (migration 0010 / HarnessHub-hrux)。
       // 33 → 35: hearing_screenshots / hearing_share_tokens (migration 0013、ヒアリングシート
       // スクリーンショット添付・受け渡しトークンの追加要件)。
-      expect(Object.keys(fromMigrations)).toHaveLength(35);
+      // 35 → 36: Docs / Sheets の business INSERT と同じ transaction で確保する mutation create 冪等台帳。
+      expect(Object.keys(fromMigrations)).toHaveLength(36);
     },
   );
 });

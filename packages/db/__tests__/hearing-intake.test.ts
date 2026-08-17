@@ -211,6 +211,38 @@ describe('HI-DB: 受付番号・sheet snapshot・共通 AI queue の実 DB 往�
     expect(new Set([...page.items, ...nextPage.items].map((row) => row.id))).toEqual(new Set([first.id, second.id]));
   });
 
+  it('状態タブの件数は cursor と status を外した集合から数え、ページを送っても動かない', async () => {
+    const actor = await seedActor('status-counts');
+    const repo = createHearingIntakeRepository(asCore(adapter));
+    const first = await repo.createSheetAndEnqueue(actor.context, createInput(actor, '請求書処理'));
+    await repo.createSheetAndEnqueue(actor.context, createInput(actor, '勤怠集計'));
+    // 1 件だけ完了へ送り、active / completed の内訳が分かれることを確かめる
+    await repo.updateSheetStatus(actor.context, first.id, 'completed');
+
+    const page = await repo.listSheets(actor.context, { workspaceId: actor.workspaceId, limit: 1 });
+    // 1 件しか返していないのに、件数は 2 件の集合から数えた値になる (受入条件 6)
+    expect(page.items).toHaveLength(1);
+    expect(page.statusCounts).toEqual({ all: 2, active: 1, completed: 1, unknown: 0 });
+
+    // 2 ページ目でも同じ件数。ページを送るたびに数字が動くと「絞り込めていない」と読まれる
+    if (page.nextCursor === null) throw new Error('first page must expose next cursor');
+    const nextPage = await repo.listSheets(actor.context, {
+      workspaceId: actor.workspaceId,
+      cursor: page.nextCursor,
+      limit: 1,
+    });
+    expect(nextPage.statusCounts).toEqual({ all: 2, active: 1, completed: 1, unknown: 0 });
+
+    // 状態で絞っても件数は変わらない。ここで 0 になると、選択中以外のタブが全部 0 に見える
+    const activeOnly = await repo.listSheets(actor.context, {
+      workspaceId: actor.workspaceId,
+      statuses: ['received', 'generating', 'review'],
+      limit: 25,
+    });
+    expect(activeOnly.items).toHaveLength(1);
+    expect(activeOnly.statusCounts).toEqual({ all: 2, active: 1, completed: 1, unknown: 0 });
+  });
+
   it('pull→claim 者 complete→sheet review の往復が完結し、別 token は拒否する', async () => {
     const actor = await seedActor('complete');
     const repo = createHearingIntakeRepository(asCore(adapter));

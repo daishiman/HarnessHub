@@ -12,8 +12,8 @@ iteration: null
 title: "root layout の inline buildThemeCss() による Style & Layout ロングタスクを解消する"
 owners: ["daishiman"]
 created_at: "2026-08-08T08:00:00Z"
-updated_at: "2026-08-10T11:49:00Z"
-status: "active"
+updated_at: "2026-08-14T01:01:06Z"
+status: "closed"
 depends_on: ["issue-ui-vrt-navigation-baseline-drift-20260810"]
 related_nodes: ["issue-hub-cwv-tbt-over-budget-20260724"]
 resource_scope: ["apps/hub/src/app/layout.tsx","packages/ui"]

@@ -9,10 +9,10 @@ priority: "medium"
 start_date: "2026-08-11"
 target_date: null
 iteration: null
-title: "Dolt remote への Beads push HTTP 400 を解消する"
+title: "Dolt remote への beads push が HTTP 400 で失敗する"
 owners: ["daishiman"]
 created_at: "2026-08-11T00:00:00Z"
-updated_at: "2026-08-12T06:56:46Z"
+updated_at: "2026-08-12T07:56:12Z"
 status: "done"
 depends_on: []
 related_nodes: []
