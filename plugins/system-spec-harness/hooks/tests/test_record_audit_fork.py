@@ -464,5 +464,154 @@ class EndToEndTest(unittest.TestCase):
             self.assertEqual(proc.returncode, 0, "観測専用 hook が session を blocking した")
 
 
+class CompletionWriterTest(unittest.TestCase):
+    """SubagentStop の第 2 writer 経路 (schema 1.3 completion 行)。
+
+    非同期 fork では PostToolUse が起動受理しか観測できず dispatch 行が pending のまま残る。
+    完了という別の観測事実を追記できないと、台帳による帰属の裏取りが構造的に成立しない。
+    """
+
+    @staticmethod
+    def _stop_payload(agent_type: str, message: str | None, agent_id: str = "ag-1") -> dict:
+        payload = {
+            "hook_event_name": "SubagentStop",
+            "session_id": "sess-1",
+            "agent_id": agent_id,
+            "agent_type": agent_type,
+            "cwd": "/tmp/project",
+        }
+        if message is not None:
+            payload["last_assistant_message"] = message
+        return payload
+
+    def _record(self, payload: dict) -> dict | None:
+        return hook.build_completion_record(payload, hook.audit_agents(_PLUGIN_ROOT))
+
+    def test_completion_row_carries_verdict_and_join_token(self):
+        record = self._record(
+            self._stop_payload(_DOC_AUDITOR, "AUDIT_DISPATCH: batch-01\n本文\n\nAUDIT_VERDICT: PASS")
+        )
+        self.assertIsNotNone(record)
+        self.assertEqual(record["schema_version"], hook.COMPLETION_SCHEMA_VERSION)
+        self.assertEqual(record["record_kind"], hook.RECORD_KIND_COMPLETION)
+        self.assertEqual(record["subagent_type"], _DOC_AUDITOR)
+        self.assertEqual(record["dispatch_token"], "batch-01")
+        self.assertEqual(record["audit_verdict"], "PASS")
+        self.assertEqual(record["verdict_state"], hook.VERDICT_STATE_RESOLVED)
+        # digest は最終応答本文から採る (起動受理 payload の digest では監査結果を表さない)。
+        self.assertEqual(
+            record["response_sha256"],
+            hashlib.sha256(
+                "AUDIT_DISPATCH: batch-01\n本文\n\nAUDIT_VERDICT: PASS".encode("utf-8")
+            ).hexdigest(),
+        )
+
+    def test_missing_marker_is_absent_not_resolved(self):
+        record = self._record(self._stop_payload(_MATRIX_AUDITOR, "本文だけで marker が無い"))
+        self.assertIsNotNone(record)
+        self.assertIsNone(record["audit_verdict"])
+        self.assertEqual(record["verdict_state"], hook.VERDICT_STATE_ABSENT)
+
+    def test_missing_response_writes_no_row(self):
+        # 応答本文を観測できない完了を resolved にすると「監査したが verdict 不明」を
+        # PASS 側へ寄せてしまう。行を作らないことで fail-closed にする。
+        self.assertIsNone(self._record(self._stop_payload(_HEARING_AUDITOR, None)))
+
+    def test_foreign_agent_is_not_recorded(self):
+        self.assertIsNone(self._record(self._stop_payload("general-purpose", "AUDIT_VERDICT: PASS")))
+
+    def test_ambiguous_token_is_dropped(self):
+        record = self._record(
+            self._stop_payload(_MATRIX_AUDITOR, "AUDIT_DISPATCH: aaaaaaaa\nAUDIT_DISPATCH: bbbbbbbb\n\nAUDIT_VERDICT: PASS")
+        )
+        self.assertIsNone(record["dispatch_token"], "曖昧な token は join key にしない")
+
+    def test_dispatch_row_captures_prompt_token(self):
+        payload = _payload(_DOC_AUDITOR, tool_name="Agent", prompt="AUDIT_DISPATCH: batch-01\n監査して")
+        payload["tool_use_id"] = "toolu_x"
+        payload["tool_response"] = {"status": "async_launched"}
+        record = hook.build_record(payload, hook.audit_agents(_PLUGIN_ROOT))
+        self.assertEqual(record["record_kind"], hook.RECORD_KIND_DISPATCH)
+        self.assertEqual(record["dispatch_token"], "batch-01")
+        self.assertEqual(record["verdict_state"], hook.VERDICT_STATE_PENDING)
+
+    def test_event_routing_prefers_explicit_flag(self):
+        self.assertEqual(hook.resolve_event({}, ["--event", "subagent-stop"]), "SubagentStop")
+        self.assertEqual(hook.resolve_event({"hook_event_name": "SubagentStop"}, []), "SubagentStop")
+        self.assertEqual(hook.resolve_event({}, []), "PostToolUse")
+
+    def test_subagent_stop_appends_via_cli(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            ledger = Path(tmp) / "audit-fork-ledger.jsonl"
+            env = dict(os.environ)
+            env[hook.LEDGER_ENV] = str(ledger)
+            env["CLAUDE_PLUGIN_ROOT"] = str(_PLUGIN_ROOT)
+            proc = subprocess.run(
+                [sys.executable, str(_HOOK_PATH), "--event", "subagent-stop"],
+                input=json.dumps(self._stop_payload(_DOC_AUDITOR, "本文\n\nAUDIT_VERDICT: FAIL")),
+                text=True,
+                capture_output=True,
+                env=env,
+                check=False,
+            )
+            self.assertEqual(proc.returncode, 0)
+            rows = [json.loads(x) for x in ledger.read_text(encoding="utf-8").splitlines() if x]
+            self.assertEqual(len(rows), 1)
+            self.assertEqual(rows[0]["audit_verdict"], "FAIL")
+
+
+class UntypedCompletionTest(unittest.TestCase):
+    """``agent_type`` が空で届く SubagentStop (実測されたケース) の受理境界。
+
+    ハーネスは compaction 等の内部 subagent で ``agent_type`` を空文字にして送る。
+    subagent_type だけを対象判定にすると auditor の完了まで取りこぼすため、join key に
+    なる ``AUDIT_DISPATCH`` token があるときだけ型不明のまま記録する。
+    """
+
+    def _record(self, agent_type: str, message: str) -> dict | None:
+        payload = {
+            "hook_event_name": "SubagentStop", "session_id": "sess-1",
+            "agent_id": "ag-9", "agent_type": agent_type,
+            "last_assistant_message": message,
+        }
+        return hook.build_completion_record(payload, hook.audit_agents(_PLUGIN_ROOT))
+
+    def test_empty_agent_type_with_token_is_recorded_without_type(self):
+        record = self._record("", "AUDIT_DISPATCH: batch-77\n本文\n\nAUDIT_VERDICT: FAIL")
+        self.assertIsNotNone(record)
+        self.assertIsNone(record["subagent_type"])
+        self.assertEqual(record["dispatch_token"], "batch-77")
+        self.assertEqual(record["audit_verdict"], "FAIL")
+
+    def test_empty_agent_type_without_token_is_not_recorded(self):
+        self.assertIsNone(self._record("", "本文\n\nAUDIT_VERDICT: PASS"))
+
+
+class DispatchTokenExtractionTest(unittest.TestCase):
+    """token 抽出の表記ゆれ耐性と曖昧判定の境界。
+
+    実測では auditor が ``## AUDIT_DISPATCH: <token> (echo)`` と見出し化して返し、起動 prompt も
+    本文と注意書きで同じ token を 2 回持つ。同値の重複は正常、異なる値の併記だけが曖昧である。
+    """
+
+    def test_decorated_line_still_yields_token(self):
+        text = "## AUDIT_DISPATCH: b2-20260815-7e4d0c11 (echo)\n\n本文\n\nAUDIT_VERDICT: FAIL"
+        self.assertEqual(hook.dispatch_token(text), "b2-20260815-7e4d0c11")
+
+    def test_same_token_repeated_is_not_ambiguous(self):
+        text = (
+            "AUDIT_DISPATCH: batch-01-abc\n"
+            "応答本文には `AUDIT_DISPATCH: batch-01-abc` を echo してください\n"
+        )
+        self.assertEqual(hook.dispatch_token(text), "batch-01-abc")
+
+    def test_distinct_tokens_remain_ambiguous(self):
+        text = "AUDIT_DISPATCH: aaaaaaaa\nAUDIT_DISPATCH: bbbbbbbb\n"
+        self.assertIsNone(hook.dispatch_token(text))
+
+    def test_absent_token_returns_none(self):
+        self.assertIsNone(hook.dispatch_token("本文だけ\n\nAUDIT_VERDICT: PASS"))
+
+
 if __name__ == "__main__":
     unittest.main()

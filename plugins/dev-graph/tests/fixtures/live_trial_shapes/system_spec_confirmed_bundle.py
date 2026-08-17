@@ -63,6 +63,18 @@ kind: index
 未割当参照なし。
 """
 
+BACKEND = """---
+status: confirmed
+category: backend
+---
+
+# バックエンド設計
+
+## 確定事項
+
+単一プロセスが localhost のみで TODO API を提供する。
+"""
+
 SESSION_ID = "fixture-c19-resume-session"
 PLATFORMS = (
     "web",
@@ -133,6 +145,20 @@ def _completeness() -> dict:
         "gate_results": [
             {"id": "G-matrix", "name": "validate-coverage-matrix", "exit_code": 0},
             {"id": "G-source-citation", "name": "validate-source-citation", "exit_code": 0},
+            {
+                "id": "G-knowledge-graph",
+                "name": "validate-knowledge-graph",
+                "exit_code": 0,
+                "subgates": [
+                    {
+                        "profile": profile,
+                        "command": ["python3", "validate-knowledge-graph.py"],
+                        "exit_code": 0,
+                        "stderr": "",
+                    }
+                    for profile in ("knowledge", "doctrine", "required-info", "cross")
+                ],
+            },
         ],
         "findings": [{"severity": "info", "bucket": "fixture", "observation": "all canonical gates passed"}],
         "gaps": [],
@@ -195,22 +221,38 @@ def _spec_state() -> dict:
 
 def content(plugin_version: str) -> dict[str, str]:
     completeness = _completeness()
-    artifacts = {
+    evaluator_inputs = {
         "system-spec/index.md": INDEX,
         "system-spec/00-requirements-definition.md": REQUIREMENTS,
-        "system-spec/completeness-report.json": _json(completeness),
+        "system-spec/backend.md": BACKEND,
         "system-spec/spec-state.json": _json(_spec_state()),
         "system-spec/fetched-references.json": _json({"references": []}),
     }
+    completeness["artifact_snapshot"] = {
+        "schema_version": "system-spec-artifact-snapshot/v1",
+        "artifacts": {
+            path: hashlib.sha256(body.encode("utf-8")).hexdigest()
+            for path, body in sorted(evaluator_inputs.items())
+        },
+    }
+    artifacts = {
+        **evaluator_inputs,
+        "system-spec/completeness-report.json": _json(completeness),
+    }
     receipt = {
-        "schema_version": "1.1",
+        "schema_version": "1.2",
         "producer": {
             "plugin": "system-spec-harness",
             "version": plugin_version,
             "entry_point": "assign-system-spec-completeness-evaluator",
         },
         "verdict": "PASS",
-        "gates": {"coverage": "PASS", "source_citation": "PASS", "evaluator": "PASS"},
+        "gates": {
+            "coverage": "PASS",
+            "source_citation": "PASS",
+            "knowledge_graph": "PASS",
+            "evaluator": "PASS",
+        },
         "artifacts": {
             path: hashlib.sha256(body.encode("utf-8")).hexdigest()
             for path, body in sorted(artifacts.items())

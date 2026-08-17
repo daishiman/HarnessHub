@@ -18,6 +18,7 @@
 - **目的**: ユーザーが決めきれない論点について、目的適合と実現可能性を比較できる選択肢を示し、納得できる決定へ導く。
 - **成功基準**: 比較根拠と不確実性を保った推奨が提示され、ユーザーが選択または再検討を明示できる。
 - **不変則**: AI推奨だけで決定を `confirmed` にしない。`confirmed` はユーザーが選択した場合に限る。
+- **不変則 (推奨の分離)**: AI 推奨は選択肢そのものへ埋め込まず、本文の独立節として提示する。`AskUserQuestion` の選択肢ラベル・説明文へ「(推奨)」「(おすすめ)」等の評価ラベルを付けない。推奨を伝える手段と、選択肢を並べる手段を混同しない。
 
 ## Layer 2: ドメイン層
 
@@ -30,6 +31,9 @@
 - **必須情報カタログ駆動 (goal-spec C16)**: `references/required-info-catalog.json` は本スキル所有の必須情報 item カタログ。`$CLAUDE_PLUGIN_ROOT/scripts/validate-knowledge-graph.py --profile required-info --input references/required-info-catalog.json` の `collection_order` (依存位相順) で質問順序を導出する。`coverage_certificate.blocking_items` は未解決一覧ではなく `missing_effect=block` の収集必須 item ID 一覧なので、非空を失敗条件にしない。各 ID が確定 foundation/matrix/decision の利用者根拠へ意味的に接地しているかを確認し、未接地 ID だけを block して `confirmed` へ遷移させない。施行主体は本 R5 収集ゲート + C05 事後監査であり、決定論 writer 施行 (apply-spec-transition への接地検査組込) は spec-state の required-info 回答スキーマ拡張を要する follow-up。
 - **未知知識 producer (要件 open-world)**: 比較検討中に C04 knowledge catalog へ登録済みの既知 seed に無い設計領域・技術・パターン (新しい方式・製品・アーキテクチャ等) を検出したら、`set-knowledge-candidate` op で `status=discovered` として `spec-state` へ記録する (id は安定 kebab-case・`topic`・`problem`・実在 goal を指す `serves_goals` を付与)。これが open-world knowledge lifecycle の入口 (discover) で、後段の qualify/deepen/promote はこの discovered を起点に進む。
 - 候補数は比較可能性を保つ2〜3案とする。
+- **質問の中立性 (qa-196-f)**: 選択肢がある質問は、全選択肢のコスト、節ごとの分量、語調・情緒価を対称にする。問いより前に利用者が未決定の評価的結論を置かず、AI が予期する案を先頭に固定せず、断定・前提埋め込み型の framing を避ける。自分に有利・不利のどちら向きの非対称も同じ厳しさで検査し、生の質問文・全選択肢・提示順序を `approval_log` に逐語で残す。「反映しない (現状維持)」が成立する場合は対称な選択肢として含める。
+- **提示順序の決定規則 (qa-196-f の運用)**: 候補の並び順は AI の選好から独立させる。既定は `option_id` の昇順など決定論的な規則とし、AI 推奨案・前回採択案・AI が採択されると予期する案を先頭に固定しない。順序に意味を持たせた場合はその規則自体を `approval_log` へ記録する。
+- **再確認時の追加規律 (appr-036 / appr-050 / appr-051 の教訓)**: 過去に採択された論点を問い直すときは、前回の採択案を先頭に置かず、前回の結論を既定として提示せず、「前回はこうだった」という誘導を問いより前に置かない。再確認は前回結論の追認手続ではなく独立した意思決定として扱い、結論が前回と変わりうることを前提に設計する。
 
 ## Layer 3: インフラ層
 
@@ -87,6 +91,9 @@
 - [ ] 出力`status`が`recommended_pending_confirmation`である
 - [ ] ユーザー確認前の`user_decision`がnullである
 - [ ] seedに無い未知の設計領域/技術/パターンを検出した場合`set-knowledge-candidate`(status=discovered)で記録されている
+- [ ] 選択式の質問が qa-196-f の 8 規律を満たし、質問文・全選択肢・提示順序が approval_log に逐語で残っている
+- [ ] 選択肢ラベル・説明文に「(推奨)」等の評価ラベルが 0 件で、AI 推奨は本文の独立節として分離されている
+- [ ] 選択肢の提示順序が決定論的規則で決まっており、AI 推奨案・前回採択案が先頭に固定されていない
 
 ### 5.4 実行方式
 
@@ -103,6 +110,8 @@
 ## Layer 7: ユーザーインタラクション層
 
 - 提示順は「未決定論点」「比較軸」「2〜3案の比較」「AI推奨」「推奨理由」「注意点」「信頼度」「確認日時・出典」「ユーザー確認」とする。
+- 「AI推奨」は本文の独立節として書く。選択肢の並びへ推奨を織り込まない (`AskUserQuestion` の label/description へ「(推奨)」等の評価ラベルを付けない)。
+- 選択肢の並び順は決定論的規則 (既定は `option_id` 昇順) で決め、AI 推奨案・前回採択案を先頭に固定しない。順序に意味を持たせた場合はその規則を `approval_log` へ記録する。
 - ユーザーには採用、別案採用、追加比較、保留を選べる形で確認する。
 - ユーザーが選択するまで確定済みと表現しない。
 
@@ -110,4 +119,4 @@
 
 ## 出力指示
 
-`needs_guidance` の論点をfoundationとconstraintsに照らし、C04をseedとしたopen-world knowledgeと最新公式一次情報から2〜3案を比較する。無料または低コスト案を必ず含めるが最安を自動採用せず、各optionは`goal_fit`と`security_fit`(いずれも非空)を持たせ、writer契約の`id/status/options/recommendation/serves_goals/user_decision`語彙でdecision recordを返す。比較検討中にseedに無い未知の設計領域/技術/パターンを検出したら`set-knowledge-candidate`(status=discovered)で記録する。AI推奨時は`status: recommended_pending_confirmation`かつ`user_decision: null`とし、ユーザー明示選択後だけ`status: confirmed`を許す。
+`needs_guidance` の論点をfoundationとconstraintsに照らし、C04をseedとしたopen-world knowledgeと最新公式一次情報から2〜3案を比較する。無料または低コスト案を必ず含めるが最安を自動採用せず、各optionは`goal_fit`と`security_fit`(いずれも非空)を持たせ、writer契約の`id/status/options/recommendation/serves_goals/user_decision`語彙でdecision recordを返す。比較検討中にseedに無い未知の設計領域/技術/パターンを検出したら`set-knowledge-candidate`(status=discovered)で記録する。AI推奨時は`status: recommended_pending_confirmation`かつ`user_decision: null`とし、ユーザー明示選択後だけ`status: confirmed`を許す。選択式の質問は qa-196-f の中立性規律を適用し、選択肢ラベル・説明文へ「(推奨)」等の評価ラベルを付けず、AI 推奨は本文の独立節として分離する。選択肢の並び順は決定論的規則で決め、AI 推奨案・前回採択案を先頭に固定しない。過去に採択された論点を問い直すときは前回結論を既定として提示せず、独立した意思決定として設計する。生の質問文・全選択肢・提示順序を `approval_log` に逐語で残す。

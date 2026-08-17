@@ -1,41 +1,23 @@
 {
- "allowed_domains": [
-  "developers.cloudflare.com"
- ],
- "findings": [
-  "Workers Paid は account あたり最低 $5/月。Workers / Pages Functions / Workers KV / Hyperdrive / Durable Objects の利用を含む",
-  "Free の 100,000 requests/day 上限は Paid には無い",
-  "CPU time は既定 30 秒、Paid では limits.cpu_ms で最大 5 分 (300,000ms) まで引上げ可",
-  "network 待ち (fetch / KV read / DB query) は CPU time に算入されない",
-  "isolate あたり memory 上限 128MB (超過は Error 1102)",
-  "Workers は cache より前段で走るため、cache hit の要求も課金対象"
- ],
- "freshness_rechecks": [
-  {
-   "checked_at": "2026-08-13T15:44:29Z",
-   "http_status": 200,
-   "method": "python3 urllib.request GET (User-Agent 明示)",
-   "observation": "ページ表示 \"Last updated Jul 7, 2026\" を本文から直接抽出。record の last_updated (Jul 7, 2026) と一致し世代落ちなし。C08 F6 で是正対象漏れと指摘された target。",
-   "page_last_updated_extracted": [
-    "Last updated Jul 7, 2026|</"
-   ],
-   "reason": "C08 独立監査 (2026-08-13 / verdict FAIL) の finding F6/F8/F9/F10 対応。F9 (先行 recheck の checked_at 12 件が 2026-08-13T15:34:43Z で秒まで一括一致し実測でない) を受け、同じ照合を request 単位の実測時刻付きで再実行し、先行エントリを本エントリへ差し替えた。",
-   "request_started_at": "2026-08-13T15:44:29Z",
-   "response_body_sha256": "c584a936401037a995ee4cabe8cbb74cd19547d0c1e71c31884aa3037d35bd46",
-   "response_bytes": 299198,
-   "response_last_modified_header": null,
-   "retrieval_channel": "primary-http-get",
-   "url": ""
-  }
- ],
- "retrieval_channel": "web-search-official-host-restricted",
- "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と要約から読み取れた事実だけを記録する。retrieved_at は本 record 作成時に読んだ実時刻で、同一 turn 内で発行した検索の記録時刻 (個別応答の受信時刻ではない)。",
- "retrieval_query": "Cloudflare Workers pricing paid plan limits",
- "retrieved_at": "2026-08-07T03:30:09Z",
- "returned_official_urls": [
-  "https://developers.cloudflare.com/workers/platform/pricing/",
-  "https://developers.cloudflare.com/workers/platform/limits/",
-  "https://developers.cloudflare.com/workers/ci-cd/builds/limits-and-pricing/"
- ],
- "target_id": "cloudflare-workers"
+  "retrieval_path": "Cloudflare official MCP (search_cloudflare_documentation)",
+  "query": "Workers pricing D1 pricing rows read written storage free plan limits",
+  "retrieved_at": "2026-08-16T02:49:50Z",
+  "official_url": "https://developers.cloudflare.com/workers/platform/pricing/",
+  "returned_official_urls": [
+    "https://developers.cloudflare.com/workers/platform/pricing/",
+    "https://developers.cloudflare.com/durable-objects/platform/pricing/",
+    "https://developers.cloudflare.com/d1/best-practices/read-replication/"
+  ],
+  "facts": [
+    "D1 (Workers Free): Rows read 5 million / day, Rows written 100,000 / day, Storage 5 GB (total)",
+    "D1 (Workers Paid): Rows read first 25 billion/month + $0.001/million rows, Rows written first 50 million/month + $1.00/million rows, Storage first 5 GB + $0.75/GB-mo",
+    "Free limits reset daily at 00:00 UTC; monthly included limits reset on the subscription renewal date",
+    "No data transfer (egress) or throughput (bandwidth) charges for data accessed from D1",
+    "Storage is per GB-month across the sum of all databases in the account; tables and indexes both count",
+    "Indexes add an additional written row when writes include the indexed column",
+    "Read replication does not charge extra for read replicas",
+    "The Workers pricing page defers D1 billing detail to the dedicated D1 pricing page /d1/platform/pricing/"
+  ],
+  "page_declared_last_updated": null,
+  "note": "返却チャンクに最終更新日の行が含まれないため、ページ宣言の更新日は取得できていない。"
 }

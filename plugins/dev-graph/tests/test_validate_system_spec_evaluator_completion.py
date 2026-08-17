@@ -2,9 +2,12 @@
 from __future__ import annotations
 
 import json
+import shlex
 import subprocess
 import sys
 from pathlib import Path
+
+import pytest
 
 
 PLUGIN = Path(__file__).resolve().parents[1]
@@ -116,7 +119,13 @@ def _target_skill() -> dict:
     }
 
 
-def _resume_runner(report: dict) -> list[dict]:
+def _resume_runner(report: dict, repo_root: Path) -> list[dict]:
+    command = shlex.join([
+        "python3",
+        "plugins/dev-graph/scripts/build-system-spec-resume-import.py",
+        "--repo-root",
+        str(repo_root),
+    ])
     return [
         {
             "type": "assistant",
@@ -124,7 +133,7 @@ def _resume_runner(report: dict) -> list[dict]:
                 "type": "tool_use",
                 "id": "toolu_runner",
                 "name": "Bash",
-                "input": {"command": "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py --repo-root fixture"},
+                "input": {"command": command},
             }]},
         },
         {
@@ -140,7 +149,11 @@ def _resume_runner(report: dict) -> list[dict]:
 
 
 def _run(
-    tmp_path: Path, records: list[dict], *, resume_report: dict | None = None
+    tmp_path: Path,
+    records: list[dict],
+    *,
+    resume_report: dict | None = None,
+    resume_repo_root: Path | None = None,
 ) -> tuple[int, dict]:
     transcript = tmp_path / "transcript.jsonl"
     transcript.write_text(
@@ -149,7 +162,13 @@ def _run(
     )
     command = [sys.executable, str(SCRIPT), "--transcript", str(transcript)]
     if resume_report is not None:
-        report_path = tmp_path / "run-dev-graph-system-spec-resume-report.json"
+        assert resume_repo_root is not None
+        report_path = (
+            resume_repo_root
+            / "eval-log"
+            / "run-dev-graph-system-spec-resume-report.json"
+        )
+        report_path.parent.mkdir(parents=True)
         report_path.write_text(json.dumps(resume_report), encoding="utf-8")
         command.extend(["--resume-report", str(report_path)])
     proc = subprocess.run(
@@ -291,8 +310,11 @@ def test_upsert_help_before_completion_is_not_a_mutation(tmp_path: Path) -> None
 
 def test_resume_report_closes_without_evaluator_or_direct_upsert(tmp_path: Path) -> None:
     resume = _resume_report()
-    records = [_target_skill(), *_resume_runner(resume)]
-    code, report = _run(tmp_path, records, resume_report=resume)
+    repo_root = tmp_path / "fixture repo|日本"
+    records = [_target_skill(), *_resume_runner(resume, repo_root)]
+    code, report = _run(
+        tmp_path, records, resume_report=resume, resume_repo_root=repo_root
+    )
     assert code == 0, report
     assert report["status"] == "PASS"
     assert report["mode"] == "resume-reuse"
@@ -301,12 +323,164 @@ def test_resume_report_closes_without_evaluator_or_direct_upsert(tmp_path: Path)
     assert report["resume_runner_invocations"] == 1
 
 
+def test_resume_report_accepts_quoted_repo_relative_runner_path(
+    tmp_path: Path,
+) -> None:
+    """shlex.join が生成する canonical single quote だけを許可する。"""
+    resume = _resume_report()
+    repo_root = tmp_path / "改善 要望" / "fixture|repo"
+    records = [_target_skill(), *_resume_runner(resume, repo_root)]
+    expected = shlex.join(
+        [
+            "python3",
+            "plugins/dev-graph/scripts/build-system-spec-resume-import.py",
+            "--repo-root",
+            str(repo_root),
+        ]
+    )
+    assert records[1]["message"]["content"][0]["input"]["command"] == expected
+
+    code, report = _run(
+        tmp_path, records, resume_report=resume, resume_repo_root=repo_root
+    )
+
+    assert code == 0, report
+    assert report["resume_runner_invocations"] == 1
+
+
+@pytest.mark.parametrize(
+    "variant",
+    ["double-quote", "extra-space", "quoted-python", "trailing-newline"],
+)
+def test_resume_report_rejects_equivalent_but_noncanonical_raw_command(
+    tmp_path: Path, variant: str
+) -> None:
+    """argv が同値でも shlex.join と異なる raw 表現は EV-024。"""
+    resume = _resume_report()
+    repo_root = tmp_path / "改善 fixture|repo"
+    records = [_target_skill(), *_resume_runner(resume, repo_root)]
+    canonical = records[1]["message"]["content"][0]["input"]["command"]
+    variants = {
+        "double-quote": (
+            "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py "
+            f'--repo-root "{repo_root}"'
+        ),
+        "extra-space": canonical.replace("python3 ", "python3  ", 1),
+        "quoted-python": canonical.replace("python3", "'python3'", 1),
+        "trailing-newline": canonical + "\n",
+    }
+    command = variants[variant]
+    assert shlex.split(command) == shlex.split(canonical)
+    records[1]["message"]["content"][0]["input"]["command"] = command
+
+    code, report = _run(
+        tmp_path, records, resume_report=resume, resume_repo_root=repo_root
+    )
+
+    assert code == 2
+    assert "EV-024" in {item["rule"] for item in report["violations"]}
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        # final4 transcript の実測 command。runner の後ろに exit echo を連結した。
+        'cd "/Users/example/改善要望" && '
+        "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py "
+        '--repo-root "/Users/example/改善要望/fixture-repo"; echo "EXIT=$?"',
+        # prefix / suffix / shell operator / wrapper をそれぞれ独立に固定する。
+        "env X=1 python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py "
+        "--repo-root /tmp/fixture",
+        "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py "
+        "--repo-root /tmp/fixture; echo EXIT=$?",
+        "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py "
+        "--repo-root /tmp/fixture && true",
+        "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py "
+        "--repo-root /tmp/fixture || true",
+        "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py "
+        "--repo-root /tmp/fixture | tee /tmp/out",
+        "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py "
+        "--repo-root /tmp/fixture|cat",
+        "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py "
+        "--repo-root /tmp/fixture;",
+        "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py "
+        "--repo-root /tmp/fixture&&true",
+        "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py "
+        "--repo-root /tmp/fixture||true",
+        "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py "
+        "--repo-root /tmp/fixture</tmp/in",
+        "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py "
+        "--repo-root /tmp/fixture>/tmp/out",
+        "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py "
+        "--repo-root /tmp/fixture>>/tmp/out",
+        "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py "
+        "--repo-root /tmp/fixture 2>/tmp/err",
+        "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py "
+        "--repo-root /tmp/fixture\necho second-command",
+        "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py "
+        '--repo-root "/tmp/$(touch /tmp/substitution)"',
+        "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py "
+        '--repo-root "/tmp/`touch /tmp/backtick`"',
+        "bash -c 'python3 plugins/dev-graph/scripts/"
+        "build-system-spec-resume-import.py --repo-root /tmp/fixture'",
+        "python3 /Users/example/plugins/dev-graph/scripts/"
+        "build-system-spec-resume-import.py --repo-root /tmp/fixture",
+        # shell 展開・glob・省略形・代替引用/空白も raw 不一致で拒否する。
+        "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py "
+        "--repo-root $FIXTURE_ROOT",
+        "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py "
+        "--repo-root ${FIXTURE_ROOT}",
+        "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py "
+        "--repo-root /tmp/{fixture,other}",
+        "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py "
+        "--repo-root /tmp/fixture*",
+        "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py "
+        "--repo-root /tmp/fixture?",
+        "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py "
+        "--repo-root /tmp/fixture[0]",
+        "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py "
+        "--repo-root /tmp/$((1 + 1))",
+        "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py "
+        "--repo-root ~/fixture",
+        "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py "
+        "--repo-root /tmp/fixture\\ repo",
+        'python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py '
+        '--repo-root "/tmp/fixture repo"',
+        "python3  plugins/dev-graph/scripts/build-system-spec-resume-import.py "
+        "--repo-root /tmp/fixture",
+        "python3\tplugins/dev-graph/scripts/build-system-spec-resume-import.py "
+        "--repo-root /tmp/fixture",
+        "'python3' plugins/dev-graph/scripts/build-system-spec-resume-import.py "
+        "--repo-root /tmp/fixture",
+        "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py "
+        "--repo-root /tmp/fixture\n",
+    ],
+)
+def test_resume_report_rejects_non_literal_runner_command(
+    tmp_path: Path, command: str
+) -> None:
+    resume = _resume_report()
+    repo_root = tmp_path / "fixture-repo"
+    records = [_target_skill(), *_resume_runner(resume, repo_root)]
+    records[1]["message"]["content"][0]["input"]["command"] = command
+
+    code, report = _run(
+        tmp_path, records, resume_report=resume, resume_repo_root=repo_root
+    )
+
+    assert code == 2
+    assert "EV-024" in {item["rule"] for item in report["violations"]}
+
+
 def test_resume_report_rejects_missing_step_and_stdout_mismatch(tmp_path: Path) -> None:
     report_file = _resume_report()
     report_file["steps"] = report_file["steps"][:-1]
     runner_stdout = _resume_report()
-    records = [_target_skill(), *_resume_runner(runner_stdout)]
-    code, result = _run(tmp_path, records, resume_report=report_file)
+    repo_root = tmp_path / "fixture-repo"
+    records = [_target_skill(), *_resume_runner(runner_stdout, repo_root)]
+    code, result = _run(
+        tmp_path, records, resume_report=report_file, resume_repo_root=repo_root
+    )
     assert code == 2
     rules = {item["rule"] for item in result["violations"]}
     assert {"EV-017", "EV-023"} <= rules
@@ -327,8 +501,11 @@ def test_status_content_may_cite_completeness_report_without_being_a_write(tmp_p
             },
         }]},
     }
-    records = [_target_skill(), *_resume_runner(resume), status_write]
-    code, result = _run(tmp_path, records, resume_report=resume)
+    repo_root = tmp_path / "fixture-repo"
+    records = [_target_skill(), *_resume_runner(resume, repo_root), status_write]
+    code, result = _run(
+        tmp_path, records, resume_report=resume, resume_repo_root=repo_root
+    )
     assert code == 0, result
     assert result["outer_report_writes"] == 0
 
@@ -341,14 +518,17 @@ def test_resume_path_rejects_upstream_skill_agent_and_direct_upsert(tmp_path: Pa
             "type": "tool_use", "id": "toolu_agent", "name": "Agent", "input": {}
         }]},
     }
+    repo_root = tmp_path / "fixture-repo"
     records = [
         _target_skill(),
         _skill_launch(),
         agent,
-        *_resume_runner(resume),
+        *_resume_runner(resume, repo_root),
         _import(),
     ]
-    code, result = _run(tmp_path, records, resume_report=resume)
+    code, result = _run(
+        tmp_path, records, resume_report=resume, resume_repo_root=repo_root
+    )
     assert code == 2
     rules = {item["rule"] for item in result["violations"]}
     assert {"EV-020", "EV-021"} <= rules

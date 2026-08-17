@@ -41,13 +41,17 @@ REQUIRED_ENTRY_POINTS = {
     "assign-system-spec-completeness-evaluator",
 }
 REQUIRED_ARTIFACT_ROLES = {"index", "requirements", "completeness"}
-REQUIRED_GATES = {"coverage", "source_citation", "evaluator"}
+REQUIRED_GATES = {"coverage", "source_citation", "knowledge_graph", "evaluator"}
 RECEIPT_FIELDS = {
     "schema_version", "producer", "verdict", "gates", "artifacts", "evaluator", "created_at"
 }
 PRODUCER_FIELDS = {"plugin", "version", "entry_point"}
 EVALUATOR_FIELDS = {"report_path", "report_sha256", "fork_ledger_path", "session_id"}
-GATE_RESULT_IDS = {"coverage": "G-matrix", "source_citation": "G-source-citation"}
+GATE_RESULT_IDS = {
+    "coverage": "G-matrix",
+    "source_citation": "G-source-citation",
+    "knowledge_graph": "G-knowledge-graph",
+}
 SUPPORTED_VERSION_MIN = (0, 1, 0)
 SUPPORTED_VERSION_MAX = (1, 0, 0)
 SEMVER = re.compile(r"^(\d+)\.(\d+)\.(\d+)(?:[-+].*)?$")
@@ -122,6 +126,17 @@ def receipt_artifact_contract() -> tuple[set[str], str, str]:
         raise ValueError(f"resume receipt schema lacks gate artifact: {exc}") from exc
 
 
+def snapshot_artifacts(root: Path, required: set[str]) -> set[str]:
+    """Return the fixed gate inputs plus every current system-spec Markdown body."""
+    spec_root = root / "system-spec"
+    markdown = {
+        path.relative_to(root).as_posix()
+        for path in spec_root.rglob("*.md")
+        if path.is_file()
+    }
+    return required | markdown
+
+
 def validate(root: Path) -> dict[str, Any]:
     root = root.resolve(strict=True)
     import_contract = load_json(IMPORT_CONTRACT_PATH)
@@ -133,7 +148,7 @@ def validate(root: Path) -> dict[str, Any]:
         or any(not isinstance(value, str) or not value for value in artifact_paths.values())
     ):
         raise ValueError("system-spec import contract artifact roles are invalid")
-    required_artifacts = receipt_artifacts
+    required_artifacts = snapshot_artifacts(root, receipt_artifacts)
     if not set(artifact_paths.values()).issubset(required_artifacts):
         raise ValueError("resume receipt schema omits import contract artifacts")
     receipt_relative = str(Path(artifact_paths["index"]).parent / "resume-receipt.json")
@@ -167,7 +182,7 @@ def validate(root: Path) -> dict[str, Any]:
             failures.append("producer-version-stale")
         if producer.get("entry_point") != "assign-system-spec-completeness-evaluator":
             failures.append("producer-entry-point-invalid")
-    if receipt.get("schema_version") != "1.1":
+    if receipt.get("schema_version") != "1.2":
         failures.append("receipt-schema-version-invalid")
     if receipt.get("verdict") != "PASS":
         failures.append("receipt-verdict-not-pass")
@@ -279,6 +294,14 @@ def validate(root: Path) -> dict[str, Any]:
         )
         if source_citation.returncode != 0:
             failures.append("source-citation-gate-invalid")
+        knowledge_graph = subprocess.run(
+            [sys.executable, str(AGGREGATE), "--knowledge-graph"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if knowledge_graph.returncode != 0:
+            failures.append("knowledge-graph-gate-invalid")
         requirements = contained_file(
             root, artifact_paths["requirements"]
         ).read_text(encoding="utf-8")

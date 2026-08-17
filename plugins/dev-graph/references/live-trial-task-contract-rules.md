@@ -35,7 +35,7 @@ lint は次の3正本を同じ経路で突合する。
 | LT-009 | required observation の被覆が無い |
 | LT-010 | observation keyword と observation の件数が違う |
 | LT-011 | premise digest が正本と違う |
-| LT-012 | task contract の required fragment が無い |
+| LT-012 | task contract の required fragment または canonical runner command の完全一致行が無い |
 | LT-013 | task contract の forbidden fragment がある |
 | LT-014 | `--all` の採用 run に task が無い |
 

@@ -1,0 +1,24 @@
+{
+  "retrieval_path": "WebSearch (allowed_domains=docs.github.com)",
+  "query": "GitHub REST API repository contents create or update file contents PUT sha",
+  "retrieved_at": "2026-08-16T02:49:50Z",
+  "official_url": "https://docs.github.com/en/rest/repos/contents",
+  "returned_official_urls": [
+    "https://docs.github.com/en/rest/repos/contents",
+    "https://docs.github.com/en/rest/guides/getting-started-with-the-git-database-api",
+    "https://docs.github.com/en/rest/git/blobs"
+  ],
+  "facts": [
+    "Create or update file contents: PUT /repos/{owner}/{repo}/contents/{path}",
+    "content must be Base64 encoded",
+    "body params: message (required), content (required), branch, committer, author, sha",
+    "sha is required when updating an existing file (blob sha of the file being replaced); omit when creating",
+    "a stale/incorrect sha fails the request (409 Conflict or 422)",
+    "current sha comes from GET on the same contents path (response includes sha, name, path, size, _links)",
+    "response returns both a content object and a commit object",
+    "DELETE on the same path also requires sha",
+    "the contents API commits ONE FILE PER REQUEST",
+    "using the delete-file endpoint and create-or-update in parallel conflicts; must be used serially",
+    "for multi-file commits use the Git Database API (blob -> tree -> commit -> update ref)"
+  ]
+}

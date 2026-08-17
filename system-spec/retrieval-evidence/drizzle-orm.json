@@ -45,6 +45,7 @@
       "rc": "1.0.0-rc.4",
       "rc1-fixes": "1.0.0-rc.2-8feace6",
       "rc4": "1.0.0-rc.4-5d5b77c",
+      "rc5": "1.0.0-rc.5-169397b",
       "revert-netlify": "1.0.0-beta.23-c10d10c",
       "rqb-perf-patch": "1.0.0-beta.2-f9236e3",
       "rqb-typeperf": "1.0.0-beta.1-69a2ca0",
@@ -60,13 +61,13 @@
     "homepage": "https://orm.drizzle.team",
     "license": "Apache-2.0",
     "repository.url": "git+https://github.com/drizzle-team/drizzle-orm.git",
-    "time.modified": "2026-08-05T17:04:14.702Z",
+    "time.modified": "2026-08-12T14:59:59.314Z",
     "version": "0.45.2"
   },
   "registry": "https://registry.npmjs.org",
   "retrieval_channel": "npm-registry",
   "retrieval_command": "pnpm view drizzle-orm <field> --json",
   "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式配布 registry (registry.npmjs.org) を pnpm CLI 経由で直接照会した実応答を証跡とする。HTML ドキュメントページ本文の取得ではない。",
-  "retrieved_at": "2026-08-07T03:25:48Z",
+  "retrieved_at": "2026-08-15T00:15:16Z",
   "target_id": "drizzle-orm"
 }

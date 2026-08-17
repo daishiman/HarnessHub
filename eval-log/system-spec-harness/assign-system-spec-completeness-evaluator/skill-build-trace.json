@@ -1,0 +1,465 @@
+{
+  "skill_name": "assign-system-spec-completeness-evaluator",
+  "skill_kind": "assign",
+  "build_mode": "update",
+  "skill_path": "plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator",
+  "source_docs": [
+    "plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/SKILL.md",
+    "plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/prompts/R1-score.md",
+    "plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/prompts/R2-delegate.md",
+    "plugins/harness-creator/skills/run-build-skill/SKILL.md",
+    "plugins/harness-creator/skills/run-build-skill/prompts/R4-trace-write.md",
+    "plugins/harness-creator/skills/run-build-skill/references/reproducibility-trace-schema.md",
+    "plugins/harness-creator/skills/run-build-skill/schemas/skill-build-trace.schema.json",
+    "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/content-review/elegance-verdict.json",
+    "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/content-review/rubric-verdict.json"
+  ],
+  "context_map_decision": {
+    "map": "run-build-skill Step 3.5 reproducibility trace contract",
+    "task_category": "existing assign evaluator build-evidence closure after independent exhaustive review",
+    "selected_docs": [
+      "plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/SKILL.md",
+      "plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/prompts/R1-score.md",
+      "plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/prompts/R2-delegate.md",
+      "plugins/harness-creator/skills/run-build-skill/SKILL.md",
+      "plugins/harness-creator/skills/run-build-skill/prompts/R4-trace-write.md",
+      "plugins/harness-creator/skills/run-build-skill/references/reproducibility-trace-schema.md",
+      "plugins/harness-creator/skills/run-build-skill/schemas/skill-build-trace.schema.json",
+      "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/content-review/elegance-verdict.json",
+      "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/content-review/rubric-verdict.json"
+    ]
+  },
+  "design_model": {
+    "intent": "生成者と分離した assign evaluator が system-spec の6観点を fail-closed で判定し、再利用可能な resume receipt へ接続する",
+    "contract": "固定 artifact snapshot、3件の監査 fork receipt、決定論 gate、観点別 verdict、findings/gaps を schema 準拠 report に集約する",
+    "boundary": "assign skill は評価対象を書き換えず、監査 agent は hook 台帳を手書きせず、FAIL は caller の elicit/doc-fetch/compile へ返す",
+    "execution": "SKILL orchestration + R1/R2 seven-layer prompts + four Python stdlib-only validators/writers (including the fail-closed Draft 7 subset interpreter) + three forked audit agents",
+    "feedback": "focused pytest、clean python -S / poisoned-jsonschema dependency regressions、portable-regex / strict URI-fragment counterexamples、prompt/frontmatter/build-trace validators。current SHA e8cd5a31...70fa の independent elegance/rubric review はともに PASS (verdict SHA256: 6150b335...a680 / 75107303...f2e4)"
+  },
+  "doc_coverage": [
+    {
+      "doc": "02-skill-structure",
+      "status": "PASS",
+      "evidence": "SKILL.md から prompts/references/schemas/scripts へ progressive disclosure し、各参照は実在する"
+    },
+    {
+      "doc": "03-frontmatter",
+      "status": "PASS",
+      "evidence": "validate-frontmatter.py exit 0: ok assign-system-spec-completeness-evaluator"
+    },
+    {
+      "doc": "04-invocation-permissions",
+      "status": "PASS",
+      "evidence": "context: fork / user-invocable: false / allowed-tools Read+Bash+Agent+legacy Task を SKILL に明示"
+    },
+    {
+      "doc": "05-layering",
+      "status": "PASS",
+      "evidence": "R1 が総合判定、R2 が fork 集約、scripts が決定論 gate を担当する依存方向"
+    },
+    {
+      "doc": "06-classification-naming",
+      "status": "PASS",
+      "evidence": "name/kind/prefix/role_suffix = assign-system-spec-completeness-evaluator/assign/assign/evaluator"
+    },
+    {
+      "doc": "07-progressive-disclosure",
+      "status": "PASS",
+      "evidence": "scoring detail は prompts/references、output contract は schemas、machine gates は scripts に分離"
+    },
+    {
+      "doc": "08-skill-writing-guidelines",
+      "status": "PASS",
+      "evidence": "Purpose & Output Contract / Key Rules / Gotchas / Additional Resources が存在"
+    },
+    {
+      "doc": "09-evaluation-orchestration",
+      "status": "PASS",
+      "evidence": "context:fork、proposer != approver、machine gate priority、fail-closed aggregation を契約化"
+    },
+    {
+      "doc": "10-subagents-hooks-integration",
+      "status": "PASS",
+      "evidence": "R2-delegate と3 auditor agent_refs、PostToolUse/SubagentStop ledger writer 契約を接続"
+    },
+    {
+      "doc": "11-templates",
+      "status": "N/A",
+      "reason": "既存 assign evaluator のbuild-evidence閉鎖であり、template の生成・更新は行っていない"
+    },
+    {
+      "doc": "13-checklists",
+      "status": "PASS",
+      "evidence": "SKILL の6観点と R1/R2 停止条件が report gate に写像される"
+    },
+    {
+      "doc": "14-dynamic-context-injection",
+      "status": "PASS",
+      "evidence": "spec_dir/output/session/fork ledger は入力引数として注入し、固定ローカル値にしない"
+    },
+    {
+      "doc": "15-official-source-notes",
+      "status": "N/A",
+      "reason": "今回の変更はリポジトリ内のbuild traceとrubric同期で、外部仕様の判定・更新を含まない"
+    },
+    {
+      "doc": "16-official-skills-reference",
+      "status": "N/A",
+      "reason": "既存の assign/context fork 契約と出力面を変更せず、公式 Skill 仕様の新規判定を要しない"
+    },
+    {
+      "doc": "26-meta-skill-dogfooding",
+      "status": "PASS",
+      "evidence": "assign evaluator 自身を deterministic rubric と30思考法の別 context elegance review で再評価"
+    },
+    {
+      "doc": "27-rubric-governance-runbook",
+      "status": "PASS",
+      "evidence": "PG-002 wording は PROP-2026-08-16-002、impact flip_rate=0.0、L0/L2 1.3.2 sync で発効"
+    },
+    {
+      "doc": "28-script-execution-model",
+      "status": "PASS",
+      "evidence": "aggregate/json-schema subset/audit attribution/resume writer の local dependency・subprocess 境界と fail-closed exit を記録"
+    },
+    {
+      "doc": "29-multi-project-rubric-composition",
+      "status": "PASS",
+      "evidence": "L0+L2 deep-merge / most-specific-wins / composition hash を deterministic score から記録"
+    },
+    {
+      "doc": "30-paradigm-analogy-map",
+      "status": "N/A",
+      "reason": "新しい実行パラダイムや配置判断を追加する更新ではない"
+    },
+    {
+      "doc": "31-output-routing-adapter-architecture",
+      "status": "PASS",
+      "evidence": "report schema -> aggregate validator -> resume receipt writer の output route を維持"
+    },
+    {
+      "doc": "32-creator-kit-implementation-ledger",
+      "status": "PASS",
+      "evidence": "SKILL、prompts、schemas、4 runtime scripts (json_schema_subset.py を含む)、tests、content-review、本 trace の実在を棚卸し"
+    },
+    {
+      "doc": "33-change-governance",
+      "status": "PASS",
+      "evidence": "変更は build evidence/rubric wording に限定し、commit/push は未許可のため実行しない"
+    },
+    {
+      "doc": "34-plugin-governance-roadmap",
+      "status": "PASS",
+      "evidence": "trace を eval-log/system-spec-harness/<skill>/ の plugin/skill 境界に配置"
+    },
+    {
+      "doc": "35-meta-harness-feedback-loop",
+      "status": "PASS",
+      "evidence": "clean python -S / unknown-keyword fail-open の初回 RED に加え、independent review の regex portability・URI fragment・resource-map 指摘を反例 RED → GREEN で接続。current SHA の rubric/elegance を別 context で再評価し、未解決 high/critical 0 で PASS"
+    }
+  ],
+  "build_flow_coverage": [
+    {
+      "step": "problem-definition",
+      "status": "PASS",
+      "evidence": "第2 independent review が target SHA 32d96bab... に regex portability / malformed URI fragment / resource-map 欠落 / evaluator raw-schema drift を特定"
+    },
+    {
+      "step": "execution-layer",
+      "status": "PASS",
+      "evidence": "semantic evaluation は assign skill、再現性確認は deterministic validator に分離"
+    },
+    {
+      "step": "classification",
+      "status": "PASS",
+      "evidence": "frontmatter kind=assign"
+    },
+    {
+      "step": "naming",
+      "status": "PASS",
+      "evidence": "directory/name/prefix/role suffix の assign-system-spec-completeness-evaluator/assign/evaluator 整合"
+    },
+    {
+      "step": "frontmatter",
+      "status": "PASS",
+      "evidence": "validate-frontmatter.py exit 0"
+    },
+    {
+      "step": "body",
+      "status": "PASS",
+      "evidence": "current SKILL.md sha256=e8cd5a31dd92c1392d0cd6a05a5926e073796ce6acaa4751e7ddf6c1fcbb70fa。portable pattern subset と fail-closed ref 契約を Additional Resources へ反映し、independent rubric/elegance を同 SHA で再評価 PASS"
+    },
+    {
+      "step": "support-files",
+      "status": "PASS",
+      "evidence": "responsibility_refs 2件、rubric/reference/schema/script/agent refs の実体を確認。SKILL の全 script_refs/schema_refs が resource-map に含まれることを集合テストで固定"
+    },
+    {
+      "step": "permissions-hooks",
+      "status": "PASS",
+      "evidence": "Read/Bash/Agent と legacy Task、hook-only audit ledger writer の権限境界を SKILL/R2 で明示"
+    },
+    {
+      "step": "validation",
+      "status": "N/A",
+      "reason": "target evaluator suite 90 passed、helper+aggregate focused 55 passed、statement/branch 合算 coverage 83%、harness scorer/schema related suite 68 passed。clean python -S / poisoned jsonschema / 24 knowledge-profile permutations / Python Unicode \\d 反例 / malformed percent・UTF-8ーtilde ref 反例は全て GREEN。lint-script-frontmatter.py は既存 test helper 2件の metadata 欠落が残るため、総合 lint gate を PASS とは記録しない"
+    },
+    {
+      "step": "operation-improvement",
+      "status": "PASS",
+      "evidence": "第2 independent review の critical/high 指摘を反例化し、portable shipped regex subset、strict local URI fragment、production resource route、scorer raw/schema 一致へ改善。current SHA の最終 independent review は 30/30 思考法・4条件・rubric 100/100 で PASS"
+    }
+  ],
+  "layer_decisions": [
+    {
+      "layer": "Skill",
+      "decision": "use",
+      "reason": "6観点評価と fail-closed 停止条件の利用者入口",
+      "placement_evidence": "plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/SKILL.md",
+      "fallback": "caller は FAIL report を elicit/doc-fetch/compile へ差し戻す",
+      "dependency_direction_ok": true,
+      "macos_stdlib_ok": true,
+      "deterministic": false
+    },
+    {
+      "layer": "Subagent",
+      "decision": "use",
+      "reason": "matrix/hearing/doc-freshness を生成者から分離した context で監査",
+      "placement_evidence": "plugins/system-spec-harness/agents/system-spec-{matrix,hearing,doc-freshness}-auditor.md",
+      "fallback": "監査 fork の帰属を接地できなければ INDETERMINATE から総合 FAIL",
+      "dependency_direction_ok": true,
+      "macos_stdlib_ok": true,
+      "deterministic": false
+    },
+    {
+      "layer": "Hook",
+      "decision": "use",
+      "reason": "fork の dispatch/completion を evaluator 自己申告から分離した append-only ledger へ記録",
+      "placement_evidence": "plugins/system-spec-harness/hooks/record-audit-fork.py",
+      "fallback": "hook receipt 不在時は report validation を fail-closed で拒否",
+      "dependency_direction_ok": true,
+      "macos_stdlib_ok": true,
+      "deterministic": true
+    },
+    {
+      "layer": "MCP",
+      "decision": "skip",
+      "reason": "リポジトリ内 artifact と agent fork で完結し、外部 MCP 依存は不要",
+      "placement_evidence": "SKILL.md allowed-tools に MCP を宣言しない",
+      "fallback": "Read/Bash/Agent のローカル面のみ使用",
+      "dependency_direction_ok": true,
+      "macos_stdlib_ok": true,
+      "deterministic": true
+    },
+    {
+      "layer": "CLI",
+      "decision": "use",
+      "reason": "validator/pytest/score を再実行可能な exit code で観測",
+      "placement_evidence": "validation commands と trace evidence",
+      "fallback": "個別 Python entrypoint を repo-root cwd で実行",
+      "dependency_direction_ok": true,
+      "macos_stdlib_ok": true,
+      "deterministic": true
+    },
+    {
+      "layer": "script",
+      "decision": "use",
+      "reason": "public report schema、stdlib-only Draft 7 subset、fork attribution、resume receipt を決定論ゲートで実行",
+      "placement_evidence": "plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/scripts",
+      "fallback": "未知 schema keyword/value shape・非 local/未解決 ref・schema/fingerprint 不一致は exit nonzero で停止",
+      "dependency_direction_ok": true,
+      "macos_stdlib_ok": true,
+      "deterministic": true
+    }
+  ],
+  "pattern_decisions": [
+    {
+      "decision": "use",
+      "pattern_ref": "independent evaluator + deterministic gate",
+      "reason": "meaning adequacy と machine-verifiable attribution/fingerprint を別の証拠層で閉じる",
+      "reuse_target": "system-spec completion report and resume receipt"
+    },
+    {
+      "decision": "use",
+      "pattern_ref": "artifact snapshot binding",
+      "reason": "評価中の入力 drift と古い PASS report の再利用を防ぐ",
+      "reuse_target": "system-spec markdown and deterministic gate inputs"
+    },
+    {
+      "decision": "use",
+      "pattern_ref": "fail-closed schema-driven stdlib subset",
+      "reason": "public schema を field SSOT のまま保ち、runtime の third-party package 不在で valid report を拒否せず、非対応 schema 拡張は黙示受理しない",
+      "reuse_target": "completeness-findings.schema.json runtime validation"
+    }
+  ],
+  "reproducibility_gates": {
+    "lint": "N/A",
+    "evaluator": "PASS",
+    "elegant_review": "PASS",
+    "governance": "PASS"
+  },
+  "four_conditions": {
+    "C1": "PASS",
+    "C2": "PASS",
+    "C3": "PASS",
+    "C4": "PASS"
+  },
+  "variant_support": {
+    "prefix": "assign",
+    "role_suffix": "evaluator",
+    "subagent": "R2 dispatches three read-only audit agents; R1 aggregates without runtime goal-seek loop",
+    "hook": "PostToolUse/SubagentStop append-only audit fork ledger attribution"
+  },
+  "script_execution_model": {
+    "contexts": ["A", "B", "C", "D", "E"],
+    "responsibility_matrix": "Skill=orchestration; prompts=semantic scoring/delegation; agents=independent audits; scripts=deterministic report/attribution/receipt gates",
+    "priority_order": "artifact snapshot -> fork attribution -> deterministic gates -> semantic aggregation -> receipt",
+    "permission_boundary": "evaluator read-only for system-spec; production writer alone creates receipt after PASS; hook alone writes ledger",
+    "scripts": [
+      {
+        "path": "plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/scripts/aggregate-completeness.py",
+        "type": "python-validator",
+        "allowed_contexts": ["A", "B", "C", "E"],
+        "frontmatter_status": "PASS"
+      },
+      {
+        "path": "plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/scripts/json_schema_subset.py",
+        "type": "python-import-module",
+        "allowed_contexts": ["A", "B", "C", "E"],
+        "frontmatter_status": "PASS"
+      },
+      {
+        "path": "plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/scripts/audit_fork_attribution.py",
+        "type": "python-import-module",
+        "allowed_contexts": ["A", "B", "C", "E"],
+        "frontmatter_status": "PASS"
+      },
+      {
+        "path": "plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/scripts/build-resume-receipt.py",
+        "type": "python-writer",
+        "allowed_contexts": ["A", "B", "C", "E"],
+        "frontmatter_status": "PASS"
+      }
+    ]
+  },
+  "governance_model": {
+    "rubric_version": "1.3.2",
+    "rubric_hash": "sha256:8ae7f9ed9e597ffbaf48c41f2dcd25562d865fef493e4e2eea70630dce36d6d0",
+    "proposal_required": "true: L2 PG-002 wording synced through PROP-2026-08-16-002",
+    "impact_assessment": "flip_rate=0.0; would_flip=0; proposed_bump=required_bump=patch; bootstrap 14/20 pending allowed",
+    "roles": {
+      "proposer": "solo-operator proposal writer",
+      "reviewer": "independent exhaustive content reviewer for target skill",
+      "approver": "solo-operator under bootstrap evidence and newly_failing=0 exception",
+      "tooling": "compute-rubric-hash.py + check-rubric-sync.py + deterministic evaluator"
+    },
+    "newly_failing_count": 0
+  },
+  "dogfooding_model": {
+    "artifact_type": "assign skill",
+    "adapter": "run-build-skill Step 3.5 trace writer contract",
+    "forked_evaluator": "current SHA e8cd5a31...70fa independent rubric/elegance review PASS; deterministic regression suite completed",
+    "eval_log_path": "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator",
+    "recursive_checks": [
+      "current SHA independent rubric/elegance verdict PASS (critical/high 0, 30 thought methods 30/30)",
+      "current stdlib runtime delta tests",
+      "clean python -S and poisoned-jsonschema independence",
+      "24 knowledge-profile permutations and shipped public schema build",
+      "portable ASCII pattern and strict URI-fragment counterexamples",
+      "SKILL refs subset of resource-map and scorer raw-output schema validation",
+      "prompt content lint",
+      "root and canonical build-trace validators"
+    ]
+  },
+  "rubric_composition_model": {
+    "status": "PASS",
+    "ordered_refs": [
+      "plugins/harness-creator/skills/ref-skill-design-rubric/references/rubric.json@1.3.2",
+      "plugins/harness-creator/skills/assign-skill-design-evaluator/references/rubric.json@1.3.2"
+    ],
+    "merge_strategy": "deep-merge",
+    "conflict_policy": "most-specific-wins",
+    "composition_hash_evidence": "sha256:3381c7cfcf0eb50c89e7f764ef78e6a5f29f1d4423dda8042bc7f766cfb62b64"
+  },
+  "paradigm_analogy_model": {
+    "status": "N/A",
+    "reason": "新規パラダイムや配置判断の生成ではなく、既存 assign evaluator の build-evidence 閉鎖のため"
+  },
+  "output_routing_model": {
+    "status": "PASS",
+    "task_kind": "system-spec completeness evaluation",
+    "payload_schema_version": "completeness-findings.schema.json + resume-receipt.schema.json",
+    "route_ref": "SKILL.md Output Contract and R1-score Layer 2.4",
+    "adapter_registry_ref": "references/resource-map.yaml",
+    "fallback": "FAIL/INDETERMINATE report returns to elicit/doc-fetch/compile or audit rerun",
+    "secret_boundary": "repository-local design artifacts only; no secrets are copied into report or ledger"
+  },
+  "prompt_generation_model": {
+    "policy_resolution": {
+      "brief_policy": "required",
+      "resolved_policy": "required",
+      "resolved_via": "skill_kind=assign and frontmatter declares two prompt-required responsibilities"
+    },
+    "per_responsibility": [
+      {
+        "id": "R1-score",
+        "name": "score",
+        "owner_agent": null,
+        "layer_yaml_path": "plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/prompts/R1-score.md",
+        "path_convention": "skill-local-v1",
+        "layers_generated": ["L1", "L2", "L3", "L4", "L5", "L6", "L7"],
+        "sha256": "719c9743eb949491065c91e1b1f8ec685bf1659c6b6c9c6e8ea5d847049e3233",
+        "lint_status": "PASS",
+        "iteration_count": 1,
+        "escalation": "none"
+      },
+      {
+        "id": "R2-delegate",
+        "name": "delegate",
+        "owner_agent": null,
+        "layer_yaml_path": "plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/prompts/R2-delegate.md",
+        "path_convention": "skill-local-v1",
+        "layers_generated": ["L1", "L2", "L3", "L4", "L5", "L6", "L7"],
+        "sha256": "7d15d8264095c339ae97ecc57097a606b5d1d25879749623e2c712b8131da827",
+        "lint_status": "PASS",
+        "iteration_count": 1,
+        "escalation": "none"
+      }
+    ],
+    "anchor_coverage": {
+      "agent_files_checked": [],
+      "missing_anchors": [],
+      "extra_anchors": []
+    }
+  },
+  "prompt_provenance": {
+    "prompt_creator_invocation": true,
+    "source_contract_ref": "plugins/prompt-creator/skills/run-prompt-creator-7layer/references/seven-layer-format.md",
+    "content_lint": {
+      "mode": "prompt",
+      "status": "PASS",
+      "evidence": "lint-agent-prompt-content.py --mode prompt --plugins-dir plugins/system-spec-harness: scanned=18, exit 0"
+    }
+  },
+  "feedback_contract": {
+    "skip_reason": "assign kind is a single-pass read-only evaluator; its six-aspect checklist and deterministic aggregation gates are the evaluation contract"
+  },
+  "variable_contract": [
+    {
+      "name": "{{SPEC_DIR}}",
+      "meaning": "evaluation target system-spec directory",
+      "default": "system-spec",
+      "required": false,
+      "not_applicable_when": "caller supplies an explicit --spec-dir",
+      "source_trace": "SKILL.md Purpose & Output Contract / argument-hint"
+    },
+    {
+      "name": "{{OUTPUT}}",
+      "meaning": "schema-compliant completeness report path",
+      "default": "eval-log under the evaluator run",
+      "required": false,
+      "not_applicable_when": "caller supplies an explicit --output",
+      "source_trace": "SKILL.md Purpose & Output Contract / argument-hint"
+    }
+  ]
+}

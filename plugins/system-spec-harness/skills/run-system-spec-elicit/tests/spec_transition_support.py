@@ -19,6 +19,23 @@ FOUNDATION_SOURCE_TEXTS = (
 )
 
 
+def effective_source_refs(
+    *,
+    qa_ids: tuple[str, ...] | None = None,
+    approval_ids: tuple[str, ...] | None = None,
+) -> dict[str, dict[str, str]]:
+    """Return one effective QA/approval binding for each U1--U9."""
+    qa_ids = qa_ids or tuple(f"qa-foundation-u{number}" for number in range(1, 10))
+    approval_ids = approval_ids or ("appr-foundation",) * 9
+    assert len(qa_ids) == len(approval_ids) == 9
+    return {
+        f"U{number}": {"qa_ref": qa_id, "approval_ref": approval_id}
+        for number, (qa_id, approval_id) in enumerate(
+            zip(qa_ids, approval_ids), start=1
+        )
+    }
+
+
 def valid_foundation() -> dict:
     """Return a complete, user-approved U1--U9 foundation fixture."""
     return {
@@ -36,6 +53,7 @@ def valid_foundation() -> dict:
         "concrete_intents": [{"id": "I1", "text": "日次バックアップ", "serves": ["G1"]}],
         "confirmed": True,
         "approval_ref": "appr-foundation",
+        "effective_source_refs": effective_source_refs(),
         "approval_note": "上位概念 U1-U9 をユーザーと確認し合意した",
     }
 

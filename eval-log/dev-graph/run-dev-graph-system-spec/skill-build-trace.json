@@ -90,7 +90,7 @@
   "design_model": {
     "intent": "仕様書・アーキテクチャをplugins/system-spec-harness/の正規フローで構築し、出典・確定状態・上位目的traceを保ったままdev-graphのspecification/architectureノードへ取り込んだ状態になっている",
     "contract": "system spec import report (system-spec/index.md + requirements/architecture章のsource_lineage + confirmation_status + 登録graph_node_id + readiness)",
-    "boundary": "仕様内容の独自生成は行わない。入力収集とcompileはsystem-spec-harness、dev-graphは起動・成果物検証・C02経由の分類/graph登録のみを担う",
+    "boundary": "仕様内容の独自生成は行わない。入力収集とcompileはsystem-spec-harness、dev-graphはgeneric specification/architecture rootの成果物検証・C02経由graph登録のみを担い、feature を生成・選択しない。下流featureのarchitecture_refs接続はfeatureを所有する C04/C02 の責務とする",
     "execution": "plugins/dev-graph/skills/run-dev-graph-system-spec/SKILL.md + declared script_refs/prompts",
     "feedback": "frontmatter feedback_contract + DEV_GRAPH_ROOT goal-seek evidence"
   },
@@ -510,7 +510,7 @@
           "L6",
           "L7"
         ],
-        "sha256": "cfb30fdb90dbc696f453fe380f0d7c1c71de1398f05b0863e94b67fb242f5ec4",
+        "sha256": "2a3cd147dd4906e19a3833de4f9a54133aaaefc02d26612c4c8c9ec1d1dd4711",
         "lint_status": "PASS",
         "iteration_count": 1,
         "escalation": "none"
@@ -530,7 +530,7 @@
           "L6",
           "L7"
         ],
-        "sha256": "284da5a708e0aa2851ca2a10d69d0c644055ef25bd88750f4b3cda4cf675f02c",
+        "sha256": "6ea1079f9e630370b913e6f5aea403de42801933d5b0615d7efa263110e1fbaf",
         "lint_status": "PASS",
         "iteration_count": 1,
         "escalation": "none"
@@ -562,7 +562,7 @@
       {
         "id": "IN1",
         "loop_scope": "inner",
-        "text": "system-spec-harnessのcoverage/source citation gateとdev-graph schema gateがすべてexit0になる",
+        "text": "system-spec-harnessのcoverage/source_citation/knowledge_graph/evaluator gateとdev-graph schema gateがすべてexit0になる",
         "verify_by": "script"
       },
       {

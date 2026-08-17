@@ -2,27 +2,31 @@
   "criteria_results": {
     "IN1": {
       "evidence_kind": "hybrid",
-      "observed": "選択 feature・architecture_refs・P01..P13 task の 15-node lineage closure を validate-source-digest.py へ全件渡す fixture test が PASS し、promotion 後の current pointer を validate-system-plan.py --feature-package feature-package/F-LIVE-001 が解決した。task 13件だけ、--staging、package 引数なしの検査は契約上拒否される。",
+      "observed": "C11 report、C02 保存済み confirmed/pass/complete、15-node lineage closure を全件渡す validate-source-digest.py、promotion 後 current pointer を使う validate-system-plan.py --feature-package feature-package/F-LIVE-001、および validate-requirements-system-spec-snapshot.py の stable post-validation rehash を、fixture test と fresh independent evaluator の双方が PASS と実測した。task 13件だけ、--staging、package 引数なし、C19 の個別 gate 複製は authority として使っていない。",
       "status": "PASS",
       "test_refs": [
         "plugins/dev-graph/tests/test_validate_graph_schema_c11_coverage.py::test_domain_dag_exact13_evidence_and_readiness_boundaries",
         "plugins/dev-graph/tests/test_validate_source_digest.py::test_c04_validates_full_lineage_closure_and_current_package",
         "plugins/dev-graph/tests/test_live_trial_fixture_builders.py::test_requirements_fixture_scope_closure_passes_source_digest",
-        "plugins/dev-graph/tests/test_live_trial_fixture_builders.py::test_requirements_fixture_resolves_published_package_from_current_pointer"
+        "plugins/dev-graph/tests/test_live_trial_fixture_builders.py::test_requirements_fixture_resolves_published_package_from_current_pointer",
+        "plugins/dev-graph/tests/test_live_trial_fixture_builders.py::test_requirements_fixture_binds_current_c19_four_gate_snapshot",
+        "plugins/dev-graph/tests/test_validate_requirements_system_spec_snapshot.py",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T092817Z-c04-out1-fresh-r2/independent-observations.json#/gate_results"
       ],
       "verify_by": "script"
     },
     "OUT1": {
       "evidence_kind": "live-trial",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260808T123500Z-o4zi-exh-c04/verdict.json",
-      "observed": "current branch の fresh live trial 20260808T123500Z-o4zi-exh-c04 は overall=PASS、nudge=0、gate=0。exact-13 handoff、feature/package/source digest 束縛、implementation source 0件、4 gate、goal-seek 7/7 を fresh independent evaluator が再実測して PASS。behavior closure digest=6c89805fa56b4badd51530c54bc65182e06a172ca863b71c9838402dc4fa1384。",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T092817Z-c04-out1-fresh-r2/verdict.json",
+      "observed": "fresh live trial 20260817T092817Z-c04-out1-fresh-r2 は overall=PASS、nudge=0、gate=0、wall-clock=411.136s。新規 emit された C04 handoff は P01..P13 exact 13、feature/package/source/graph digest、C19 resume receipt/completeness report/full artifact snapshot の3 digest に束縛され、baseline 入力49件は無変更、implementation source は0件だった。fresh independent evaluator fdd2a547-0f66-45c3-a2d5-3f43af177a92 が5 gate、negative controls、goal-seek 8/8 を読取専用で再実測し PASS。behavior closure digest=0d0e6b9d76c456122c6f3f593b0aaf4db2426d67755f4ff796498cb2fd3ce710。",
       "scenario_id": "C04-OUT1-positive-ready-handoff",
       "status": "PASS",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260808T123500Z-o4zi-exh-c04/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260808T123500Z-o4zi-exh-c04/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260808T123500Z-o4zi-exh-c04/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260808T123500Z-o4zi-exh-c04/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T092817Z-c04-out1-fresh-r2/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T092817Z-c04-out1-fresh-r2/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T092817Z-c04-out1-fresh-r2/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T092817Z-c04-out1-fresh-r2/independent-verification.json",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T092817Z-c04-out1-fresh-r2/independent-observations.json"
       ],
       "verify_by": "live-trial"
     },
@@ -39,13 +43,13 @@
   },
   "iteration_limit": 3,
   "loop_scope": "both",
-  "reviewer": "fresh-independent-live-trial-evaluator-HarnessHub-f84o-postmain-20260806",
+  "reviewer": "fresh-independent-context:fdd2a547-0f66-45c3-a2d5-3f43af177a92",
   "schema_version": "1.1.0",
   "target": {
     "component_id": "C04",
     "plugin": "dev-graph",
     "skill": "run-dev-graph-requirements",
-    "skill_md_sha256": "95bb1cee258f1c17980312a1d7480375a3fc3191e6c5cd4bbafb3e39545921d6"
+    "skill_md_sha256": "ade0f08f7e109b02d50e782f10567518a5af26e8a053d8411d27ec5230057750"
   },
   "verdict": "PASS"
 }

@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1753,
+  "graph_revision": 1754,
   "nodes": [
     {
       "acceptance": [
@@ -62496,6 +62496,451 @@
     },
     {
       "acceptance": [
+        "source lineage と evaluator evidence を保持する",
+        "C02 でのみ登録する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "architecture",
+      "artifact_subtypes": [
+        "backend",
+        "data",
+        "security"
+      ],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "architecture",
+          "candidate_path": "architecture/system-spec-overview.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "system-spec-harness が確定した architecture context の import。",
+      "completion_evidence": {
+        "completed_at": "2026-08-17T08:41:48Z",
+        "evidence_refs": [
+          "system-spec/completeness-report.json"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-17T08:41:48Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "7ed726cf030c9db0f1a9175068c1aea5879c32bc5d152337ae23eb485f85426b",
+        "evaluator": "system-spec-harness/assign-system-spec-completeness-evaluator",
+        "evidence_ref": "system-spec/completeness-report.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-17T08:41:48Z",
+      "depends_on": [],
+      "domain": "system-spec",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "architecture/system-spec-overview.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "仕様由来の architecture context を feature から参照できる状態。",
+      "graph_node_id": "arch-system-spec-overview",
+      "implementation_readiness": {
+        "checked_at": "2026-08-17T08:41:48Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "system-spec-harness"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "system-spec-import",
+      "pull_request_linkages": [],
+      "purpose": "確定済み system-spec の architecture context を参照可能にする。",
+      "related_nodes": [],
+      "resource_scope": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/completeness-report.json"
+      ],
+      "scope_in": [
+        "confirmed system-spec requirements artifact"
+      ],
+      "scope_out": [
+        "confirmed artifacts are not rewritten by this adapter"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-17T08:41:48Z",
+        "origin_kind": "system-spec-harness",
+        "source_digest": "ce4e67a9460878b7d8a1c471f85d8114678e4f9d890a85860d83be5d7ae99b8a",
+        "source_path": "system-spec/00-requirements-definition.md",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "system-spec",
+        "source-lineage",
+        "imported"
+      ],
+      "target_date": null,
+      "template_id": "architecture",
+      "template_version": "1.0.0",
+      "title": "system-spec architecture overview",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-17T08:41:48Z"
+    },
+    {
+      "acceptance": [
+        "source lineage と evaluator evidence を保持する",
+        "architecture node を参照する"
+      ],
+      "architecture_refs": [
+        "arch-system-spec-overview"
+      ],
+      "artifact_kind": "specification",
+      "artifact_subtypes": [
+        "api",
+        "backend",
+        "data",
+        "security"
+      ],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "specification",
+          "candidate_path": "specs/system-spec-index.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "system-spec-harness が compile した specification index の import。",
+      "completion_evidence": {
+        "completed_at": "2026-08-17T08:41:48Z",
+        "evidence_refs": [
+          "system-spec/completeness-report.json"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-17T08:41:48Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "7ed726cf030c9db0f1a9175068c1aea5879c32bc5d152337ae23eb485f85426b",
+        "evaluator": "system-spec-harness/assign-system-spec-completeness-evaluator",
+        "evidence_ref": "system-spec/completeness-report.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-17T08:41:48Z",
+      "depends_on": [],
+      "domain": "system-spec",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "specs/system-spec-index.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "仕様と architecture context を source lineage 付きで結ぶ。",
+      "graph_node_id": "spec-system-spec-index",
+      "implementation_readiness": {
+        "checked_at": "2026-08-17T08:41:48Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "system-spec-harness"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "system-spec-import",
+      "pull_request_linkages": [],
+      "purpose": "確定済み system-spec の index を参照可能にする。",
+      "related_nodes": [],
+      "resource_scope": [
+        "system-spec/index.md",
+        "system-spec/completeness-report.json"
+      ],
+      "scope_in": [
+        "confirmed system-spec index artifact"
+      ],
+      "scope_out": [
+        "confirmed artifacts are not rewritten by this adapter"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-17T08:41:48Z",
+        "origin_kind": "system-spec-harness",
+        "source_digest": "f261a184f7635ce5c1de61db1b432ec3e67c7fe50c23928b94e0476973ccf7f7",
+        "source_path": "system-spec/index.md",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "system-spec",
+        "source-lineage",
+        "imported"
+      ],
+      "target_date": null,
+      "template_id": "specification",
+      "template_version": "1.0.0",
+      "title": "system-spec compiled specification",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-17T08:41:48Z"
+    },
+    {
+      "acceptance": [
+        "I15 と D9-D12 が spec-state で confirmed",
+        "completeness-report が PASS",
+        "C19 最終 live-trial が PASS",
+        "仕様反映受領書がある"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-dev-workflow",
+        "arch-system-spec-overview"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-gjof",
+        "linked_at": "2026-08-17T11:19:54Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/in-app-improvement-request-spec-20260817.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "I15 は既存 feedback-loop の仕様追補であり、独立 C14 feature package ではなく issue として追跡する。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "7ed726cf030c9db0f1a9175068c1aea5879c32bc5d152337ae23eb485f85426b",
+        "evaluator": "assign-system-spec-completeness-evaluator",
+        "evidence_ref": "system-spec/completeness-report.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-17T12:00:00Z",
+      "depends_on": [],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/in-app-improvement-request-spec-20260817.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "I15 / D9-D12 が confirmed のまま lineage 付きで参照でき、Hub 実装は後続 issue に渡せる",
+      "graph_node_id": "issue-in-app-improvement-request-spec-20260817",
+      "implementation_readiness": {
+        "checked_at": "2026-08-17T12:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "認証済み業務画面から離れずに改善要望を投稿する I15 契約を、system-spec 正規フローで確定し dev-graph へ取り込む",
+      "related_nodes": [
+        "feat-feedback-loop",
+        "spec-system-spec-index",
+        "arch-system-spec-overview",
+        "issue-audit-multi-dispatch-null-verdict-20260808",
+        "issue-c19-live-trial-rerun-task-contract-r2-20260803"
+      ],
+      "resource_scope": [
+        "system-spec/spec-state.json",
+        "system-spec/00-requirements-definition.md",
+        "docs/features/feat-feedback-loop/i15-in-app-improvement-request-spec-reflection-receipt.md"
+      ],
+      "scope_in": [
+        "I15 確定仕様と D9-D12",
+        "system-spec compile / completeness / C19 import",
+        "監査 fork schema 1.3 と C04 snapshot 契約",
+        "仕様反映受領書"
+      ],
+      "scope_out": [
+        "Hub 画面・API・DB の実装",
+        "本番 GitHub token 投入",
+        "feat-feedback-loop exact-13 の書き換え"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-17T12:00:00Z",
+        "origin_kind": "system-spec-harness",
+        "source_digest": "05cb0c36f454d4497b558824ae841f131971d10643f20bbd2eaf2cd28053fe9a",
+        "source_path": "system-spec/spec-state.json",
+        "source_plugin": "system-spec-harness",
+        "source_version": "1.1"
+      },
+      "start_date": "2026-08-15",
+      "status": "active",
+      "tags": [
+        "feat-feedback-loop",
+        "i15",
+        "system-spec",
+        "improvement-request"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "画面内改善要望 (I15) の仕様確定と system-spec 正規取込",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-17T11:19:54Z"
+    },
+    {
+      "acceptance": [
+        "仕様反映受領書に検証と影響判断を記録する",
+        "対象 branch を main 同期後に Draft PR として公開する",
+        "Hub 実装未着手を残課題として明示する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-feedback-loop/sys-feedback-loop-i15-spec-handoff-20260817.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "follow-up issue の最終公開条件だけを追跡する単一責務 handoff",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "a2c839764c78e6bfefd6813f072fdae0512c28d67a8b6013b248cb5fdba228ad",
+        "evaluator": "final-review",
+        "evidence_ref": "docs/features/feat-feedback-loop/i15-in-app-improvement-request-spec-reflection-receipt.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-17T12:00:00Z",
+      "depends_on": [
+        "issue-in-app-improvement-request-spec-20260817"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "tasks/feat-feedback-loop/sys-feedback-loop-i15-spec-handoff-20260817.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "commit・Draft PR・Beads・Dev Graph・検証証拠が同じ変更境界を参照する",
+      "graph_node_id": "task-i15-in-app-improvement-request-spec-handoff-20260817",
+      "implementation_readiness": {
+        "checked_at": "2026-08-17T12:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "凍結済み exact-13 を変更せず、I15 仕様確定の最終レビューと Draft PR 境界を追跡する",
+      "related_nodes": [
+        "feat-feedback-loop",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "tasks/feat-feedback-loop/sys-feedback-loop-i15-spec-handoff-20260817.md",
+        "docs/features/feat-feedback-loop/i15-in-app-improvement-request-spec-reflection-receipt.md"
+      ],
+      "scope_in": [
+        "最終差分レビュー",
+        "品質ゲート再実行",
+        "仕様影響判断と受領書",
+        "main 同期",
+        "Draft PR と Beads 更新"
+      ],
+      "scope_out": [
+        "Hub runtime 実装",
+        "exact-13 再 promote",
+        "無関係な rubric 文言差分"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-17T12:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": "a2c839764c78e6bfefd6813f072fdae0512c28d67a8b6013b248cb5fdba228ad",
+        "source_path": "docs/features/feat-feedback-loop/i15-in-app-improvement-request-spec-reflection-receipt.md",
+        "source_plugin": "final-review",
+        "source_version": "0.1.0"
+      },
+      "start_date": "2026-08-17",
+      "status": "active",
+      "tags": [
+        "feat-feedback-loop",
+        "i15",
+        "final-review"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "I15 画面内改善要望 仕様確定の最終レビュー handoff",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-17T12:00:00Z"
+    },
+    {
+      "acceptance": [
         "docs/features/feat-semantic-emphasis-icons/requirements-baseline.md に goal-spec.json の purpose/goal/scope_in 5 件/scope_out 4 件/acceptance 5 件が逐語一致で転記されている",
         "quality_constraints 5 件 (emoji-ban-semantic-token-qa232-5 / icon-lint-ci-fail-closed-qa233-6 / icon-ownership-boundary-qa233-3 / design-system-token-and-contrast-gate / state-value-visible-label-qa232-2) が個別の充足条件として書き下されている",
         "既存実装 (packages/ui/src/icons/index.tsx の callout 4 アイコン、packages/ui/src/components/Markdown.tsx の remarkCallouts、packages/ui/src/tokens/tokens.ts の infoBlue/infoBlueSoft) が『すでに存在する部分』として明記され、本 feature の残作業が絵文字 lint 未整備・一覧/カード状態表現の token 監査・可視ラベル併置監査に限定されることが要件として確定している"
@@ -64004,109 +64449,6 @@
     },
     {
       "acceptance": [
-        "source lineage と evaluator evidence を保持する",
-        "C02 でのみ登録する"
-      ],
-      "architecture_refs": [],
-      "artifact_kind": "architecture",
-      "artifact_subtypes": [
-        "backend",
-        "data",
-        "security"
-      ],
-      "beads_linkage": null,
-      "classification_candidates": [
-        {
-          "artifact_kind": "architecture",
-          "candidate_path": "architecture/system-spec-overview.md",
-          "confidence": 1.0
-        }
-      ],
-      "classification_confidence": 1.0,
-      "classification_reason": "system-spec-harness が確定した architecture context の import。",
-      "completion_evidence": {
-        "completed_at": "2026-08-13T22:33:06Z",
-        "evidence_refs": [
-          "system-spec/completeness-report.json"
-        ],
-        "policy": "manual",
-        "reconciled_at": "2026-08-13T22:33:06Z",
-        "source": "manual",
-        "status": "done"
-      },
-      "confirmation_evidence": {
-        "evaluated_digest": "5b82af4dfafcea3acab4bbfb1b34a8b3b7f924dfa9c1c506ffa659a8a3ae0cb0",
-        "evaluator": "system-spec-harness/assign-system-spec-completeness-evaluator",
-        "evidence_ref": "system-spec/completeness-report.json"
-      },
-      "confirmation_status": "confirmed",
-      "created_at": "2026-08-13T22:33:06Z",
-      "depends_on": [],
-      "domain": "system-spec",
-      "evaluation_status": "pass",
-      "execution_contexts": [],
-      "feature_package_id": null,
-      "file_path": "architecture/system-spec-overview.md",
-      "github_project_linkages": [],
-      "github_publication": {
-        "labels": [],
-        "milestone": null,
-        "mode": "local_only",
-        "project_aliases": []
-      },
-      "goal": "仕様由来の architecture context を feature から参照できる状態。",
-      "graph_node_id": "arch-system-spec-overview",
-      "implementation_readiness": {
-        "checked_at": "2026-08-13T22:33:06Z",
-        "missing_sections": [],
-        "status": "complete"
-      },
-      "issue_linkage": null,
-      "iteration": null,
-      "owners": [
-        "system-spec-harness"
-      ],
-      "parent_feature": null,
-      "phase_ref": null,
-      "priority": null,
-      "project_id": "system-spec-import",
-      "pull_request_linkages": [],
-      "purpose": "確定済み system-spec の architecture context を参照可能にする。",
-      "related_nodes": [],
-      "resource_scope": [
-        "system-spec/00-requirements-definition.md",
-        "system-spec/completeness-report.json"
-      ],
-      "scope_in": [
-        "confirmed system-spec requirements artifact"
-      ],
-      "scope_out": [
-        "confirmed artifacts are not rewritten by this adapter"
-      ],
-      "source_lineage": {
-        "imported_at": "2026-08-13T22:33:06Z",
-        "origin_kind": "system-spec-harness",
-        "source_digest": "408f576f25e8e60f2fa9a148c7e37e2e566d2335066327a6c57a44d42eee1de9",
-        "source_path": "system-spec/00-requirements-definition.md",
-        "source_plugin": "system-spec-harness",
-        "source_version": "0.1.0"
-      },
-      "start_date": null,
-      "status": "active",
-      "tags": [
-        "system-spec",
-        "source-lineage",
-        "imported"
-      ],
-      "target_date": null,
-      "template_id": "architecture",
-      "template_version": "1.0.0",
-      "title": "system-spec architecture overview",
-      "tracker_binding": "none",
-      "updated_at": "2026-08-13T22:33:06Z"
-    },
-    {
-      "acceptance": [
         ":::cards cols=2 / cols=3 と :::card で作った行を縦に積め、大画面・中幅・狭幅の列数が契約どおりに変わる",
         "列数が変わっても DOM 順は記述順を保ち、読上げ順と視覚順が一致する",
         "未知 cols、未閉じ、不正嵌套は safe degradation してドキュメント全体を描画でき、編集時は非 blocking 警告から修正場所が分かる",
@@ -65264,112 +65606,6 @@
       "title": "所有境界 lint: apps/hub 側の inline SVG アイコン再実装を検出する",
       "tracker_binding": "beads",
       "updated_at": "2026-08-14T12:54:30.297011Z"
-    },
-    {
-      "acceptance": [
-        "source lineage と evaluator evidence を保持する",
-        "architecture node を参照する"
-      ],
-      "architecture_refs": [
-        "arch-system-spec-overview"
-      ],
-      "artifact_kind": "specification",
-      "artifact_subtypes": [
-        "api",
-        "backend",
-        "data",
-        "security"
-      ],
-      "beads_linkage": null,
-      "classification_candidates": [
-        {
-          "artifact_kind": "specification",
-          "candidate_path": "specs/system-spec-index.md",
-          "confidence": 1.0
-        }
-      ],
-      "classification_confidence": 1.0,
-      "classification_reason": "system-spec-harness が compile した specification index の import。",
-      "completion_evidence": {
-        "completed_at": "2026-08-13T22:33:06Z",
-        "evidence_refs": [
-          "system-spec/completeness-report.json"
-        ],
-        "policy": "manual",
-        "reconciled_at": "2026-08-13T22:33:06Z",
-        "source": "manual",
-        "status": "done"
-      },
-      "confirmation_evidence": {
-        "evaluated_digest": "5b82af4dfafcea3acab4bbfb1b34a8b3b7f924dfa9c1c506ffa659a8a3ae0cb0",
-        "evaluator": "system-spec-harness/assign-system-spec-completeness-evaluator",
-        "evidence_ref": "system-spec/completeness-report.json"
-      },
-      "confirmation_status": "confirmed",
-      "created_at": "2026-08-13T22:33:06Z",
-      "depends_on": [],
-      "domain": "system-spec",
-      "evaluation_status": "pass",
-      "execution_contexts": [],
-      "feature_package_id": null,
-      "file_path": "specs/system-spec-index.md",
-      "github_project_linkages": [],
-      "github_publication": {
-        "labels": [],
-        "milestone": null,
-        "mode": "local_only",
-        "project_aliases": []
-      },
-      "goal": "仕様と architecture context を source lineage 付きで結ぶ。",
-      "graph_node_id": "spec-system-spec-index",
-      "implementation_readiness": {
-        "checked_at": "2026-08-13T22:33:06Z",
-        "missing_sections": [],
-        "status": "complete"
-      },
-      "issue_linkage": null,
-      "iteration": null,
-      "owners": [
-        "system-spec-harness"
-      ],
-      "parent_feature": null,
-      "phase_ref": null,
-      "priority": null,
-      "project_id": "system-spec-import",
-      "pull_request_linkages": [],
-      "purpose": "確定済み system-spec の index を参照可能にする。",
-      "related_nodes": [],
-      "resource_scope": [
-        "system-spec/index.md",
-        "system-spec/completeness-report.json"
-      ],
-      "scope_in": [
-        "confirmed system-spec index artifact"
-      ],
-      "scope_out": [
-        "confirmed artifacts are not rewritten by this adapter"
-      ],
-      "source_lineage": {
-        "imported_at": "2026-08-13T22:33:06Z",
-        "origin_kind": "system-spec-harness",
-        "source_digest": "a30f863d5ee66f3c91e4845987a5f708cbd058f8c5e255814ec8cebe40948eae",
-        "source_path": "system-spec/index.md",
-        "source_plugin": "system-spec-harness",
-        "source_version": "0.1.0"
-      },
-      "start_date": null,
-      "status": "active",
-      "tags": [
-        "system-spec",
-        "source-lineage",
-        "imported"
-      ],
-      "target_date": null,
-      "template_id": "specification",
-      "template_version": "1.0.0",
-      "title": "system-spec compiled specification",
-      "tracker_binding": "none",
-      "updated_at": "2026-08-13T22:33:06Z"
     },
     {
       "acceptance": [

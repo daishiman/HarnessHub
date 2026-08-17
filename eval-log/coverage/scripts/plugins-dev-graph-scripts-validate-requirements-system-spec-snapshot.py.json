@@ -1,0 +1,10 @@
+{
+  "artifact": "plugins/dev-graph/scripts/validate-requirements-system-spec-snapshot.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 86,
+    "notes": "C04 が C19 resume validator を subprocess で呼び、receipt/report digest と章集合を2回採って安定性を見る薄い adapter。system_spec ディレクトリは .dev-graph/config.json の content_roots から解決し、repo 固有 path リテラルを持たない。fixture 66 件中 focused は PASS。責務は snapshot 照合に閉じ、elicitation を再実装しない。"
+  }
+}
