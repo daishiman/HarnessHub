@@ -427,7 +427,9 @@ def attach_evidence(tmp_path: Path, refs_data: dict) -> None:
     evidence_dir.mkdir(exist_ok=True)
     for ref in refs_data["references"]:
         path = evidence_dir / f"{ref['target_id']}.txt"
-        content = f"WebFetch evidence for {ref['target_id']}\n".encode()
+        # 版番号も本文へ入れる。F7 (HarnessHub-pepx) の値の接地検査は、記録した version が
+        # その証跡に現れることを要求するので、版を欠いた証跡は正例にならない。
+        content = f"WebFetch evidence for {ref['target_id']} version {ref.get('version', '')}\n".encode()
         path.write_bytes(content)
         ref["evidence_ref"] = str(path.relative_to(tmp_path))
         ref["evidence_sha256"] = hashlib.sha256(content).hexdigest()

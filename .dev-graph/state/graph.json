@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1766,
+  "graph_revision": 1768,
   "nodes": [
     {
       "acceptance": [
@@ -68568,6 +68568,109 @@
       "title": "I15 画面内改善要望 仕様確定の最終レビュー handoff",
       "tracker_binding": "none",
       "updated_at": "2026-08-17T12:00:00Z"
+    },
+    {
+      "acceptance": [
+        "version が証跡本文と矛盾する fixture で exit 非 0",
+        "既存実データが全件通る (偽陽性 0)"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-pepx",
+        "linked_at": "2026-08-17T14:21:48Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/source-citation-version-evidence-consistency-20260817.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "決定論ゲートの検査軸不足であり、修正対象は validator script 単体",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": "manual",
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "745a6e9de9dd63fff48e8b76ba4f7e325f03d256873f02aef5e3e6e924a75f49",
+        "evaluator": "2026-08-17 最小 fixture で exit 0 を実測 (version=3.46.0 と証跡本文 3.53.4 の矛盾が通過)",
+        "evidence_ref": "plugins/system-spec-harness/scripts/validate-source-citation.py"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-17T00:00:00.000000Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/source-citation-version-evidence-consistency-20260817.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "version/last_updated が取得証跡本文と矛盾する記録を決定論ゲートが fail-closed で落とす状態",
+      "graph_node_id": "issue-source-citation-version-evidence-consistency-20260817",
+      "implementation_readiness": {
+        "checked_at": "2026-08-17T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "証跡ファイルの digest 束縛はあるが、record の version がその証跡から来ていることを誰も検査していないため、値だけ差し替えた捏造が緑で通る",
+      "related_nodes": [],
+      "resource_scope": [
+        "plugins/system-spec-harness/scripts/validate-source-citation.py"
+      ],
+      "scope_in": [
+        "validate-source-citation.py への値と証跡本文の整合検査",
+        "表記ゆれの正規化規則と回帰テスト"
+      ],
+      "scope_out": [
+        "doc-fetch skill 本体の取得方式変更",
+        "coverage-matrix 側の検査"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-17T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-17",
+      "status": "draft",
+      "tags": [
+        "system-spec-harness",
+        "citation",
+        "fail-closed",
+        "evidence"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "validate-source-citation.py が version と取得証跡本文の整合を検査しない",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-17T00:00:00.000000Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
