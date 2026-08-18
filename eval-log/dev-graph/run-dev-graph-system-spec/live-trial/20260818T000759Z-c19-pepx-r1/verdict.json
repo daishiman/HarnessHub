@@ -58,7 +58,7 @@
   },
   "scenario_id": "C19-OUT1-positive-system-spec-lineage-r6-bounded",
   "scenario_contract": {
-    "scenario_file": "/Users/dm/orca/workspaces/HarnessHub/card-closeout/plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
+    "scenario_file": "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
     "scenario_id": "C19-OUT1-positive-system-spec-lineage-r6-bounded",
     "required_observations": [
       "the declared system-spec-harness contract and digest-bound PASS receipt validate in reuse-confirmed mode without upstream regeneration",

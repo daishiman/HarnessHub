@@ -58,7 +58,7 @@
   },
   "scenario_id": "C04-OUT1-positive-ready-handoff",
   "scenario_contract": {
-    "scenario_file": "/Users/dm/orca/workspaces/HarnessHub/card-closeout/plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
+    "scenario_file": "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
     "scenario_id": "C04-OUT1-positive-ready-handoff",
     "required_observations": [
       "a capability-build task-graph handoff is emitted for the exact-13 package",
