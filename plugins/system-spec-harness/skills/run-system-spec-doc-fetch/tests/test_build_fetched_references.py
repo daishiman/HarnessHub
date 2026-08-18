@@ -270,7 +270,12 @@ def _attach_evidence(tmp_path: Path, records: list[dict]) -> None:
     evidence_dir.mkdir(exist_ok=True)
     for record in records:
         path = evidence_dir / f"{record['target_id']}.txt"
-        content = f"WebFetch evidence for {record['target_id']}\n".encode()
+        # 版番号を証跡本文へ含める。実取得の証跡なら記録した version が本文に現れるのが
+        # 正常形で、含まない fixture は「値がどこから来たか不明な記録」を正例として
+        # 固定してしまう (HarnessHub-pepx の C13 F7)。
+        version = record.get("version")
+        suffix = f" version {version}" if version else ""
+        content = f"WebFetch evidence for {record['target_id']}{suffix}\n".encode()
         path.write_bytes(content)
         record["evidence_ref"] = str(path.relative_to(tmp_path))
         record["evidence_sha256"] = hashlib.sha256(content).hexdigest()
