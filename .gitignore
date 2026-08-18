@@ -150,3 +150,11 @@ coverage/
 # 新規 verdict だけが黙って untracked のまま落ちる (= harness-ratchet を緑にする修正が
 # push されない)。2026-07-28 に実際に踏んだため明示的に再包含する。
 !eval-log/coverage/
+# live-trial の被験 fixture repo と作業ディレクトリ。build_live_trial_fixture.py で
+# 決定論的に再生成でき、それ自身が nested .git を持つため追跡対象にならない。
+# --out を run ディレクトリ内へ向けると受領書ビルダー (scripts/build-spec-reflection-receipt.py)
+# の clean-tree 検査を毎回落とすので、既定の live-trial-fixtures/ と同じ扱いで除外する。
+# acceptance の正本は同じ run ディレクトリの verdict.json / transcript.jsonl 側で、
+# fixture の中身は verdict が束縛する digest 経由で検証される。
+eval-log/*/*/live-trial/*/fixture-repo/
+eval-log/*/*/live-trial/*/work/
