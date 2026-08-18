@@ -28,6 +28,15 @@ violation とする (捏造の疑い)。また全 record の retrieved_at が完
 `evidence_sha256` を持つ。references が非空なら `--repo-root` を必須とし、repo 内の証跡ファイルの
 実在と SHA-256 を突合する。
 
+値の接地検査 (HarnessHub-pepx): `version` に版番号トークンがあるとき、そのいずれかが証跡本文か
+`source_url` に現れることを要求する。digest 一致は「証跡が改変されていない」ことしか保証せず、
+証跡を触らずに record の version だけを別経路の値へ差し替える改変は素通りしていた。
+`last_updated` は対象にしない。実データでは「ページに更新日の明示が無いので取得日を記録した」
+という正当な記録が多数あり、本文と突合すると正しい記録を落とすためである。
+版数を持たない how-to ページなど、版を姉妹 record から引いている正当な記録には
+`version_derived_from` で由来を明示させる。指した先が実在し、その証跡が digest 検証済みで、
+同じ版番号がそこに接地していることまで確認するので、申告だけでは検査を回避できない。
+
 targets ファイルの期待形状:
 {"targets": [{"target_id": "react", ...}, {"target_id": "postgres", ...}]}
   または {"targets": ["react", "postgres"]}   # 文字列 id の配列でも可
@@ -69,6 +78,10 @@ REQUIRED_FIELDS = (
     "evidence_sha256",
 )
 SHA256_HEX = re.compile(r"^[0-9a-f]{64}$")
+# 版番号らしさの下限をドット 1 個以上に置く (`1.20.2` / `5.0.0-beta.32` は取り、`16` は取らない)。
+VERSION_TOKEN = re.compile(r"\d+(?:\.\d+)+(?:[-+][0-9A-Za-z.]+)?")
+# 欄の先頭にある版指定。`"16 (改名は 16.0 で導入)"` の `16` を拾うための補欠経路。
+HEAD_VERSION = re.compile(r"v?(\d+(?:\.\d+)*)")
 
 
 def _target_ids(data: dict) -> list[str]:
@@ -110,6 +123,35 @@ def _resolve_evidence_path(repo_root: Path, evidence_ref: object) -> Path | None
     except ValueError:
         return None
     return candidate
+
+
+def _version_tokens(value: object) -> tuple[list[str], str]:
+    """version 欄から突合単位を取り出す。返り値は (ドット付きトークン, 先頭の版指定)。
+
+    実データの version 欄は素の版番号ではなく注釈付きの散文が普通で、
+    `"0.45.2 (安定版) / 1.0.0-rc.4 (v1 プレリリース現行)"` のような値が入る。欄全体を
+    証跡本文と突合すると正しい記録が大量に落ちるため、突合単位を版番号トークンへ落とす。
+
+    ドット付きトークンだけでは足りない。`"16 (改名は 16.0 で導入)"` のように、宣言している版は
+    `16` で、`16.0` は注釈中の別の数だという実例がある。この形を拾うため、欄の先頭にある版指定
+    (ドット無しを含む) を第 2 の候補として別に返す。ドット無しは年・件数と衝突しうるので、
+    ドット付きがどれも接地しなかったときの補欠としてのみ使い、語境界つきで照合する。
+    """
+    if not isinstance(value, str):
+        return [], ""
+    head = HEAD_VERSION.match(value.strip())
+    return VERSION_TOKEN.findall(value), (head.group(1) if head else "")
+
+
+def _is_grounded(haystack: str, tokens: list[str], head: str) -> bool:
+    """版番号トークンのいずれかが haystack に現れるか。"""
+    if any(token in haystack for token in tokens):
+        return True
+    if head and head not in tokens:
+        # 補欠経路。ドット無しの版指定は語境界つきでのみ認める
+        # (`16` が `2016` や件数の一部に当たって通るのを防ぐ)。
+        return re.search(rf"(?<!\d){re.escape(head)}(?!\d)", haystack) is not None
+    return False
 
 
 def _norm_host(host: str) -> str:
@@ -183,6 +225,10 @@ def validate(
         findings.append("targets: 対象 target_id が空 (取得対象一覧が無い)")
 
     by_id: dict[str, dict] = {}
+    # digest 一致まで確認できた証跡だけを派生元の候補にする。未検証の証跡を根拠に使えると、
+    # 改変された証跡へ version_derived_from を向けるだけで接地検査を回避できてしまう。
+    verified_evidence: dict[str, Path] = {}
+    pending_grounding: list[tuple[str, dict, list[str], str]] = []
     for i, ref in enumerate(refs):
         if not isinstance(ref, dict):
             findings.append(f"references[{i}]: オブジェクトでない")
@@ -255,6 +301,60 @@ def validate(
                         f"references[{tid}]: evidence_sha256 が evidence_ref の内容と不一致 "
                         "(retrieval 痕跡の改変または record 取り違え)"
                     )
+                else:
+                    # F7: 記録した version がその証跡から来ていることの突合。
+                    # digest 一致は「証跡が改変されていない」ことしか言えず、証跡はそのままに
+                    # record の version だけを別経路の値へ差し替える改変を検出できない
+                    # (HarnessHub-eiky r2 で実際に起きた事故がこの形)。
+                    # source_url も探索対象に含める。版が本文ではなく URL に現れる公式ページ
+                    # (例 /docs/upgrading/version-16) があり、そこは正当な根拠だからである。
+                    verified_evidence[tid] = evidence_path
+                    tokens, head = _version_tokens(ref.get("version"))
+                    if tokens or head:
+                        haystack = evidence_path.read_text(encoding="utf-8", errors="replace")
+                        haystack += "\n" + str(ref.get("source_url") or "")
+                        if not _is_grounded(haystack, tokens, head):
+                            # 判定はここでは確定させない。version_derived_from による他 record
+                            # からの派生が正当な場合があり、その突合には全 record が要るためである。
+                            pending_grounding.append((tid, ref, tokens, head))
+
+    # F7 の派生解決。自分の証跡で接地しなかった version は、由来を明示していれば認める。
+    # 版数を持たない how-to ページの記録が「その時点でどの版を見ていたか」を書き残すのは
+    # 正当な情報であり、検査を通すために真の情報を削らせる方向へ倒すべきではない。
+    # ただし由来は無条件には信じない。指した先が実在し、その証跡が digest 検証済みで、
+    # 同じ版番号がそこに接地していることまで確認する (監査の連鎖を切らない)。
+    for tid, ref, tokens, head in pending_grounding:
+        # 表示は実際に照合した候補にする。ドット無しの版だけを宣言している record では
+        # tokens が空で、空リストを出すと何を探したのか読めなくなるためである。
+        shown = tokens or [head]
+        origin = ref.get("version_derived_from")
+        if not origin:
+            findings.append(
+                f"references[{tid}]: version={ref['version']!r} の版番号 {shown} が "
+                "evidence_ref の本文にも source_url にも現れない "
+                "(記録値が当該証跡から得られていない疑い)"
+            )
+            continue
+        if origin == tid or origin not in by_id:
+            findings.append(
+                f"references[{tid}]: version_derived_from={origin!r} が references に実在しない "
+                "(派生元として無効)"
+            )
+            continue
+        origin_path = verified_evidence.get(origin)
+        if origin_path is None:
+            findings.append(
+                f"references[{tid}]: version_derived_from={origin!r} の証跡が digest 検証を通っていない "
+                "(未検証の証跡は派生元にできない)"
+            )
+            continue
+        origin_hay = origin_path.read_text(encoding="utf-8", errors="replace")
+        origin_hay += "\n" + str(by_id[origin].get("source_url") or "")
+        if not _is_grounded(origin_hay, tokens, head):
+            findings.append(
+                f"references[{tid}]: version={ref['version']!r} の版番号 {shown} が "
+                f"派生元 {origin!r} の証跡にも現れない (派生の申告が根拠を伴っていない)"
+            )
 
     # 全件対応 (欠落 0)
     missing = [t for t in target_ids if t not in by_id]

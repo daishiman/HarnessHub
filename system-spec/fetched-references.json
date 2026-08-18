@@ -274,7 +274,8 @@
       "latest_checked_at": "2026-08-15T01:35:54Z",
       "evidence_ref": "system-spec/retrieval-evidence/opennext-cloudflare-env-vars.json",
       "evidence_sha256": "a005e7c863ca624dc061bd4de96322064e0d94f346c4db14ad68f8fad6f1ac90",
-      "summary": "@opennextjs/cloudflare における環境値・binding・secret の解決経路の一次資料。qa-172 の中核根拠である getCloudflareContext() の env 解決について取得した。\n【C08 finding-2 への回答】監査は「環境変数 (vars/secrets) は context の env では取得できず process.env でのみ利用可能」という相違があると述べたが、公式 how-to はこの区別を local 開発の文脈で述べている。すなわち next dev 配下では .dev.vars / wrangler config の値が env に現れないため Next.js の .env を使え、という指示であり、deploy 済み Worker 上で secret が env から読めないという意味ではない。本 repository の吸収層 (apps/hub/src/app/health/runtime-env.ts) は getCloudflareContext().env を第一経路とし失敗時に process.env へ落とす形であり、この公式指針と整合する。したがって吸収層の設計自体は正しく、欠陥は「認証に関わる 2 箇所がその吸収層を通っていない」ことに限定される (契約 E-1)。\n【追加で効く事実】公式が deploy 時の --keep-vars を推奨している。dashboard 側で投入した値が deploy で消える経路が存在するということであり、「一度は動いていたのに、ある deploy 以降だけ縮退する」形の再発があり得る。未解決事項 1 (いつから縮退しているか未確認) の候補原因として記録する。\n\n取得経路の開示: 当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と、その応答から読み取れた事実だけを記録する。\n[再照合 2026-08-15T01:35:54Z] opennext.js.org 限定の検索で env vars ガイドの内容を再確認した。local 開発は .dev.vars ではなく Next.js の .env を使い、NEXTJS_ENV (既定 production) で読み分ける。local build は .dev.vars / .env が設定を上書きしうるため CD (Workers Builds) を正本経路とする。Cloudflare 側の環境変数と process の環境変数が競合した場合は process 側が優先される。なお本 record の version は @opennextjs/cloudflare の版数であり、その値は npm registry を出典とする別 target (opennext-cloudflare) の再照合に依拠する。"
+      "summary": "@opennextjs/cloudflare における環境値・binding・secret の解決経路の一次資料。qa-172 の中核根拠である getCloudflareContext() の env 解決について取得した。\n【C08 finding-2 への回答】監査は「環境変数 (vars/secrets) は context の env では取得できず process.env でのみ利用可能」という相違があると述べたが、公式 how-to はこの区別を local 開発の文脈で述べている。すなわち next dev 配下では .dev.vars / wrangler config の値が env に現れないため Next.js の .env を使え、という指示であり、deploy 済み Worker 上で secret が env から読めないという意味ではない。本 repository の吸収層 (apps/hub/src/app/health/runtime-env.ts) は getCloudflareContext().env を第一経路とし失敗時に process.env へ落とす形であり、この公式指針と整合する。したがって吸収層の設計自体は正しく、欠陥は「認証に関わる 2 箇所がその吸収層を通っていない」ことに限定される (契約 E-1)。\n【追加で効く事実】公式が deploy 時の --keep-vars を推奨している。dashboard 側で投入した値が deploy で消える経路が存在するということであり、「一度は動いていたのに、ある deploy 以降だけ縮退する」形の再発があり得る。未解決事項 1 (いつから縮退しているか未確認) の候補原因として記録する。\n\n取得経路の開示: 当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と、その応答から読み取れた事実だけを記録する。\n[再照合 2026-08-15T01:35:54Z] opennext.js.org 限定の検索で env vars ガイドの内容を再確認した。local 開発は .dev.vars ではなく Next.js の .env を使い、NEXTJS_ENV (既定 production) で読み分ける。local build は .dev.vars / .env が設定を上書きしうるため CD (Workers Builds) を正本経路とする。Cloudflare 側の環境変数と process の環境変数が競合した場合は process 側が優先される。なお本 record の version は @opennextjs/cloudflare の版数であり、その値は npm registry を出典とする別 target (opennext-cloudflare) の再照合に依拠する。",
+      "version_derived_from": "opennext-cloudflare"
     },
     {
       "target_id": "tailwindcss-v4",
@@ -322,7 +323,7 @@
       "last_updated": "2024-12-12",
       "latest_checked_at": "2026-08-10T11:54:59Z",
       "evidence_ref": "system-spec/retrieval-evidence/wcag-2-2.json",
-      "evidence_sha256": "858040cebbf287df5aba0c5236602a0e39ae723e34ffae1bc82eb4614e82eca1",
+      "evidence_sha256": "e201655cf9ffc91b29cdc59a2f17576fbee994ab37fe58453fb6e7fe7facf342",
       "summary": "W3C Recommendation の WCAG 2.2 を確認した。知覚可能・操作可能・理解可能・堅牢の4原則と検証可能な達成基準を、Hub のアクセシビリティ要件と同値表の受入基準に使う。"
     },
     {

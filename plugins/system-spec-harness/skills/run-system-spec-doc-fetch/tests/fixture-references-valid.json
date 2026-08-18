@@ -9,7 +9,7 @@
       "version": "19.0",
       "latest_checked_at": "2026-07-11T00:05:00Z",
       "evidence_ref": "examples/fixture-evidence/react.md",
-      "evidence_sha256": "693e53c9e7cd8e2430830d8a1d95c9aa548b5ac6d38fcda59ac972568a1c01db",
+      "evidence_sha256": "bb970acfe87f03658a003e8fbd8c7a41e140e8cf64d35063177d271299269bf8",
       "summary": "React 公式リファレンス。フック/コンポーネント API の現行版。"
     },
     {

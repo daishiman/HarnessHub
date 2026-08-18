@@ -1,20 +1,9 @@
 {
-  "schema_version": "1.1.0",
-  "target": {
-    "plugin": "dev-graph",
-    "skill": "run-dev-graph-system-spec",
-    "component_id": "C19",
-    "skill_md_sha256": "0ad44124f5860ef53d4a293a5e65a96835d6ca78456c3f8610fb67875e8ff3aa"
-  },
-  "verdict": "PASS",
-  "reviewer": "fresh independent evaluator c19_r6_final_goal_evaluator plus canonical-command completion gate and poll-state/transcript-bound live-trial verdict, 20260817T094952Z-mp9j-c19-r6-final",
-  "loop_scope": "both",
-  "iteration_limit": 3,
   "criteria_results": {
     "IN1": {
-      "status": "PASS",
-      "verify_by": "script",
       "evidence_kind": "hybrid",
+      "observed": "The three focused contract modules pass (109 tests): resume receipt validation, evaluator completion including raw canonical-command adversarial boundaries, and live-trial task contract generation/lint. The final recovered transcript passes validate-system-spec-evaluator-completion with one exact canonical runner invocation and zero violations; validate-goal-seek-evidence is valid with zero violations. The bounded runner imported architecture/specification through C02, reported network_calls=0 and upstream_skill_invocations=0, and completed all 12 steps with exit 0.",
+      "status": "PASS",
       "test_refs": [
         "plugins/dev-graph/tests/test_validate_system_spec_resume.py",
         "plugins/dev-graph/tests/test_validate_system_spec_evaluator_completion.py",
@@ -22,23 +11,34 @@
         "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260817T094952Z-mp9j-c19-r6-final/external-completion-validation.json",
         "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260817T094952Z-mp9j-c19-r6-final/goal-evaluation.json"
       ],
-      "observed": "The three focused contract modules pass (109 tests): resume receipt validation, evaluator completion including raw canonical-command adversarial boundaries, and live-trial task contract generation/lint. The final recovered transcript passes validate-system-spec-evaluator-completion with one exact canonical runner invocation and zero violations; validate-goal-seek-evidence is valid with zero violations. The bounded runner imported architecture/specification through C02, reported network_calls=0 and upstream_skill_invocations=0, and completed all 12 steps with exit 0."
+      "verify_by": "script"
     },
     "OUT1": {
-      "status": "PASS",
-      "verify_by": "live-trial",
       "evidence_kind": "live-trial",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T015722Z-c19-pepx-r2/verdict.json",
+      "observed": "fresh live trial 20260818T015722Z-c19-pepx-r2 は overall=PASS、nudge=0、gate=0、wall-clock=30.034s (予算 360s)。system-spec-harness の F7 版番号接地 fixture 修正 (HarnessHub-pepx) で挙動閉包が再び変わり 20260818T000759Z-c19-pepx-r1 が stale-sha になったための再実走。canonical runner を1回だけ実行し 12 step 全て exit 0、mode=reuse-confirmed、network_calls=0、upstream_skill_invocations=0、禁止 4 entry point の Skill 呼出は0件。登録 node は arch-system-spec-overview と spec-system-spec-index の2件のみで、いずれも C02 (upsert-node.py) 経由。fresh independent evaluator ccb36075-fddd-4d1c-9f71-babbae4bad1b が required_observations 3件を読取専用で再実測し、out/status.json の自己申告を transcript の実出力で裏取りして PASS。behavior closure digest=93ab16877178248aea160f931f95140a2a27b3ffb4ed3532d74ad57bace379ed、transcript SHA c2bb013c588ae5f2406a2dff93c8a2fb501cdaf6b0b690244bea683cfae32d2a。",
       "scenario_id": "C19-OUT1-positive-system-spec-lineage-r6-bounded",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260817T094952Z-mp9j-c19-r6-final/verdict.json",
+      "status": "PASS",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260817T094952Z-mp9j-c19-r6-final/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260817T094952Z-mp9j-c19-r6-final/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260817T094952Z-mp9j-c19-r6-final/poll-state.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260817T094952Z-mp9j-c19-r6-final/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260817T094952Z-mp9j-c19-r6-final/external-completion-validation.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260817T094952Z-mp9j-c19-r6-final/goal-evaluation.json"
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T015722Z-c19-pepx-r2/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T015722Z-c19-pepx-r2/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T015722Z-c19-pepx-r2/poll-state.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T015722Z-c19-pepx-r2/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T015722Z-c19-pepx-r2/independent-verification.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T015722Z-c19-pepx-r2/independent-observations.json"
       ],
-      "observed": "Fresh bounded r6 live trial completed PASS in 60.593 seconds with 208784 measured tokens against max_wall_clock_s=360 and max_total_tokens=2000000. The verdict binds behavior closure eedf22f22f61902cb45d33f976430c4417ec7228c9f33fa32671eaae8bbdc015, final transcript SHA 082c69df40d413e56a2fb56d5256b498f59dbec8a04448ea5211492517a0a5fc, and fresh independent evaluator c19_r6_final_goal_evaluator. Transcript invokes only dev-graph:run-dev-graph-system-spec and executes exactly the shlex.join canonical Bash command once; forbidden upstream Skills/Agent, diagnostics, extra validators, dependency installation, runner rerun, prefix/suffix, operators, redirects, and wrappers are absent. External completion validation reports PASS with one runner and zero violations. Scenario args/task/invocation contracts match, required observations are fully evidenced, all 12 runner steps exit 0, registration is C02-only, both nodes retain source_lineage and confirmation_evidence, and duplicate elicitation/compile runtime logic is absent."
+      "verify_by": "live-trial"
     }
-  }
+  },
+  "iteration_limit": 3,
+  "loop_scope": "both",
+  "reviewer": "fresh-independent-context:ccb36075-fddd-4d1c-9f71-babbae4bad1b",
+  "schema_version": "1.1.0",
+  "target": {
+    "component_id": "C19",
+    "plugin": "dev-graph",
+    "skill": "run-dev-graph-system-spec",
+    "skill_md_sha256": "0ad44124f5860ef53d4a293a5e65a96835d6ca78456c3f8610fb67875e8ff3aa"
+  },
+  "verdict": "PASS"
 }

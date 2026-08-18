@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import importlib.util
 import json
 import re
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -16,19 +18,33 @@ FEATURE_IDS = (
     "feat-card-block-authoring",
     "feat-card-mutation-safety",
 )
-PARITY_FIELDS = (
-    "graph_node_id",
-    "artifact_kind",
-    "purpose",
-    "goal",
-    "scope_in",
-    "scope_out",
-    "acceptance",
-    "architecture_refs",
-    "depends_on",
-    "resource_scope",
-    "updated_at",
+
+def _load(name: str, rel: str):
+    """repo 内の script を sys.path を汚さずに読む。"""
+    spec = importlib.util.spec_from_file_location(name, ROOT / rel)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+# 契約は plan ゲートが実行時に持つ。ここでキーを列挙し直すと、片方だけ更新されたときに
+# 「テストは緑なのに plan で落ちる」という一番たちの悪い乖離になる (実際そうなっていた:
+# 本テストは depends_on / resource_scope を含む 11 キーを要求し、plan ゲートは 9 キーの
+# exact set を要求していたため、この 3 feature は plan 不能のまま緑だった)。
+# 対策として列挙をやめ、plan ゲートを実際に呼んで「plan できること」を直接確かめる。
+# 定数を切り出して import する案は取らない。resolve-project-context.py は dev-graph 3 skill の
+# 宣言済み挙動面に含まれ、1 文字でも触ると live-trial 証跡が失効する (再 trial が要る)。
+_PLAN_GATE = _load(
+    "_card_plan_gate", "plugins/system-dev-planner/scripts/resolve-project-context.py"
 )
+_CONTEXT_WRITER = _load("_card_context_writer", "scripts/build-feature-context.py")
+# graph node にはあるが context.json は持たないフィールド。正本は graph なので
+# .md frontmatter と graph の 2 者で突合する。
+GRAPH_ONLY_FIELDS = ("depends_on", "resource_scope")
+# architecture_refs は context がファイルパス表記、frontmatter/graph が node id 表記で、
+# 文字列一致では比較できない。語彙の正規化は build-feature-context.py が持つ実装を借りる。
+VOCABULARY_FIELD = "architecture_refs"
 # 実装が製品コードへ接地した feature。到達状態を `(achieved)` と書き、「未実装」の記述を残さない。
 # 完了の記録先はここと frontmatter の implementation_readiness / completion_evidence であって、
 # `## 実装結果` のような章を増やす形は取らない (章立ては EXPECTED_SECTIONS の exact tuple)。
@@ -74,6 +90,12 @@ def _context(feature_id: str) -> dict[str, Any]:
     return value
 
 
+def _all_graph_nodes() -> list[dict[str, Any]]:
+    """architecture 参照の解決には feature 以外の node (arch-*) も要る。"""
+    graph = json.loads((ROOT / ".dev-graph/state/graph.json").read_text(encoding="utf-8"))
+    return [node for node in graph["nodes"] if "graph_node_id" in node]
+
+
 @pytest.fixture(scope="module")
 def graph_nodes() -> dict[str, dict[str, Any]]:
     graph = json.loads((ROOT / ".dev-graph/state/graph.json").read_text(encoding="utf-8"))
@@ -107,7 +129,8 @@ def test_context_frontmatter_and_graph_have_exact_parity(
     frontmatter, _ = _frontmatter_and_body(feature_id)
     context = _context(feature_id)
     graph = graph_nodes[feature_id]
-    assert set(context) == set(PARITY_FIELDS), f"{feature_id}: context fields drifted"
+    # 形状契約は plan ゲートに実際に通して確かめる。ここが「plan できる」の唯一の定義。
+    _PLAN_GATE.validate_feature_context(ROOT, feature_id, f"features/{feature_id}.context.json")
     # context.json には writer が無く upsert-node.py は graph.json と .md frontmatter しか
     # 書かないため、この 3 者は upsert のたびに片肺で崩れる。落ちたときに「どう直すか」が
     # 分からないと毎回 CI ログから手で照合する羽目になるので、修復コマンドを message に載せる。
@@ -115,9 +138,26 @@ def test_context_frontmatter_and_graph_have_exact_parity(
         f"python3 scripts/build-feature-context.py --write --feature {feature_id}"
         " (正本は .dev-graph/state/graph.json)"
     )
-    for field in PARITY_FIELDS:
+    for field in set(context) - {VOCABULARY_FIELD}:
         assert context[field] == frontmatter[field] == graph[field], (
             f"{feature_id}: {field} drifted / repair: {repair}"
+        )
+    for field in GRAPH_ONLY_FIELDS:
+        assert field not in context, (
+            f"{feature_id}: {field} の正本は graph.json 側。context.json が持つと plan が拒否する"
+        )
+        assert frontmatter[field] == graph[field], f"{feature_id}: {field} drifted / repair: {repair}"
+    # 語彙 (パス表記 / node id 表記) を吸収してから突合する。
+    nodes = {node["graph_node_id"]: node for node in _all_graph_nodes()}
+    path_index = _CONTEXT_WRITER._path_index(nodes)
+    resolved = [
+        _CONTEXT_WRITER.split_architecture_refs(source[VOCABULARY_FIELD], nodes, path_index)
+        for source in (context, frontmatter, graph)
+    ]
+    for architecture, _supplementary, unresolved in resolved:
+        assert not unresolved, f"{feature_id}: 解決できない architecture 参照: {unresolved}"
+        assert architecture == resolved[0][0], (
+            f"{feature_id}: {VOCABULARY_FIELD} drifted / repair: {repair}"
         )
 
 

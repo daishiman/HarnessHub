@@ -52,6 +52,28 @@ def load_scenario(scenario_file: Path, scenario_id: str) -> dict:
     return matched[0]
 
 
+def repo_relative_scenario_file(scenario_file: str) -> str:
+    """受領書へ記録する scenario_file を、それを所有する repo からの相対へ畳む。
+
+    verdict.json は clone 先で追試されるため、著者の作業機の絶対パスを残すと
+    その持ち主の環境でしか解決できない参照になる。evidence_ref は
+    ``validate_evidence_claims`` が相対性と閉じ込めを強制しているのに、
+    scenario_file だけは受け取った文字列をそのまま記録していた。実際 C04/C19 の
+    再実走で作業機の絶対パスが記録され、下流の受領書検査
+    (``tests/test_skill_criteria_evidence.py``) が repo 相対を要求して落ちた。
+
+    基準を workdir ではなく scenario file 自身が属する repo に取る。workdir は
+    fixture 検証では tmp 配下に置かれ repo を持たないことがあるのに対し、実運用の
+    scenario 正本は必ず repo 内にあるためこちらのほうが安定する。どの repo にも
+    属さない scenario (tmp fixture など) は畳む基準が無いので受け取った形のまま返す。
+    """
+    resolved = Path(scenario_file).resolve()
+    for candidate in resolved.parents:
+        if (candidate / ".git").exists():  # worktree では .git はファイル
+            return resolved.relative_to(candidate).as_posix()
+    return scenario_file
+
+
 def parse_observation_claims(raw: list[str], total: int) -> dict[int, str]:
     """``--observation N=<evidence ref>`` を index→evidence へ解く。"""
     claims: dict[int, str] = {}

@@ -36,27 +36,9 @@
     "docs 以外の初期 client chunk が増えず、markdown-view / markdown-editor の dynamic import 境界が保たれる"
   ],
   "architecture_refs": [
-    "arch-harness-hub-frontend",
-    "arch-harness-hub-security",
-    "arch-harness-hub-design-system"
-  ],
-  "depends_on": [
-    "feat-card-mutation-safety",
-    "feat-semantic-emphasis-icons"
-  ],
-  "resource_scope": [
-    "packages/ui/src/components/Markdown.tsx",
-    "packages/ui/src/components/Markdown.test.tsx",
-    "packages/ui/src/components/Tabs.tsx",
-    "apps/hub/src/components/docs/markdown-view.ts",
-    "apps/hub/src/components/docs/markdown-editor.ts",
-    "apps/hub/src/app/(dashboard)/docs/[id]/document-detail-content.tsx",
-    "apps/hub/src/app/(dashboard)/docs/[id]/edit/document-edit-page.tsx",
-    "apps/hub/src/app/(dashboard)/docs/new/document-create-form.tsx",
-    "apps/hub/src/app/api/v1/docs/[id]/images/route.ts",
-    "apps/hub/src/app/api/v1/docs/[id]/images/[imageId]/route.ts",
-    "apps/hub/src/features/docs-cms/image-service.ts",
-    "apps/hub/tests/browser"
+    "architecture/harness-hub-design-system.md",
+    "architecture/harness-hub-frontend.md",
+    "architecture/harness-hub-security.md"
   ],
   "updated_at": "2026-08-16T07:15:30Z"
 }

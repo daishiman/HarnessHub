@@ -1,0 +1,72 @@
+{
+  "status": "PASS",
+  "mode": "reuse-confirmed",
+  "scenario": "C19-OUT1-positive-system-spec-lineage-r6-bounded",
+  "network_calls": 0,
+  "upstream_skill_invocations": 0,
+  "registered_nodes": [
+    "arch-system-spec-overview",
+    "spec-system-spec-index"
+  ],
+  "runner_report": {
+    "runner": "build-system-spec-resume-import",
+    "canonical_command": "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py --repo-root '/Users/dm/orca/workspaces/HarnessHub/card-closeout/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T000759Z-c19-pepx-r1/fixture-repo'",
+    "invocations": 1,
+    "status": "PASS",
+    "mode": "reuse-confirmed",
+    "report_path": "/Users/dm/orca/workspaces/HarnessHub/card-closeout/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T000759Z-c19-pepx-r1/fixture-repo/eval-log/run-dev-graph-system-spec-resume-report.json",
+    "completion_contract": {
+      "version": "system-spec-resume-closure/v1",
+      "path": "resume-reuse",
+      "authority": "digest-bound-resume-receipt",
+      "evaluator_execution": "reused-current-pass",
+      "import_writer": "C02"
+    },
+    "checklist": [
+      { "id": "context", "status": "pass", "evidence": "resolve-context exit 0" },
+      { "id": "resume-authority", "status": "pass", "evidence": "validate-resume valid=true" },
+      { "id": "no-upstream-regeneration", "status": "pass", "evidence": "network and upstream Skill counts are 0" },
+      { "id": "logic-boundary", "status": "pass", "evidence": "gate-boundary exit 0" },
+      { "id": "c02-import", "status": "pass", "evidence": "two dry-runs and two upserts exit 0" },
+      { "id": "lineage-evidence", "status": "pass", "evidence": "source digest and evidence refs gates exit 0" }
+    ],
+    "steps": [
+      { "label": "resolve-context", "exit_code": 0 },
+      { "label": "validate-resume", "exit_code": 0 },
+      { "label": "build-import", "exit_code": 0 },
+      { "label": "gate-boundary", "exit_code": 0 },
+      { "label": "gate-source-and-evidence-bindings", "exit_code": 0 },
+      { "label": "gate-graph-preview", "exit_code": 0 },
+      { "label": "c02-dry-run-architecture", "exit_code": 0 },
+      { "label": "c02-dry-run-specification", "exit_code": 0 },
+      { "label": "c02-upsert-architecture", "exit_code": 0 },
+      { "label": "c02-upsert-specification", "exit_code": 0 },
+      { "label": "gate-evidence-refs", "exit_code": 0 },
+      { "label": "gate-source-digest", "exit_code": 0 }
+    ],
+    "steps_total": 12,
+    "steps_exit_zero": 12
+  },
+  "required_observations": [
+    {
+      "observation": "the declared system-spec-harness contract and digest-bound PASS receipt validate in reuse-confirmed mode without upstream regeneration",
+      "evidence": "validate-system-spec-resume.py step exit 0 with valid=true, mode=reuse-confirmed, plugin_version=0.1.0, required_entry_points = [assign-system-spec-completeness-evaluator, run-system-spec-compile, run-system-spec-doc-fetch, run-system-spec-elicit], failures=[]; network_calls=0 and upstream_skill_invocations=0 confirm no elicit/doc-fetch/compile/evaluator re-run."
+    },
+    {
+      "observation": "the imported specification and architecture retain source lineage and evaluator evidence",
+      "evidence": "checklist lineage-evidence pass; gate-source-and-evidence-bindings, gate-evidence-refs (validate-evidence-refs.py) and gate-source-digest (validate-source-digest.py) all exit 0 for arch-system-spec-overview and spec-system-spec-index, so each node's source_lineage/source_digest matches its own source_path sha256 and confirmation_evidence refs are non-dangling."
+    },
+    {
+      "observation": "registration occurs only through C02 and no duplicate elicitation or compile logic appears in dev-graph",
+      "evidence": "import_writer=C02 with only c02-dry-run-* and c02-upsert-* steps (upsert-node.py) writing the two nodes, no direct upsert; checklist logic-boundary pass via gate-boundary exit 0 confirming 0 duplicated elicitation/compile logic in dev-graph."
+    }
+  ],
+  "constraints_honored": {
+    "canonical_runner_command_executed_verbatim_once": true,
+    "first_run_terminal": true,
+    "no_followup_diagnostics_or_validators_or_reruns": true,
+    "no_fixture_artifact_or_receipt_hand_edits": true,
+    "non_subject_skills_or_agents_invoked": 0
+  },
+  "blocker": null
+}

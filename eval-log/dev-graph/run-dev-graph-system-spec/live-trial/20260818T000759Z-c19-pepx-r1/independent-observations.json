@@ -1,0 +1,119 @@
+{
+  "schema_version": "1.0.0",
+  "kind": "live-trial-independent-observations",
+  "verdict": "PASS",
+  "blockers": [],
+  "evaluator": {
+    "mode": "fresh-independent-context",
+    "id": "ff2000e9-090a-4c90-9a30-f7a362e2075f",
+    "constraints_honored": [
+      "read-only outside the two declared output files",
+      "target skill dev-graph:run-dev-graph-system-spec was not invoked",
+      "canonical runner build-system-spec-resume-import.py was NOT re-run",
+      "only read-only validators were re-run (validate-system-spec-resume.py, validate-source-digest.py --registered, validate-evidence-refs.py --registered, validate-graph-schema.py, validate-system-spec-boundary.py); --progress writeback path was deliberately avoided so no trial evidence was mutated",
+      "fixture repo, HarnessHub behavior files, and existing trial evidence were not edited",
+      "nothing was repaired; findings reported as-is",
+      "every claim rests on a file read or a command run in this session"
+    ]
+  },
+  "target": {
+    "skill": "dev-graph:run-dev-graph-system-spec",
+    "scenario": "C19-OUT1-positive-system-spec-lineage-r6-bounded",
+    "trial_root": "/Users/dm/orca/workspaces/HarnessHub/card-closeout/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T000759Z-c19-pepx-r1",
+    "fixture_repo": "/Users/dm/orca/workspaces/HarnessHub/card-closeout/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T000759Z-c19-pepx-r1/fixture-repo"
+  },
+  "observations": {
+    "1": {
+      "title": "invocation and completion integrity",
+      "result": "PASS",
+      "evidence": {
+        "transcript_sha256_recomputed": "bfbbacee79ba4687e11561a8ce844315bc5f6d8d8c8e808a7c0dfc9d76782773",
+        "transcript_sha256_expected": "bfbbacee79ba4687e11561a8ce844315bc5f6d8d8c8e808a7c0dfc9d76782773",
+        "transcript_sha256_match": true,
+        "target_skill_invocations": 1,
+        "target_skill_invocation_input": "{\"skill\": \"dev-graph:run-dev-graph-system-spec\", \"args\": \"--repo-root /Users/dm/.../20260818T000759Z-c19-pepx-r1/fixture-repo --resume\"}",
+        "all_tool_uses_in_order": ["Bash(cat task.md)", "Skill(dev-graph:run-dev-graph-system-spec)", "Bash(canonical runner)", "Write(out/status.json)"],
+        "forbidden_invoked_skills_hits": 0,
+        "forbidden_skills_checked": [
+          "system-spec-harness:run-system-spec-elicit",
+          "run-system-spec-elicit",
+          "system-spec-harness:run-system-spec-doc-fetch",
+          "run-system-spec-doc-fetch",
+          "system-spec-harness:run-system-spec-compile",
+          "run-system-spec-compile",
+          "system-spec-harness:assign-system-spec-completeness-evaluator",
+          "assign-system-spec-completeness-evaluator"
+        ],
+        "canonical_runner_bash_invocations": 1,
+        "canonical_command_byte_identity": "sha256 of transcript Bash input.command == sha256 of task.md premise code block line == f691066893fed098049e169495523701996d33cef79b21c2a12a53d8e37d8917 (no prefix/suffix/cwd/env/redirect)",
+        "agent_or_other_skill_invocations": 0,
+        "user_turns_in_transcript": 1,
+        "nudge_or_interactive_gate_response": "none (single user prompt; remaining user rows are tool_result blocks only)",
+        "final_assistant_text": "DONE: PASS",
+        "poll_state": {"elapsed": 75, "gate_ticks": 0, "warned80": 0, "budget_max_wall_clock_s": 360, "within_budget": true},
+        "out_dir_contents": ["status.json"],
+        "note_non_blocking": "task.md was read via Bash `cat` rather than the Read tool; the Skill call remained the first non-read action, so the execution contract's ordering requirement is satisfied."
+      }
+    },
+    "2": {
+      "title": "reuse-confirmed validation without upstream regeneration",
+      "result": "PASS",
+      "evidence": {
+        "independent_rerun": "python3 plugins/dev-graph/scripts/validate-system-spec-resume.py --repo-root <fixture> => exit 0, {\"valid\": true, \"mode\": \"reuse-confirmed\", \"plugin_version\": \"0.1.0\", \"failures\": []}",
+        "required_entry_points_declared": [
+          "assign-system-spec-completeness-evaluator",
+          "run-system-spec-compile",
+          "run-system-spec-doc-fetch",
+          "run-system-spec-elicit"
+        ],
+        "receipt": "system-spec/resume-receipt.json schema_version 1.2, producer system-spec-harness/assign-system-spec-completeness-evaluator, verdict PASS, gates coverage/source_citation/knowledge_graph/evaluator all PASS",
+        "digest_binding_recomputed_by_evaluator": {
+          "system-spec/00-requirements-definition.md": "f2f24d652c2a92c9ee11396bcc40d3ed35ea383626ce05c8672b3fc5ce42405d",
+          "system-spec/backend.md": "e1266c857325a25dbf707e52ed367b4725d9587961d3ce333969db1ec9154649",
+          "system-spec/completeness-report.json": "4af2fd6346f158168deea021fce2865374c0941c3fcf0f3e48dc34566cf4c74b",
+          "system-spec/fetched-references.json": "6c5f3da9c1c7c9c873c09a36384deb1abb8a92fe2c83653a173f1abe4a063e6c",
+          "system-spec/index.md": "042c43f66df32052cb9c17cda86b16f1600601f27e8317a44283654ca77133c0",
+          "system-spec/spec-state.json": "93462c532f09972a1f68b4d7685e94a039c1835b0e56a8e09343e6e08d4bf40c",
+          "all_six_match_receipt": true
+        },
+        "no_upstream_regeneration": {
+          "webfetch_or_websearch_tool_uses": 0,
+          "tool_names_used_in_transcript": ["Bash", "Skill", "Bash", "Write"],
+          "elicit_doc_fetch_compile_evaluator_reruns": 0,
+          "fixture_git_status": "system-spec/* and eval-log/system-spec-harness/audit-fork-ledger.jsonl are unmodified (git status --porcelain lists no changes under system-spec/ or eval-log/system-spec-harness/); only .dev-graph/state/graph.json is M plus new import/eval-log/architecture/specs outputs"
+        }
+      }
+    },
+    "3": {
+      "title": "source lineage and evaluator evidence retained",
+      "result": "PASS",
+      "evidence": {
+        "graph_nodes_read_directly": "<fixture>/.dev-graph/state/graph.json contains exactly 2 nodes: arch-system-spec-overview, spec-system-spec-index",
+        "arch_source_lineage": {"origin_kind": "system-spec-harness", "source_plugin": "system-spec-harness", "source_version": "0.1.0", "source_path": "system-spec/00-requirements-definition.md", "source_digest": "f2f24d652c2a92c9ee11396bcc40d3ed35ea383626ce05c8672b3fc5ce42405d"},
+        "spec_source_lineage": {"origin_kind": "system-spec-harness", "source_plugin": "system-spec-harness", "source_version": "0.1.0", "source_path": "system-spec/index.md", "source_digest": "042c43f66df32052cb9c17cda86b16f1600601f27e8317a44283654ca77133c0"},
+        "digests_are_per_node_not_reused": true,
+        "evaluator_shasum_check": "shasum -a 256 of each source_path equals the node's source_digest (independently recomputed)",
+        "confirmation_evidence_both_nodes": {"evaluator": "system-spec-harness/assign-system-spec-completeness-evaluator", "evaluated_digest": "4af2fd6346f158168deea021fce2865374c0941c3fcf0f3e48dc34566cf4c74b", "evidence_ref": "system-spec/completeness-report.json", "matches_actual_report_sha256": true, "confirmation_status": "confirmed", "evaluation_status": "pass"},
+        "independent_validator_reruns": {
+          "validate-source-digest.py --registered arch-system-spec-overview,spec-system-spec-index": "exit 0, {\"checked\": 2, \"registered_mismatch\": []}",
+          "validate-evidence-refs.py --registered arch-system-spec-overview,spec-system-spec-index": "exit 0, {\"scanned_nodes_with_evidence\": 2, \"registered_dangling\": [], \"existing_dangling\": []}",
+          "validate-graph-schema.py --graph <fixture>/.dev-graph/state/graph.json --repo-root <fixture>": "{\"valid\": true, \"violations\": [], \"implementation_readiness\": \"complete\"}"
+        },
+        "body_files_carry_lineage": "architecture/system-spec-overview.md and specs/system-spec-index.md frontmatter carry literal source_lineage and confirmation_evidence blocks identical to the graph nodes"
+      }
+    },
+    "4": {
+      "title": "C02-only registration, no duplicated elicit/compile logic",
+      "result": "PASS",
+      "evidence": {
+        "baseline_graph": "git show HEAD:.dev-graph/state/graph.json in the fixture => 0 nodes, graph_revision 0; the run added exactly the two expected nodes",
+        "registered_nodes_exact": ["arch-system-spec-overview", "spec-system-spec-index"],
+        "writer_path": "plugins/dev-graph/scripts/build-system-spec-resume-import.py invokes upsert-node.py for c02-dry-run-{architecture,specification} and c02-upsert-{architecture,specification} (lines 226-251); its own write_json calls target only eval-log/*.json and .dev-graph/tmp/ preview files, never .dev-graph/state/graph.json",
+        "upsert_id_assertion": "runner raises RunFailure unless upsert-node.py stdout graph_node_id equals the expected id, and both c02-upsert steps exited 0",
+        "boundary_validator_independent_rerun": "python3 plugins/dev-graph/scripts/validate-system-spec-boundary.py => {\"valid\": true, \"dev_graph_hits\": {\"elicitation_cell_transition\": [], \"elicitation_turn_transition\": [], \"spec_compiler\": []}, \"vacuous_controls\": [], \"duplicate_signatures\": {}} with live positive controls resolving to system-spec-harness paths (skills/run-system-spec-elicit/scripts/state_transition_matrix.py, lib/spec_docset_foundation.py)",
+        "duplicate_count": 0,
+        "twelve_steps_exit_zero": "runner stdout in transcript and <fixture>/eval-log/run-dev-graph-system-spec-progress.json both show all 12 gate_exit_codes = 0"
+      }
+    }
+  }
+}

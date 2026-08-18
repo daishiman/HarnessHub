@@ -44,6 +44,12 @@ jobs:
       # 8000 件超の中に埋もれて「どう直すか」が読めないため、数百 ms のこの step を前に置いて
       # 原因と修復コマンドを最初のエラーとして出す。落ちても後段の pytest が同じ契約を守る
       # (この step だけを消しても保証は無音にならない)。
+      # キー集合と型の契約 (plan の入力形状) を値の突合より先に見る。形が違うものを値で
+      # 比較しても意味が無く、エラーも読みにくい。契約の正本は plan ゲートの
+      # validate_feature_context() で、この step はそれを作成時へ前倒ししているだけ。
+      - name: Check feature context contract (validate-feature-context)
+        run: python3 scripts/validate-feature-context.py --skip-frozen
+
       - name: Check feature context sidecar parity (build-feature-context)
         run: python3 scripts/build-feature-context.py --all --check --skip-frozen
 
