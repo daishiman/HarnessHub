@@ -17,16 +17,17 @@
     },
     "OUT1": {
       "evidence_kind": "live-trial",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T092817Z-c04-out1-fresh-r2/verdict.json",
-      "observed": "fresh live trial 20260817T092817Z-c04-out1-fresh-r2 は overall=PASS、nudge=0、gate=0、wall-clock=411.136s。新規 emit された C04 handoff は P01..P13 exact 13、feature/package/source/graph digest、C19 resume receipt/completeness report/full artifact snapshot の3 digest に束縛され、baseline 入力49件は無変更、implementation source は0件だった。fresh independent evaluator fdd2a547-0f66-45c3-a2d5-3f43af177a92 が5 gate、negative controls、goal-seek 8/8 を読取専用で再実測し PASS。behavior closure digest=0d0e6b9d76c456122c6f3f593b0aaf4db2426d67755f4ff796498cb2fd3ce710。",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T235457Z-c04-pepx-r1/verdict.json",
+      "observed": "fresh live trial 20260817T235457Z-c04-pepx-r1 は overall=PASS、nudge=0、gate=0、wall-clock=465.726s。C13 の値の接地検査 (F7, HarnessHub-pepx) 追加で 挙動閉包が変わったための再実走。新規 emit された C04 handoff は P01..P13 exact 13、feature/package/source/graph digest、C19 resume receipt/completeness report/full artifact snapshot の 3 digest に束縛され、implementation source は0件だった。fresh independent evaluator 24259ff1-0787-4860-b53c-1ec7f1b6cc38 が5 gate・digest 突合・goal-seek 配線を読取専用で再実測し PASS。behavior closure digest=8120b906b8ed21d59d7ce65062c2f9675088c5b786f159694ed0d5f189688567。",
       "scenario_id": "C04-OUT1-positive-ready-handoff",
       "status": "PASS",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T092817Z-c04-out1-fresh-r2/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T092817Z-c04-out1-fresh-r2/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T092817Z-c04-out1-fresh-r2/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T092817Z-c04-out1-fresh-r2/independent-verification.json",
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T092817Z-c04-out1-fresh-r2/independent-observations.json"
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T235457Z-c04-pepx-r1/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T235457Z-c04-pepx-r1/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T235457Z-c04-pepx-r1/poll-state.json",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T235457Z-c04-pepx-r1/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T235457Z-c04-pepx-r1/independent-verification.json",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T235457Z-c04-pepx-r1/independent-observations.json"
       ],
       "verify_by": "live-trial"
     },
@@ -43,7 +44,7 @@
   },
   "iteration_limit": 3,
   "loop_scope": "both",
-  "reviewer": "fresh-independent-context:fdd2a547-0f66-45c3-a2d5-3f43af177a92",
+  "reviewer": "fresh-independent-context:24259ff1-0787-4860-b53c-1ec7f1b6cc38",
   "schema_version": "1.1.0",
   "target": {
     "component_id": "C04",

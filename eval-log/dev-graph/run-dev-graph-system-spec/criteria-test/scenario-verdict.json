@@ -7,7 +7,7 @@
     "skill_md_sha256": "0ad44124f5860ef53d4a293a5e65a96835d6ca78456c3f8610fb67875e8ff3aa"
   },
   "verdict": "PASS",
-  "reviewer": "fresh independent evaluator c19_r6_final_goal_evaluator plus canonical-command completion gate and poll-state/transcript-bound live-trial verdict, 20260817T094952Z-mp9j-c19-r6-final",
+  "reviewer": "fresh-independent-context:ff2000e9-090a-4c90-9a30-f7a362e2075f",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -29,16 +29,16 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C19-OUT1-positive-system-spec-lineage-r6-bounded",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260817T094952Z-mp9j-c19-r6-final/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T000759Z-c19-pepx-r1/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260817T094952Z-mp9j-c19-r6-final/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260817T094952Z-mp9j-c19-r6-final/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260817T094952Z-mp9j-c19-r6-final/poll-state.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260817T094952Z-mp9j-c19-r6-final/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260817T094952Z-mp9j-c19-r6-final/external-completion-validation.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260817T094952Z-mp9j-c19-r6-final/goal-evaluation.json"
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T000759Z-c19-pepx-r1/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T000759Z-c19-pepx-r1/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T000759Z-c19-pepx-r1/poll-state.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T000759Z-c19-pepx-r1/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T000759Z-c19-pepx-r1/independent-verification.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T000759Z-c19-pepx-r1/independent-observations.json"
       ],
-      "observed": "Fresh bounded r6 live trial completed PASS in 60.593 seconds with 208784 measured tokens against max_wall_clock_s=360 and max_total_tokens=2000000. The verdict binds behavior closure eedf22f22f61902cb45d33f976430c4417ec7228c9f33fa32671eaae8bbdc015, final transcript SHA 082c69df40d413e56a2fb56d5256b498f59dbec8a04448ea5211492517a0a5fc, and fresh independent evaluator c19_r6_final_goal_evaluator. Transcript invokes only dev-graph:run-dev-graph-system-spec and executes exactly the shlex.join canonical Bash command once; forbidden upstream Skills/Agent, diagnostics, extra validators, dependency installation, runner rerun, prefix/suffix, operators, redirects, and wrappers are absent. External completion validation reports PASS with one runner and zero violations. Scenario args/task/invocation contracts match, required observations are fully evidenced, all 12 runner steps exit 0, registration is C02-only, both nodes retain source_lineage and confirmation_evidence, and duplicate elicitation/compile runtime logic is absent."
+      "observed": "fresh live trial 20260818T000759Z-c19-pepx-r1 は overall=PASS、nudge=0、gate=0、wall-clock=75.086s (予算 360s)。C13 の値の接地検査 (F7, HarnessHub-pepx) で挙動閉包が変わったための再実走。canonical runner を1回だけ byte-identical に実行し 12 step 全て exit 0、mode=reuse-confirmed、network_calls=0、upstream_skill_invocations=0、禁止 4 entry point の Skill 呼出は0件。登録 node は arch-system-spec-overview と spec-system-spec-index の2件のみで、いずれも C02 (upsert-node.py) 経由。fresh independent evaluator ff2000e9-090a-4c90-9a30-f7a362e2075f が validate-system-spec-resume / validate-source-digest / validate-evidence-refs / validate-graph-schema / validate-system-spec-boundary を読取専用で再実行し、resume receipt の 6 artifact digest も再計算して一致を確認し PASS。behavior closure digest=5a7d6b037cfcf1029275b7348ed64654f528b19292fe8e84bd79e18f96f37b80、transcript SHA bfbbacee79ba4687e11561a8ce844315bc5f6d8d8c8e808a7c0dfc9d76782773。"
     }
   }
 }
