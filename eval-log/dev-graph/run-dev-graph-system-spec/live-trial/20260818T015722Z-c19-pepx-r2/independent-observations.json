@@ -1,0 +1,234 @@
+{
+  "schema_version": "1.0.0",
+  "kind": "live-trial-independent-observations",
+  "verdict": "PASS",
+  "blockers": [],
+  "evaluator": {
+    "mode": "fresh-independent-context",
+    "id": "ccb36075-fddd-4d1c-9f71-babbae4bad1b",
+    "constraints_honored": [
+      "did not invoke the subject skill dev-graph:run-dev-graph-system-spec",
+      "did not invoke any Skill or Agent tool",
+      "fixture-repo, HarnessHub sources and existing trial evidence were read-only; no repair performed",
+      "only read-only validators with declared write-scope: none were executed (validate-system-spec-boundary.py, validate-system-spec-resume.py, validate-source-digest.py)",
+      "wrote only independent-observations.json and independent-verification.json under TRIAL_ROOT",
+      "every claim is backed by a recomputed digest, a file read, or a command exit code"
+    ]
+  },
+  "target": {
+    "skill": "dev-graph:run-dev-graph-system-spec",
+    "scenario": "C19-OUT1-positive-system-spec-lineage-r6-bounded",
+    "trial_root": "/Users/dm/orca/workspaces/HarnessHub/card-closeout/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T015722Z-c19-pepx-r2",
+    "fixture_repo": "/Users/dm/orca/workspaces/HarnessHub/card-closeout/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T015722Z-c19-pepx-r2/fixture-repo"
+  },
+  "observations": {
+    "1": {
+      "title": "transcript integrity (sha256 recomputed)",
+      "result": "PASS",
+      "evidence": {
+        "command": "shasum -a 256 transcript.jsonl",
+        "recomputed_sha256": "c2bb013c588ae5f2406a2dff93c8a2fb501cdaf6b0b690244bea683cfae32d2a",
+        "expected_sha256": "c2bb013c588ae5f2406a2dff93c8a2fb501cdaf6b0b690244bea683cfae32d2a",
+        "match": true,
+        "transcript_bytes": 89931,
+        "transcript_lines": 42,
+        "final_transcript_recheck": {
+          "reason": "the verdict builder re-collected transcript.jsonl when closing the trial session; this observation was recomputed against that final artifact",
+          "superseded_snapshot": {"sha256": "d02bc327209c339c1d7cb2ff4e4aeaca8902fb4686a41dc9f50af00f2e83e616", "bytes": 89505, "lines": 41},
+          "delta": "exactly one appended line (index 41) of type \"last-prompt\": a session bookkeeping record repeating the original task.md prompt with leafUuid 24395a50-d05e-4b88-84f8-b2c44ed01507; it carries no message content, no tool_use and no user turn",
+          "lines_0_to_40_unchanged": true,
+          "method": "the final transcript was re-parsed line by line (all 42 records), not diffed only at the tail: tool_use inventory, Skill/Agent/AskUserQuestion invocations, forbidden skill names in invocation position, and user prompt turns were all recounted from scratch on the 89931-byte artifact, and the fixture digests were recomputed afterwards",
+          "re_audited_on_final_transcript": {
+            "tool_use_counts": {"Bash": 2, "Skill": 1, "Write": 1, "Agent": 0, "AskUserQuestion": 0},
+            "skill_invocations": "still exactly 1: dev-graph:run-dev-graph-system-spec with --repo-root <FIXTURE> --resume (line 21)",
+            "forbidden_invoked_skills": 0,
+            "user_prompt_turns": 1,
+            "nudge_or_gate_answers": 0,
+            "final_assistant_text": "DONE: PASS (line 39, attributionSkill dev-graph:run-dev-graph-system-spec)",
+            "fixture_unchanged_after_recheck": {
+              "system-spec/00-requirements-definition.md": "f2f24d652c2a92c9ee11396bcc40d3ed35ea383626ce05c8672b3fc5ce42405d",
+              "system-spec/index.md": "042c43f66df32052cb9c17cda86b16f1600601f27e8317a44283654ca77133c0",
+              "system-spec/completeness-report.json": "4af2fd6346f158168deea021fce2865374c0941c3fcf0f3e48dc34566cf4c74b",
+              "graph_revision": 2,
+              "nodes": ["arch-system-spec-overview", "spec-system-spec-index"]
+            }
+          },
+          "conclusion": "no content in the appended line contradicts any observation; observations 2-8 stand unchanged"
+        }
+      }
+    },
+    "2": {
+      "title": "subject skill invoked exactly once with the contracted args",
+      "result": "PASS",
+      "evidence": {
+        "skill_tool_use_count": 1,
+        "transcript_line_index": 21,
+        "skill": "dev-graph:run-dev-graph-system-spec",
+        "args": "--repo-root /Users/dm/orca/workspaces/HarnessHub/card-closeout/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T015722Z-c19-pepx-r2/fixture-repo --resume",
+        "args_match_template": "--repo-root <FIXTURE> --resume",
+        "all_tool_use_counts": {"Bash": 2, "Skill": 1, "Write": 1, "Agent": 0}
+      }
+    },
+    "3": {
+      "title": "forbidden_invoked_skills absent from all invocations",
+      "result": "PASS",
+      "evidence": {
+        "forbidden_entries_checked": [
+          "system-spec-harness:run-system-spec-elicit",
+          "run-system-spec-elicit",
+          "system-spec-harness:run-system-spec-doc-fetch",
+          "run-system-spec-doc-fetch",
+          "system-spec-harness:run-system-spec-compile",
+          "run-system-spec-compile",
+          "system-spec-harness:assign-system-spec-completeness-evaluator",
+          "assign-system-spec-completeness-evaluator"
+        ],
+        "forbidden_as_skill_or_agent_invocation": 0,
+        "only_skill_invocation": "dev-graph:run-dev-graph-system-spec (line 21)",
+        "textual_occurrences_are_non_invocation": "matches appear only inside the Write payload of out/status.json (line 32), task.md and the runner report as required_entry_points strings; no tool_use of type Skill/Agent names them",
+        "bash_commands_executed_by_subject_session": [
+          "cat .../task.md",
+          "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py --repo-root '<FIXTURE>'"
+        ]
+      }
+    },
+    "4": {
+      "title": "no nudge and no interactive gate answers",
+      "result": "PASS",
+      "evidence": {
+        "user_prompt_turns": 1,
+        "user_prompt_text": "次のファイルに書かれたタスクを読み、その指示どおりに実行してください。余計な確認は返さず即着手: <task.md>",
+        "additional_user_steering_turns": 0,
+        "AskUserQuestion_tool_use_count": 0,
+        "poll_state": {"elapsed": 30, "stall": 0, "gate_ticks": 0, "warned80": 0, "prev": "jsonl:89505:IDLE_TURN_COMPLETE"},
+        "turn_duration_ms": 47466
+      }
+    },
+    "5": {
+      "title": "scenario required_observations[1]: digest-bound PASS receipt validates in reuse-confirmed mode with no upstream regeneration",
+      "result": "PASS",
+      "evidence": {
+        "independent_rerun": "python3 plugins/dev-graph/scripts/validate-system-spec-resume.py --repo-root <FIXTURE> -> exit 0, valid=true, mode=reuse-confirmed, plugin_version=0.1.0, failures=[]",
+        "validator_write_scope": "none (header of validate-system-spec-resume.py)",
+        "receipt_path": "<FIXTURE>/system-spec/resume-receipt.json",
+        "receipt_verdict": "PASS",
+        "receipt_gates": {"coverage": "PASS", "source_citation": "PASS", "knowledge_graph": "PASS", "evaluator": "PASS"},
+        "receipt_artifact_digests_recomputed": {
+          "system-spec/00-requirements-definition.md": {"receipt": "f2f24d652c2a92c9ee11396bcc40d3ed35ea383626ce05c8672b3fc5ce42405d", "actual": "f2f24d652c2a92c9ee11396bcc40d3ed35ea383626ce05c8672b3fc5ce42405d", "match": true},
+          "system-spec/backend.md": {"receipt": "e1266c857325a25dbf707e52ed367b4725d9587961d3ce333969db1ec9154649", "actual": "e1266c857325a25dbf707e52ed367b4725d9587961d3ce333969db1ec9154649", "match": true},
+          "system-spec/completeness-report.json": {"receipt": "4af2fd6346f158168deea021fce2865374c0941c3fcf0f3e48dc34566cf4c74b", "actual": "4af2fd6346f158168deea021fce2865374c0941c3fcf0f3e48dc34566cf4c74b", "match": true},
+          "system-spec/fetched-references.json": {"receipt": "6c5f3da9c1c7c9c873c09a36384deb1abb8a92fe2c83653a173f1abe4a063e6c", "actual": "6c5f3da9c1c7c9c873c09a36384deb1abb8a92fe2c83653a173f1abe4a063e6c", "match": true},
+          "system-spec/index.md": {"receipt": "042c43f66df32052cb9c17cda86b16f1600601f27e8317a44283654ca77133c0", "actual": "042c43f66df32052cb9c17cda86b16f1600601f27e8317a44283654ca77133c0", "match": true},
+          "system-spec/spec-state.json": {"receipt": "93462c532f09972a1f68b4d7685e94a039c1835b0e56a8e09343e6e08d4bf40c", "actual": "93462c532f09972a1f68b4d7685e94a039c1835b0e56a8e09343e6e08d4bf40c", "match": true}
+        },
+        "no_upstream_regeneration": {
+          "runner_reported_network_calls": 0,
+          "runner_reported_upstream_skill_invocations": 0,
+          "transcript_backing": "no WebFetch/WebSearch tool_use in transcript; the only network-capable tools used are Bash (2 calls, both local python3/cat) and Write; the sole Skill call is the subject skill itself",
+          "upstream_artifact_mtimes": "all system-spec/* digests still equal the 2026-07-21T00:00:00Z receipt values, so no upstream file was regenerated during the run"
+        }
+      }
+    },
+    "6": {
+      "title": "scenario required_observations[2]: imported specification and architecture retain source lineage and evaluator evidence",
+      "result": "PASS",
+      "evidence": {
+        "graph": "<FIXTURE>/.dev-graph/state/graph.json (graph_revision=2, 2 nodes)",
+        "arch-system-spec-overview": {
+          "artifact_kind": "architecture",
+          "file_path": "architecture/system-spec-overview.md",
+          "source_lineage": {
+            "source_plugin": "system-spec-harness",
+            "source_version": "0.1.0",
+            "origin_kind": "system-spec-harness",
+            "source_path": "system-spec/00-requirements-definition.md",
+            "source_digest": "f2f24d652c2a92c9ee11396bcc40d3ed35ea383626ce05c8672b3fc5ce42405d",
+            "imported_at": "2026-08-18T01:58:29Z"
+          },
+          "recomputed_source_path_sha256": "f2f24d652c2a92c9ee11396bcc40d3ed35ea383626ce05c8672b3fc5ce42405d",
+          "source_digest_match": true,
+          "confirmation_evidence": {
+            "evaluator": "system-spec-harness/assign-system-spec-completeness-evaluator",
+            "evidence_ref": "system-spec/completeness-report.json",
+            "evaluated_digest": "4af2fd6346f158168deea021fce2865374c0941c3fcf0f3e48dc34566cf4c74b"
+          },
+          "recomputed_evidence_ref_sha256": "4af2fd6346f158168deea021fce2865374c0941c3fcf0f3e48dc34566cf4c74b",
+          "evaluated_digest_match": true,
+          "confirmation_status": "confirmed",
+          "evaluation_status": "pass"
+        },
+        "spec-system-spec-index": {
+          "artifact_kind": "specification",
+          "file_path": "specs/system-spec-index.md",
+          "source_lineage": {
+            "source_plugin": "system-spec-harness",
+            "source_version": "0.1.0",
+            "origin_kind": "system-spec-harness",
+            "source_path": "system-spec/index.md",
+            "source_digest": "042c43f66df32052cb9c17cda86b16f1600601f27e8317a44283654ca77133c0",
+            "imported_at": "2026-08-18T01:58:29Z"
+          },
+          "recomputed_source_path_sha256": "042c43f66df32052cb9c17cda86b16f1600601f27e8317a44283654ca77133c0",
+          "source_digest_match": true,
+          "confirmation_evidence": {
+            "evaluator": "system-spec-harness/assign-system-spec-completeness-evaluator",
+            "evidence_ref": "system-spec/completeness-report.json",
+            "evaluated_digest": "4af2fd6346f158168deea021fce2865374c0941c3fcf0f3e48dc34566cf4c74b"
+          },
+          "recomputed_evidence_ref_sha256": "4af2fd6346f158168deea021fce2865374c0941c3fcf0f3e48dc34566cf4c74b",
+          "evaluated_digest_match": true,
+          "confirmation_status": "confirmed",
+          "evaluation_status": "pass"
+        },
+        "gate_non_vacuity_check": {
+          "command": "python3 plugins/dev-graph/scripts/validate-source-digest.py --repo-root <FIXTURE> --progress <FIXTURE>/eval-log/run-dev-graph-system-spec-progress.json",
+          "output": {"checked": 2, "registered_mismatch": []},
+          "exit_code": 0,
+          "note": "checked=2 (>0) confirms the digest gate actually inspected both imported nodes rather than passing vacuously; the same command without --progress yields checked=0, so the runner's --progress form is the effective gate",
+          "evidence_ref_audit_from_progress": {"scanned_nodes_with_evidence": 2, "registered_dangling": [], "existing_dangling": []}
+        },
+        "evidence_ref_target_exists": "<FIXTURE>/system-spec/completeness-report.json exists; its verdict=PASS with 6 aspects PASS and gate_results exit_code 0"
+      }
+    },
+    "7": {
+      "title": "scenario required_observations[3]: registration only via C02 and no duplicated elicitation/compile logic in dev-graph",
+      "result": "PASS",
+      "evidence": {
+        "runner_completion_contract_import_writer": "C02",
+        "canonical_graph_writer_in_runner": "build-system-spec-resume-import.py mutates .dev-graph/state/graph.json only through subprocess calls to upsert-node.py (lines 228 and 242); its own write_json calls target eval-log/*.json and .dev-graph/tmp/system-spec-import/preflight.graph.json only",
+        "c02_steps": ["c02-dry-run-architecture exit 0", "c02-dry-run-specification exit 0", "c02-upsert-architecture exit 0", "c02-upsert-specification exit 0"],
+        "graph_state": "graph_revision=2 with exactly the 2 nodes registered this run; no node registered outside the C02 upserts",
+        "boundary_gate_independent_rerun": {
+          "command": "python3 plugins/dev-graph/scripts/validate-system-spec-boundary.py",
+          "exit_code": 0,
+          "valid": true,
+          "positive_control": {
+            "elicitation_cell_transition": ["skills/run-system-spec-elicit/scripts/state_transition_matrix.py"],
+            "elicitation_turn_transition": ["skills/run-system-spec-elicit/scripts/state_transition_matrix.py"],
+            "spec_compiler": ["lib/spec_docset_foundation.py"]
+          },
+          "dev_graph_hits": {"elicitation_cell_transition": [], "elicitation_turn_transition": [], "spec_compiler": []},
+          "vacuous_controls": [],
+          "note": "positive controls are non-empty in system-spec-harness, so the zero dev-graph hits are a real absence rather than a vacuous match"
+        }
+      }
+    },
+    "8": {
+      "title": "out/status.json self-report is consistent with the transcript's actual runner output",
+      "result": "PASS",
+      "evidence": {
+        "status_json_claims": {"steps_total": 12, "steps_exit_zero": 12, "invocations": 1, "status": "PASS", "network_calls": 0, "upstream_skill_invocations": 0},
+        "transcript_backing": "the Bash tool_result at transcript line 28 is the runner's own JSON and contains a steps array of exactly 12 entries, each with exit_code 0, plus status=PASS, mode=reuse-confirmed, network_calls=0, upstream_skill_invocations=0 and registered_this_run=[arch-system-spec-overview, spec-system-spec-index]",
+        "step_labels_identical": true,
+        "runner_invocations_in_transcript": 1,
+        "fixture_side_copy": "<FIXTURE>/eval-log/run-dev-graph-system-spec-resume-report.json carries the same 12 gate_exit_codes all 0",
+        "residual_note": "the fixture progress checklist marks live-trial-outer-closure as pending-external, which is consistent with this independent post-run verification and is not claimed as passed by status.json"
+      }
+    }
+  },
+  "scenario_observation_map": {
+    "1": "independent-observations.json#/observations/5",
+    "2": "independent-observations.json#/observations/6",
+    "3": "independent-observations.json#/observations/7"
+  }
+}

@@ -17,17 +17,17 @@
     },
     "OUT1": {
       "evidence_kind": "live-trial",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T235457Z-c04-pepx-r1/verdict.json",
-      "observed": "fresh live trial 20260817T235457Z-c04-pepx-r1 は overall=PASS、nudge=0、gate=0、wall-clock=465.726s。C13 の値の接地検査 (F7, HarnessHub-pepx) 追加で 挙動閉包が変わったための再実走。新規 emit された C04 handoff は P01..P13 exact 13、feature/package/source/graph digest、C19 resume receipt/completeness report/full artifact snapshot の 3 digest に束縛され、implementation source は0件だった。fresh independent evaluator 24259ff1-0787-4860-b53c-1ec7f1b6cc38 が5 gate・digest 突合・goal-seek 配線を読取専用で再実測し PASS。behavior closure digest=8120b906b8ed21d59d7ce65062c2f9675088c5b786f159694ed0d5f189688567。",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260818T015722Z-c04-pepx-r2/verdict.json",
+      "observed": "fresh live trial 20260818T015722Z-c04-pepx-r2 は overall=PASS、nudge=0、gate=0、wall-clock=330.365s (予算 600s)。system-spec-harness の F7 版番号接地 fixture 修正 (HarnessHub-pepx) で挙動閉包が再び変わり 20260817T235457Z-c04-pepx-r1 が stale-sha になったための再実走。被験 Skill の呼出はちょうど1回で args は task.md リテラルと一致し、内部 script 直叩きによる迂回はない。新規 emit された C04 handoff は SYS-LIVE-001-P01..P13 の exact 13、feature/package/source/graph digest、C19 resume receipt / completeness report / full artifact snapshot の 3 digest に束縛され、implementation source は0件だった。fresh independent evaluator 875679c1-497f-4eb0-9d06-a6dff1073579 が required_observations 4件・digest 突合・goal-seek 配線 (original_goal_hash 整合) を読取専用で再実測し、out/status.json の自己申告と矛盾しないことも確認して PASS。behavior closure digest=8b40bd852d3b8e00408c78f128b7b922c55fad75d3482d1467d4aef1410aad3b、transcript SHA 6ac725108c6886fb9f87dfcba8a4d05c7c79cd57b9c954e933adfc6bcfde89f3。",
       "scenario_id": "C04-OUT1-positive-ready-handoff",
       "status": "PASS",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T235457Z-c04-pepx-r1/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T235457Z-c04-pepx-r1/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T235457Z-c04-pepx-r1/poll-state.json",
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T235457Z-c04-pepx-r1/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T235457Z-c04-pepx-r1/independent-verification.json",
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T235457Z-c04-pepx-r1/independent-observations.json"
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260818T015722Z-c04-pepx-r2/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260818T015722Z-c04-pepx-r2/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260818T015722Z-c04-pepx-r2/poll-state.json",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260818T015722Z-c04-pepx-r2/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260818T015722Z-c04-pepx-r2/independent-verification.json",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260818T015722Z-c04-pepx-r2/independent-observations.json"
       ],
       "verify_by": "live-trial"
     },
@@ -44,7 +44,7 @@
   },
   "iteration_limit": 3,
   "loop_scope": "both",
-  "reviewer": "fresh-independent-context:24259ff1-0787-4860-b53c-1ec7f1b6cc38",
+  "reviewer": "fresh-independent-context:875679c1-497f-4eb0-9d06-a6dff1073579",
   "schema_version": "1.1.0",
   "target": {
     "component_id": "C04",

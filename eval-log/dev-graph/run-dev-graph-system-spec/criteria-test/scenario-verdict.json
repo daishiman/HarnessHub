@@ -1,20 +1,9 @@
 {
-  "schema_version": "1.1.0",
-  "target": {
-    "plugin": "dev-graph",
-    "skill": "run-dev-graph-system-spec",
-    "component_id": "C19",
-    "skill_md_sha256": "0ad44124f5860ef53d4a293a5e65a96835d6ca78456c3f8610fb67875e8ff3aa"
-  },
-  "verdict": "PASS",
-  "reviewer": "fresh-independent-context:ff2000e9-090a-4c90-9a30-f7a362e2075f",
-  "loop_scope": "both",
-  "iteration_limit": 3,
   "criteria_results": {
     "IN1": {
-      "status": "PASS",
-      "verify_by": "script",
       "evidence_kind": "hybrid",
+      "observed": "The three focused contract modules pass (109 tests): resume receipt validation, evaluator completion including raw canonical-command adversarial boundaries, and live-trial task contract generation/lint. The final recovered transcript passes validate-system-spec-evaluator-completion with one exact canonical runner invocation and zero violations; validate-goal-seek-evidence is valid with zero violations. The bounded runner imported architecture/specification through C02, reported network_calls=0 and upstream_skill_invocations=0, and completed all 12 steps with exit 0.",
+      "status": "PASS",
       "test_refs": [
         "plugins/dev-graph/tests/test_validate_system_spec_resume.py",
         "plugins/dev-graph/tests/test_validate_system_spec_evaluator_completion.py",
@@ -22,23 +11,34 @@
         "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260817T094952Z-mp9j-c19-r6-final/external-completion-validation.json",
         "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260817T094952Z-mp9j-c19-r6-final/goal-evaluation.json"
       ],
-      "observed": "The three focused contract modules pass (109 tests): resume receipt validation, evaluator completion including raw canonical-command adversarial boundaries, and live-trial task contract generation/lint. The final recovered transcript passes validate-system-spec-evaluator-completion with one exact canonical runner invocation and zero violations; validate-goal-seek-evidence is valid with zero violations. The bounded runner imported architecture/specification through C02, reported network_calls=0 and upstream_skill_invocations=0, and completed all 12 steps with exit 0."
+      "verify_by": "script"
     },
     "OUT1": {
-      "status": "PASS",
-      "verify_by": "live-trial",
       "evidence_kind": "live-trial",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T015722Z-c19-pepx-r2/verdict.json",
+      "observed": "fresh live trial 20260818T015722Z-c19-pepx-r2 は overall=PASS、nudge=0、gate=0、wall-clock=30.034s (予算 360s)。system-spec-harness の F7 版番号接地 fixture 修正 (HarnessHub-pepx) で挙動閉包が再び変わり 20260818T000759Z-c19-pepx-r1 が stale-sha になったための再実走。canonical runner を1回だけ実行し 12 step 全て exit 0、mode=reuse-confirmed、network_calls=0、upstream_skill_invocations=0、禁止 4 entry point の Skill 呼出は0件。登録 node は arch-system-spec-overview と spec-system-spec-index の2件のみで、いずれも C02 (upsert-node.py) 経由。fresh independent evaluator ccb36075-fddd-4d1c-9f71-babbae4bad1b が required_observations 3件を読取専用で再実測し、out/status.json の自己申告を transcript の実出力で裏取りして PASS。behavior closure digest=93ab16877178248aea160f931f95140a2a27b3ffb4ed3532d74ad57bace379ed、transcript SHA c2bb013c588ae5f2406a2dff93c8a2fb501cdaf6b0b690244bea683cfae32d2a。",
       "scenario_id": "C19-OUT1-positive-system-spec-lineage-r6-bounded",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T000759Z-c19-pepx-r1/verdict.json",
+      "status": "PASS",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T000759Z-c19-pepx-r1/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T000759Z-c19-pepx-r1/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T000759Z-c19-pepx-r1/poll-state.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T000759Z-c19-pepx-r1/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T000759Z-c19-pepx-r1/independent-verification.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T000759Z-c19-pepx-r1/independent-observations.json"
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T015722Z-c19-pepx-r2/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T015722Z-c19-pepx-r2/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T015722Z-c19-pepx-r2/poll-state.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T015722Z-c19-pepx-r2/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T015722Z-c19-pepx-r2/independent-verification.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T015722Z-c19-pepx-r2/independent-observations.json"
       ],
-      "observed": "fresh live trial 20260818T000759Z-c19-pepx-r1 は overall=PASS、nudge=0、gate=0、wall-clock=75.086s (予算 360s)。C13 の値の接地検査 (F7, HarnessHub-pepx) で挙動閉包が変わったための再実走。canonical runner を1回だけ byte-identical に実行し 12 step 全て exit 0、mode=reuse-confirmed、network_calls=0、upstream_skill_invocations=0、禁止 4 entry point の Skill 呼出は0件。登録 node は arch-system-spec-overview と spec-system-spec-index の2件のみで、いずれも C02 (upsert-node.py) 経由。fresh independent evaluator ff2000e9-090a-4c90-9a30-f7a362e2075f が validate-system-spec-resume / validate-source-digest / validate-evidence-refs / validate-graph-schema / validate-system-spec-boundary を読取専用で再実行し、resume receipt の 6 artifact digest も再計算して一致を確認し PASS。behavior closure digest=5a7d6b037cfcf1029275b7348ed64654f528b19292fe8e84bd79e18f96f37b80、transcript SHA bfbbacee79ba4687e11561a8ce844315bc5f6d8d8c8e808a7c0dfc9d76782773。"
+      "verify_by": "live-trial"
     }
-  }
+  },
+  "iteration_limit": 3,
+  "loop_scope": "both",
+  "reviewer": "fresh-independent-context:ccb36075-fddd-4d1c-9f71-babbae4bad1b",
+  "schema_version": "1.1.0",
+  "target": {
+    "component_id": "C19",
+    "plugin": "dev-graph",
+    "skill": "run-dev-graph-system-spec",
+    "skill_md_sha256": "0ad44124f5860ef53d4a293a5e65a96835d6ca78456c3f8610fb67875e8ff3aa"
+  },
+  "verdict": "PASS"
 }
