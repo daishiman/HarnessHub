@@ -67,6 +67,7 @@ run "lint-doc-line-limit"                  python3 scripts/lint-doc-line-limit.p
 DOC_LINK_RATCHET_BASE="origin/main"
 run "lint-doc-internal-link-integrity"     python3 scripts/lint-doc-internal-link-integrity.py --repo-root . --max-violations 354 --ratchet-base "$DOC_LINK_RATCHET_BASE"
 run "lint-mechanism-knowledge-boundary"    python3 scripts/lint-mechanism-knowledge-boundary.py --repo-root .
+run "lint-icon-ownership-boundary"         python3 scripts/lint-icon-ownership-boundary.py --repo-root .
 run "lint-portability-knowledge-optin"     python3 scripts/lint-portability-knowledge-optin.py --repo-root .
 # workflow の step gate 自体が壊れていないかを pre-push 段で検査する。step-level `if` から同一 step の
 # `env:` を参照すると Actions の評価順 (if → env) で式が恒久 false になり、secret 投入後も step が

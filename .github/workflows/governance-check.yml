@@ -108,6 +108,9 @@ jobs:
       - name: "lint mechanism-knowledge boundary (qa-070 仕組みへの repo 固有ナレッジ hard-code 遮断)"
         run: python3 scripts/lint-mechanism-knowledge-boundary.py --repo-root .
         continue-on-error: false
+      - name: "lint icon ownership boundary (アイコン供給元を packages/ui/src/icons に限定・inline SVG/絵文字の再実装遮断)"
+        run: python3 scripts/lint-icon-ownership-boundary.py --repo-root .
+        continue-on-error: false
       - name: "lint portability knowledge opt-in (qa-070 移植チャネルは仕組みのみ既定・ナレッジ同梱は明示 opt-in)"
         run: python3 scripts/lint-portability-knowledge-optin.py --repo-root .
         continue-on-error: false
