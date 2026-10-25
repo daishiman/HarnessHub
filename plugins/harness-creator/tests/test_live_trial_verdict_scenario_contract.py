@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -569,3 +570,33 @@ def test_the_undeclared_flag_gate_rejects_the_r2_c14_template() -> None:
         "run-dev-graph-decompose",
         "--repo-root <contained-fixture-repo> --binding none --dry-run",
     ) == ["--binding"]
+
+
+def test_recorded_scenario_file_is_folded_to_repo_relative() -> None:
+    """受領書へ記録する scenario_file は絶対パスで渡しても repo 相対へ畳まれる。
+
+    verdict.json は clone 先で追試されるため、著者の作業機の絶対パスを残すと持ち主の
+    環境でしか解決できない参照になる。C04/C19 の再実走で実際に絶対パスが記録され、
+    下流の受領書検査 (tests/test_skill_criteria_evidence.py) が落ちた。
+    """
+    folded = "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json"
+    assert VERDICT.repo_relative_scenario_file(str(DEV_GRAPH_SCENARIOS)) == folded
+    # repo root から相対で渡した場合も同じ形に落ちる (呼び出し側の書き方で受領書が
+    # 変わらない)。cwd 依存を排すため明示的に repo root へ移動して確かめる。
+    cwd = os.getcwd()
+    try:
+        os.chdir(REPO)
+        assert VERDICT.repo_relative_scenario_file(folded) == folded
+    finally:
+        os.chdir(cwd)
+
+
+def test_scenario_file_outside_any_repo_is_left_as_given(tmp_path) -> None:
+    """どの repo にも属さない scenario は畳む基準が無いので受け取った形のまま返す。
+
+    畳めない入力を無理に相対化すると、解決できない参照を受領書へ書くことになる。
+    ここが黙って壊れないことを固定する (fixture 検証経路が実際にこの形を通る)。
+    """
+    outside = tmp_path / "scenarios.json"
+    outside.write_text("{}", encoding="utf-8")
+    assert VERDICT.repo_relative_scenario_file(str(outside)) == str(outside)

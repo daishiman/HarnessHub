@@ -1,0 +1,17 @@
+# resource-map.yaml — C04 requirements handoff progressive-disclosure index
+resources:
+  - file: ../../../scripts/validate-requirements-system-spec-snapshot.py
+    topic: C19 の digest-bound PASS receipt/report/全 system-spec Markdown snapshot をupstream成功後のpost-validation rehashで C04 handoff へ束縛する薄い consumer adapter
+    read_when: R2b-readiness で feature/package lineage の検証後、C19 評価 snapshot が current か確定するとき
+  - file: ../../../scripts/validate-system-spec-resume.py
+    topic: system-spec-harness の current artifact snapshot と completeness evaluator receipt を再検証する C19 正本 gate
+    read_when: adapter の upstream authority と fail-closed の理由を確認するとき。C04 から個別 gate を再実装しない
+  - file: ../../../schemas/requirements-system-spec-snapshot.schema.json
+    topic: C04 が handoff へ保存する receipt/report/artifact-snapshot digest binding の出力 schema
+    read_when: R3-handoff で adapter stdout を snapshot digest と共に受け渡すとき
+  - file: ../../../scripts/validate-source-digest.py
+    topic: 選択 feature、architecture_refs、exact-13 task の source lineage currentness gate
+    read_when: R2b-readiness で graph node closure 自体の digest を検証するとき
+  - file: ../../../../system-dev-planner/scripts/validate-system-plan.py
+    topic: promotion 済み feature package の P01..P13 exact-set/13-node DAG を検証する外部正本
+    read_when: R2b-readiness で --feature-package を用い package 構造を検証するとき

@@ -1,41 +1,30 @@
 {
- "allowed_domains": [
-  "developers.cloudflare.com"
- ],
- "findings": [
-  "課金は 保存量 + Class A (状態変更系・高価) + Class B (読取系) の 3 軸",
-  "DeleteObject / DeleteBucket / AbortMultipartUpload は無料操作",
-  "egress は R2 直・Workers API・S3 API・r2.dev いずれも無料",
-  "storage class は Standard (既定) と Infrequent Access (取出料 + 最低 30 日課金)",
-  "無料枠の例示値: 10 GB-month storage / 1M Class A / 10M Class B per month",
-  "権限不足 (HTTP 401) の要求は課金されない"
- ],
- "freshness_rechecks": [
-  {
-   "checked_at": "2026-08-13T15:44:29Z",
-   "http_status": 200,
-   "method": "python3 urllib.request GET (User-Agent 明示)",
-   "observation": "ページ表示 \"Last updated Aug 7, 2026\" を本文から直接抽出。record の last_updated が May 28, 2026 のままだったため本回で更新した (C08 F3)。",
-   "page_last_updated_extracted": [
-    "Last updated Aug 7, 2026|</"
-   ],
-   "reason": "C08 独立監査 (2026-08-13 / verdict FAIL) の finding F6/F8/F9/F10 対応。F9 (先行 recheck の checked_at 12 件が 2026-08-13T15:34:43Z で秒まで一括一致し実測でない) を受け、同じ照合を request 単位の実測時刻付きで再実行し、先行エントリを本エントリへ差し替えた。",
-   "request_started_at": "2026-08-13T15:44:29Z",
-   "response_body_sha256": "865d883ec5b1bebffceff960415a84c60293236735603c70eed660874878e41f",
-   "response_bytes": 147338,
-   "response_last_modified_header": null,
-   "retrieval_channel": "primary-http-get",
-   "url": ""
+  "target_id": "cloudflare-r2",
+  "retrieved_at": "2026-08-15T00:12:40Z",
+  "retrieval_channel": "cloudflare-docs-mcp",
+  "retrieval_query": "R2 pricing free tier storage Class A Class B operations egress",
+  "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、Cloudflare 公式が提供する MCP server (cloudflare-docs / search_cloudflare_documentation) を取得経路とした。返却されたのは公式ドキュメントページ本文の chunk であり、WebSearch の要約ではなく本文の逐語断片である。ページ本文中の更新日表示 (Last updated Aug 7, 2026) と、同ページに埋め込まれた schema.org TechArticle の dateModified=2026-08-07 の 2 経路で更新日を確認した。",
+  "official_host": "developers.cloudflare.com",
+  "source_url": "https://developers.cloudflare.com/r2/pricing/",
+  "page_last_updated_verbatim": "Last updated Aug 7, 2026",
+  "schema_org_date_modified": "2026-08-07",
+  "returned_official_urls": [
+    "https://developers.cloudflare.com/r2/pricing/",
+    "https://developers.cloudflare.com/workers/platform/pricing/",
+    "https://developers.cloudflare.com/changelog/post/2026-05-11-r2-data-catalog-pricing-announced/"
+  ],
+  "findings": [
+    "課金は 保存量 + Class A (状態変更系・高価) + Class B (読取系) の 3 軸で、egress (インターネットへのデータ転送) は Standard / Infrequent Access のいずれも無料",
+    "Free tier (Standard storage のみ・毎月): Storage 10 GB-month / Class A 100 万 requests / Class B 1,000 万 requests / Egress 無料",
+    "Standard storage の従量: $0.015 / GB-month, Class A $4.50 / 百万 req, Class B $0.36 / 百万 req, Data Retrieval なし",
+    "Infrequent Access storage の従量: $0.01 / GB-month, Class A $9.00 / 百万 req, Class B $0.90 / 百万 req, Data Retrieval $0.01 / GB。Free tier は適用されない",
+    "課金単位は切り上げ (1,000,001 操作は 200 万操作として課金、1.1 GB-month は 2 GB-month として課金)",
+    "呼び出し元に権限が無い要求 (HTTP 401) は課金対象外",
+    "egress が無料なのは R2 直・Workers API・S3 API・r2.dev ドメイン経由の場合で、従量課金の他サービスを R2 bucket へ繋ぐとそちら側で課金され得る"
+  ],
+  "verbatim_excerpt": "### Free tier\n\nYou can use the following amount of storage and operations each month for free.\n\n|                                    | Free                         |\n| ---------------------------------- | ---------------------------- |\n| Storage                            | 10 GB-month / month          |\n| Class A Operations                 | 1 million requests / month   |\n| Class B Operations                 | 10 million requests / month  |\n| Egress (data transfer to Internet) | Free                         |\n\nCaution\n\nThe free tier only applies to Standard storage, and does not apply to Infrequent Access storage.",
+  "supersedes": {
+    "previous_retrieved_at": "2026-08-07T03:30:09Z",
+    "reason": "旧 record は公式 host 限定 WebSearch の要約経路であり、ページ本文の更新日表示を再確認できず last_updated に『May 28, 2026 (要 WebFetch/直接取得)』という未確認注記が残っていた。C08 独立監査 (鮮度) が cloudflare-r2 を鮮度未確認として指摘したため、公式 MCP 経由で本文を取得し直し、更新日を 2 経路で確定した。"
   }
- ],
- "retrieval_channel": "web-search-official-host-restricted",
- "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と要約から読み取れた事実だけを記録する。retrieved_at は本 record 作成時に読んだ実時刻で、同一 turn 内で発行した検索の記録時刻 (個別応答の受信時刻ではない)。",
- "retrieval_query": "Cloudflare R2 pricing storage Class A Class B operations",
- "retrieved_at": "2026-08-07T03:30:09Z",
- "returned_official_urls": [
-  "https://developers.cloudflare.com/r2/pricing/",
-  "https://developers.cloudflare.com/r2/buckets/storage-classes/",
-  "https://developers.cloudflare.com/changelog/post/2026-05-11-r2-data-catalog-pricing-announced/"
- ],
- "target_id": "cloudflare-r2"
 }

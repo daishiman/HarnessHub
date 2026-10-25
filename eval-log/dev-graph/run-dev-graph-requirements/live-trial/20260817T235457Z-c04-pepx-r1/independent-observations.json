@@ -1,0 +1,232 @@
+{
+  "schema_version": "1.0.0",
+  "kind": "live-trial-independent-observations",
+  "verdict": "PASS",
+  "blockers": [],
+  "evaluator": {
+    "mode": "fresh-independent-context",
+    "id": "24259ff1-0787-4860-b53c-1ec7f1b6cc38",
+    "constraints_honored": [
+      "read-only on fixture-repo, HarnessHub behavior files, and all pre-existing trial evidence",
+      "target skill dev-graph:run-dev-graph-requirements was never invoked by this evaluator",
+      "nothing was repaired; findings would have been reported as blockers",
+      "every claim is backed by a file read or a command executed, with concrete quoted values",
+      "only the two permitted output files were written inside TRIAL_ROOT"
+    ]
+  },
+  "target": {
+    "skill": "dev-graph:run-dev-graph-requirements",
+    "scenario": "C04-OUT1-positive-ready-handoff",
+    "trial_root": "/Users/dm/orca/workspaces/HarnessHub/card-closeout/eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T235457Z-c04-pepx-r1",
+    "fixture_repo": "/Users/dm/orca/workspaces/HarnessHub/card-closeout/eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T235457Z-c04-pepx-r1/fixture-repo"
+  },
+  "observations": {
+    "1": {
+      "title": "Invocation and completion integrity (transcript digest, single Skill invocation, DONE: PASS with no nudge and no interactive gate)",
+      "result": "PASS",
+      "evidence": {
+        "transcript_sha256_recomputed": "657a39396dae47d233ea4764abeb06165fd68e582eb1da04446077f6ad7b0f42",
+        "transcript_sha256_expected": "657a39396dae47d233ea4764abeb06165fd68e582eb1da04446077f6ad7b0f42",
+        "transcript_sha256_match": true,
+        "transcript_lines": 188,
+        "skill_tool_use_count_total": 1,
+        "skill_tool_use_count_for_target": 1,
+        "skill_tool_use_input": {
+          "skill": "dev-graph:run-dev-graph-requirements",
+          "args": "--repo-root /Users/dm/orca/workspaces/HarnessHub/card-closeout/eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T235457Z-c04-pepx-r1/fixture-repo --feature-id F-LIVE-001"
+        },
+        "skill_tool_use_transcript_line_index": 22,
+        "tool_use_histogram": {"Bash": 29, "Skill": 1, "Write": 3},
+        "user_turns_in_transcript": [
+          "line 5: initial task prompt pointing at task.md",
+          "line 24: Skill tool_result (skill body injection), not a human turn"
+        ],
+        "nudge_turns": 0,
+        "interactive_gate_responses": 0,
+        "pane_grep_for_nudge_or_gate_prompt": "no matches for nudge|続けて|approve|y/n|Do you want|Proceed?",
+        "final_assistant_text": "DONE: PASS",
+        "out_status_json": {"status": "PASS", "scenario": "C04-OUT1-positive-ready-handoff"},
+        "poll_state": {"elapsed": 465, "stall": 0, "settle": 3, "gate_ticks": 0, "prev": "jsonl:508585:IDLE_TURN_COMPLETE"},
+        "resource_budget_max_wall_clock_s": 600,
+        "gates_independently_rerun_by_evaluator": {
+          "validate-graph-schema.py": {"exit_code": 0, "valid": true, "violations": []},
+          "validate-system-plan.py --feature-package feature-package/F-LIVE-001": {"exit_code": 0, "violations": [], "contract_version": "1.3.0"},
+          "validate-source-digest.py --registered <15 node ids>": {"exit_code": 0, "checked": 15, "registered_mismatch": []},
+          "validate-requirements-system-spec-snapshot.py": {"exit_code": 0, "valid": true, "failures": []}
+        }
+      }
+    },
+    "2": {
+      "title": "goal-seek wiring (goal-spec / progress / intermediate present, 6 keys per line, original_goal_hash parity)",
+      "result": "PASS",
+      "evidence": {
+        "goal_spec_path": "fixture-repo/eval-log/run-dev-graph-requirements-goal-spec.json",
+        "progress_path": "fixture-repo/eval-log/run-dev-graph-requirements-progress.json",
+        "intermediate_path": "fixture-repo/eval-log/run-dev-graph-requirements-intermediate.jsonl",
+        "all_three_exist": true,
+        "goal_spec_original_goal_prefix": "system-spec-harness確定成果物とsystem development task planを含むグラフ情報から実装要件を導出し、implementation-readiness完了時だけcapability-build/ta",
+        "computed_utf8_sha256_of_original_goal": "04482e65a513cf4eb345f2c370d45ce5751e7732b0d3ef89c786c5eac4266c96",
+        "intermediate_line_count": 1,
+        "lines_with_all_six_required_keys": 1,
+        "required_keys": ["original_goal", "original_goal_hash", "current_goal_snapshot", "delta_from_original", "merged_directive_for_next", "drift_signal"],
+        "lines_with_hash_mismatch": 0,
+        "lines_with_original_goal_text_mismatch": 0,
+        "drift_signal_values": ["none"],
+        "progress_original_goal_hash": "04482e65a513cf4eb345f2c370d45ce5751e7732b0d3ef89c786c5eac4266c96",
+        "progress_verdict": "PASS",
+        "progress_implementation_code_generated": 0
+      }
+    },
+    "3": {
+      "title": "Required observations 1 and 2 — capability-build task-graph handoff emitted for the exact-13 package, bound to feature and source digest",
+      "result": "PASS",
+      "evidence": {
+        "handoff_path": "fixture-repo/docs/requirements/F-LIVE-001/capability-build-handoff.json",
+        "handoff_is_newly_created_untracked": true,
+        "handoff_kind": "capability-build/task-graph-handoff",
+        "handoff_producer": "dev-graph/run-dev-graph-requirements",
+        "handoff_status": "released",
+        "task_count": 13,
+        "task_node_ids": "SYS-LIVE-001-P01 .. SYS-LIVE-001-P13 (exact 13, no extras, no gaps)",
+        "task_node_ids_match_expected_exact_set": true,
+        "intra_feature_dag": "P01 -> P02 -> ... -> P13, strictly forward, P01 has no dependency",
+        "feature_id_in_handoff": "F-LIVE-001",
+        "feature_package_id_in_handoff": "feature-package/F-LIVE-001",
+        "parent_feature_in_handoff": "F-LIVE-001",
+        "graph_node_ids_present_in_fixture_graph": ["F-LIVE-001", "LT-ARCH-001", "SYS-LIVE-001-P01 .. P13"],
+        "digest_cross_checks_against_fixture_ground_truth": {
+          "feature_source_digest": {
+            "handoff": "f2f24d652c2a92c9ee11396bcc40d3ed35ea383626ce05c8672b3fc5ce42405d",
+            "graph_node_F-LIVE-001.source_lineage.source_digest": "f2f24d652c2a92c9ee11396bcc40d3ed35ea383626ce05c8672b3fc5ce42405d",
+            "match": true
+          },
+          "feature_evaluated_digest": {
+            "handoff": "d90caac89d99b7f2a6175180ba54b8e9514a38d78bb2a0db24a14b556a752549",
+            "graph_node_F-LIVE-001.confirmation_evidence.evaluated_digest": "d90caac89d99b7f2a6175180ba54b8e9514a38d78bb2a0db24a14b556a752549",
+            "match": true
+          },
+          "package_canonical_digest": {
+            "handoff": "sha256:d90caac89d99b7f2a6175180ba54b8e9514a38d78bb2a0db24a14b556a752549",
+            "staging-manifest.json.canonical_digest": "sha256:d90caac89d99b7f2a6175180ba54b8e9514a38d78bb2a0db24a14b556a752549",
+            "match": true
+          },
+          "registration_receipt_source_digest": {
+            "handoff": "sha256:d90caac89d99b7f2a6175180ba54b8e9514a38d78bb2a0db24a14b556a752549",
+            "dev-graph-registration-receipt.json.source_digest": "sha256:d90caac89d99b7f2a6175180ba54b8e9514a38d78bb2a0db24a14b556a752549",
+            "match": true
+          },
+          "promotion_published_digest": {
+            "handoff": "sha256:d90caac89d99b7f2a6175180ba54b8e9514a38d78bb2a0db24a14b556a752549",
+            "atomic-promotion-receipt.json.published_digest": "sha256:d90caac89d99b7f2a6175180ba54b8e9514a38d78bb2a0db24a14b556a752549",
+            "match": true
+          },
+          "package_source_feature_digest": {
+            "handoff": "sha256:9ea5885dab34301e5feb131e8f54b5f10d95a658816c283d4747cc9f25ddf998",
+            "feature-package.json.source_feature_digest": "sha256:9ea5885dab34301e5feb131e8f54b5f10d95a658816c283d4747cc9f25ddf998",
+            "match": true
+          },
+          "graph_digest_after_registration": {
+            "handoff": "sha256:d75a3a107db4a8481df12189d0262fc0ecd4e17f93251d73d6e7b052fd80594f",
+            "dev-graph-registration-receipt.json.graph_digest_after": "sha256:d75a3a107db4a8481df12189d0262fc0ecd4e17f93251d73d6e7b052fd80594f",
+            "match": true
+          },
+          "graph_revision": {"handoff": 3, "graph.json.graph_revision": 3, "receipt.graph_revision_after": 3, "match": true},
+          "graph_snapshot_sha256": {
+            "handoff": "9598d70de80b2bdbc4f71decc6dea7148f4ef9ecf9d2f6e4904251c8f2451cd2",
+            "evaluator_shasum_of_.dev-graph/state/graph.json": "9598d70de80b2bdbc4f71decc6dea7148f4ef9ecf9d2f6e4904251c8f2451cd2",
+            "match": true
+          }
+        },
+        "saved_state_parity_recomputed_by_evaluator": {
+          "F-LIVE-001": "confirmation_status=confirmed / evaluation_status=pass / implementation_readiness.status=complete",
+          "architecture_refs": ["LT-ARCH-001"],
+          "task_nodes_not_ready": [],
+          "task_parent_feature_set": ["F-LIVE-001"],
+          "task_feature_package_id_set": ["feature-package/F-LIVE-001"],
+          "task_source_digest_set": ["d90caac89d99b7f2a6175180ba54b8e9514a38d78bb2a0db24a14b556a752549"]
+        },
+        "companion_artifacts_bound": {
+          "requirements_document": "docs/requirements/F-LIVE-001/requirements.md",
+          "requirements_document_sha256_in_handoff": "8e3b808976ccde7398709e5cafbca6434b318e6644cfa6c5c4912488a0ac4b25",
+          "requirements_document_sha256_recomputed": "8e3b808976ccde7398709e5cafbca6434b318e6644cfa6c5c4912488a0ac4b25",
+          "readiness_matrix": "docs/requirements/F-LIVE-001/readiness-matrix.json",
+          "readiness_matrix_sha256_in_handoff": "b9c934ab4ff571ecab53b2f1b1bb98ff15e6c52bfc7043490467fd604197e650",
+          "readiness_matrix_sha256_recomputed": "b9c934ab4ff571ecab53b2f1b1bb98ff15e6c52bfc7043490467fd604197e650"
+        },
+        "not_a_relabelled_planner_input": {
+          "handoff.boundary.not_this_artifact": ["system-plan/F-LIVE-001/system-build-handoff.json", "system-plan/F-LIVE-001/task-graph.json"],
+          "both_planner_files_remain_tracked_and_unmodified_in_git_status": true
+        }
+      }
+    },
+    "4": {
+      "title": "Required observation 3 — handoff bound to a current C19 resume receipt, completeness report, and full system-spec artifact snapshot",
+      "result": "PASS",
+      "evidence": {
+        "validator_rerun_by_evaluator": "plugins/dev-graph/scripts/validate-requirements-system-spec-snapshot.py --repo-root <FIXTURE>",
+        "validator_exit_code": 0,
+        "validator_valid": true,
+        "validator_failures": [],
+        "validator_mode": "reuse-confirmed",
+        "upstream_validator": "validate-system-spec-resume",
+        "resume_receipt_sha256": {
+          "validator": "b2e0284fba74fa6e297fd9e610e3f93773a61f23d86059c8560f358df71f263f",
+          "handoff.c19_system_spec_snapshot": "b2e0284fba74fa6e297fd9e610e3f93773a61f23d86059c8560f358df71f263f",
+          "handoff.snapshot_digests": "b2e0284fba74fa6e297fd9e610e3f93773a61f23d86059c8560f358df71f263f",
+          "match": true
+        },
+        "completeness_report_sha256": {
+          "validator": "4af2fd6346f158168deea021fce2865374c0941c3fcf0f3e48dc34566cf4c74b",
+          "handoff.c19_system_spec_snapshot": "4af2fd6346f158168deea021fce2865374c0941c3fcf0f3e48dc34566cf4c74b",
+          "handoff.snapshot_digests": "4af2fd6346f158168deea021fce2865374c0941c3fcf0f3e48dc34566cf4c74b",
+          "match": true
+        },
+        "artifact_snapshot_sha256": {
+          "validator": "82d4a32be9099dbbe276c3b99758311c9b1778cbff1703051289a5f14ba82830",
+          "handoff.c19_system_spec_snapshot": "82d4a32be9099dbbe276c3b99758311c9b1778cbff1703051289a5f14ba82830",
+          "handoff.snapshot_digests": "82d4a32be9099dbbe276c3b99758311c9b1778cbff1703051289a5f14ba82830",
+          "match": true
+        },
+        "artifact_list_parity": {
+          "validator": ["system-spec/00-requirements-definition.md", "system-spec/backend.md", "system-spec/completeness-report.json", "system-spec/fetched-references.json", "system-spec/index.md", "system-spec/spec-state.json"],
+          "handoff": ["system-spec/00-requirements-definition.md", "system-spec/backend.md", "system-spec/completeness-report.json", "system-spec/fetched-references.json", "system-spec/index.md", "system-spec/spec-state.json"],
+          "match": true
+        },
+        "currency_note": "the evaluator re-ran the adapter after the trial finished and reproduced all three digests byte-identically, so the binding is current, not stale",
+        "handoff_post_validation_rehash": "stable"
+      }
+    },
+    "5": {
+      "title": "Required observation 4 — the requirements skill generated no implementation source file",
+      "result": "PASS",
+      "evidence": {
+        "git_status_short_in_fixture": [
+          "?? docs/requirements/",
+          "?? eval-log/run-dev-graph-requirements-goal-spec.json",
+          "?? eval-log/run-dev-graph-requirements-intermediate.jsonl",
+          "?? eval-log/run-dev-graph-requirements-progress.json"
+        ],
+        "modified_tracked_files": 0,
+        "untracked_files_full_list": [
+          "docs/requirements/F-LIVE-001/capability-build-handoff.json",
+          "docs/requirements/F-LIVE-001/readiness-matrix.json",
+          "docs/requirements/F-LIVE-001/requirements.md",
+          "eval-log/run-dev-graph-requirements-goal-spec.json",
+          "eval-log/run-dev-graph-requirements-intermediate.jsonl",
+          "eval-log/run-dev-graph-requirements-progress.json"
+        ],
+        "implementation_source_files_created": 0,
+        "classification": "all 6 new files are requirements/readiness/handoff documents or goal-seek evaluation records; none is executable implementation source",
+        "helper_scripts_written_by_the_run": [
+          "/private/tmp/claude-501/.../scratchpad/emit_c04_artifacts.py",
+          "/private/tmp/claude-501/.../scratchpad/emit_goalseek_records.py",
+          "/private/tmp/claude-501/.../scratchpad/verify_c04_run.py"
+        ],
+        "helper_scripts_note": "all three Write tool calls in the transcript targeted the session scratchpad outside the fixture repository; no Write touched fixture-repo, so they are not fixture implementation source",
+        "handoff_declares_implementation_code_generated": 0,
+        "handoff_target": {"skill": "capability-build/task-graph build", "owns": "implementation source generation"},
+        "fixture_graph_store_and_receipts_unmodified": "git status shows no modification to .dev-graph/, system-plan/, or system-spec/"
+      }
+    }
+  }
+}

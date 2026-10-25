@@ -3,7 +3,7 @@ status: confirmed
 category: infrastructure
 aggregate: 確定
 spec_cells: [infrastructure.web, infrastructure.mobile, infrastructure.tablet, infrastructure.desktop-windows, infrastructure.desktop-linux, infrastructure.desktop-macos]
-serves_goals: [G1, G4, G5, G2]
+serves_goals: [G1, G2, G4, G5, G6]
 ---
 
 # インフラ (infrastructure)
@@ -15,35 +15,42 @@ serves_goals: [G1, G4, G5, G2]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-187 |
+| Web (web) | 確定 | 確定質疑: qa-250 |
 | モバイル (mobile) | 対象外 | 理由: native モバイル向け配信基盤なし (ブラウザ経由提供) |
 | タブレット (tablet) | 対象外 | 理由: native タブレット向け配信基盤なし (ブラウザ経由提供) |
-| デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-043 |
+| デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-281 |
 | デスクトップ (Linux) (desktop-linux) | 対象外 | 理由: Linux desktop 向け Publisher 配布は対象外 (作者環境は macOS + Windows) |
-| デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-043 |
+| デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-281 |
 
 ## 確定内容 (質疑録)
 
-### qa-187 (対応セル: web)
+### qa-250 (対応セル: web)
 
-**質問**: qa-185 で原因の候補を 3 つ残した。そのうち候補 (2)「isolate 寿命 × process.env の lazy populate のタイミング」について C08 独立監査 6 回目が公式一次記述で裏取りを行った。Cloudflare Workers Best Practices が、binding のみを変更する deploy では isolate が 再利用され得ること、および env 由来の値を global scope に保持すると基盤の binding が 変わっても stale な値が持続し得ることを、名指しの anti-pattern として警告している。process の lazy populate は isolate 生存期間内の最初のアクセス時点で行われ、投入有無を毎回再チェックする仕組みではない。この裏取り結果を仕様へ反映せよ。
+**質問**: スクリーンショットの保存先と、容量と可読性の両立をどう確定するか (knowledge_ref 訂正を含む再確定)。
 
-**回答**: 候補 (2) を『公式記述で機序として成立することが確認された候補』へ格上げする。ただし本番でそれが起きたとは断定しない。qa-183-b の方針 (断定の強さと根拠の強さを揃える) を維持する。
+**回答**: [逐語] 「R2でOKです。できるだけ画像で情報を取らせ、容量オーバーにならないように、この辺ちょっと工夫はしておいてほしいです。ただし、文字が読めないぐらい解像度を低くするのはやめておいてください。」
 
-[qa-187-a 公式記述で確認できたこと] C08 が Cloudflare 公式 Workers Best Practices (developers.cloudflare.com/workers/best-practices/workers-best-practices/) から次を確認した: binding だけを変更しコードを変更しない deploy では、Cloudflare は実行中の isolate を**再利用することがある** (コードを再ロードせずに環境変数や binding を差し替えられるため)。その結果、env から取得した値を global scope のインスタンスへ保持していると、基盤の binding が変わっても **stale な値のまま持続し得る**。公式が示す正しい形は『リクエストごとに新しいインスタンスを作る』ことである。あわせて process ドキュメント (developers.cloudflare.com/workers/runtime-apis/nodejs/process/) 側から、lazy populate が **process への最初のアクセス時点**で行われること、すなわち isolate 生存期間内で一度きりであり投入有無を再評価しないことを確認した。
+[技術的具体化] 保存先は R2。既存 wrangler.jsonc に R2 bucket が 4 本あるので、5 本目として改善要望スクリーンショット専用の bucket binding を追加し、既存 bucket へ相乗りさせない (保持期間と削除方針が違うものを同じ bucket に混ぜると、片方の一括削除がもう片方を巻き込む)。DB には R2 オブジェクトキーとバイト数・幅・高さだけを保存し、画像実体を DB に入れない。参考実装は data URL を DB 列へ入れていたが、行サイズが肥大して一覧クエリまで重くなるため踏襲しない。
 
-[qa-187-b これは E-2 の直接根拠である] middleware.ts:26-35 は module 最上位で `process.env.AUTH_SESSION_SECRET` を一度だけ読み、その値で `authAdapter` を構築して module scope に保持する。module 最上位は isolate 起動ごとに 1 回しか評価されない (isolate は per-request ではない)。したがってこの形は、**公式が名指しで警告している anti-pattern と構造的に一致する**。ある isolate が secret 未投入の時点で最初に process へ触れて undefined を populate すると、その後 secret を投入しても、その deploy が binding のみの変更であれば同じ isolate が再利用され、deny-all 版の authAdapter が使われ続ける。isolate が evict されるまで解消しない。
-E-2 (環境値の読み出しを吸収層へ一本化し、request context 内で解決する) は、これまで『Workers が request context 外の I/O を許可しない』という一般則に接地していたが、本 turn 以降は **binding 変更 deploy と isolate 再利用という具体的な機序**にも接地する。根拠が 1 本増えたのであって、置き換わったのではない。
+容量と可読性の両立: 長辺を 1600px まで縮小したうえで JPEG 品質を段階的に下げ、目標バイト数 (概ね 700KB) に収める。ただし長辺 1600px は下限として固定し、目標に収まらない場合でもこれ以上は縮小しない。文字が読めなくなった時点でスクリーンショットの目的 (どこが問題か伝える) が失われ、容量を節約した意味がなくなるため。品質下限に達しても目標を超える場合は、縮小せずそのまま保存し、管理側に「大きい画像」として記録する。
 
-[qa-187-c それでも原因を断定しない理由] 公式記述が保証するのは『この機序が成立し得る』ところまでである。報告症状が実際にこの経路で起きたと言うには、当該 isolate の生成時刻と secret 投入時刻の前後関係という**本番の実測データ**が要る。本セッションでは本番への観測が許諾されておらず、この前後関係は取得できていない。よって候補 (2) は『機序として確認済み・実際の発生は未確認』の強さで記録し、候補 (1) 未ゲート経路・候補 (3) 認証以外の原因も引き続き残す。
+圧縮はブラウザ側 canvas で行い、サーバへは圧縮済みの 1 枚だけを送る。回線が細い端末で巨大な原寸画像を上げさせない。
 
-[qa-187-d 仕様に加えるもの] E-2 の acceptance に「認証に関わる構築物が module scope に保持されず、request ごとに解決される」を明示する。V6 の検査点に「module 最上位での環境値依存構築の検出」を含める (これは既に E-1 の検査だが、isolate 再利用という**失敗の帰結**を検査の説明文へ書き添える。検査が何を防いでいるか読めないと、将来この検査は『厳しすぎる』として緩められる)。
+オブジェクトキー: tenant / 年月 / 要望 ID から決定的に組み立て、再送で同じキーへ上書きされるようにする。キーに投稿者名や画面名の生文字列を入れない (キーが漏れたときに内容を推測させない)。
 
-### qa-043 (対応セル: desktop-windows, desktop-macos)
+配信: 公開 URL を持たせず、認可を通す API route が R2 から取得してストリームする。Cache-Control は private とし、CDN へ載せない。
+
+cron: 既存 Worker の日次 cron に、DB から参照されない孤児オブジェクトの回収を追加する。種別が request の要望については、対応完了から一定期間後に診断情報も削除するため、削除対象の判定は種別を見る。
+
+### qa-281 (対応セル: desktop-windows, desktop-macos)
 
 **質問**: 作者デスクトップ環境 (macOS / Windows) の infrastructure (配布・実行基盤・ツールチェーン) は何を正本とするか? (C07 監査指摘への対応: infrastructure.desktop-windows/desktop-macos の qa_ref=qa-003 は Hub web hosting 中心の回答で desktop 固有の裏付けが薄い。既確定内容の集約による専用質疑化であり新規決定は含まない)
 
 **回答**: 既確定の qa-003 / qa-010 / qa-034 / qa-039 / qa-041 の desktop 該当部分を infrastructure.desktop の専用正本として集約確定する。(1) 配布経路 (qa-003): Publisher / Skill の作者環境への配布は URL 型 marketplace (native source) または Bootstrap Installer の 2 経路を Stage 0 technical gate (H7) で検証し、成立した経路を採用する (一般利用者に GitHub アカウントを要求しない = I6)。(2) 実行形態 (qa-010): 専用 desktop GUI は作らず、Publisher core は TypeScript (Node + pnpm) で実装し Claude Code / Codex plugin (slash command /harness-hub:publish + skill + スクリプト) として配布する。target=web_app の出口は作者 local session での wrangler CLI スクリプト実行 (I5。Hub は URL 登録・公開範囲検査・health 確認のみ)。(3) ツールチェーン (qa-039): 作者/提供者環境は macOS 主・Windows 従で、Claude Code + pnpm (corepack 経由・他パッケージマネージャ禁止) + git + wrangler CLI。両 OS で同一の pnpm script が動作すること (パス区切り・改行コード・シェル依存をコマンドへ埋め込まない)。ローカルは preview 用 Turso または local SQLite を binding し production DB を指さない。production への deploy/migration の正本経路は CI (緊急時のみローカル + 事後記録)。(4) 資格情報基盤 (qa-041): Device Flow token は OS 資格情報域 (macOS Keychain / Windows Credential Manager) のみに保存。(5) 環境・binding の詳細正本は docs/infrastructure-spec.md (qa-034)、desktop 側の運用規律は dev-workflow (qa-039) と security (qa-041) の各確定に従属し、本 qa は infrastructure.desktop 行への接地点を提供する。
+
+【本 entry の位置づけ (2026-08-15)】
+本 entry は qa-043 を **回答本文について逐語で全面継承した自己完結版** である。第 4 回 completeness evaluator が medium finding (`design_knowledge_reflection`) として、legacy_backfill 経路 4 章 (backend / dev-workflow / infrastructure / testing-qa) の `design_applications` が『〜という責務分離に適用した』のように原則名の言い換えに留まり、dialogue 経路より具体性が低いと指摘した。writer (`set-qa-design-applications`) は完了済み backfill と異なる解釈の再適用を構造的に拒否するため、既存 entry を書き換える経路が無い。そこで reopen → 本 entry で再確定という正規経路を採る。
+**変更したのは設計解釈 (`design_applications`) だけであり、上記の回答本文が定める要件は 一切変更していない。** 仕様章 (compile-spec-doc.py) は確定セルの現 qa_ref に対応する節だけを 出力するため、追補のみの entry で再確定すると基礎契約が章から消える。それを防ぐため本文を 丸ごと引き継いでいる (qa-216 / qa-217 と同じ方式)。
 
 ## 上流指針 (doctrine anchor)
 
@@ -100,51 +107,103 @@ E-2 (環境値の読み出しを吸収層へ一本化し、request context 内�
 
 ---
 
+### Cloud Architecture Patterns — deep knowledge card
+
+- 出典カード: `ref-system-design-knowledge/references/cloud-architecture-patterns.md`
+
+#### 目的
+
+マネージドなクラウド基盤 (オブジェクトストレージ・リレーショナル/KV ストア・エッジ実行環境・キュー) を組み合わせるとき、データの配置・整合性の境界・劣化の順序を、後から検証できる根拠とともに決める。
+
+#### 解決する問題
+
+- 大容量バイナリを DB 行へ格納し、本文を必要としない一覧クエリまで巨大な行の読み出しに巻き込む。
+- 複数のマネージドサービスに跨る書込みを、暗黙に原子的だと仮定して整合性の破れを設計外に置く。
+- 障害時に何を先に諦めるかが未定義で、劣化の仕方が実行環境や実装者ごとにばらつく。
+- 署名や認可を通さない公開 URL でバイナリを配信し、識別子の漏洩がそのまま内容の漏洩になる。
+- サービス固有の制約 (実行時間・ペイロード上限・同時実行) を非機能要件として書き出さず、規模が伸びた時点で設計をやり直す。
+
+#### 適用条件
+
+- マネージドな複数サービス (ストレージ・DB・実行環境) を組み合わせ、単一トランザクションで閉じない書込みがある。
+- 利用者が生成するバイナリ (画像・添付) を保存し、その一覧や検索を別途提供する。
+- 実行環境に明示的な資源上限があり、超過が機能の失敗として現れる。
+
+#### 非適用条件
+
+- 単一ノード・単一 DB で完結し、外部ストレージを持たない構成に、跨る書込みの補償設計を先行導入しない。
+- バイナリが小さく件数も限られる場合 (例: 数 KB のアイコン数十件) に、参照の間接化による往復増を払わない。
+- 基盤が既に保証している性質 (オブジェクトストレージ側の耐久性・多重化) を、自前の複製で二重化しない。
+
+#### トレードオフ・失敗モード
+
+- バイナリを外へ出すと、DB とストレージが別系になり原子性が失われる。書込み順序の固定と孤児回収を設計に含めないと、参照切れが蓄積する。
+- 冪等キーを導入すると、鍵の生存期間と保管場所という新しい状態が増える。期限設計を怠ると、正当な再投稿まで重複として捨てる。
+- 認可を通す配信は CDN キャッシュを効きにくくする。閲覧者数が大きい経路にそのまま適用すると費用と遅延が悪化する。
+- 制約を非機能要件に書いても、実測せずに数値を置くと「守っているつもり」の仕様になる。上限付近の実測を伴わない宣言は根拠にならない。
+- 劣化順序を決めても、超過時の記録を残さないと、仕様どおり劣化したのか単に壊れたのかを事後に区別できない。
+
+#### goalへの寄与
+
+- データ配置の判断を、製品名ではなく「何が原子的か・何が検索対象か」という検証可能な性質へ還元でき、後から根拠を追える。
+- 一覧の読み出し費用を保存量から独立させ、利用が伸びても管理画面の応答が劣化しない構造を先に確保する。
+- 壊れる向きを事前に選ぶことで、障害時の復旧手順が「どちらが正か」を都度判断しない決定的な手順になる。
+
+---
+
 #### 本章での適用
 
-##### 確定内容 qa-187 (対応セル: web)
+##### 確定内容 qa-250 (対応セル: web)
 
-- 確定要件: 候補 (2) を『公式記述で機序として成立することが確認された候補』へ格上げする。ただし本番でそれが起きたとは断定しない。qa-183-b の方針 (断定の強さと根拠の強さを揃える) を維持する。
-
-[qa-187-a 公式記述で確認できたこと] C08 が Cloudflare 公式 Workers Best Practices (developers.cloudflare.com/workers/best-practices/workers-best-practices/) から次を確認した: binding だけを変更しコードを変更しない deploy では、Cloudflare は実行中の isolate を**再利用することがある** (コードを再ロードせずに環境変数や binding を差し替えられるため)。その結果、env から取得した値を global scope のインスタンスへ保持していると、基盤の binding が変わっても **stale な値のまま持続し得る**。公式が示す正しい形は『リクエストごとに新しいインスタンスを作る』ことである。あわせて process ドキュメント (developers.cloudflare.com/workers/runtime-apis/nodejs/process/) 側から、lazy populate が **process への最初のアクセス時点**で行われること、すなわち isolate 生存期間内で一度きりであり投入有無を再評価しないことを確認した。
-
-[qa-187-b これは E-2 の直接根拠である] middleware.ts:26-35 は module 最上位で `process.env.AUTH_SESSION_SECRET` を一度だけ読み、その値で `authAdapter` を構築して module scope に保持する。module 最上位は isolate 起動ごとに 1 回しか評価されない (isolate は per-request ではない)。したがってこの形は、**公式が名指しで警告している anti-pattern と構造的に一致する**。ある isolate が secret 未投入の時点で最初に process へ触れて undefined を populate すると、その後 secret を投入しても、その deploy が binding のみの変更であれば同じ isolate が再利用され、deny-all 版の authAdapter が使われ続ける。isolate が evict されるまで解消しない。
-E-2 (環境値の読み出しを吸収層へ一本化し、request context 内で解決する) は、これまで『Workers が request context 外の I/O を許可しない』という一般則に接地していたが、本 turn 以降は **binding 変更 deploy と isolate 再利用という具体的な機序**にも接地する。根拠が 1 本増えたのであって、置き換わったのではない。
-
-[qa-187-c それでも原因を断定しない理由] 公式記述が保証するのは『この機序が成立し得る』ところまでである。報告症状が実際にこの経路で起きたと言うには、当該 isolate の生成時刻と secret 投入時刻の前後関係という**本番の実測データ**が要る。本セッションでは本番への観測が許諾されておらず、この前後関係は取得できていない。よって候補 (2) は『機序として確認済み・実際の発生は未確認』の強さで記録し、候補 (1) 未ゲート経路・候補 (3) 認証以外の原因も引き続き残す。
-
-[qa-187-d 仕様に加えるもの] E-2 の acceptance に「認証に関わる構築物が module scope に保持されず、request ごとに解決される」を明示する。V6 の検査点に「module 最上位での環境値依存構築の検出」を含める (これは既に E-1 の検査だが、isolate 再利用という**失敗の帰結**を検査の説明文へ書き添える。検査が何を防いでいるか読めないと、将来この検査は『厳しすぎる』として緩められる)。
-- 設計解釈の記録経路: `legacy_backfill` (`set-qa-design-applications`)
-- 原則: Explicit effects and errors (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/clean-code.md#中核概念`)
+- 確定要件: 「[逐語] 「R2でOKです。できるだけ画像で情報を取らせ、容量オーバーにならないように、この辺ちょっと工夫はしておいてほしいです。ただし、文字が読めないぐらい解…」 (全文は本章「確定内容 (質疑録)」の `qa-250` を正本とする)
+- 設計解釈の記録経路: `dialogue`
+- 原則: 大容量バイナリを別系へ逃がし、DB にはメタデータだけを持たせる (関心の分離) (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/clean-architecture.md#中核概念`)
   - 採否: `applied`
-  - 章固有の根拠: 認証に使う環境 binding の解決を module scope の暗黙キャッシュから request boundary へ移し、値の由来と失敗を明示する契約に適用した。
+  - 章固有の根拠: 画像を DB 行へ入れると、一覧クエリが本文だけを欲しいときでも巨大な行を読むことになり、要望が増えるほど管理画面が遅くなる。R2 にキーで逃がし、DB にはバイト数と寸法だけ残す。
   - トレードオフ:
-    - request ごとの解決処理が増える
-    - module scope cache による僅かな高速化を採らない
-- 原則: 観測可能性 (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/site-reliability-engineering.md#中核概念`)
+    - R2 と DB が別系になり原子性が失われる。書込み順序を R2 先行に固定し、壊れる向きを孤児側へ寄せる
+    - 詳細表示で 1 往復増える。認可を通す必要がありどのみち API 経由になるため実質の追加コストは小さい
+- 原則: 劣化させる順序を明示する (graceful degradation の優先順位) (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/site-reliability-engineering.md#中核概念`)
   - 採否: `applied`
-  - 章固有の根拠: 公式に成立する isolate 再利用機序と、本番で実際に発生したという未確認仮説を分離し、稼働構成の由来を観測できることを acceptance に加える判断に適用した。
+  - 章固有の根拠: 容量目標と可読性が衝突したとき、どちらを犠牲にするかを実装者の裁量に委ねると端末や画面によって結果がばらつく。品質を先に落とし、長辺 1600px は下限として固定する順序を仕様で決める。
   - トレードオフ:
-    - 原因断定には本番時系列の追加観測が必要になる
-    - 観測を増やしても secret 値自体は記録できない
-##### 確定内容 qa-043 (対応セル: desktop-windows, desktop-macos)
+    - 情報量の多い画面では目標バイト数を超えたまま保存される。超過は許容し、記録して監視する
+    - JPEG 化により文字の輪郭に圧縮ノイズが乗る。PNG 維持より可読性はわずかに落ちるが 1600px 下限で実用範囲に収める
+- 原則: 推測不能な識別子と、署名なし公開 URL の禁止 (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: スクリーンショットには業務画面がそのまま写るため、キーが漏れただけで内容へ到達できてはならない。決定的だが内容を推測させないキーにし、配信は必ず認可を通す route を経由する。
+  - トレードオフ:
+    - CDN キャッシュが効かず閲覧のたびに Worker と R2 を経由する。閲覧者は管理者に限られ件数が小さいため許容する
+##### 確定内容 qa-281 (対応セル: desktop-windows, desktop-macos)
 
-- 確定要件: 既確定の qa-003 / qa-010 / qa-034 / qa-039 / qa-041 の desktop 該当部分を infrastructure.desktop の専用正本として集約確定する。(1) 配布経路 (qa-003): Publisher / Skill の作者環境への配布は URL 型 marketplace (native source) または Bootstrap Installer の 2 経路を Stage 0 technical gate (H7) で検証し、成立した経路を採用する (一般利用者に GitHub アカウントを要求しない = I6)。(2) 実行形態 (qa-010): 専用 desktop GUI は作らず、Publisher core は TypeScript (Node + pnpm) で実装し Claude Code / Codex plugin (slash command /harness-hub:publish + skill + スクリプト) として配布する。target=web_app の出口は作者 local session での wrangler CLI スクリプト実行 (I5。Hub は URL 登録・公開範囲検査・health 確認のみ)。(3) ツールチェーン (qa-039): 作者/提供者環境は macOS 主・Windows 従で、Claude Code + pnpm (corepack 経由・他パッケージマネージャ禁止) + git + wrangler CLI。両 OS で同一の pnpm script が動作すること (パス区切り・改行コード・シェル依存をコマンドへ埋め込まない)。ローカルは preview 用 Turso または local SQLite を binding し production DB を指さない。production への deploy/migration の正本経路は CI (緊急時のみローカル + 事後記録)。(4) 資格情報基盤 (qa-041): Device Flow token は OS 資格情報域 (macOS Keychain / Windows Credential Manager) のみに保存。(5) 環境・binding の詳細正本は docs/infrastructure-spec.md (qa-034)、desktop 側の運用規律は dev-workflow (qa-039) と security (qa-041) の各確定に従属し、本 qa は infrastructure.desktop 行への接地点を提供する。
-- 設計解釈の記録経路: `legacy_backfill` (`set-qa-design-applications`)
+- 確定要件: 「既確定の qa-003 / qa-010 / qa-034 / qa-039 / qa-041 の desktop 該当部分を infrastructure.d…」 (全文は本章「確定内容 (質疑録)」の `qa-281` を正本とする)
+- 設計解釈の記録経路: `dialogue`
 - 原則: 環境の再現性 (Infrastructure as Code) (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/site-reliability-engineering.md#中核概念`)
   - 採否: `applied`
-  - 章固有の根拠: macOS / Windows の作者環境で同じ pnpm script、明示 binding、同じ配布経路を使い、shell や production DB への暗黙依存を避ける基盤契約に適用した。
+  - 章固有の根拠: 本回答の【(3) ツールチェーン】が定める『両 OS で同一の pnpm script が動作すること (パス区切り・改行コード・シェル依存をコマンドへ埋め込まない)』と『ローカルは preview 用 Turso または local SQLite を binding し production DB を指さない』の部分へ効く。この章で特に効く理由は、desktop が CI と違って作者ごとに環境が異なり、しかも誰も観測していない場所だからである。そのため再現性を『同じ結果が出ること』ではなく『同じコマンドが同じ意味で動くこと』として 書き下す必要があり、pnpm を corepack 経由に固定し他パッケージマネージャを禁じる規定も、OS 差ではなく作者間の差を消すためのものである。代替案として『OS 別に script を分けて差異を吸収する』方式を検討したが、分岐が増えるほど片方だけが壊れたまま気づかれない期間が伸び、macOS 主・Windows 従という利用実態ではその期間が Windows 側に偏って長くなるため採らなかった。
   - トレードオフ:
-    - OS ごとの差異を吸収する検証と保守が必要になる
-    - 緊急時のローカル操作にも事後記録の負担が生じる
+    - shell 依存を排する制約により、書ける script の表現力が下がる
+    - OS 固有の最適化を捨てるため一部の処理は遅くなる
 - 原則: Secure defaults and usable security (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念`)
   - 採否: `applied`
-  - 章固有の根拠: Device Flow token を OS 資格情報域だけへ保存し、非エンジニアへ長命 secret の手動管理を要求しない既定に適用した。
+  - 章固有の根拠: 本回答の【(4) 資格情報基盤】『Device Flow token は OS 資格情報域 (macOS Keychain / Windows Credential Manager) のみに保存』と、【(1) 配布経路】『一般利用者に GitHub アカウントを要求しない (I6)』の部分へ効く。両者は『安全な既定が使いにくければ迂回される』という同一の判断から出ている。Device Flow を選んだのは、作者に長命 secret を手で管理させないためであり、OS 資格情報域へ限定したのは、保存先を利用者の裁量に委ねた瞬間に最も手軽な場所 (repository 内の設定ファイル) が選ばれるためである。代替案として『.env や専用の設定ファイルへ 平文保存し権限を 600 にする』方式を検討したが、作者の repository 直下は git 管理下に入り得る場所で、`.gitignore` の書き漏れ 1 つが公開事故になるため採らなかった。
   - トレードオフ:
-    - OS 資格情報 API ごとの adapter が必要になる
-    - ヘッドレス環境では別の安全な資格情報経路が必要になる
-- 資するゴール: G1, G4, G5, G2
+    - OS 資格情報 API ごとの adapter 実装と保守が必要になる
+    - ヘッドレス環境や CI では別の安全な資格情報経路を用意する必要がある
+- 原則: 本番への単一経路 (Deployment pipeline) (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/continuous-delivery.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: 本回答の【(3) ツールチェーン】『production への deploy/migration の正本経路は CI (緊急時のみローカル + 事後記録)』の部分へ効く。この章に固有の事情は、desktop に wrangler CLI が 入っている以上、本番へ直接到達できる手段が物理的に存在してしまう点である。そこで『禁止』ではなく 『正本経路を 1 つに定め、例外は事後記録を義務づける』形を採った。禁止にすると、障害時に手段を 封じられた作業者が結局それを使い、しかも使ったことが記録に残らないという最悪の状態になるためである。代替案として『production 資格情報を desktop から完全に排除する』方式を検討したが、復旧手段が CI の可用性へ完全に従属し、CI 自体の障害時に打つ手が無くなるため採らなかった。
+  - トレードオフ:
+    - ローカルからの本番操作という経路が制度上は残り続ける
+    - 事後記録の実効性は運用の規律に依存し、機械的には強制しきれない
+- 資するゴール: G1, G2, G4, G5, G6
 
 ## 最新ドキュメント出典
 
-- (このカテゴリに割り当てた取得済みドキュメントなし。全体出典は index.md 参照)
+| 対象 | バージョン | 公式発行元 | 出典URL | 取得 | 最新確認 |
+|---|---|---|---|---|---|
+| cloudflare-workers | 2026-08-16 (本文照合日。公式 MCP 経路のため、ページ本文が宣言する最終更新日の行は返却チャンクに含まれず取得できていない) | Cloudflare, Inc. (developers.cloudflare.com) | https://developers.cloudflare.com/workers/platform/pricing/ | 2026-08-16T02:49:50Z | 2026-08-16T02:49:50Z |
+| wrangler | 4.123.0 | Cloudflare, Inc. (github.com) | https://github.com/cloudflare/workers-sdk/releases | 2026-08-16T02:49:50Z | 2026-08-16T02:49:50Z |
+| cloudflare-r2 | Aug 7, 2026 | Cloudflare, Inc. (developers.cloudflare.com) | https://developers.cloudflare.com/r2/pricing/ | 2026-08-15T00:14:15Z | 2026-08-15T00:14:15Z |
+| opennext-cloudflare | 1.20.2 | OpenNext (OSS) (opennext.js.org) | https://opennext.js.org/cloudflare | 2026-08-15T00:15:16Z | 2026-08-15T00:15:16Z |
+| opennext-cloudflare-env-vars | 1.20.2 (@opennextjs/cloudflare の現行版) | OpenNext (OSS) (opennext.js.org) | https://opennext.js.org/cloudflare/howtos/env-vars | 2026-08-15T01:35:54Z | 2026-08-15T01:35:54Z |

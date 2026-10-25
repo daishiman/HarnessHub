@@ -1,0 +1,10 @@
+{
+  "artifact": "plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/scripts/validate-json-schema-subset.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 88,
+    "notes": "completeness-findings.schema.json が出荷する Draft 7 語彙だけを stdlib で解釈する。未知 keyword / 非 local $ref / 非対応 pattern は schema 構築時に fail-closed。aggregate-completeness から importlib で読む。test_json_schema_subset.py と aggregate テストが PASS。"
+  }
+}

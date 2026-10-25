@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub デザインシステム アーキテクチャ"
 owners: ["daishiman"]
 created_at: "2026-08-13T09:30:00Z"
-updated_at: "2026-08-14T00:45:00Z"
+updated_at: "2026-08-16T07:07:08.359196Z"
 status: "active"
 depends_on: ["arch-harness-hub-frontend"]
 related_nodes: ["spec-harness-hub-ui-foundation-addendum","spec-harness-hub-information-design-addendum","issue-agent-kit-elegant-design-integration-20260813"]
@@ -46,7 +46,6 @@ execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"not_applicable"}
 implementation_readiness: {"checked_at":"2026-08-13T09:30:00Z","missing_sections":[],"status":"complete"}
 ---
-
 
 # Architecture overview
 
@@ -284,3 +283,5 @@ md 以上ではアプリ本体を角丸 14px + 1px 輪郭 + `shadow-frame` で�
 `data-palette` は `gray|blue|beige|green|navy`。切替 UI は `AppearancePicker` が所有し、
 token 表を client chunk に載せない。本文カードは `hh-cards` / `hh-card` と semantic token だけを使い、
 色だけで列や状態を区別しない。
+
+一覧カードは DataTable の同じ column model から描く。本文カードの列数は `data-cols` だけが意味を持ち、色やアイコンで列を表さない。運用は [list-shell 運用](../docs/features/feat-card-list-shell/operations.md)。

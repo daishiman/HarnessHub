@@ -1,0 +1,263 @@
+{
+  "schema_version": "1.0.0",
+  "kind": "live-trial-independent-observations",
+  "verdict": "PASS",
+  "blockers": [],
+  "evaluator": {
+    "mode": "fresh-independent-context",
+    "id": "875679c1-497f-4eb0-9d06-a6dff1073579",
+    "constraints_honored": [
+      "FIXTURE / HarnessHub 本体 / 既存 trial 証跡へ一切書き込んでいない (write は TRIAL_ROOT 直下の independent-observations.json と independent-verification.json のみ)",
+      "被験 skill dev-graph:run-dev-graph-requirements を自分では呼んでいない",
+      "他の Skill / Agent を呼んでいない",
+      "再実行した script は write-scope: none 宣言のある read-only validator のみ (validate-graph-schema.py / validate-system-plan.py / validate-source-digest.py / validate-requirements-system-spec-snapshot.py)",
+      "全主張をファイル読み取りまたは実行コマンドの具体値で裏づけた"
+    ]
+  },
+  "target": {
+    "skill": "dev-graph:run-dev-graph-requirements",
+    "scenario": "C04-OUT1-positive-ready-handoff",
+    "trial_root": "/Users/dm/orca/workspaces/HarnessHub/card-closeout/eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260818T015722Z-c04-pepx-r2",
+    "fixture_repo": "/Users/dm/orca/workspaces/HarnessHub/card-closeout/eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260818T015722Z-c04-pepx-r2/fixture-repo"
+  },
+  "observations": {
+    "1": {
+      "title": "transcript.jsonl の sha256 が期待値と一致",
+      "result": "PASS",
+      "evidence": {
+        "command": "shasum -a 256 transcript.jsonl",
+        "recomputed": "6ac725108c6886fb9f87dfcba8a4d05c7c79cd57b9c954e933adfc6bcfde89f3",
+        "expected": "6ac725108c6886fb9f87dfcba8a4d05c7c79cd57b9c954e933adfc6bcfde89f3",
+        "match": true,
+        "file_bytes": 377138,
+        "jsonl_lines": 156
+      }
+    },
+    "2": {
+      "title": "被験 skill の Skill tool_use がちょうど 1 回・args が task.md リテラルと一致・内部 script による迂回なし",
+      "result": "PASS",
+      "evidence": {
+        "tool_use_counts": {"Bash": 26, "Skill": 1},
+        "skill_call_line_index": 21,
+        "skill_input": {
+          "skill": "dev-graph:run-dev-graph-requirements",
+          "args": "--repo-root /Users/dm/orca/workspaces/HarnessHub/card-closeout/eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260818T015722Z-c04-pepx-r2/fixture-repo --feature-id F-LIVE-001"
+        },
+        "task_md_literal_line": 27,
+        "args_literal_match": true,
+        "first_action_before_skill": "line 13: Bash `cat task.md` のみ (内部 script の実行なし)",
+        "bypass_check": "Skill 呼び出し (line 21) より前に dev-graph/system-dev-planner の script 実行は 0 件。以降の Bash 26 件はすべて Skill 展開後の SKILL.md 正規経路の実行および実測検証"
+      }
+    },
+    "3": {
+      "title": "nudge / 対話 gate 応答が 0",
+      "result": "PASS",
+      "evidence": {
+        "non_tool_result_user_turns": 2,
+        "turn_1": "line 5: 初回 task 投入 (task.md を読んで実行せよ)",
+        "turn_2": "line 23: Skill 展開により注入された SKILL.md 本文 (harness 由来、人間の nudge ではない)",
+        "human_nudge_count": 0,
+        "poll_state": {"elapsed": 330, "stall": 0, "gate_ticks": 0, "warned80": 0, "prev": "jsonl:377138:IDLE_TURN_COMPLETE"}
+      }
+    },
+    "4": {
+      "title": "required_observation 1: exact-13 package に対する capability-build/task-graph handoff が実ファイルとして emit されている",
+      "result": "PASS",
+      "evidence": {
+        "path": "fixture-repo/docs/requirements/F-LIVE-001/capability-build-handoff.json",
+        "newly_created": "git ls-files --others --exclude-standard に出現 (baseline の subject_outputs_absent_at_baseline に整合)",
+        "kind": "capability-build/task-graph-handoff",
+        "producer": "dev-graph/run-dev-graph-requirements",
+        "task_count": 13,
+        "task_node_ids_exact_set": "SYS-LIVE-001-P01..SYS-LIVE-001-P13 (13 件、過不足なし)",
+        "phase_refs": "P01..P13",
+        "task_dependencies": "P01 は空、P02..P13 は直前 phase のみを参照する機能内前方 DAG",
+        "boundary_declared": {
+          "not_this_artifact": [
+            "system-plan/F-LIVE-001/system-build-handoff.json",
+            "system-plan/F-LIVE-001/task-graph.json"
+          ]
+        },
+        "independent_rerun_validate_system_plan": {
+          "command": "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root <FIXTURE> --feature-package feature-package/F-LIVE-001",
+          "exit_code": 0,
+          "violations": [],
+          "validated_digest": "sha256:774e768b5d2d2ba5fd612da5e58e529ffcca4ed8f50eaaea60d24c5db367980c"
+        },
+        "sibling_artifacts": [
+          "docs/requirements/F-LIVE-001/requirements.md (6118 chars / 95 行, sha256 ebe31fa60f567aaae45bc5b67abf7588bd60b0926fa68f535f359a06ac57b978)",
+          "docs/requirements/F-LIVE-001/readiness-matrix.json (sha256 bfc3343be0b1405b9ed6cde7149c73f0a524ae6535cb4ac07fa72131a099109c)"
+        ],
+        "handoff_document_digests_match_actual_files": true
+      }
+    },
+    "5": {
+      "title": "required_observation 2: handoff の feature / package / source digest が graph node・staging-manifest.json・registration receipt の実値と一致",
+      "result": "PASS",
+      "evidence": {
+        "feature_source_digest": {
+          "handoff": "f2f24d652c2a92c9ee11396bcc40d3ed35ea383626ce05c8672b3fc5ce42405d",
+          "graph_node_F-LIVE-001.source_lineage.source_digest": "f2f24d652c2a92c9ee11396bcc40d3ed35ea383626ce05c8672b3fc5ce42405d",
+          "actual_file_sha256": "system-spec/00-requirements-definition.md = f2f24d652c2a92c9ee11396bcc40d3ed35ea383626ce05c8672b3fc5ce42405d",
+          "match": true
+        },
+        "feature_evaluated_digest": {
+          "handoff": "774e768b5d2d2ba5fd612da5e58e529ffcca4ed8f50eaaea60d24c5db367980c",
+          "graph_node_F-LIVE-001.confirmation_evidence.evaluated_digest": "774e768b5d2d2ba5fd612da5e58e529ffcca4ed8f50eaaea60d24c5db367980c",
+          "match": true
+        },
+        "package_canonical_digest": {
+          "handoff": "sha256:774e768b5d2d2ba5fd612da5e58e529ffcca4ed8f50eaaea60d24c5db367980c",
+          "staging-manifest.json.canonical_digest": "sha256:774e768b5d2d2ba5fd612da5e58e529ffcca4ed8f50eaaea60d24c5db367980c",
+          "match": true
+        },
+        "registration_receipt_source_digest": {
+          "handoff": "sha256:774e768b5d2d2ba5fd612da5e58e529ffcca4ed8f50eaaea60d24c5db367980c",
+          "dev-graph-registration-receipt.json.source_digest": "sha256:774e768b5d2d2ba5fd612da5e58e529ffcca4ed8f50eaaea60d24c5db367980c",
+          "match": true
+        },
+        "graph_digest_after_registration": {
+          "handoff": "sha256:8a25e7e005dd6a71942096699922f59542aef31eb1083085eb2986611f0f45cd",
+          "receipt.graph_digest_after": "sha256:8a25e7e005dd6a71942096699922f59542aef31eb1083085eb2986611f0f45cd",
+          "match": true
+        },
+        "graph_revision": {"handoff": 3, "graph.json.graph_revision": 3, "receipt.graph_revision_after": 3, "match": true},
+        "graph_snapshot_sha256": {
+          "handoff": "60dff15b18a0cf887dcefad6164f636e39c9aa4dde19d3bc9427820858ac506c",
+          "actual_sha256_of_.dev-graph/state/graph.json": "60dff15b18a0cf887dcefad6164f636e39c9aa4dde19d3bc9427820858ac506c",
+          "match": true
+        },
+        "package_source_feature_digest": {
+          "handoff": "sha256:9ea5885dab34301e5feb131e8f54b5f10d95a658816c283d4747cc9f25ddf998",
+          "feature-package.json.source_feature_digest": "sha256:9ea5885dab34301e5feb131e8f54b5f10d95a658816c283d4747cc9f25ddf998",
+          "actual_file_sha256": "system-plan/F-LIVE-001/feature-context.json = 9ea5885dab34301e5feb131e8f54b5f10d95a658816c283d4747cc9f25ddf998",
+          "match": true
+        },
+        "promotion_published_digest": {
+          "handoff": "sha256:774e768b5d2d2ba5fd612da5e58e529ffcca4ed8f50eaaea60d24c5db367980c",
+          "atomic-promotion-receipt.json.published_digest": "sha256:774e768b5d2d2ba5fd612da5e58e529ffcca4ed8f50eaaea60d24c5db367980c",
+          "match": true
+        },
+        "feature_binding": {
+          "handoff.feature_id": "F-LIVE-001",
+          "handoff.parent_feature": "F-LIVE-001",
+          "handoff.feature_package_id": "feature-package/F-LIVE-001",
+          "graph_nodes_P01_P13.parent_feature": "全 13 件 F-LIVE-001",
+          "graph_nodes_P01_P13.feature_package_id": "全 13 件 feature-package/F-LIVE-001"
+        },
+        "independent_rerun_source_digest": {
+          "command": "python3 plugins/dev-graph/scripts/validate-source-digest.py --repo-root <FIXTURE> --graph <FIXTURE>/.dev-graph/state/graph.json --registered F-LIVE-001,LT-ARCH-001,SYS-LIVE-001-P01..P13",
+          "exit_code": 0,
+          "checked": 15,
+          "registered_mismatch": [],
+          "handoff_gate_results.source_lineage_digest.checked": 15,
+          "match": true
+        },
+        "independent_rerun_C11": {
+          "command": "python3 plugins/dev-graph/scripts/validate-graph-schema.py --graph <FIXTURE>/.dev-graph/state/graph.json --repo-root <FIXTURE>",
+          "exit_code": 0,
+          "valid": true,
+          "violations": [],
+          "implementation_readiness": "complete",
+          "missing_sections": []
+        },
+        "saved_state_parity_recheck": "graph 15 node すべてが confirmation_status=confirmed / evaluation_status=pass / implementation_readiness.status=complete (実測)",
+        "fixture_untampered": "live-trial-baseline.json の inputs 49 path をすべて再ハッシュし mismatch 0 件 (graph store・package・registration receipt・C19 receipt/report を含む)"
+      }
+    },
+    "6": {
+      "title": "required_observation 3: handoff が current な C19 resume receipt / completeness report / full system-spec artifact snapshot に束縛されている",
+      "result": "PASS",
+      "evidence": {
+        "independent_rerun": {
+          "command": "python3 plugins/dev-graph/scripts/validate-requirements-system-spec-snapshot.py --repo-root <FIXTURE>",
+          "exit_code": 0,
+          "valid": true,
+          "mode": "reuse-confirmed",
+          "upstream_validator": "validate-system-spec-resume",
+          "failures": []
+        },
+        "resume_receipt_sha256": {
+          "handoff": "b2e0284fba74fa6e297fd9e610e3f93773a61f23d86059c8560f358df71f263f",
+          "validator_output": "b2e0284fba74fa6e297fd9e610e3f93773a61f23d86059c8560f358df71f263f",
+          "raw_file_sha256": "system-spec/resume-receipt.json = b2e0284fba74fa6e297fd9e610e3f93773a61f23d86059c8560f358df71f263f",
+          "match": true
+        },
+        "completeness_report_sha256": {
+          "handoff": "4af2fd6346f158168deea021fce2865374c0941c3fcf0f3e48dc34566cf4c74b",
+          "validator_output": "4af2fd6346f158168deea021fce2865374c0941c3fcf0f3e48dc34566cf4c74b",
+          "raw_file_sha256": "system-spec/completeness-report.json = 4af2fd6346f158168deea021fce2865374c0941c3fcf0f3e48dc34566cf4c74b",
+          "match": true
+        },
+        "artifact_snapshot_sha256": {
+          "handoff": "82d4a32be9099dbbe276c3b99758311c9b1778cbff1703051289a5f14ba82830",
+          "validator_output": "82d4a32be9099dbbe276c3b99758311c9b1778cbff1703051289a5f14ba82830",
+          "match": true
+        },
+        "artifacts_list_identical": [
+          "system-spec/00-requirements-definition.md",
+          "system-spec/backend.md",
+          "system-spec/completeness-report.json",
+          "system-spec/fetched-references.json",
+          "system-spec/index.md",
+          "system-spec/spec-state.json"
+        ],
+        "post_validation_rehash": "handoff 記載 stable。独立再実行でも 3 digest が同値で再現 (current かつ安定)",
+        "digests_recorded_in_two_places_consistent": "handoff.c19_system_spec_snapshot と handoff.snapshot_digests の 3 digest が相互に一致"
+      }
+    },
+    "7": {
+      "title": "required_observation 4: 実装 source file の生成が 0 件",
+      "result": "PASS",
+      "evidence": {
+        "command": "git -C <FIXTURE> status --short / git ls-files --others --exclude-standard",
+        "git_status_short": ["?? docs/requirements/", "?? eval-log/run-dev-graph-requirements-goal-spec.json", "?? eval-log/run-dev-graph-requirements-intermediate.jsonl", "?? eval-log/run-dev-graph-requirements-progress.json"],
+        "untracked_files": [
+          "docs/requirements/F-LIVE-001/capability-build-handoff.json",
+          "docs/requirements/F-LIVE-001/readiness-matrix.json",
+          "docs/requirements/F-LIVE-001/requirements.md",
+          "eval-log/run-dev-graph-requirements-goal-spec.json",
+          "eval-log/run-dev-graph-requirements-intermediate.jsonl",
+          "eval-log/run-dev-graph-requirements-progress.json"
+        ],
+        "modified_tracked_files": 0,
+        "implementation_source_files": 0,
+        "note": "新規生成物はすべて requirements 成果物 (.md/.json) と goal-seek 配線 (.json/.jsonl)。src/ 等の実装コードは 0 件で、handoff.implementation_code_generated=0 の自己申告と一致",
+        "harness_repo_pollution": "HarnessHub 本体の git status に tracked file の変更なし (未追跡の live-trial ディレクトリのみ)"
+      }
+    },
+    "8": {
+      "title": "goal-seek 配線 3 点の実在と original_goal_hash 整合",
+      "result": "PASS",
+      "evidence": {
+        "goal_spec": "fixture-repo/eval-log/run-dev-graph-requirements-goal-spec.json (実在)",
+        "progress": "fixture-repo/eval-log/run-dev-graph-requirements-progress.json (実在, status=complete, blockers=[])",
+        "intermediate": "fixture-repo/eval-log/run-dev-graph-requirements-intermediate.jsonl (実在, 1 行)",
+        "original_goal": "system-spec-harness確定成果物とsystem development task planを含むグラフ情報から実装要件を導出し、implementation-readiness完了時だけcapability-build/task-graph buildへ実装をhandoffした状態になっている",
+        "recomputed_utf8_sha256": "04482e65a513cf4eb345f2c370d45ce5751e7732b0d3ef89c786c5eac4266c96",
+        "goal_spec_original_goal_hash": "04482e65a513cf4eb345f2c370d45ce5751e7732b0d3ef89c786c5eac4266c96",
+        "goal_spec_hash_match": true,
+        "intermediate_line_key_check": "1 行すべてが original_goal / original_goal_hash / current_goal_snapshot / delta_from_original / merged_directive_for_next / drift_signal の 6 key を保持 (欠落 0)",
+        "intermediate_hash_match": "全行 (1/1) の original_goal_hash が goal-spec の再計算値と一致",
+        "drift_signal": "none",
+        "progress_hash_match": true
+      }
+    },
+    "9": {
+      "title": "out/status.json の自己申告が独立実測と矛盾しない",
+      "result": "PASS",
+      "evidence": {
+        "status_json": {"status": "PASS", "scenario": "C04-OUT1-positive-ready-handoff"},
+        "independent_measurement": "required_observations 4 件すべて PASS、5 gate を独立再実行して exit 0、digest 束縛は全件一致",
+        "contradiction": "なし",
+        "note": "status.json は Write tool ではなく Bash の tmp+mv による atomic write で作成されている (transcript line 147)。task.md は Write を指示していたが、成果物の内容・配置・out/ 単一ファイル制約はいずれも満たしており scenario の required_observations には影響しない"
+      }
+    }
+  },
+  "scenario_observation_map": {
+    "1": "independent-observations.json#/observations/4",
+    "2": "independent-observations.json#/observations/5",
+    "3": "independent-observations.json#/observations/6",
+    "4": "independent-observations.json#/observations/7"
+  }
+}

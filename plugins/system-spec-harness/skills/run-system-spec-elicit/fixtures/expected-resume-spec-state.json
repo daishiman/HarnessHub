@@ -306,6 +306,7 @@
     },
     "constraints": [],
     "concrete_intents": [],
+    "effective_source_refs": {},
     "confirmed": false
   },
   "decisions": [],

@@ -365,6 +365,48 @@ def test_cli_init_chunk_apply_aggregate(tmp_path):
     assert mod.main(["aggregate", "--state", str(state_path)]) == 0
 
 
+def test_run_chunk_warns_on_unprocessed_turns(capsys):
+    """max_loops を超えた turn を黙って捨てず、未消化件数を stderr へ出す。
+
+    hearing_progress.complete は未収集セル 0 を意味するだけで turn 消化の証跡にならない。
+    未消化が可視化されないと、投入した turn の一部だけが適用された state を完了扱いできてしまう。
+    """
+    state = mod.init_state(_taxonomy())
+    processed = mod.run_chunk(state, _turns(), max_loops=5)
+    assert processed == 5
+    err = capsys.readouterr().err
+    assert "未消化" in err
+    assert "投入 9 turn" in err and "5 turn を適用" in err and "4 turn が未消化" in err
+
+
+def test_run_chunk_require_all_raises_on_unprocessed_turns():
+    state = mod.init_state(_taxonomy())
+    with pytest.raises(mod.TransitionError) as excinfo:
+        mod.run_chunk(state, _turns(), max_loops=5, require_all=True)
+    assert "4 turn が未消化" in str(excinfo.value)
+
+
+def test_run_chunk_require_all_passes_when_all_consumed(capsys):
+    state = mod.init_state(_taxonomy())
+    turns = _turns()
+    assert mod.run_chunk(state, turns, max_loops=len(turns), require_all=True) == len(turns)
+    assert "未消化" not in capsys.readouterr().err
+
+
+def test_cli_chunk_require_all_returns_1_on_unprocessed(tmp_path):
+    state_path = tmp_path / "spec-state.json"
+    turns_path = tmp_path / "turns.json"
+    turns_path.write_text(TURNS.read_text(encoding="utf-8"), encoding="utf-8")
+    assert mod.main(["init", "--taxonomy", str(TAXONOMY), "--out", str(state_path)]) == 0
+    before = state_path.read_text(encoding="utf-8")
+    assert mod.main([
+        "chunk", "--state", str(state_path), "--turns", str(turns_path),
+        "--max-loops", "5", "--require-all",
+    ]) == 1
+    # fail-closed: 停止時に部分適用を書き戻さない。
+    assert state_path.read_text(encoding="utf-8") == before
+
+
 def test_cli_apply_rollback_returns_1(tmp_path):
     state_path = tmp_path / "spec-state.json"
     assert mod.main(["init", "--taxonomy", str(TAXONOMY), "--out", str(state_path)]) == 0

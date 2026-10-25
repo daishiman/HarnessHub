@@ -1,0 +1,40 @@
+{
+  "branch": "daishiman/改善要望を記録する",
+  "content_roots": {
+    "architecture": "/Users/dm/orca/workspaces/HarnessHub/改善要望を記録する/architecture",
+    "documents": "/Users/dm/orca/workspaces/HarnessHub/改善要望を記録する/docs",
+    "features": "/Users/dm/orca/workspaces/HarnessHub/改善要望を記録する/features",
+    "issues": "/Users/dm/orca/workspaces/HarnessHub/改善要望を記録する/issues",
+    "repository": "/Users/dm/orca/workspaces/HarnessHub/改善要望を記録する",
+    "specifications": "/Users/dm/orca/workspaces/HarnessHub/改善要望を記録する/specs",
+    "system_spec": "/Users/dm/orca/workspaces/HarnessHub/改善要望を記録する/system-spec",
+    "tasks": "/Users/dm/orca/workspaces/HarnessHub/改善要望を記録する/tasks"
+  },
+  "coordination_paths": {
+    "events": "/Users/dm/dev/dev/個人開発/HarnessHub/.git/dev-graph/events.json",
+    "leases": "/Users/dm/dev/dev/個人開発/HarnessHub/.git/dev-graph/leases.json",
+    "root": "/Users/dm/dev/dev/個人開発/HarnessHub/.git/dev-graph"
+  },
+  "default_branch": "main",
+  "diagnostics": [],
+  "git_common_dir": "/Users/dm/dev/dev/個人開発/HarnessHub/.git",
+  "git_dir": "/Users/dm/dev/dev/個人開発/HarnessHub/.git/worktrees/改善要望を記録する",
+  "head_sha": "ecc62b68c85d176c530d8c57b0690218d36381eb",
+  "local_state_paths": {
+    "cache": "/Users/dm/orca/workspaces/HarnessHub/改善要望を記録する/.dev-graph/cache",
+    "config": "/Users/dm/orca/workspaces/HarnessHub/改善要望を記録する/.dev-graph/config.json",
+    "graph": "/Users/dm/orca/workspaces/HarnessHub/改善要望を記録する/.dev-graph/state/graph.json",
+    "locks": "/Users/dm/orca/workspaces/HarnessHub/改善要望を記録する/.dev-graph/locks"
+  },
+  "mode": "write",
+  "plugin_source": "/Users/dm/orca/workspaces/HarnessHub/改善要望を記録する/plugins/dev-graph",
+  "repo_root": "/Users/dm/orca/workspaces/HarnessHub/改善要望を記録する",
+  "repository_id": "github:daishiman/HarnessHub",
+  "root_trust_evidence": {
+    "claude_project_dir_verified": true,
+    "git_common_dir_ownership_verified": true,
+    "git_toplevel_verified": true,
+    "selected_by": "explicit --repo-root"
+  },
+  "worktree_id": "wt_9a2463efc89088d8"
+}

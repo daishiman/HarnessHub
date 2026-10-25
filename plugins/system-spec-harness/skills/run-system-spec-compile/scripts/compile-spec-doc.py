@@ -4,7 +4,7 @@
 # version: 0.2.0
 # purpose: run-system-spec-compile の決定論コンパイラ。収集済み spec-state.json と取得済み fetched-references.json・設計知識参照から、章別 Markdown 複数ファイル + index.md を組み立てる。各章 frontmatter に確定マーカー (status: confirmed/draft + spec_cells + category) を付与し (C11 hook の判定ソース)、カテゴリ別収集状態 (未着手/収集中/確定/対象外+理由) と最新ドキュメント出典を反映する。ヒアリング継続やドキュメント再取得はしない (入力を組み立てるのみ)。
 # inputs:
-#   - argv: compile --spec spec-state.json --references fetched-references.json [--out-dir system-spec]
+#   - argv: compile --spec spec-state.json --references fetched-references.json [--out-dir system-spec] [--repo-root .]
 # outputs:
 #   - system-spec/<category>.md 章別 Markdown + system-spec/index.md
 #   - exit: 0=OK / 1=入力/IO エラー / 2=usage error
@@ -48,6 +48,7 @@ import argparse
 import heapq
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 from urllib.parse import urlparse
@@ -62,11 +63,37 @@ from spec_docset_catalog import _category_ids, _knowledge_catalog, _knowledge_to
 from spec_docset_chapters import *
 from spec_docset_foundation import *
 
+
+KNOWLEDGE_REF_VALIDATOR = Path(__file__).resolve().parents[3] / "scripts" / "validate-design-knowledge-refs.py"
+
 # --------------------------------------------------------------------------- #
 # CLI                                                                          #
 # --------------------------------------------------------------------------- #
 def load_json(path_str: str) -> dict:
     return json.loads(Path(path_str).read_text(encoding="utf-8"))
+
+
+def require_valid_knowledge_refs(matrix_path: str, repo_root: str) -> None:
+    """Existing validator is the SSOT; compilation must not duplicate its rules."""
+    try:
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(KNOWLEDGE_REF_VALIDATOR),
+                "--matrix",
+                matrix_path,
+                "--repo-root",
+                repo_root,
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+    except OSError as exc:
+        raise CompileError(f"design knowledge_ref validator を実行できない: {exc}") from exc
+    if result.returncode != 0:
+        details = result.stdout.strip() or result.stderr.strip() or f"exit {result.returncode}"
+        raise CompileError(f"design knowledge_ref 実在ゲート失敗:\n{details}")
 
 
 def main(argv: list[str]) -> int:
@@ -78,9 +105,15 @@ def main(argv: list[str]) -> int:
     p_compile.add_argument("--spec", required=True, help="spec-state.json のパス")
     p_compile.add_argument("--references", required=True, help="fetched-references.json のパス")
     p_compile.add_argument("--out-dir", default="system-spec", help="出力ディレクトリ (既定 system-spec)")
+    p_compile.add_argument(
+        "--repo-root",
+        default=".",
+        help="knowledge_ref を解決する repository root (既定: cwd)",
+    )
     args = ap.parse_args(argv)
 
     try:
+        require_valid_knowledge_refs(args.spec, args.repo_root)
         spec = load_json(args.spec)
         refs_data = load_json(args.references)
         docset = compile_docset(spec, refs_data)

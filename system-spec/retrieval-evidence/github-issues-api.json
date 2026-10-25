@@ -1,0 +1,22 @@
+{
+  "retrieval_path": "WebSearch (allowed_domains=docs.github.com)",
+  "query": "GitHub REST API issues create issue endpoint documentation",
+  "retrieved_at": "2026-08-16T02:49:50Z",
+  "official_url": "https://docs.github.com/en/rest/issues/issues",
+  "returned_official_urls": [
+    "https://docs.github.com/en/rest/issues/issues",
+    "https://docs.github.com/en/rest/issues/comments",
+    "https://docs.github.com/en/rest/using-the-rest-api/getting-started-with-the-rest-api",
+    "https://docs.github.com/en/rest"
+  ],
+  "facts": [
+    "Create an issue: POST /repos/{owner}/{repo}/issues",
+    "body params: title (required), body, assignees, labels, milestone, type",
+    "API version header: X-GitHub-Api-Version: 2022-11-28",
+    "Any user with pull access can create an issue; issues disabled -> 410 Gone",
+    "This endpoint triggers notifications; creating content too quickly may hit secondary rate limits",
+    "Issues endpoints may return pull requests; identify them by the pull_request key",
+    "No endpoint for uploading/attaching binary files to an issue is listed on this page"
+  ],
+  "note": "本 record の中心的事実は『Issues の REST API に添付 (file upload) の endpoint が無い』こと。同一 API 群の一覧に該当 endpoint が存在しないことをもって確認した。"
+}

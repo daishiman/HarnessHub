@@ -184,6 +184,29 @@ def test_c12_confirmed_dangling_qa_ref():
     assert any("qa-999" in f for f in c12.validate(d))
 
 
+def test_c12_confirmed_cell_cannot_consume_retired_qa():
+    d = _valid_matrix()
+    d["qa_log"][0]["retirement"] = {
+        "writer": "retire-qa",
+        "reason": "履歴のみ",
+    }
+    assert any("retired" in f and "active consumer" in f for f in c12.validate(d))
+
+
+def test_c12_retirement_shape_and_superseding_ref_fail_closed():
+    malformed = _valid_matrix()
+    malformed["qa_log"][0]["retirement"] = {"writer": "hand-edit", "reason": "x"}
+    assert any("retirement" in f for f in c12.validate(malformed))
+
+    dangling = _valid_matrix()
+    dangling["qa_log"][0]["retirement"] = {
+        "writer": "retire-qa",
+        "reason": "x",
+        "superseded_by": "qa-missing",
+    }
+    assert any("superseded_by" in f for f in c12.validate(dangling))
+
+
 def test_c12_invalid_state():
     d = _valid_matrix()
     d["matrix"]["database"]["web"] = {"state": "とりあえず"}
@@ -404,7 +427,9 @@ def attach_evidence(tmp_path: Path, refs_data: dict) -> None:
     evidence_dir.mkdir(exist_ok=True)
     for ref in refs_data["references"]:
         path = evidence_dir / f"{ref['target_id']}.txt"
-        content = f"WebFetch evidence for {ref['target_id']}\n".encode()
+        # 版番号も本文へ入れる。F7 (HarnessHub-pepx) の値の接地検査は、記録した version が
+        # その証跡に現れることを要求するので、版を欠いた証跡は正例にならない。
+        content = f"WebFetch evidence for {ref['target_id']} version {ref.get('version', '')}\n".encode()
         path.write_bytes(content)
         ref["evidence_ref"] = str(path.relative_to(tmp_path))
         ref["evidence_sha256"] = hashlib.sha256(content).hexdigest()

@@ -3,7 +3,7 @@
 # name: apply-spec-transition
 # version: 0.2.0
 # purpose: spec-state の単一 writer CLI。各責務は state_transition_{matrix,foundation,knowledge}.py へ分離する。
-# inputs: [bootstrap|init|add-category|apply|chunk|aggregate|set-targets|set-foundation|set-decision|set-knowledge-candidate|set-qa-design-applications]
+# inputs: [bootstrap|init|add-category|apply|chunk|aggregate|set-targets|set-foundation|set-decision|set-knowledge-candidate|set-qa-design-applications|retire-qa]
 # outputs: [spec-state.json or stdout]
 # network: false
 # write-scope: spec-state.json
@@ -55,8 +55,11 @@ from state_transition_matrix import (
     init_state,
     next_unresolved_question,
     recompute_aggregates,
+    retire_qa,
     run_chunk,
+    fix_qa_knowledge_ref,
     set_qa_design_applications,
+    set_qa_source,
     set_targets,
 )
 
@@ -118,6 +121,11 @@ def main(argv: list[str]) -> int:
     chunk.add_argument("--state", required=True)
     chunk.add_argument("--turns", required=True, help="ターン列 JSON ファイル")
     chunk.add_argument("--max-loops", type=int, default=MAX_LOOPS_DEFAULT)
+    chunk.add_argument(
+        "--require-all",
+        action="store_true",
+        help="投入 turn を全て消化できない場合に非 0 終了する (未消化の黙殺を防ぐ)",
+    )
     chunk.add_argument("--out")
     aggregate = sub.add_parser("aggregate", help="集約状態を再計算")
     aggregate.add_argument("--state", required=True)
@@ -138,6 +146,18 @@ def main(argv: list[str]) -> int:
     candidate.add_argument("--state", required=True)
     candidate.add_argument("--candidate", required=True, help="candidate JSON文字列またはファイル")
     candidate.add_argument("--out")
+    qa_source = sub.add_parser(
+        "set-qa-source",
+        help="既存 qa の質問・回答を保ったまま欠落した出所メタデータだけを追記",
+    )
+    qa_source.add_argument("--state", required=True)
+    qa_source.add_argument("--qa-id", required=True)
+    qa_source.add_argument(
+        "--source",
+        required=True,
+        help='source JSON または JSON ファイル (例: {"kind":"user-dialogue"})',
+    )
+    qa_source.add_argument("--out")
     qa_design = sub.add_parser(
         "set-qa-design-applications",
         help="既存 qa の質問・回答を保ったまま設計適用を追記",
@@ -150,6 +170,25 @@ def main(argv: list[str]) -> int:
         help="design_applications JSON配列または JSON ファイル",
     )
     qa_design.add_argument("--out")
+    qa_ref = sub.add_parser(
+        "fix-qa-knowledge-ref",
+        help="解釈本文を変えず、実在しない knowledge_ref だけを実在する参照へ差し替え",
+    )
+    qa_ref.add_argument("--state", required=True)
+    qa_ref.add_argument("--qa-id", required=True)
+    qa_ref.add_argument("--old-ref", required=True, help="実在しない現行 knowledge_ref")
+    qa_ref.add_argument("--new-ref", required=True, help="実在する差し替え先 knowledge_ref")
+    qa_ref.add_argument("--repo-root", required=True, help="参照先の実在を確認する repo root")
+    qa_ref.add_argument("--out")
+    retire = sub.add_parser(
+        "retire-qa",
+        help="active consumer 0件の QA を本文不変のまま履歴化",
+    )
+    retire.add_argument("--state", required=True)
+    retire.add_argument("--qa-id", required=True)
+    retire.add_argument("--reason", required=True)
+    retire.add_argument("--superseded-by")
+    retire.add_argument("--out")
     args = parser.parse_args(argv)
     try:
         if args.cmd == "bootstrap":
@@ -164,7 +203,12 @@ def main(argv: list[str]) -> int:
             elif args.cmd == "apply":
                 apply_turn(state, {"ops": [json.loads(args.op)]})
             elif args.cmd == "chunk":
-                run_chunk(state, load_json(args.turns), max_loops=args.max_loops)
+                run_chunk(
+                    state,
+                    load_json(args.turns),
+                    max_loops=args.max_loops,
+                    require_all=args.require_all,
+                )
             elif args.cmd == "aggregate":
                 recompute_aggregates(state)
             elif args.cmd == "set-targets":
@@ -176,6 +220,8 @@ def main(argv: list[str]) -> int:
                 set_decision(state, load_json_arg(args.decision))
             elif args.cmd == "set-knowledge-candidate":
                 set_knowledge_candidate(state, load_json_arg(args.candidate))
+            elif args.cmd == "set-qa-source":
+                set_qa_source(state, args.qa_id, load_json_arg(args.source))
             elif args.cmd == "set-qa-design-applications":
                 value = load_json_arg(args.applications)
                 set_qa_design_applications(
@@ -184,6 +230,17 @@ def main(argv: list[str]) -> int:
                     value["design_applications"]
                     if isinstance(value, dict) and "design_applications" in value
                     else value,
+                )
+            elif args.cmd == "fix-qa-knowledge-ref":
+                fix_qa_knowledge_ref(
+                    state, args.qa_id, args.old_ref, args.new_ref, args.repo_root
+                )
+            elif args.cmd == "retire-qa":
+                retire_qa(
+                    state,
+                    args.qa_id,
+                    args.reason,
+                    superseded_by=args.superseded_by,
                 )
             _emit(state, args.out or args.state)
     except TransitionError as exc:

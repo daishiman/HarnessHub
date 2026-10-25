@@ -33,33 +33,8 @@
     "Catalog / PublishRequest の idempotency・release/publish 状態契約は変化せず、カード一覧の表示構造と Markdown カード本文は変更しない"
   ],
   "architecture_refs": [
-    "arch-harness-hub-backend",
-    "arch-harness-hub-security"
-  ],
-  "depends_on": [],
-  "resource_scope": [
-    "apps/hub/src/app/api/v1/docs/route.ts",
-    "apps/hub/src/app/api/v1/docs/[id]/route.ts",
-    "apps/hub/src/app/api/v1/sheets/route.ts",
-    "apps/hub/src/app/api/v1/sheets/[id]/route.ts",
-    "apps/hub/src/app/(dashboard)/docs/new/document-create-form.tsx",
-    "apps/hub/src/app/(dashboard)/docs/document-edit-panel.tsx",
-    "apps/hub/src/app/(dashboard)/docs/[id]/edit/document-edit-page.tsx",
-    "apps/hub/src/app/(dashboard)/sheets/new/hearing-intake-wizard.tsx",
-    "apps/hub/src/app/(dashboard)/sheets/[id]/hearing-sheet-detail.tsx",
-    "apps/hub/src/features/docs-cms/dto.ts",
-    "apps/hub/src/features/hearing-intake/service.ts",
-    "apps/hub/src/lib/http",
-    "packages/schemas/docs-cms",
-    "packages/schemas/hearing-intake",
-    "packages/db/repository/docs-cms.ts",
-    "packages/db/repository/hearing-intake.ts",
-    "packages/db/repository/hearing-intake-queue.ts",
-    "packages/db/repository/mutation-safety.ts",
-    "packages/db/schema/docs-cms/schema.ts",
-    "packages/db/schema/hearing-intake/schema.ts",
-    "packages/db/schema/mutation-safety/schema.ts",
-    "packages/db/migrations/0015_card-mutation-safety.sql"
+    "architecture/harness-hub-backend.md",
+    "architecture/harness-hub-security.md"
   ],
   "updated_at": "2026-08-15T00:55:35.784176Z"
 }

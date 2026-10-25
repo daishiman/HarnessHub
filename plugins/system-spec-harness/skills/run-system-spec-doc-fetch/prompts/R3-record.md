@@ -34,6 +34,12 @@
 - **必須フィールド**: `target_id` / `retrieved_at` / `source_url` / `official_publisher` / `official_host` / `latest_checked_at` / `evidence_ref` / `evidence_sha256` / `summary`、および `version` か `last_updated` のいずれか。`evidence_ref` は project root からの相対パス、`evidence_sha256` は小文字16進数64桁である。
 - **全件対応**: `spec-state.targets[]` (または R1 の取得対象一覧) の各 `target_id` に record が 1 件対応し、欠落 0・重複 0。
 - **host 一致**: `source_url` の host が `official_host` と一致する (`build-fetched-references.py` が導出/検証)。
+- **`summary` の書式規約 (散文の版ドリフト防止)**: `summary` は「現行の主張」→「履歴」の順に書く。
+  - **先頭領域**は現行版だけを現在形で述べる。`version` フィールドを更新したら、同じ turn で先頭領域の版番号も書き換える。末尾へ再照合段落を足して先頭を前回のまま残す運用は、`version` は新しいのに散文だけ旧版を主張する状態 (版ドリフト) を作る。実装判断者は散文を読むため、これは実害のある欠陥になる。
+  - **履歴**は先頭領域の後に置き、`鮮度再照合 (<実照会時刻>): ...` / `[以下は履歴]` / `[訂正 ...]` のいずれかのマーカーで開始する。マーカー以降の旧版番号はそのまま残してよい (履歴として正しい)。
+  - 同一文面の再照合段落を 2 つ以上重ねない。同じ内容を複数回照合したときは 1 段落へ畳み、**実照会時刻はどれも消さず併記**する (Key Rule 5: 時刻を捏造・削除しない)。
+  - 他製品の版 (依存要件の TypeScript 5.5、対応ブラウザの Safari 16.4 など) は先頭領域に書いてよい。検査は `version` と同じ major の版番号だけを見る。
+  - この規約は `build-fetched-references.py` の `prose_version_drift()` が assemble 時に機械検査し、違反は `RecordError` で exit1 になる (散文だけが古い状態を注意力で防がない)。
 
 ## Layer 3: インフラ層
 - **決定論ヘルパ**: `scripts/build-fetched-references.py`
@@ -65,6 +71,7 @@
 - [ ] 対象数と record 数が一致する
 - [ ] target_id の重複がない
 - [ ] 各 record が実取得素材へ追跡できる
+- [ ] `summary` 先頭領域が現行版だけを現在形で述べ、過去の照合は履歴マーカー以降に置かれている (assembler の版ドリフト検査が exit0)
 - [ ] 未取得 target が理由付きで差し戻されている
 - [ ] candidate qualification素材が公式/一次HTTPS・checked_at付きsource_refsへ正規化されている
 

@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "mode": "resume-reuse",
+  "evaluator_launches": [],
+  "first_import_line": null,
+  "task_output_attempts": 0,
+  "task_stop_events": 0,
+  "outer_report_writes": 0,
+  "foreground_blocking_waits": 0,
+  "resume_runner_invocations": 1,
+  "violations": []
+}

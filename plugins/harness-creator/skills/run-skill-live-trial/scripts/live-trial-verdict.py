@@ -229,6 +229,7 @@ _FLAG_PATTERN = _SCENARIO._FLAG_PATTERN
 load_scenario = _SCENARIO.load_scenario
 parse_observation_claims = _SCENARIO.parse_observation_claims
 validate_evidence_claims = _SCENARIO.validate_evidence_claims
+repo_relative_scenario_file = _SCENARIO.repo_relative_scenario_file
 observation_coverage = _SCENARIO.observation_coverage
 args_divergence = _SCENARIO.args_divergence
 validate_task_contract = _SCENARIO.validate_task_contract
@@ -485,6 +486,7 @@ def main(argv: list[str] | None = None) -> int:
             return 2
         try:
             scenario = load_scenario(Path(ns.scenario_file), ns.scenario_id)
+            recorded_scenario_file = repo_relative_scenario_file(ns.scenario_file)
             required_observations = list(scenario["required_observations"])
             claims = parse_observation_claims(ns.observation, len(required_observations))
             claims = validate_evidence_claims(workdir, claims)
@@ -511,7 +513,7 @@ def main(argv: list[str] | None = None) -> int:
             budget, wall_clock_s=measured_wall_clock_s, token_usage=token_usage
         )
         scenario_contract = {
-            "scenario_file": ns.scenario_file,
+            "scenario_file": recorded_scenario_file,
             "scenario_id": ns.scenario_id,
             "required_observations": required_observations,
             "observed": observed,

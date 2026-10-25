@@ -60,6 +60,7 @@ SYSTEM_SPEC_JSON_ALLOWLIST = {
     "fetched-references.json",
     "completeness-report.json",
     "completeness-findings.json",  # system-dev-planner C08 が読む正準名 (report と同内容)
+    "resume-receipt.json",  # C19 validate-system-spec-resume が読む digest-bound 受領書
 }
 # system-spec/ 直下に置いてよい既知サブディレクトリ。混入遮断の目的は「雑多なファイルの流入防止」
 # であって、正本 JSON が参照する名前付きの資料までは禁じない。

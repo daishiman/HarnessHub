@@ -1,41 +1,44 @@
 {
-  "schema_version": "1.1.0",
-  "target": {
-    "plugin": "dev-graph",
-    "skill": "run-dev-graph-system-spec",
-    "component_id": "C19",
-    "skill_md_sha256": "c20734d924cd41d39d26f1ad9a3658a93befd1e4a78a9e48251bc9116dbedb78"
-  },
-  "verdict": "PASS",
-  "reviewer": "independent fresh goal evaluator plus path-specific completion gate and poll-state/transcript-bound live-trial verdict, 20260811T082609Z-wt3-c19-pr699-merge",
-  "loop_scope": "both",
-  "iteration_limit": 3,
   "criteria_results": {
     "IN1": {
-      "status": "PASS",
-      "verify_by": "script",
       "evidence_kind": "hybrid",
+      "observed": "The three focused contract modules pass (109 tests): resume receipt validation, evaluator completion including raw canonical-command adversarial boundaries, and live-trial task contract generation/lint. The final recovered transcript passes validate-system-spec-evaluator-completion with one exact canonical runner invocation and zero violations; validate-goal-seek-evidence is valid with zero violations. The bounded runner imported architecture/specification through C02, reported network_calls=0 and upstream_skill_invocations=0, and completed all 12 steps with exit 0.",
+      "status": "PASS",
       "test_refs": [
         "plugins/dev-graph/tests/test_validate_system_spec_resume.py",
-        "plugins/dev-graph/tests/test_prepare_system_spec_import.py",
-        "plugins/dev-graph/tests/test_validate_graph_schema_c11_heading_readiness.py",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260811T082609Z-wt3-c19-pr699-merge/goal-evaluation.json"
+        "plugins/dev-graph/tests/test_validate_system_spec_evaluator_completion.py",
+        "plugins/dev-graph/tests/test_live_trial_task_contract.py",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260817T094952Z-mp9j-c19-r6-final/external-completion-validation.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260817T094952Z-mp9j-c19-r6-final/goal-evaluation.json"
       ],
-      "observed": "validate-system-spec-resume, path-specific evaluator completion, validate-system-spec-boundary, validate-graph-schema, validate-source-digest, validate-evidence-refs, and validate-goal-seek-evidence all exited 0 in the post-validator-change run. The three referenced pytest modules pass (30 tests). The bounded runner imported architecture/specification through C02 and reported network_calls=0 and upstream_skill_invocations=0."
+      "verify_by": "script"
     },
     "OUT1": {
-      "status": "PASS",
-      "verify_by": "live-trial",
       "evidence_kind": "live-trial",
-      "scenario_id": "C19-OUT1-positive-system-spec-lineage-r3-bounded",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260811T082609Z-wt3-c19-pr699-merge/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T015722Z-c19-pepx-r2/verdict.json",
+      "observed": "fresh live trial 20260818T015722Z-c19-pepx-r2 は overall=PASS、nudge=0、gate=0、wall-clock=30.034s (予算 360s)。system-spec-harness の F7 版番号接地 fixture 修正 (HarnessHub-pepx) で挙動閉包が再び変わり 20260818T000759Z-c19-pepx-r1 が stale-sha になったための再実走。canonical runner を1回だけ実行し 12 step 全て exit 0、mode=reuse-confirmed、network_calls=0、upstream_skill_invocations=0、禁止 4 entry point の Skill 呼出は0件。登録 node は arch-system-spec-overview と spec-system-spec-index の2件のみで、いずれも C02 (upsert-node.py) 経由。fresh independent evaluator ccb36075-fddd-4d1c-9f71-babbae4bad1b が required_observations 3件を読取専用で再実測し、out/status.json の自己申告を transcript の実出力で裏取りして PASS。behavior closure digest=93ab16877178248aea160f931f95140a2a27b3ffb4ed3532d74ad57bace379ed、transcript SHA c2bb013c588ae5f2406a2dff93c8a2fb501cdaf6b0b690244bea683cfae32d2a。",
+      "scenario_id": "C19-OUT1-positive-system-spec-lineage-r6-bounded",
+      "status": "PASS",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260811T082609Z-wt3-c19-pr699-merge/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260811T082609Z-wt3-c19-pr699-merge/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260811T082609Z-wt3-c19-pr699-merge/poll-state.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260811T082609Z-wt3-c19-pr699-merge/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T015722Z-c19-pepx-r2/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T015722Z-c19-pepx-r2/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T015722Z-c19-pepx-r2/poll-state.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T015722Z-c19-pepx-r2/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T015722Z-c19-pepx-r2/independent-verification.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260818T015722Z-c19-pepx-r2/independent-observations.json"
       ],
-      "observed": "Fresh bounded live trial completed PASS in 105.461 seconds with 206629 accounted tokens against max_wall_clock_s=360 and max_total_tokens=2000000, re-run after merging main into PR #699 so the verdict binds the combined behaviour closure SHA 1e9fa5b062d6ac216aee2da6b275356e604c1b9110a6b5ba55a301e7e3b953f2 (incremental planner action=run, reason=behavior-changed). Verdict derives wall time from digest-bound poll state, records measured=true with zero missing/id-less usage records, and binds fresh independent evaluator c19_pr699_merge_goal_evaluator to transcript SHA f9430bb26d3b83928dfefea1c4d7657dfdca52de2298f80ce2205d105b23c2ce. Transcript invokes only dev-graph:run-dev-graph-system-spec; forbidden upstream system-spec generation skills are absent, and scenario args/task/invocation contracts all match with zero unobserved required observations. The resume completion gate verifies one deterministic runner, network_calls=0, upstream_skill_invocations=0, all 12 step exits 0, and C02-only registration. Both imported nodes retain source lineage/evaluator evidence, and the boundary gate proves equivalent elicitation/compile runtime logic is absent from dev-graph."
+      "verify_by": "live-trial"
     }
-  }
+  },
+  "iteration_limit": 3,
+  "loop_scope": "both",
+  "reviewer": "fresh-independent-context:ccb36075-fddd-4d1c-9f71-babbae4bad1b",
+  "schema_version": "1.1.0",
+  "target": {
+    "component_id": "C19",
+    "plugin": "dev-graph",
+    "skill": "run-dev-graph-system-spec",
+    "skill_md_sha256": "0ad44124f5860ef53d4a293a5e65a96835d6ca78456c3f8610fb67875e8ff3aa"
+  },
+  "verdict": "PASS"
 }

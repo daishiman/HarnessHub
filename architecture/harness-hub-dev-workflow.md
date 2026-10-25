@@ -252,7 +252,7 @@ parallel 運用許可ではない。current runtime の fresh live-trial で 3 f
 per-call 行と最終 receipt を実証するまでは **1 message = 1 foreground fork** を維持する。
 製品 API・DB・認証認可・UI・Cloudflare deploy unit は非変更。判断と検証の正本は
 [uypz 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/uypz-audit-fork-schema12-spec-reflection-receipt.md)
-とする。
+とする。schema 1.3 は `SubagentStop` と `AUDIT_DISPATCH` で completion を join する。
 
 ## 検証 tier の責務境界 (2026-08-09 / qa-216)
 

@@ -12,6 +12,9 @@ from spec_docset_catalog import (
     _row,
 )
 
+DOC_LINE_LIMIT = 300
+DESIGN_KNOWLEDGE_SUFFIX = "-design-knowledge.md"
+
 # レンダリング (章 / index) — 純関数                                            #
 # --------------------------------------------------------------------------- #
 def render_frontmatter(spec: dict, cat_id: str) -> str:
@@ -254,6 +257,35 @@ def _render_candidate_card(candidate: dict) -> list[str]:
     return lines
 
 
+#: 抜粋の上限。ここを超える回答は正本 (`## 確定内容 (質疑録)`) を読ませる。
+#: 「どの確定の話か」を見失わない程度の手掛かりだけを残す長さにする。
+_ANSWER_EXCERPT_LIMIT = 80
+
+
+def _qa_answer_pointer(qa: dict, ref: str) -> str:
+    """確定要件の「所在」を示す。本文の再掲はしない。
+
+    以前はここで ``qa['answer']`` を丸ごと再掲していたが、同じ章の
+    ``## 確定内容 (質疑録)`` が同じ本文を既に実体描画しており、1 章に同一文が 2 回出ていた
+    (全 10 章で 351 行の重複。`lint-doc-line-limit` の 300 行超過の主因でもあった)。
+    正本を 1 箇所に保ち、ここからは参照と手掛かりだけを出す。
+
+    qa 本文が正本に無い場合は定型文で緑化せず、欠落をそのまま見せる (fail-visible)。
+    """
+    answer = qa.get("answer")
+    if not isinstance(answer, str) or not answer.strip():
+        return "(qa_log 本文欠落)"
+    # 抜粋は先頭 1 行だけ。複数行の回答を潰して 1 行に詰めると原文と紛らわしくなる。
+    head = answer.strip().splitlines()[0].strip()
+    truncated = len(head) > _ANSWER_EXCERPT_LIMIT or head != answer.strip()
+    if len(head) > _ANSWER_EXCERPT_LIMIT:
+        head = head[:_ANSWER_EXCERPT_LIMIT]
+    if truncated:
+        # 切り詰めた事実を隠さない。読み手が「これで全部」と誤読すると解釈がずれる。
+        return f"「{head}…」 (全文は本章「確定内容 (質疑録)」の `{ref}` を正本とする)"
+    return f"「{head}」 (正本: 本章「確定内容 (質疑録)」の `{ref}`)"
+
+
 def _render_chapter_application(spec: dict, cat_id: str) -> list[str]:
     """caller が記録した章固有の原則採否を確定判断へ紐付けて描画する。
 
@@ -276,7 +308,7 @@ def _render_chapter_application(spec: dict, cat_id: str) -> list[str]:
             [
                 f"##### 確定内容 {ref} (対応セル: {', '.join(cells)})",
                 "",
-                f"- 確定要件: {qa.get('answer', '(qa_log 本文欠落)')}",
+                f"- 確定要件: {_qa_answer_pointer(qa, ref)}",
             ]
         )
         applications = qa.get("design_applications")
@@ -379,11 +411,19 @@ def render_citations(refs: list[dict], *, empty_note: str) -> str:
     return "\n".join(lines)
 
 
-def render_chapter(spec: dict, cat_id: str, refs_by_cat: dict[str, list[dict]]) -> str:
+def render_chapter(
+    spec: dict,
+    cat_id: str,
+    refs_by_cat: dict[str, list[dict]],
+    *,
+    design_section: str | None = None,
+) -> str:
     """1 カテゴリ章の完全な Markdown を組み立てる (frontmatter + 状態表 + 設計知識 + 出典)。"""
     label = category_label(spec, cat_id)
     agg = category_aggregate(spec, cat_id)
     refs = refs_by_cat.get(cat_id, [])
+    if design_section is None:
+        design_section = render_design_refs(cat_id, spec)
     parts = [
         render_frontmatter(spec, cat_id),
         "",
@@ -398,7 +438,7 @@ def render_chapter(spec: dict, cat_id: str, refs_by_cat: dict[str, list[dict]]) 
         "",
         render_doctrine_anchor(cat_id),
         "",
-        render_design_refs(cat_id, spec),
+        design_section,
         "",
         render_citations(
             refs,
@@ -407,3 +447,71 @@ def render_chapter(spec: dict, cat_id: str, refs_by_cat: dict[str, list[dict]]) 
         "",
     ]
     return "\n".join(parts)
+
+
+def _design_appendix_frontmatter(spec: dict, cat_id: str) -> str:
+    lines = render_frontmatter(spec, cat_id).splitlines()
+    lines[-1:-1] = [
+        "kind: design-knowledge-appendix",
+        f"parent_chapter: {cat_id}.md",
+    ]
+    return "\n".join(lines)
+
+
+def render_design_knowledge_appendix(spec: dict, cat_id: str) -> str:
+    """カテゴリ章から責務分割した設計知識付録を、入力の省略なしで描画する。"""
+    label = category_label(spec, cat_id)
+    return "\n".join(
+        [
+            _design_appendix_frontmatter(spec, cat_id),
+            "",
+            f"# {label} 設計知識付録 ({cat_id})",
+            "",
+            f"- [{label} 本章](./{cat_id}.md) — 確定質疑・状態・出典の正本",
+            "",
+            render_design_refs(cat_id, spec),
+            "",
+        ]
+    )
+
+
+def render_chapter_documents(
+    spec: dict,
+    cat_id: str,
+    refs_by_cat: dict[str, list[dict]],
+) -> dict[str, str]:
+    """300行以下なら1章、超過時は本章 + 設計知識付録を返す。"""
+    chapter_name = f"{cat_id}.md"
+    full_chapter = render_chapter(spec, cat_id, refs_by_cat)
+    if len(full_chapter.splitlines()) <= DOC_LINE_LIMIT:
+        return {chapter_name: full_chapter}
+
+    appendix_name = f"{cat_id}{DESIGN_KNOWLEDGE_SUFFIX}"
+    design_pointer = "\n".join(
+        [
+            "## 適用された設計知識",
+            "",
+            f"- [設計知識付録](./{appendix_name}) — deep card と "
+            "qa_ref / knowledge_ref に束縛した章固有の適用記録",
+        ]
+    )
+    documents = {
+        chapter_name: render_chapter(
+            spec,
+            cat_id,
+            refs_by_cat,
+            design_section=design_pointer,
+        ),
+        appendix_name: render_design_knowledge_appendix(spec, cat_id),
+    }
+    oversized = {
+        name: len(text.splitlines())
+        for name, text in documents.items()
+        if len(text.splitlines()) > DOC_LINE_LIMIT
+    }
+    if oversized:
+        details = ", ".join(f"{name}={lines}行" for name, lines in oversized.items())
+        raise CompileError(
+            f"{cat_id}: 設計知識の責務分割後も {DOC_LINE_LIMIT}行上限を超過 ({details})"
+        )
+    return documents

@@ -39,15 +39,16 @@
       "mode": "positive",
       "resource_budget": {"max_wall_clock_s": 600, "max_total_tokens": 5000000},
       "task_args_template": "--repo-root <contained-fixture-repo> --feature-id F-LIVE-001 (package は fixture 内 system-plan/F-LIVE-001/ を skill が解決する)",
-      "fixture_contract": "The feature is confirmed/evaluation-pass/readiness-complete and the package is a valid P01..P13 exact-13 DAG with matching source digest and parent feature.",
+      "fixture_contract": "The feature is confirmed/evaluation-pass/readiness-complete, the package is a valid P01..P13 exact-13 DAG with matching source digest and parent feature, and a digest-bound C19 PASS receipt covers the current full system-spec snapshot.",
       "required_observations": [
         "a capability-build task-graph handoff is emitted for the exact-13 package",
         "the handoff remains bound to the feature and source digest",
+        "the handoff is bound to a current C19 resume receipt, completeness report, and full system-spec artifact snapshot",
         "the requirements skill generates no implementation source file"
       ]
     },
     {
-      "scenario_id": "C19-OUT1-positive-system-spec-lineage-r3-bounded",
+      "scenario_id": "C19-OUT1-positive-system-spec-lineage-r6-bounded",
       "component_id": "C19",
       "skill": "run-dev-graph-system-spec",
       "criterion_id": "OUT1",
@@ -59,7 +60,10 @@
           "upsert-node.py",
           "validate-system-spec-resume.py",
           "reuse-confirmed",
-          "--resume"
+          "--resume",
+          "初回 runner の終了状態を終端結果とする",
+          "診断コマンド・個別 validator・依存 package 導入・runner 再実行を行わない",
+          "canonical runner command の1行を文字どおり単独実行する"
         ],
         "forbidden_fragments": [
           "公式ページを実取得",

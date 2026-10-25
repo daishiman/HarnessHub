@@ -52,6 +52,7 @@
       "system-dev-planner"
     ],
     "run-dev-graph-requirements": [
+      "system-spec-harness",
       "system-dev-planner"
     ],
     "run-dev-graph-system-spec": [

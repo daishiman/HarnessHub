@@ -39,8 +39,8 @@
       "label": "設計知識反映",
       "auditor": "assign-system-spec-completeness-evaluator",
       "component": "C05",
-      "self_evaluated": "C05 R1-score が自前評価する (独立 auditor なし)。C06 は設計知識 (system-spec/*.md) を読まないため design_knowledge に束縛しない (虚偽対応の撤去)",
-      "primary_input": "system-spec/*.md / ref-system-design-knowledge/references/resource-map.yaml",
+      "self_evaluated": "C05 R1-score が自前評価する (独立 auditor なし)。C06 は仕様書 Markdown を読まないため design_knowledge に束縛しない (虚偽対応の撤去)",
+      "primary_input": "system-spec/ 配下の全 Markdown (Path.rglob('*.md')) / ref-system-design-knowledge/references/resource-map.yaml",
       "deterministic_gate": null,
       "pass_criteria": [
         "機械層: コンパイル済み各章が resource-map.yaml 由来の設計知識ポインタ節を持つ (compile の render_design_refs が注入)",

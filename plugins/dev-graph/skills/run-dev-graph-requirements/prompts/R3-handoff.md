@@ -1,23 +1,23 @@
 # Prompt: R3-handoff
 
-> C11のreadiness検証とsystem-dev-planner所有のsystem-plan検証 (validate-system-plan.py) の完了時だけ要件定義書をcapability-build/task-graph buildへhandoffする。不足時はmissing_sectionsを返して停止し、実装コードは生成しない
+> C11/readiness・feature/package lineage・system-plan・C19 system-spec snapshotの全検証完了時だけ要件定義書をcapability-build/task-graph buildへhandoffする。不足時はmissing_sectionsを返して停止し、実装コードは生成しない
 
 ## Layer 1: 基本定義層
 
 - `responsibility_id`: `R3-handoff`
 - `skill`: `run-dev-graph-requirements`
-- 不変目的: C11のreadiness検証とsystem-dev-planner所有のsystem-plan検証 (validate-system-plan.py) の完了時だけ要件定義書をcapability-build/task-graph buildへhandoffする。不足時はmissing_sectionsを返して停止し、実装コードは生成しない
+- 不変目的: C11/readiness・feature/package lineage・system-plan・C19 system-spec snapshotの全検証完了時だけ要件定義書をcapability-build/task-graph buildへhandoffする。不足時はmissing_sectionsを返して停止し、実装コードは生成しない
 - 成功条件は Layer 2 の受入条件と Layer 5 の二値 checklist の同時充足とする。
 
 ## Layer 2: ドメイン層
 
 ### 入力契約
 
-- PASS receipt、trace plan、validated system plan、requirements candidate。
+- PASS receipt、trace plan、validated system plan、requirements candidate、C19 snapshot adapter がupstream成功後の安定post-validation passで確定した `resume_receipt_sha256` / `completeness_report_sha256` / `artifact_snapshot_sha256`。
 
 ### 出力契約
 
-- atomic requirements document、capability-build handoff ref、snapshot digest。
+- atomic requirements document、capability-build handoff ref、graph/package/C19 snapshot digest。
 
 ### 責務境界
 
@@ -25,11 +25,11 @@
 
 ### 受入条件
 
-- 全requirement/source/package refを持ちdigest一致、self-generated code 0になる。
+- 全requirement/source/package refと C19 receipt/report/artifact-snapshot digest を持ちcurrent、self-generated code 0になる。
 
 ## Layer 3: インフラ層
 
-- 使用資産: WriteとSkill capability-buildへのhandoff。
+- 使用資産: Write、Skill capability-buildへのhandoff、R2b が `validate-requirements-system-spec-snapshot.py` で確定した 3 digest binding。
 - path は caller repository context または skill-relative reference から解決し、環境固有の絶対 path を成果物へ保存しない。
 
 ## Layer 4: 共通ポリシー層
@@ -46,7 +46,7 @@
 
 ### 5.2 ゴール定義
 
-- 目的: C11のreadiness検証とsystem-dev-planner所有のsystem-plan検証 (validate-system-plan.py) の完了時だけ要件定義書をcapability-build/task-graph buildへhandoffする。不足時はmissing_sectionsを返して停止し、実装コードは生成しない
+- 目的: graph/package/C19 snapshot の全 gate 完了時だけ要件定義書を handoff し、不足時は生成を拒否する
 - 背景: この責務を隣接 responsibility から分離し、入力・出力・authority を一意にする。
 - 達成ゴール: atomic requirements document、capability-build handoff ref、snapshot digestが生成され、受入条件を満たした状態になっている。
 
@@ -55,7 +55,7 @@
 - [ ] 宣言した入力が全て検証済みである
 - [ ] 出力が宣言した shape と authority を満たす
 - [ ] 責務境界に反する read/write/delegation が0件である
-- [ ] 全requirement/source/package refを持ちdigest一致、self-generated code 0になる
+- [ ] 全requirement/source/package refと C19 receipt/report/artifact-snapshot digest を持ちcurrent、self-generated code 0になる
 
 ### 5.4 実行方式
 
@@ -74,4 +74,3 @@
 ## 出力指示
 
 Layer 2 の入力・出力・責務境界・受入条件を正本としてこの単一責務だけを実行し、思考過程を出力せず、artifact/receipt、検証結果、未達 blocker だけを返す。
-

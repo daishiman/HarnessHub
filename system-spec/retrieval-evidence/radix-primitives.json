@@ -1,18 +1,13 @@
 {
-  "allowed_domains": [
-    "www.radix-ui.com"
+  "retrieval_path": "WebSearch (allowed_domains=ui.shadcn.com) + 既存の公式 Introduction 記録",
+  "query": "shadcn/ui Base UI default changelog 2026 Radix",
+  "retrieved_at": "2026-08-16T03:19:23Z",
+  "official_url": "https://www.radix-ui.com/primitives/docs/overview/introduction",
+  "context_source": "https://ui.shadcn.com/docs/changelog/2026-07-base-ui-default",
+  "facts": [
+    "Radix Primitives: WAI-ARIA conformant behavior, keyboard interaction, focus management, unstyled, incrementally adoptable (公式 Introduction・2026-08-10 取得)",
+    "shadcn/ui (downstream consumer) made Base UI the default in July 2026, but states Radix is not deprecated and remains supported",
+    "shadcn/ui ships every update and new component for both Radix and Base UI"
   ],
-  "findings": [
-    "Radix Primitives はアクセシビリティ、カスタマイズ性、開発者体験を重視した低レベル UI ライブラリである",
-    "コンポーネントはスタイルを持たず、既存のスタイル方式と組み合わせられる",
-    "WAI-ARIA の設計パターンに沿い、キーボード操作やフォーカス管理などの難しい挙動を扱う",
-    "個別 primitive 単位で段階的に導入できる"
-  ],
-  "retrieval_channel": "WebSearch/WebFetch",
-  "retrieval_method_disclosure": "公式 host に限定して検索し、公式 Introduction 本文を取得・確認した。",
-  "retrieved_at": "2026-08-10T11:54:59Z",
-  "returned_official_urls": [
-    "https://www.radix-ui.com/primitives/docs/overview/introduction"
-  ],
-  "target_id": "radix-primitives"
+  "note": "Radix 自体の公式ページからは既定変更に関する記述を取得していない。既定変更は下流の shadcn/ui 側の決定であり、その一次資料は shadcn-ui record が持つ。"
 }

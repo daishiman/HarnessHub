@@ -2,32 +2,35 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-requirements",
-    "skill_md_sha256": "95bb1cee258f1c17980312a1d7480375a3fc3191e6c5cd4bbafb3e39545921d6"
+    "skill_md_sha256": "ade0f08f7e109b02d50e782f10567518a5af26e8a053d8411d27ec5230057750"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "codex-independent-evaluator-eval_decompose_trial_r3-20260802",
-  "reviewed_at": "2026-08-02",
+  "findings_summary": {
+    "contradiction": 0,
+    "omission": 0,
+    "inconsistency": 0,
+    "dependency_break": 0,
+    "smell": 1
+  },
+  "reviewer": "codex-independent-rubric-final-review",
+  "reviewed_at": "2026-08-17T09:08:54Z",
   "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
     "loop_scope": "both",
-    "criteria_evaluated": [
-      "IN1",
-      "OUT1",
-      "OUT2"
-    ],
+    "criteria_evaluated": ["IN1", "OUT1", "OUT2"],
     "positive_feedback": [
-      "NM/整合: SKILL.md、R2b-readiness.md、component-inventory C04-IN1 が同じ 15-node closure、CLI、停止条件を表現する。",
-      "BD/測定可能性: validate-source-digest.py exit 0 と validate-system-plan.py PASS に係留され、自己申告や目視で代替できない。",
-      "RG/責務: 要件導出と gated handoff に限定し、task 生成と実装コード生成を system-dev-planner/capability-build へ委譲する。",
-      "安全性: incomplete/pending/fail/stale、lineage 不一致、package 検証失敗のいずれでも部分 handoff を認めない。"
+      "handoff時のcurrentnessを5 gateとして明示し、stale/incomplete/unstableをfail-closedにする。",
+      "TOCTOUを二回のpost-validation captureで検出し、upstream semantic ownershipを保持したままconsumer freshnessを担保する。"
     ],
-    "negative_feedback": [],
+    "negative_feedback": [
+      "[low][FM-005] descriptionの初句「確定」は動詞開始ではない。"
+    ],
     "iteration": 1,
     "iteration_limit": 3,
-    "hook_trigger": "manual",
+    "hook_trigger": "manual-final-review",
     "next_action": "none"
   },
-  "notes": "qa-121 で更新した C04 current behavior closure を fresh independent reviewer が rubric 観点で再評価。lineage closure、current pointer、四 gate、責務境界が測定可能かつ fail-closed で、high severity 0 件のため PASS。"
+  "notes": "rubric score=97/100、threshold=80、critical/high/medium=0。low 1件はPASSを妨げない。current behavior closure 84bfeb20cfd22076894ec599a6abc9a0c2aac4c11b2c9a9bd5a7e622845a9bcfはfresh live trial 20260817T092817Z-c04-out1-fresh-r2 と独立evaluatorのPASSへ束縛済み。"
 }

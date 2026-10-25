@@ -2,34 +2,41 @@
   "target": {
     "plugin": "system-spec-harness",
     "skill": "run-system-spec-doc-fetch",
-    "skill_md_sha256": "8bef0bbf461ccb07d970a96ba43053836b62518708787d419c3c4b94e75d8939"
+    "skill_md_sha256": "1d94d1ff7f70a5aa73977589906ec5968dc476ad6db29806860dae2aa29deaa8"
   },
   "review_kind": "elegance",
   "verdict": "PASS",
   "findings_summary": {
     "contradiction": 0,
-    "omission": 0,
-    "inconsistency": 0,
+    "omission": 1,
+    "inconsistency": 1,
     "dependency_break": 0,
-    "smell": 0
+    "smell": 1
   },
-  "reviewer": "independent-content-reviewer",
-  "reviewed_at": "2026-08-03T00:00:00Z",
-  "iterations": 1,
+  "reviewer": "assign-skill-design-evaluator",
+  "reviewed_at": "2026-08-16T05:13:12Z",
+  "iterations": 2,
+  "human_review_required": false,
   "feedback_loop": {
     "loop_scope": "both",
     "criteria_evaluated": ["IN1", "OUT1"],
     "positive_feedback": [
-      "R4-audit-doc-freshness の responsibility_refs・responsibilities 登録と Key Rule 6 (鮮度判定=C08 委譲) が矛盾なく共存: R4 は SSOT 定義をこの skill に置き実行は C08 外部起動に委ねる分離が明瞭",
-      "evidence fixtures の examples/fixture-evidence 移動後、fixture-references-valid/missing/host-mismatch の全 evidence_ref パスと SHA-256 が実ファイルと一致し全32テスト PASSED",
-      "fetched-references.schema.json・validate-source-citation.py・SKILL.md 必須フィールド定義・IN1 criteria・R2-fetch・R3-record が五重に整合",
-      "R1-R4 の 7 層プロンプトが一貫した構造と用語で記述され責務境界が明確。局面カタログに R4 を含めず C08 外部起動に限定する境界が正当"
+      "iteration 1 で指摘した low 4 件が実体を伴って解消されたことを git diff で確認した: (1) source: が plugin-plans/system-spec-harness/component-inventory.json (実在) へ、(2) resource-map.yaml と SKILL.md『Additional Resources』の双方へ R4 を追加し frontmatter の responsibility_refs 4 件と本文列挙が一致、(3) R4 メタ表の output_schema 誤記を実出力契約へ訂正し fixture は input_fixture 行へ役割分離、(4) 検証コマンドが PLUGIN_ROOT=\"${CLAUDE_PLUGIN_ROOT:-$CLAUDE_PROJECT_DIR/plugins/system-spec-harness}\" を実際に経由する形へ変わり cwd 依存が消えた。いずれも辻褄合わせでなく参照先の実体と整合している。",
+      "特に依頼された『3 の output_schema 書き換えが R4 の実出力を正しく写しているか』を独立に検証した結果、写せている: R4 Layer 7 (最終行 AUDIT_VERDICT: PASS|FAIL|INDETERMINATE を 1 行だけ)、起動アダプタ agents/system-spec-doc-freshness-auditor.md の同記述、および consumer 実装 hooks/record-audit-fork.py の AUDIT_VERDICT_LINE_RE = ^AUDIT_VERDICT: (PASS|FAIL|INDETERMINATE)\\s*$ (fullmatch を最終行へ適用) の 3 点が一致する。『schema 無し + 1 行 marker が機械可読部』という表現は実装の実態そのもので、メタ表だけの辻褄合わせではない。",
+      "『検査を通すための改変』を避ける判断が保たれている: FM-003 (medium) は checker 側 heuristic の誤検出という前回判断を踏襲し、description も checker も未改変のまま medium を残置している。verdict を緑にするために被検査対象を書き換えない規律が守られた。",
+      "回帰が出ていない: plugins/system-spec-harness 全体 711 passed、当 skill の tests 40 passed。frontmatter/prompt 契約系 lint (validate-frontmatter / lint-skill-name / lint-skill-description / lint-prompt-contract-drift --all / lint-feedback-contract --all) も全て exit0 で本 skill への指摘なし。"
     ],
-    "negative_feedback": [],
-    "iteration": 1,
-    "iteration_limit": 3,
-    "hook_trigger": "manual",
+    "negative_feedback": [
+      "[omission / 低・今回の修正で新規混入] R4-audit-doc-freshness.md メタ表の新しい output_schema 行が『詳細は L7.1』を指すが、R4 に 7.1 という節番号は存在しない (小節番号を持つのは Layer 5 の 5.1-5.4 のみで、Layer 7 は小節無しの単一節)。正しい参照先は『Layer 7』。追跡は容易だが、L5 の番号体系を Layer 7 にも借用したように読める。",
+      "[inconsistency / 低] 同メタ表が機械可読部を『最終行 AUDIT_VERDICT marker』のみと書いているが、実際の機械可読契約はもう 1 本ある: 起動 prompt に AUDIT_DISPATCH: <token> がある場合、応答本文へ同じ 1 行を 1 回だけ echo する義務 (agents/system-spec-doc-freshness-auditor.md、および hooks/record-audit-fork.py の AUDIT_DISPATCH_TOKEN_RE が台帳の dispatch↔completion join key として消費)。R4 本文にはこの義務が書かれていないため、prompt 側を SSOT として読む agent は echo を落としうる (落とすと並列起動時に verdict 帰属が確定せず aggregate-completeness.py が fail-closed になる)。メタ表の記述精度というより R4 本文の契約漏れ。",
+      "[smell / 低・重みは前回より上がったと判断] frontmatter source: を plugin-plans/system-spec-harness/component-inventory.json へ向けた修正自体は doc/21 の traceability (この skill の仕様がどこ由来か) として正しい。ただしその結果、frontmatter から解決できる文書の C02 output_contract (request_id / resume_token / freshness_policy / status=pending_evidence) が、実際に出荷されている schemas/fetched-references.schema.json + R3 の契約 (evidence_ref / evidence_sha256 / summary) と食い違う状態が、以前より 1 hop 近くなった。frontmatter コメントの『component-inventory.json C02 SSOT』という呼称と併せると、初見の読み手が計画文書を runtime 正本と誤読しうる。対処案は 2 択で、(a) コメントを『build 由来 (計画時) の出典。runtime 正本は schemas/fetched-references.schema.json + prompts/R3』と明示するか、(b) component-inventory 側の output_contract を現行契約へ追従させる。今回は指摘のみで PASS は阻まない。",
+      "[advisory / 採点外・未解消] machine_checks の REG-001 (high, governance): eval-log/system-spec-harness/run-system-spec-doc-fetch/skill-build-trace.json が依然不在。score には反映されないが再現性トレースは未整備のまま。",
+      "[medium / FM-003・意図的に未解消] 決定論採点は今回も『trigger count = 7 (expected 2..3)』を出す (description は未変更なので当然)。前回判断どおり render-findings-score.py の日本語分岐が中黒の名詞列挙と『や』をトリガ句として数える heuristic 誤検出であり、実トリガ句は『…記録したいとき』『…裏取りしたいとき』の 2 つ。恒久対策は harness-creator 側 checker の修正であり、description の書き換えでは行わない。"
+    ],
+    "iteration": 2,
+    "iteration_limit": 2,
+    "hook_trigger": "Stop",
     "next_action": "none"
   },
-  "notes": "independent content review: SKILL.md (sha256=8bef0bbf461ccb07d970a96ba43053836b62518708787d419c3c4b94e75d8939) を全文読了。R4 追加 (responsibility_refs/responsibilities/本文責務正本行) と evidence fixtures の examples/fixture-evidence 移動を検証。R4 は C08 起動アダプタ経由の外部実行であり goal-seek 局面カタログ非掲載は正当。fixtures 3 ファイルの evidence_ref パス・SHA-256 を shasum -a 256 で突合済み。schema required[]・validate-source-citation.py REQUIRED_FIELDS・IN1 criteria・R2/R3 プロンプト間で必須フィールド定義が一貫。全 32 テスト PASSED。(a)矛盾0 (b)漏れ0 (c)規約整合 (d)依存整合 (e)rubric high severity 0。"
+  "notes": "incremental profile の focused combined review、iteration 2 (limit 2 の範囲内)。30 思考法は使用していない。SKILL.md sha は c5a4bba3... → 1d94d1ff... へ変化し自分で shasum -a 256 を実行して取得。iteration 1 の 4 指摘は git diff で実体確認のうえ解消。残る指摘は low 3 件 (うち 1 件は今回の修正で新規混入した dangling pointer『L7.1』) と、意図的に据え置いた FM-003 (medium, checker 側誤検出) および REG-001 (high advisory, 採点外) のみで、鑑定対象そのものに high severity は 0。よって PASS・next_action=none とし、残件は follow-up として記録する。被採点物は本レビューで一切改変していない (Write は verdict 2 ファイルのみ)。"
 }

@@ -1,13 +1,12 @@
 """C19 confirmed-bundle reuse gate tests."""
 from __future__ import annotations
 
-import json
-import importlib.util
 import hashlib
+import importlib.util
+import json
 import subprocess
 import sys
 from pathlib import Path
-
 
 PLUGIN = Path(__file__).resolve().parents[1]
 BUILDER = PLUGIN / "tests" / "fixtures" / "build_live_trial_fixture.py"
@@ -45,6 +44,23 @@ def run(root: Path) -> tuple[int, dict]:
         check=False,
     )
     return proc.returncode, json.loads(proc.stdout)
+
+
+def capture_snapshot(root: Path) -> dict:
+    proc = subprocess.run(
+        [
+            sys.executable,
+            str(RECEIPT_WRITER),
+            "--repo-root",
+            str(root),
+            "--print-artifact-snapshot",
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    return json.loads(proc.stdout)
 
 
 def test_confirmed_bundle_passes_without_network_or_generation(tmp_path: Path) -> None:
@@ -159,10 +175,102 @@ def test_production_writer_builds_a_digest_and_ledger_bound_receipt(tmp_path: Pa
     )
     assert proc.returncode == 0, proc.stdout + proc.stderr
     receipt = json.loads(output.read_text(encoding="utf-8"))
-    assert receipt["schema_version"] == "1.1"
+    assert receipt["schema_version"] == "1.2"
     assert receipt["evaluator"]["session_id"] == SESSION_ID
     code, report = run(root)
     assert code == 0, report
+
+
+def test_production_writer_requires_passing_knowledge_graph_gate(tmp_path: Path) -> None:
+    root = fixture(tmp_path)
+    report_path = root / "system-spec" / "completeness-report.json"
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    report["gate_results"] = [
+        item for item in report["gate_results"] if item.get("id") != "G-knowledge-graph"
+    ]
+    report_path.write_text(json.dumps(report), encoding="utf-8")
+    output = root / "system-spec" / "resume-receipt.json"
+    before = output.read_bytes()
+
+    proc = subprocess.run(
+        [
+            sys.executable,
+            str(RECEIPT_WRITER),
+            "--repo-root",
+            str(root),
+            "--session",
+            SESSION_ID,
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert proc.returncode == 2
+    assert "G-knowledge-graph" in proc.stdout
+    assert output.read_bytes() == before
+
+
+def test_production_writer_binds_every_system_spec_markdown_artifact(tmp_path: Path) -> None:
+    """indexリンクだけでなく、分割された章本文もresume snapshotへ直接束縛する。"""
+    root = fixture(tmp_path)
+    appendix = root / "system-spec" / "ui-ux-design-knowledge.md"
+    appendix.write_text("# UI-UX design knowledge\n\nBound appendix body.\n", encoding="utf-8")
+    report_path = root / "system-spec" / "completeness-report.json"
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    report["artifact_snapshot"] = capture_snapshot(root)
+    report_path.write_text(json.dumps(report), encoding="utf-8")
+    output = root / "system-spec" / "resume-receipt.json"
+    output.unlink()
+
+    proc = subprocess.run(
+        [
+            sys.executable,
+            str(RECEIPT_WRITER),
+            "--repo-root",
+            str(root),
+            "--session",
+            SESSION_ID,
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    receipt = json.loads(output.read_text(encoding="utf-8"))
+    assert "system-spec/ui-ux-design-knowledge.md" in receipt["artifacts"]
+
+    appendix.write_text("# changed after evaluation\n", encoding="utf-8")
+    code, report = run(root)
+    assert code == 2
+    assert "artifact-digest-stale:system-spec/ui-ux-design-knowledge.md" in report["failures"]
+
+
+def test_production_writer_rejects_markdown_added_after_evaluation_snapshot(tmp_path: Path) -> None:
+    root = fixture(tmp_path)
+    output = root / "system-spec" / "resume-receipt.json"
+    before = output.read_bytes()
+    (root / "system-spec" / "late-unreviewed.md").write_text(
+        "# added after the PASS report\n", encoding="utf-8"
+    )
+
+    proc = subprocess.run(
+        [
+            sys.executable,
+            str(RECEIPT_WRITER),
+            "--repo-root",
+            str(root),
+            "--session",
+            SESSION_ID,
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert proc.returncode == 2
+    assert "artifact snapshot" in proc.stdout
+    assert output.read_bytes() == before
 
 
 def test_production_writer_rejects_noncanonical_report_path(tmp_path: Path) -> None:
@@ -230,6 +338,13 @@ def test_resume_runner_imports_both_nodes_and_writes_goal_evidence(tmp_path: Pat
         if item["id"] == "live-trial-outer-closure"
     )
     assert outer["status"] == "pending-external"
+    upstream_gates = next(
+        item for item in progress["checklist"]
+        if item["id"] == "upstream-gates"
+    )
+    assert upstream_gates["evidence"] == (
+        "digest-bound coverage/source_citation/knowledge_graph/evaluator gates current"
+    )
 
     first = (root / "eval-log" / "run-dev-graph-system-spec-intermediate.jsonl").read_text(
         encoding="utf-8"

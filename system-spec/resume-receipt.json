@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.2",
+  "producer": {
+    "plugin": "system-spec-harness",
+    "version": "0.1.0",
+    "entry_point": "assign-system-spec-completeness-evaluator"
+  },
+  "verdict": "PASS",
+  "gates": {
+    "coverage": "PASS",
+    "source_citation": "PASS",
+    "knowledge_graph": "PASS",
+    "evaluator": "PASS"
+  },
+  "artifacts": {
+    "system-spec/00-requirements-definition.md": "ce4e67a9460878b7d8a1c471f85d8114678e4f9d890a85860d83be5d7ae99b8a",
+    "system-spec/auth.md": "bca64993acba285340296d1aba6d99b5ffa3746e892ad3e7799302dc709363b8",
+    "system-spec/backend.md": "14e1c8a86a177542e02458dfb890d394961e4542721edfa6b75357ce715bd94d",
+    "system-spec/database.md": "0c50c54898a8c6242dcb5907937fc0838c516e9f9302dc781b8cf4537e38ca9f",
+    "system-spec/dev-workflow.md": "46c898853ebbc4dbc15d710ff8312e1be9bdab09bc82b24782498cf802f317bf",
+    "system-spec/fetched-references.json": "5562d4f6bfd651cfddec0ec88777faf5465e8ee7924de3e136187baa5d7c6f27",
+    "system-spec/frontend.md": "d3074c576bb5a9514d99a68b5f18d01e2b509e5e2c0541fc0b27690b972cda60",
+    "system-spec/implementation-writebacks.md": "cd5ff5127fa980e151545e3c33ca20d870d933d66061d6dd76bf07e1f0779d36",
+    "system-spec/index.md": "f261a184f7635ce5c1de61db1b432ec3e67c7fe50c23928b94e0476973ccf7f7",
+    "system-spec/infrastructure.md": "469600fa184c8182959c68234ee6fd7a888f248984145cda9eae2b957b7637e6",
+    "system-spec/maintenance-ops.md": "389d1f0e69b130ead7a86881caabc9988a2a17b9140fca86301a30abce77e803",
+    "system-spec/security.md": "ac8daa73d0d6cbf3126eaa0307988db0745872d2e3e804fc02195b93bdd6cf00",
+    "system-spec/spec-state.json": "05cb0c36f454d4497b558824ae841f131971d10643f20bbd2eaf2cd28053fe9a",
+    "system-spec/testing-qa.md": "da1967bdcc1a42981a6bd9fb759ac9979402b274878b3825eb101e91d440558b",
+    "system-spec/ui-ux-design-knowledge.md": "2003568989e4c6b4ae1a8463f3b0bf8e44da57f88f848ef90647c2dcfd3f25ca",
+    "system-spec/ui-ux.md": "94892efd7d6aa9b7be9340f5fb2c4fa461b652d66783f325327314b21447d8a6",
+    "system-spec/completeness-report.json": "7ed726cf030c9db0f1a9175068c1aea5879c32bc5d152337ae23eb485f85426b"
+  },
+  "evaluator": {
+    "report_path": "system-spec/completeness-report.json",
+    "report_sha256": "7ed726cf030c9db0f1a9175068c1aea5879c32bc5d152337ae23eb485f85426b",
+    "fork_ledger_path": "eval-log/system-spec-harness/audit-fork-ledger.jsonl",
+    "session_id": "392db97a-726c-42be-a009-50818cb5d560"
+  },
+  "created_at": "2026-08-17T07:40:03Z"
+}

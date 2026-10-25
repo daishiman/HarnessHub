@@ -1,6 +1,798 @@
 # Spec Diff History
 
 このファイルは `.github/workflows/update-yaml-spec.yml` が週次自動更新する。最新が上。
+## 2026-10-19T03:37:13Z
+
+実仕様ページに変更を検知。
+
+```diff
+--- 
++++ 
+@@ -82,15 +82,13 @@
+ /doctor
+ setup checkup stays typable when
+ disableBundledSkills
+-is on, in Claude Code v2.1.205 and later. To hide it, set the
++is on. To hide it, set the
+ DISABLE_DOCTOR_COMMAND
+ environment variable or a
+ skillOverrides
+ entry of
+ "doctor": "off"
+-. Before v2.1.205,
+-/doctor
+-was a built-in command rather than a bundled skill.
++.
+ Bundled skills are listed alongside built-in commands in the
+ commands reference
+ , marked
+@@ -177,7 +175,7 @@
+ at the repo root, or in the touched package directory in a monorepo, so later runs and other agents follow the same steps. At the repo root, the recorded skill replaces the bundled
+ /verify
+ .
+-Claude edits the recorded file only when it steered a run wrong, such as a command that failed or a missing step, so you can commit the file without per-session diffs. Before v2.1.205, the bundled skill told Claude to fold in anything a run learned, which caused frequent merge conflicts.
++Claude edits the recorded file only when it steered a run wrong, such as a command that failed or a missing step, so you can commit the file without per-session diffs.
+ ​
+ Run your checks before each commit
+ When a session starts with a skill named
+@@ -387,6 +385,12 @@
+ anthropic-skills:
+ doesn’t load. See
+ Names reserved for synced skills
++.
++Characters in the name
++: outside a plugin, a skill folder doesn’t load when its name has a character such as a zero-width space or
++<
++. See
++Characters a skill name can’t hold
+ .
+ Command files
+ : a Markdown file in
+@@ -1368,6 +1372,53 @@
+ name
+ field, Claude Code falls back to the plugin’s directory name.
+ ​
++Characters a skill name can’t hold
++If a skill or custom command is missing from the
++/
++menu, or the menu doesn’t show a skill’s frontmatter
++name
++, check the name. Claude Code refuses a command name or a frontmatter
++name
++that contains characters such as these:
++A zero-width space or a control character
++A private-use or unassigned character, such as a glyph from an icon font
++A character that changes the direction of the text around it
++A blank other than one plain space between words, such as a no-break space, two spaces in a row, or a space at the start or end
++<
++or
++>
++A custom command or skill doesn’t load when Claude Code refuses its directory or file name. Rename that folder or file to remove the characters. A skill still loads when these characters are only in a plugin skill folder’s name or in its frontmatter
++name
++:
++Folder in a plugin’s
++skills/
++directory or its manifest’s
++skills
++paths
++: you don’t need to rename the folder. These characters become hyphens in the skill’s command name, so type the command with the hyphens.
++Frontmatter
++name
++: the
++/
++menu doesn’t show the
++name
++value and typing it doesn’t invoke the skill. Edit the
++name:
++line to remove the characters.
++To find out which name Claude Code refused, start it with
+... (1440 more lines)
+```
+
+## 2026-10-12T04:44:51Z
+
+実仕様ページに変更を検知。
+
+```diff
+--- 
++++ 
+@@ -97,8 +97,50 @@
+ Skill
+ in the Purpose column.
+ ​
++Check your setup with
++/doctor
++Run
++/doctor
++at the Claude Code prompt for a setup checkup that diagnoses issues and can fix them. Claude reports its findings first and asks for confirmation before changing anything. The checkup covers these areas:
++Installation health
++: duplicate or leftover installs,
++PATH
++problems, unparseable settings files, and whether a newer version is available on your
++release channel
++Extensions
++: unused skills, MCP servers, and plugins compared with their context cost, and slow
++hooks
++CLAUDE.md
++files
++: local
++CLAUDE.md
++files that duplicate checked-in ones, checked-in
++CLAUDE.md
++content Claude could derive from the codebase
++, and the always-loaded guidance that remains, which Claude offers to migrate into skills and nested
++CLAUDE.md
++files that load on demand
++Permissions
++: an offer to make
++auto mode
++your default permission mode and to
++pre-approve
++read-only commands that you frequently deny
++For read-only installation diagnostics without starting a session, run
++claude doctor
++in your terminal instead.
++To audit your instructions rather than your setup, run
++/doctor prompt-audit
++at the Claude Code prompt. Claude
++checks your
++CLAUDE.md
++files, skills, and other configuration
++for outdated or conflicting instructions instead of running the checkup. The
++prompt-audit
++subcommand requires Claude Code v2.1.283 or later.
++​
+ Run and verify your app
+-Three bundled skills work together to launch your app and confirm changes against the running app instead of just tests:
++Three bundled skills work together to launch your app and confirm changes against the running app instead of tests alone:
+ Skill
+ Purpose
+ /run
+@@ -134,7 +176,7 @@
+ .claude/skills/verify/SKILL.md
+ at the repo root, or in the touched package directory in a monorepo, so later runs and other agents follow the same steps. At the repo root, the recorded skill replaces the bundled
+ /verify
+-. This requires Claude Code v2.1.200 or later.
++.
+ Claude edits the recorded file only when it steered a run wrong, such as a command that failed or a missing step, so you can commit the file without per-session diffs. Before v2.1.205, the bundled skill told Claude to fold in anything a run learned, which caused frequent merge conflicts.
+ ​
+ Run your checks before each commit
+@@ -199,6 +241,15 @@
+ managed-agents-onboard
+ Walk through creating a new Managed Agent
+ Earlier than v2.1.221
++managed-agents-onboard <url>
++Build the Managed Agent that the page at the URL describes, such as a page in the
++Managed Agents docs
++v2.1.290 or later
++managed-agents-onboard <quickstart-name>
++Build one of the Console’s quickstart templates, such as
++deep-researcher
++. If you give one word that isn’t a template name, Claude lists the valid names
++v2.1.290 or later
+ prompt-audit
+ Flag instructions written for older models in your prompts, skills, and tool descriptions and propose fixes as a diff
+ v2.1.221 or later
+@@ -373,6 +424,10 @@
+... (1953 more lines)
+```
+
+## 2026-10-05T04:30:39Z
+
+実仕様ページに変更を検知。
+
+```diff
+--- 
++++ 
+@@ -136,6 +136,86 @@
+ /verify
+ . This requires Claude Code v2.1.200 or later.
+ Claude edits the recorded file only when it steered a run wrong, such as a command that failed or a missing step, so you can commit the file without per-session diffs. Before v2.1.205, the bundled skill told Claude to fold in anything a run learned, which caused frequent merge conflicts.
++​
++Run your checks before each commit
++When a session starts with a skill named
++verify
++or
++simplify
++in place, Claude Code’s commit instructions tell Claude to run it right before each commit, except for changes to docs or tests. This requires Claude Code v2.1.286 or later. Claude gets that instruction when these conditions hold at the start of the session:
++Location
++: the skill loads from the enterprise, personal, project, or additional-directory
++location
++, or from a
++.claude/commands/
++file with that name. The recipe that
++/verify
++records at your repo root is a project skill, so it counts. The bundled
++/verify
++and
++/simplify
++, plugin skills, and skills from your claude.ai account don’t count.
++Invocation
++: Claude can invoke the skill. If you’ve
++stopped Claude from invoking it
++, for example with
++disable-model-invocation: true
++, Claude doesn’t get the instruction.
++Git instructions
++: you haven’t turned off
++includeGitInstructions
++. Turning it off removes this instruction together with the rest of the built-in commit and PR instructions.
++​
++Work on Claude API projects
++The bundled
++/claude-api
++skill loads
++Claude API
++and
++Managed Agents
++reference material for your project’s language. Claude also activates it automatically when your code imports
++anthropic
++or
++@anthropic-ai/sdk
++.
++To start one of the skill’s workflows, type a subcommand after the skill name at the Claude Code prompt, for example
++/claude-api migrate
++. The table lists what each subcommand does and the earliest Claude Code version that includes it.
++migrate
++and
++managed-agents-onboard
++predate v2.1.221, the oldest version the table tracks.
++Subcommand
++What it does
++Minimum version
++migrate
++Update your existing Claude API code to a newer model
++Earlier than v2.1.221
++upgrade
++Move your project’s Anthropic SDK dependency across a major version, currently the Python
++anthropic
++package from 0.x to 1.x
++v2.1.236 or later
++managed-agents-onboard
++Walk through creating a new Managed Agent
++Earlier than v2.1.221
++prompt-audit
++Flag instructions written for older models in your prompts, skills, and tool descriptions and propose fixes as a diff
++v2.1.221 or later
++cost-optimize
++Profile where your project’s Claude API spend goes and propose savings from options such as prompt caching, trimming unneeded input and output tokens, batch processing, effort, and model choice, one change at a time
++v2.1.247 or later
++build-eval
++Build an eval set for your Claude-powered app
++v2.1.259 or later
++hillclimb
++Iteratively improve your app against an existing eval
+... (2088 more lines)
+```
+
+## 2026-09-28T04:07:46Z
+
+実仕様ページに変更を検知。
+
+```diff
+--- 
++++ 
+@@ -155,7 +155,9 @@
+ SKILL.md
+ file with two parts: YAML frontmatter between
+ ---
+-markers that tells Claude when to use the skill, and markdown content with the instructions Claude follows when the skill runs. The directory name becomes the command you type, and the
++markers that tells Claude when to use the skill, and markdown content with the instructions Claude follows when the skill runs. The directory name, or the frontmatter
++name
++when you set one, becomes the command you type, and the
+ description
+ helps Claude decide when to load the skill automatically.
+ Save this to
+@@ -238,6 +240,7 @@
+ handle symlinks differently
+ .
+ Reserved name
++synced
+ : don’t name a skill folder
+ synced
+ , in any capitalization. Claude Code uses
+@@ -245,6 +248,15 @@
+ for
+ skills downloaded from claude.ai
+ and skips a skill you author at that name in the enterprise, personal, and project locations.
++Reserved name
++anthropic-skills
++: outside a plugin, a skill folder or command file whose name is
++anthropic-skills
++or starts with
++anthropic-skills:
++doesn’t load. See
++Names reserved for synced skills
++.
+ Command files
+ : a Markdown file in
+ .claude/commands/
+@@ -279,6 +291,13 @@
+ move the session with
+ /cd
+ on v2.1.246 or later, Claude Code adds the new directory’s project skills.
++In a session running in a linked
++git worktree
++, Claude Code searches parent directories only up to the worktree root. On Claude Code v2.1.277 or later, when the worktree checkout has no
++.claude/skills
++directory at its root, Claude Code loads the main checkout’s project skills instead. See
++What worktrees share with the main checkout
++.
+ Skills in a
+ .claude/skills/
+ directory below where you started don’t load at startup. They load the first time Claude reads or edits a file in that subdirectory and stay available for the rest of the session. Until then they don’t appear in the
+@@ -286,7 +305,7 @@
+ menu and you can’t invoke them by name. To load them sooner, run
+ /add-dir
+ with the subdirectory’s path, which requires Claude Code v2.1.257 or later.
+-When a nested skill shares a name with another skill, both stay available. With a
++When a nested skill’s directory name matches another skill’s name, both stay available. With a
+ deploy
+ skill at the repository root and another in
+ apps/web/.claude/skills/
+@@ -347,9 +366,13 @@
+ and plugin settings.
+ ​
+ Resolve skills that share a name
+-When two skills share a name, where each one came from decides which one
++When two skills share a directory or file name, where each one came from decides which one
+ /name
+-runs. The table covers the enterprise, personal, project, nested, plugin, and claude.ai locations, bundled skills, and command files:
++runs. For a name set by the frontmatter
++name
++field, see
++How a skill gets its command name
++. The table covers the enterprise, personal, project, nested, plugin, and claude.ai locations, bundled skills, and command files:
+ Same name in
+ Which one runs
+ Two of enterprise, personal, and project
+@@ -380,11 +403,9 @@
+ A plugin skill and a skill at any of the locations above
+ Both load, because plugin skills are namespaced as
+ /plugin-name:skill-name
+... (6880 more lines)
+```
+
+## 2026-09-21T03:45:14Z
+
+実仕様ページに変更を検知。
+
+```diff
+--- 
++++ 
+@@ -225,10 +225,9 @@
+ is enabled, as
+ /plugin-name:skill-name
+ claude.ai account
+-Skills you enable in your claude.ai settings
+-Cowork and cloud sessions. See
++Skills enabled for your claude.ai account
++Cowork sessions, cloud sessions, and terminal sessions where you sign in with that account. See
+ Skills synced from claude.ai
+-for local sessions
+ Skill folders also follow these rules:
+ Symlinked folders
+ : a
+@@ -405,7 +404,7 @@
+ ~/.claude/skills/
+ on your machine, Claude Code reports that the skill was not found when a
+ routine
+-invokes it, because each routine run starts as a fresh remote session. To make a personal skill available in these sessions:
++invokes it, because each routine run starts as a fresh cloud session. To make a personal skill available in these sessions:
+ For Cowork and cloud sessions, enable the skill for your claude.ai account.
+ For cloud sessions, you can instead commit the skill to the repository’s
+ .claude/skills/
+@@ -420,11 +419,13 @@
+ .
+ ​
+ Skills synced from claude.ai
+-This section applies to you if you enabled skills for your claude.ai account. In Cowork and cloud sessions, Claude Code loads those skills without any setup on your machine. In any other session on your machine, Claude Code loads them only after you turn syncing on with
+-CLAUDE_CODE_SYNC_SKILLS
+-in a non-interactive run, as
++This section applies to you if you use Cowork or cloud sessions, or sign in to Claude Code in your terminal with a claude.ai account. In those sessions, Claude Code loads the skills enabled for your claude.ai account, with no setup on your part, as
+ Where synced skills load
+-describes.
++describes. Those skills include the ones you create or turn on in your claude.ai settings, skills your organization provides there, and Anthropic’s built-in skills such as
++pdf
++and
++xlsx
++.
+ Claude Code downloads a synced skill from your account rather than reading a file you wrote on the machine where the session runs, so it applies rules to synced skills that don’t apply to the skills you store in the
+ skills locations
+ .
+@@ -433,47 +434,68 @@
+ In a Cowork or cloud session, Claude Code loads the skills enabled for your claude.ai account, and
+ Skills in Cowork and cloud sessions
+ says how to choose which skills those sessions get.
+-In any other session on your machine, Claude Code loads them only after you download them once in a non-interactive run:
+-1
+-Enable the skills for your claude.ai account
+-Enable each skill you want for your claude.ai account, as
+-Skills in Cowork and cloud sessions
+-describes. Claude Code downloads only the skills you enabled, and it needs your claude.ai sign-in to download them.
+-2
+-Run Claude Code in non-interactive mode with syncing turned on
+-Claude Code downloads synced skills only when you run it in
+-non-interactive mode
+-with the
+--p
+-flag and set
++In your terminal, Claude Code syncs those skills in sessions where you sign in with your claude.ai account. When the session starts, Claude Code downloads your account’s skills into
++~/.claude/skills/synced/
++in the background, then checks claude.ai for changes about every 10 minutes while the session runs. When a check finds that a skill was added, edited, or turned off on claude.ai, Claude Code adds, updates, or removes it in the running session without a restart. Syncing in terminal sessions requires Claude Code v2.1.273 or later.
++The sync never delays startup, because Claude waits for a skill’s download only when it invokes that skill. A short
++non-interactive
++run can therefore finish before a newly added skill downloads, in which case a later session downloads it. To make a non-interactive run download your skills and wait for the list before it answers the prompt, set
+ CLAUDE_CODE_SYNC_SKILLS
+ to
+ 1
+-. The prompt you pass doesn’t affect the download.
+-CLAUDE_CODE_SYNC_SKILLS
+-=
+-1
+-claude
+--p
+-"List the skills you have available"
+-Claude Code downloads the skills into
+-~/.claude/skills/synced/
+-, answers the prompt, and exits like any other non-interactive run. The downloaded skills stay on disk after it exits, so you don’t need to keep the run open. Claude Code downloads skills only during a run with
+-CLAUDE_CODE_SYNC_SKILLS
+-set, so after you enable or change a skill on claude.ai, run the command again. To change how long the run waits for the sync before it answers the prompt, set
+... (2084 more lines)
+```
+
+## 2026-09-14T03:46:57Z
+
+実仕様ページに変更を検知。
+
+```diff
+--- 
++++ 
+@@ -77,9 +77,7 @@
+ are enabled.
+ To turn bundled skills off, use the
+ disableBundledSkills
+-setting, which disables every bundled skill except
+-/doctor
+-.
++setting.
+ The
+ /doctor
+ setup checkup stays typable when
+@@ -191,115 +189,79 @@
+ /summarize-changes
+ Either way, Claude should respond with a short summary of your edit and a list of risks.
+ ​
+-Where skills live
+-Where you store a skill determines who can use it:
++Choose where skills load
++Where you save a skill decides which sessions load it. Save it under your home directory to get it in every project, commit it to a repository to share it with everyone who works there, or distribute it through a plugin or managed settings to reach a whole team.
+ Location
+ Path
+-Applies to
++Loads in
+ Enterprise
+-See
+-managed settings
+-All users in your organization
++.claude/skills/<skill-name>/SKILL.md
++in the
++managed settings directory
++All users on machines where your organization deploys it
+ Personal
+ ~/.claude/skills/<skill-name>/SKILL.md
+-All your projects
++All your projects on this machine, but not
++Cowork or cloud sessions
+ Project
+ .claude/skills/<skill-name>/SKILL.md
+-This project only
++Sessions in this repository. Commit it so your team gets it too
++Nested
++<subdir>/.claude/skills/<skill-name>/SKILL.md
++Sessions started in or below
++<subdir>
++. A session started above it loads the skill once Claude works on files there. See
++monorepos and subdirectories
++Additional directory
++.claude/skills/<skill-name>/SKILL.md
++in a directory you pass with
++--add-dir
++That session. See
++directories outside the project
+ Plugin
+ <plugin>/skills/<skill-name>/SKILL.md
+-Where plugin is enabled
+-When skills share the same name, Claude Code resolves the conflict by source:
+-Across levels, enterprise overrides personal, and personal overrides project.
+-For example, with a
+-deploy
+-skill in both
+-~/.claude/skills/
+-and your project’s
+-.claude/skills/
+-,
+-/deploy
+-runs the personal one.
+-A skill at any of these levels also overrides a bundled skill with the same name, but not the bundled skill’s aliases.
+-For example, a
+-code-review
+-skill in your project’s
+-.claude/skills/
+-replaces the bundled
+-/code-review
+-, and typing the bundled alias
+-/review
+-never runs your skill.
+-Plugin skills use a
+-plugin-name:skill-name
+... (2897 more lines)
+```
+
+## 2026-09-07T03:20:02Z
+
+実仕様ページに変更を検知。
+
+```diff
+--- 
++++ 
+@@ -348,11 +348,14 @@
+ on v2.1.246 or later, Claude Code adds the new directory’s project skills.
+ Skills in nested
+ .claude/skills/
+-directories below your starting directory aren’t loaded at startup. They load the first time Claude reads or edits a file inside that subdirectory, and stay available for the rest of the session. For example, after Claude edits a file under
++directories below your starting directory don’t load at startup. They load the first time Claude reads or edits a file in the subdirectory that contains them, and stay available for the rest of the session. For example, after Claude edits a file under
+ packages/frontend/
+ , skills in
+ packages/frontend/.claude/skills/
+-become available. Until then, those skills don’t appear in autocomplete and can’t be invoked by name.
++become available. Until then, those skills don’t appear in autocomplete, and you can’t invoke them by name.
++To load a subdirectory’s skills before Claude reads or edits a file there, run
++/add-dir
++with that subdirectory’s path. This requires Claude Code v2.1.257 or later.
+ Files in
+ .claude/commands/
+ support the same
+@@ -1066,23 +1069,19 @@
+ already carried it.
+ In
+ non-interactive sessions
+-, Claude Code doesn’t reserve the names
++, the names
+ help
+ and
+ feedback
+-for their terminal-only built-in commands, so a plugin skill with one of those names keeps its bare command there. Claude Code still reserves the name of every other terminal-only built-in, such as
++aren’t reserved for their terminal-only built-in commands, so a plugin skill with one of those names keeps its bare command there. Every other terminal-only built-in’s name, such as
+ /login
+-, even though the command can’t run in those sessions. In those sessions Claude Code also skips a synced skill named
++, stays reserved even though the command can’t run in those sessions. A synced skill named
+ help
+ or
+ feedback
+-, because it
++is still skipped there, because Claude Code
+ skips a synced skill
+-whose name matches any built-in command whether or not that command can run. From v2.1.216 through v2.1.220,
+-help
+-and
+-feedback
+-were reserved too, so a plugin skill with one of those names was invocable only by its namespaced command in non-interactive sessions.
++whose name matches any built-in command whether or not that command can run.
+ For a plugin-root
+ SKILL.md
+ , there is no skill directory to take the name from, so
+@@ -1577,7 +1576,9 @@
+ , regardless of this setting.
+ How Claude Code handles the body of a synced skill
+ says what Claude receives in place of the command in each kind of session.
+-To request deeper reasoning when
++To request deeper reasoning when a skill runs, include
++ultrathink
++anywhere 
+ 
+ ## Source (settings): https://docs.claude.com/en/docs/claude-code/settings
+ 
+@@ -1963,6 +1964,8 @@
+ --effort
+ for
+ effortLevel
++and
++modelSettings
+ .
+ An environment variable
+ : export the key’s paired variable before you run
+@@ -1977,21 +1980,22 @@
+ lists its per-session overrides and which one takes precedence, so check the entry for the key you want to change.
+ Commands you run inside a session mostly save your choice:
+ /config
+-writes to your settings files, and
++writes to your settings files,
+ /model
+-and
++saves the value as your default for new sessions, and
+ /effort
+-save the value as your default for new sessions. Pressing
++on your machine saves the level as your default for the model you’re using.
+... (1733 more lines)
+```
+
+## 2026-08-31T04:11:00Z
+
+実仕様ページに変更を検知。
+
+```diff
+--- 
++++ 
+@@ -70,7 +70,12 @@
+ followed by the skill name. Claude invokes some bundled skills automatically when relevant; others, including
+ /verify
+ , run only when you invoke them, which keeps you in control of when these longer-running checks spend time and tokens.
+-Bundled skills are available in every session. To turn them off, use the
++Most bundled skills are available in every session. A few depend on a specific feature:
++/workflow-authoring
++, for example, is available only when
++dynamic workflows
++are enabled.
++To turn bundled skills off, use the
+ disableBundledSkills
+ setting, which disables every bundled skill except
+ /doctor
+@@ -337,7 +342,10 @@
+ --add-dir
+ . Claude Code reads
+ .claude/skills/
+-inside each added directory alongside the project skills.
++inside each added directory alongside the project skills. When you
++move the session with
++/cd
++on v2.1.246 or later, Claude Code adds the new directory’s project skills.
+ Skills in nested
+ .claude/skills/
+ directories below your starting directory aren’t loaded at startup. They load the first time Claude reads or edits a file inside that subdirectory, and stay available for the rest of the session. For example, after Claude edits a file under
+@@ -368,24 +376,76 @@
+ .claude/skills/
+ and
+ .claude/commands/
+-from each added directory automatically. This exception applies only to
++from each added directory automatically. This exception applies to
+ --add-dir
+-and
++,
+ /add-dir
+-. The
++, and directories the Agent SDK adds through
++additionalDirectories
++in TypeScript or
++add_dirs
++in Python, which the SDK passes to Claude Code as
++--add-dir
++.
++The
+ permissions.additionalDirectories
+ setting in
+ settings.json
+-grants file access only and doesn’t load skills, commands, or subagents. See
++grants file access only and doesn’t load skills, commands, or subagents, even though the TypeScript option has the same name. See
+ Live change detection
+ for how skill edits are picked up during a session.
+-Subagents follow the same exception: when you add a directory, Claude Code loads its
++Claude Code loads skills, commands, and subagents from an added directory only when the
++project
++setting source
++is enabled, which is the default. If you pass
++--setting-sources
++on the CLI, or set
++settingSources
++or
++setting_sources
++explicitly in the SDK, include
++project
++in the list. In
++--safe-mode
++, Claude Code loads none of the three. A
++strictPluginOnlyCustomization
++managed policy and
++bare mode
++treat the three differently:
++Skills
++in
++.claude/skills/
++: a policy that locks skills turns them off. Bare mode still loads them.
++Commands
++in
++.claude/commands/
+... (3840 more lines)
+```
+
+## 2026-08-24T01:19:27Z
+
+実仕様ページに変更を検知。
+
+```diff
+--- 
++++ 
+@@ -108,11 +108,6 @@
+ and
+ /verify
+ how to build and launch your project
+-All three skills require Claude Code v2.1.145 or later. Check your version with
+-claude --version
+-or the
+-/status
+-command.
+ /run
+ and
+ /verify
+@@ -350,23 +345,6 @@
+ , skills in
+ packages/frontend/.claude/skills/
+ become available. Until then, those skills don’t appear in autocomplete and can’t be invoked by name.
+-Each skill is a directory with
+-SKILL.md
+-as the entrypoint:
+-my-skill/
+-├── SKILL.md           # Main instructions (required)
+-├── template.md        # Template for Claude to fill in
+-├── examples/
+-│   └── sample.md      # Example output showing expected format
+-└── scripts/
+-└── validate.sh    # Script Claude can execute
+-The
+-SKILL.md
+-contains the main instructions and is required. Other files are optional and let you build more powerful skills: templates for Claude to fill in, example outputs showing the expected format, scripts Claude can execute, or detailed reference documentation. Reference these files from your
+-SKILL.md
+-so Claude knows what they contain and when to load them. See
+-Add supporting files
+-for more details.
+ Files in
+ .claude/commands/
+ support the same
+@@ -375,7 +353,9 @@
+ name
+ and
+ paths
+-, which Claude Code ignores in a command file. You invoke a command file by its file name. Skills are recommended since they support additional features like supporting files.
++, which Claude Code ignores in a command file. You invoke a command file by its file name. Skills are recommended since they support additional features like
++supporting files
++.
+ ​
+ Skills from additional directories
+ The
+@@ -396,10 +376,14 @@
+ permissions.additionalDirectories
+ setting in
+ settings.json
+-grants file access only and doesn’t load skills or commands. See
++grants file access only and doesn’t load skills, commands, or subagents. See
+ Live change detection
+ for how skill edits are picked up during a session.
+-Other
++Subagents follow the same exception: when you add a directory, Claude Code loads its
++.claude/agents/
++folder too. It doesn’t watch that folder, or the added directory’s
++.claude/commands/
++, so after you add or edit a subagent or command file there, restart the session to load the change. Other
+ .claude/
+ configuration such as output styles is not loaded from additional directories. See the
+ exceptions table
+@@ -559,6 +543,66 @@
+ disableSkillShellExecution
+ is on.
+ ​
++Remove a skill
++How you remove a skill depends on where it came from:
++Personal or project skill
++: delete the skill’s directory,
++~/.claude/skills/<skill-name>/
++or
++.claude/skills/<skill-name>/
++. Claude Code
++drops it from
++/skills
+... (4779 more lines)
+```
+
 ## 2026-08-17T01:17:59Z
 
 実仕様ページに変更を検知。
