@@ -155,7 +155,12 @@ def render_requirements_definition(spec: dict) -> str:
     return "\n".join(parts)
 
 
-def render_index(spec: dict, refs_by_cat: dict[str, list[dict]], unassigned: list[dict]) -> str:
+def render_index(
+    spec: dict,
+    refs_by_cat: dict[str, list[dict]],
+    unassigned: list[dict],
+    chapter_files: dict[str, list[str]] | None = None,
+) -> str:
     """全章 + カテゴリ集約状態を相互参照する index.md を組み立てる (R3-crosslink)。"""
     cat_ids = _category_ids(spec)
     rf = requirements_foundation(spec)
@@ -197,8 +202,14 @@ def render_index(spec: dict, refs_by_cat: dict[str, list[dict]], unassigned: lis
         label = category_label(spec, cat_id)
         cells = " ".join(spec_cell_ids(spec, cat_id))
         serves = " ".join(chapter_serves_goals(spec, cat_id)) or "—"
+        files = (chapter_files or {}).get(cat_id) or [f"{cat_id}.md"]
+        chapter_links = [f"[{files[0]}](./{files[0]})"]
+        chapter_links.extend(
+            f"[設計知識付録](./{name})"
+            for name in files[1:]
+        )
         lines.append(
-            f"| {label} ({cat_id}) | [{cat_id}.md](./{cat_id}.md) | {agg} | `{status}` | {serves} | {cells} |"
+            f"| {label} ({cat_id}) | {' / '.join(chapter_links)} | {agg} | `{status}` | {serves} | {cells} |"
         )
     lines.extend(["", "## 集約状態サマリ", ""])
     summary: dict[str, list[str]] = {"未着手": [], "収集中": [], "確定": [], "対象外": []}
@@ -207,6 +218,16 @@ def render_index(spec: dict, refs_by_cat: dict[str, list[dict]], unassigned: lis
     for label in ("未着手", "収集中", "確定", "対象外"):
         members = ", ".join(summary.get(label, [])) or "—"
         lines.append(f"- **{label}**: {members}")
+
+    lines.extend(
+        [
+            "",
+            "## 実装 writeback",
+            "",
+            "- [実装 writeback 索引](./implementation-writebacks.md) — "
+            "要件確定後の実装契約を、再compileの所有範囲外で保持する正本",
+        ]
+    )
 
     lines.extend(["", "## 全体ドキュメント出典 (未割当参照)", ""])
     if unassigned:
@@ -224,11 +245,14 @@ def compile_docset(spec: dict, refs_data: dict) -> dict[str, str]:
     cat_ids = _category_ids(spec)
     refs_by_cat, unassigned = references_by_category(spec, refs_data)
     docset: dict[str, str] = {}
+    chapter_files: dict[str, list[str]] = {}
     # 要件定義書 (上位概念・憲法) を最初の章として生成 (要件 C9)
     docset[REQUIREMENTS_CHAPTER] = render_requirements_definition(spec)
     for cat_id in cat_ids:
-        docset[f"{cat_id}.md"] = render_chapter(spec, cat_id, refs_by_cat)
-    docset["index.md"] = render_index(spec, refs_by_cat, unassigned)
+        documents = render_chapter_documents(spec, cat_id, refs_by_cat)
+        docset.update(documents)
+        chapter_files[cat_id] = list(documents)
+    docset["index.md"] = render_index(spec, refs_by_cat, unassigned, chapter_files)
     return docset
 
 

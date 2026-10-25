@@ -48,7 +48,7 @@
       "C04": {
         "skill": "skills/run-dev-graph-requirements/SKILL.md",
         "criteria": {
-          "IN1": ["criteria:in1", "gh-bridge.py", "必須キー欠落が0件"],
+          "IN1": ["criteria:in1", "validate-source-digest.py", "validate-system-plan.py", "validate-requirements-system-spec-snapshot.py", "receipt/report/全Markdown snapshot digest", "必須キー欠落が0件"],
           "OUT1": ["criteria:out1", "capability-build/task-graph", "実装コードを生成しない"],
           "OUT2": ["criteria:out2", "implementation_readiness=incomplete", "missing_sections", "handoffを保留"]
         }
@@ -93,7 +93,7 @@
       "C19": {
         "skill": "skills/run-dev-graph-system-spec/SKILL.md",
         "criteria": {
-          "IN1": ["criteria:in1", "coverage/source citation gate", "schema gate", "exit0"],
+          "IN1": ["criteria:in1", "coverage/source_citation/knowledge_graph/evaluator gate", "schema gate", "exit0"],
           "OUT1": ["criteria:out1", "source lineage", "複製0件", "c02経由"]
         }
       }

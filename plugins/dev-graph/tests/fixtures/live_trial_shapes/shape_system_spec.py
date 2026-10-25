@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """C19 bounded resume fixture.
 
-scenario: ``C19-OUT1-positive-system-spec-lineage-r3-bounded``
+scenario: ``C19-OUT1-positive-system-spec-lineage-r6-bounded``
 contract: "A digest-bound system-spec-harness PASS bundle is preloaded. C19 must
 validate and import it without rerunning elicitation, doc fetch, compile, or the
 completeness evaluator. The trial is bounded by wall-clock and token budgets."
@@ -31,9 +31,16 @@ def _plugin_version() -> str:
 PLACED_CONTENT = content(_plugin_version())
 
 TASK_CONTRACT: dict[str, object] = {
-    "scenario_id": "C19-OUT1-positive-system-spec-lineage-r3-bounded",
+    "scenario_id": "C19-OUT1-positive-system-spec-lineage-r6-bounded",
     "harness_plugin": "system-spec-harness",
     "workflow_mode": "reuse-confirmed",
+    "runner_argv_template": (
+        "python3",
+        "plugins/dev-graph/scripts/build-system-spec-resume-import.py",
+        "--repo-root",
+        "<contained-fixture-repo>",
+    ),
+    "runner_instruction": "この1行を文字どおり単独実行する",
     "placed_inputs": tuple(PLACED_CONTENT),
     "absent_artifacts": (),
     "required_entry_points": (

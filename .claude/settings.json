@@ -236,6 +236,12 @@
         "from_plugin": "system-spec-harness"
       },
       {
+        "event": "SubagentStop",
+        "matcher": null,
+        "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/system-spec-harness/hooks/record-audit-fork.py\" --event subagent-stop",
+        "from_plugin": "system-spec-harness"
+      },
+      {
         "event": "PreToolUse",
         "matcher": "Write|Edit|MultiEdit",
         "command": "python3 ${CLAUDE_PROJECT_DIR}/plugins/ubm-goal-setting/hooks/ubm-write-path-guard.py",
@@ -640,6 +646,14 @@
           {
             "command": "python3 ${CLAUDE_PROJECT_DIR}/scripts/hook-verify-evaluator-json.py",
             "type": "command"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/system-spec-harness/hooks/record-audit-fork.py\" --event subagent-stop"
           }
         ]
       }

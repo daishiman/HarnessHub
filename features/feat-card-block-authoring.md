@@ -12,7 +12,7 @@ iteration: null
 title: "カードブロック本文記法と編集/プレビュー 2 ペイン"
 owners: ["daishiman"]
 created_at: "2026-08-13T22:39:59Z"
-updated_at: "2026-08-15T23:38:37.521089Z"
+updated_at: "2026-08-16T07:15:30Z"
 status: "draft"
 depends_on: ["feat-card-mutation-safety","feat-semantic-emphasis-icons"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-security","arch-harness-hub-design-system","feat-docs-cms"]
@@ -78,3 +78,5 @@ frontend、security、design-system の制約を参照する。とくに sanitiz
 ## Handoff
 
 実装は `packages/ui` の remark plugin による `:::cards cols=2|3` → `hh-cards` / `hh-card` 変換 (未知 cols は 2 列へ寄せ、未閉じは素の Markdown へ縮退)、`hh-cards` / `hh-card` と正規化済み `data-cols` だけに限った sanitize allowlist 差分、大画面 2 ペイン / 狭幅 Tabs と toolbar からの 2/3 列雛形挿入へ接地した。詳細・検証・残課題は [仕様反映受領書](../docs/features/feat-card-block-authoring/spec-reflection-receipt.md) を正本とする。
+
+PR #731 は 2026-08-16 に main へ merge 済み（`fc2dc9c2`）。運用手順は [operations](../docs/features/feat-card-block-authoring/operations.md)、実装接地は [implementation-notes](../docs/features/feat-card-block-authoring/implementation-notes.md)。

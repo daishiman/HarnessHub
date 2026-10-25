@@ -9,7 +9,7 @@ effect: local-artifact
 owner: team-platform
 since: 2026-07-11
 version: 0.1.0
-source: plugins/system-spec-harness/component-inventory.json
+source: plugin-plans/system-spec-harness/component-inventory.json
 source-tier: internal
 last-audited: 2026-07-11
 audit-trigger: official-update
@@ -142,12 +142,15 @@ feedback_contract: # per-skill 評価基準 (component-inventory.json C02 SSOT)
 ## 検証コマンド
 
 ```bash
-PLUGIN_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"   # plugins/system-spec-harness を指す
+# plugins/system-spec-harness を指す。cwd に依存させないため以後は必ずこの変数経由で叩く
+# ($0 は skill 実行時に未定義なので使わない)。
+PLUGIN_ROOT="${CLAUDE_PLUGIN_ROOT:-$CLAUDE_PROJECT_DIR/plugins/system-spec-harness}"
+
 # R3 決定論組み立て (全件対応も同時検査)
-python3 skills/run-system-spec-doc-fetch/scripts/build-fetched-references.py \
+python3 "$PLUGIN_ROOT/skills/run-system-spec-doc-fetch/scripts/build-fetched-references.py" \
   assemble --records records.json --targets targets.json --out fetched-references.json
 # IN1 ゲート (共有 script)
-python3 scripts/validate-source-citation.py \
+python3 "$PLUGIN_ROOT/scripts/validate-source-citation.py" \
   --targets targets.json --references fetched-references.json --repo-root "$CLAUDE_PROJECT_DIR"
 ```
 
@@ -158,10 +161,11 @@ python3 scripts/validate-source-citation.py \
 3. version が数値化されない技術はページ最終更新日を `last_updated` に記録する (version と両欠落は FAIL)。
 4. 同一技術が複数カテゴリに跨っても `target_id` は 1 件に束ねる (重複は FAIL)。
 5. ヒアリング中裏取り (経路 b) では対象をユーザー指定分に絞ってよいが、記録形状と検証は同一。
+6. `version` を更新したら同じ turn で `summary` 先頭領域の版番号も書き換える。末尾に再照合段落だけ足すと `version` は新しいのに散文は旧版を主張する「版ドリフト」になる。過去の照合は `鮮度再照合 (<実照会時刻>):` / `[以下は履歴]` / `[訂正 ...]` のマーカー以降へ置く (書式規約の正本 = `prompts/R3-record.md` Layer 2、機械検査 = assembler の `prose_version_drift()`)。
 
 ## Additional Resources
 
-- `prompts/R1-identify.md` / `prompts/R2-fetch.md` / `prompts/R3-record.md` — 責務 SSOT (7 層)
+- `prompts/R1-identify.md` / `prompts/R2-fetch.md` / `prompts/R3-record.md` / `prompts/R4-audit-doc-freshness.md` — 責務 SSOT (7 層)。R4 は OUT1 (公式サイト再照合) を独立 context で担い、起動アダプタ `../../agents/system-spec-doc-freshness-auditor.md` (C08) との差分は prompt 側を優先する
 - `scripts/build-fetched-references.py` — record 素材を契約形状へ正規化・全件突合する決定論 assembler
 - `references/official-source-catalog.md` — 公式 host 判定の指針と代表例
 - `references/resource-map.yaml` — Progressive Disclosure 索引

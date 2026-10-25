@@ -3,7 +3,7 @@ status: confirmed
 category: frontend
 aggregate: 確定
 spec_cells: [frontend.web, frontend.mobile, frontend.tablet, frontend.desktop-windows, frontend.desktop-linux, frontend.desktop-macos]
-serves_goals: [G1, G2, G3, G5]
+serves_goals: [G1, G2, G5, G6, G7]
 ---
 
 # フロントエンド (frontend)
@@ -15,40 +15,50 @@ serves_goals: [G1, G2, G3, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-233 |
+| Web (web) | 確定 | 確定質疑: qa-252 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。モバイルブラウザ表示は web 行のレスポンシブでカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。タブレットブラウザ表示は web 行のレスポンシブでカバー |
-| デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-007 |
+| デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-257 |
 | デスクトップ (Linux) (desktop-linux) | 対象外 | 理由: Linux desktop クライアントは対象外 (作者環境は macOS + Windows) |
-| デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-007 |
+| デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-257 |
 
 ## 確定内容 (質疑録)
 
-### qa-233 (対応セル: web)
+### qa-252 (対応セル: web)
 
-**質問**: qa-232 で確定したカード一覧・タブ・検索・カードブロック本文・編集/プレビュー 2 ペインを、frontend/web の実装契約としてどう確定するか。
+**質問**: クライアント側の診断収集を、どの単位でどこまで有界にするか (収集時の上限・畳み込み・切り詰め順序)。
 
-**回答**: [出所] 利用者の2026-08-13の明示要望 (qa-232 と同一の逐語) を実装層へ落とした契約である。qa-227 の frontend/web 既存契約 (Next.js App Router + TypeScript + pnpm、@opennextjs/cloudflare 上の SSR、server-first、packages/ui 所有の共通部品、route-local 遅延読込境界) は、以下の差分以外を全面維持する。
+**回答**: [技術的具体化] qa-234 で確定した収集項目 (console error/warn、未捕捉例外、失敗した network request、viewport/DPR/theme、route pattern、build 版数、直近 navigation) は変えず、保持の仕方だけを次のとおり有界にする。
 
-【1 カードブロック記法】カードブロックは remark のコンテナ記法 `:::cards cols=2` の内側に `:::card` を並べる入れ子で表す。`cols` は 2 と 3 のみ受理し、未知の値・未閉じブロックは描画時に通常段落へ縮退させて例外を投げない。実装は packages/ui の Markdown 実装が所有する remark plugin とし、apps/hub 側で再実装しない (既存 callout plugin と同じ所在・同じ方式)。
+(a) リングバッファ — 収集はページ読込時から常時走るため、無制限に貯めると長時間開いたままの画面でメモリを食う。console 系は直近 50 件、失敗 network request は直近 30 件、navigation は直近 3 件のリングバッファに固定する。溢れた分は古いものから捨てる。
 
-【2 生成要素と段組】plugin は `hh-cards` (属性 data-cols) と `hh-card` のカスタム要素を生成し、React の components map で CSS grid へ描画する。段組は `lg` (1025px) 以上で指定 cols 列、`md` (641px) 以上 `lg` 未満で 2 列を上限、`md` 未満で 1 列とする。列数が減っても DOM 順序は記述順のまま保ち、読み上げ順と視覚順を一致させる。
+(b) 指紋による畳み込み — 同一原因の反復を件数で潰さない。console 系は (level, message の先頭 200 文字, stack の先頭 1 フレーム) を指紋として畳み、network は (method, route pattern, status) を指紋として畳む。各グループは count・first_at・last_at を持つ。React の再描画ループのように同じ error が数百件出る場合、生の 50 件は同じ内容の羅列になるが、畳めば 1 グループ + count=数百 として原因を保ったまま 1/50 以下になる。
 
-【3 一覧部品の共通化】カードグリッド・表示切替・タブは packages/ui の共通部品として実装し、docs / sheets / catalog の 3 画面が同一部品を使う。既存 DataTable は削除せずテーブル表示側で継続利用する。ListState・FilterBar・AppliedFilterChips・CursorPager の既存契約は変更しない。
+(c) 1 件あたりの切り詰め — message は 1,000 文字、stack は先頭 5 フレーム、失敗 request の response body は保持しない (状態コードと route pattern だけ)。network の URL は query string を落として route pattern へ正規化してから記録する。長い body や query を抱えないことは、そのまま個人情報の巻き込み防止にもなる。
 
-【4 状態の単一の真実】タブ・検索語・filter は URL query を単一の真実とし、同じ状態を client state に二重で持たない。既存 remembered-filters には表示形態 (カード / テーブル) のみを追加で記憶させる。
+(d) グループ数の上限 — 畳んだ後で console 系 30 グループ、network 20 グループを上限とし、超過分は count 降順・last_at 降順で上位を残す。
 
-【5 編集/プレビュー】2 ペインと 1 面タブの切替は CSS で行い、`lg` 未満は既存 Tabs 部品で 2 面を切り替える。プレビューは編集中の client 側でも表示側と同じ MarkdownView を使い、sanitize schema を共有して表示差を作らない。Markdown の重量依存は既存の dynamic import 境界 (markdown-view / markdown-editor の薄い公開境界) を維持し、docs 以外の画面の初期 client chunk を増やさない。
+(e) 総量上限と削り順 — 送信直前に JSON 化してバイト数を測り、32KB を超える場合は次の順で捨てる: 1) navigation 履歴 2) warn グループの last_at が古い順 3) network グループの last_at が古い順 4) error グループの last_at が古い順。環境情報 (viewport/DPR/theme/route pattern/build 版数/UA) と error グループの最新 3 件は捨てない中核とし、ここまで削っても 32KB に収まらない場合はそのまま送る (中核だけで 32KB を超えることは実際上起きないが、中核を削る分岐を作らないことで「削りすぎて原因が分からない診断」が生まれる余地をなくす)。
 
-【6 アイコン】アイコンは packages/ui のアイコンモジュールが持つ inline SVG のみを使う。UI 文言・callout ラベル・空状態文言に絵文字を混入させない。絵文字混入は lint で検出する。
+(f) 捨てた記録 — 切り詰めた場合は truncated=true と、種別ごとの dropped_count を診断 JSON に持たせる。管理者が「これで全部か」を判断できないまま読むことのほうが、情報が足りないことより害が大きい。
 
-【7 不変】公開 API・DB schema・認可判定・Cloudflare deploy unit は変更しない。server-first と既存の screen-pattern gate、情報設計シート・screen-inventory profile 更新の PR 要件も維持する。
+本文入力は 2,000 文字、注釈は 1 画面あたりの図形数 100 を上限とし、いずれも入力時点で止める。送信してからサーバに弾かれるより、書いている最中に上限が見えるほうが投稿者の手戻りが小さい。
 
-### qa-007 (対応セル: desktop-windows, desktop-macos)
+### qa-257 (対応セル: desktop-windows, desktop-macos)
 
-**質問**: フロントエンド構成 (クライアント構成・状態管理・レンダリング・ビルド) は?
+**質問**: デスクトップ環境 (macOS / Windows) の frontend は何を正本とするか? (C05 監査指摘への対応: frontend.desktop-windows/desktop-macos の qa_ref=qa-007 は Hub Web 全体の構成を述べた回答で、desktop 固有の裏付けが薄い。infrastructure が qa-043 で行った『既確定内容の desktop 専用集約』と同型の是正であり、新規決定は含まない)
 
-**回答**: ユーザー直接指定: Next.js + TypeScript、パッケージマネージャは pnpm (npm 不使用、packageManager フィールドで pin)。Hub Web は Next.js App Router を Workers 上 (@opennextjs/cloudflare) で SSR し、初期 4 画面 (業務ツール一覧 / 詳細 / 公開状態・修正内容 / Workspace 設定・Release 履歴) をレスポンシブ実装。作者向けクライアントは専用 desktop GUI を作らず、Claude Code / Codex plugin (slash command + skill + スクリプト) を Publisher の操作面とする (§5.1: Web に会話型 Creator を作らない)。
+**回答**: 既確定の qa-007 / qa-010 / qa-234 / qa-252 の desktop 該当部分を frontend.desktop の専用正本として集約確定する。
+
+(1) クライアント形態 (qa-007 / qa-010) — 専用の desktop GUI アプリケーションは作らない。macOS / Windows の利用者が触れるのは、desktop ブラウザ (Chromium 系 = Chrome / Edge、および macOS の Safari) で開く同一の Next.js App Router クライアントである。desktop 向けに別のコード経路・別のビルド成果物を持たず、web と同じ bundle を配信する。したがって frontend.desktop は『web の構成を desktop ブラウザで成立させる条件』を正本とし、独立した実装層を持たない。
+
+(2) 作者向けクライアント (qa-010) — 作者 (Publisher) の操作面は Claude Code / Codex の plugin (slash command + skill + スクリプト) であり、Hub の frontend ではない。desktop 上で動く作者向け GUI を frontend の責務に含めない。
+
+(3) 改善要望ウィジェットの desktop 成立条件 (qa-234 / qa-252) — 右下常設ボタンとウィジェットは、desktop ブラウザで次を満たす。(a) modern-screenshot の domToCanvas は Chromium 系と Safari の双方で SVG foreignObject 経路が動作することを Stage 0 で確認し、動作しない環境では撮影を伴わない投稿へ縮退する (投稿そのものは落とさない)。(b) desktop は画面幅が広く、ウィジェットを画面全体に被せる必要がない。注釈エディタは中央のダイアログとし、背後の業務画面が見える配置にする (投稿者が元画面を見ながら書ける)。(c) 診断情報の収集 (console / network / navigation のリングバッファ) は実行環境に依存しない Web API のみを使い、desktop 固有の分岐を持たない。
+
+(4) 対象ブラウザと最低バージョン — 業務利用の実態に合わせ、Chromium 系と Safari の各最新 2 メジャーを対象とする。これを外れた環境では、ウィジェットの読み込み自体を行わず業務画面の動作を妨げない (改善要望は業務の付随機能であり、その失敗が本体を壊してはならない)。
+
+(5) desktop-linux — 対象外の既存判断 (作者環境および利用者環境が macOS + Windows) を維持する。
 
 ## 上流指針 (doctrine anchor)
 
@@ -104,133 +114,61 @@ serves_goals: [G1, G2, G3, G5]
 
 #### 本章での適用
 
-##### 確定内容 qa-233 (対応セル: web)
+##### 確定内容 qa-252 (対応セル: web)
 
-- 確定要件: [出所] 利用者の2026-08-13の明示要望 (qa-232 と同一の逐語) を実装層へ落とした契約である。qa-227 の frontend/web 既存契約 (Next.js App Router + TypeScript + pnpm、@opennextjs/cloudflare 上の SSR、server-first、packages/ui 所有の共通部品、route-local 遅延読込境界) は、以下の差分以外を全面維持する。
-
-【1 カードブロック記法】カードブロックは remark のコンテナ記法 `:::cards cols=2` の内側に `:::card` を並べる入れ子で表す。`cols` は 2 と 3 のみ受理し、未知の値・未閉じブロックは描画時に通常段落へ縮退させて例外を投げない。実装は packages/ui の Markdown 実装が所有する remark plugin とし、apps/hub 側で再実装しない (既存 callout plugin と同じ所在・同じ方式)。
-
-【2 生成要素と段組】plugin は `hh-cards` (属性 data-cols) と `hh-card` のカスタム要素を生成し、React の components map で CSS grid へ描画する。段組は `lg` (1025px) 以上で指定 cols 列、`md` (641px) 以上 `lg` 未満で 2 列を上限、`md` 未満で 1 列とする。列数が減っても DOM 順序は記述順のまま保ち、読み上げ順と視覚順を一致させる。
-
-【3 一覧部品の共通化】カードグリッド・表示切替・タブは packages/ui の共通部品として実装し、docs / sheets / catalog の 3 画面が同一部品を使う。既存 DataTable は削除せずテーブル表示側で継続利用する。ListState・FilterBar・AppliedFilterChips・CursorPager の既存契約は変更しない。
-
-【4 状態の単一の真実】タブ・検索語・filter は URL query を単一の真実とし、同じ状態を client state に二重で持たない。既存 remembered-filters には表示形態 (カード / テーブル) のみを追加で記憶させる。
-
-【5 編集/プレビュー】2 ペインと 1 面タブの切替は CSS で行い、`lg` 未満は既存 Tabs 部品で 2 面を切り替える。プレビューは編集中の client 側でも表示側と同じ MarkdownView を使い、sanitize schema を共有して表示差を作らない。Markdown の重量依存は既存の dynamic import 境界 (markdown-view / markdown-editor の薄い公開境界) を維持し、docs 以外の画面の初期 client chunk を増やさない。
-
-【6 アイコン】アイコンは packages/ui のアイコンモジュールが持つ inline SVG のみを使う。UI 文言・callout ラベル・空状態文言に絵文字を混入させない。絵文字混入は lint で検出する。
-
-【7 不変】公開 API・DB schema・認可判定・Cloudflare deploy unit は変更しない。server-first と既存の screen-pattern gate、情報設計シート・screen-inventory profile 更新の PR 要件も維持する。
+- 確定要件: 「[技術的具体化] qa-234 で確定した収集項目 (console error/warn、未捕捉例外、失敗した network request、viewpor…」 (全文は本章「確定内容 (質疑録)」の `qa-252` を正本とする)
 - 設計解釈の記録経路: `dialogue`
-- 原則: 依存の方向と所有境界の固定 (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/clean-architecture.md#中核概念`)
+- 原則: 無制限に増える資源には、収集の入口で固定の上限を置く (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/site-reliability-engineering.md#中核概念`)
   - 採否: `applied`
-  - 章固有の根拠: カードブロックの記法解釈と描画を packages/ui の Markdown 実装へ一箇所で所有させ、apps/hub 側の再実装を禁じた。一覧のカード・タブ・切替も共通部品化し、docs / sheets / catalog の 3 画面で規則が分岐するのを防いだ。
+  - 章固有の根拠: 診断収集はページを開いている間ずっと走る。上限を送信時のバリデーションだけに置くと、送信するまでの間にクライアントのメモリを無制限に消費し、そもそも改善要望を出したい不安定な画面ほど先に重くなる。リングバッファで入口を有界にする。
   - トレードオフ:
-    - packages/ui の公開面が広がり、破壊的変更時の影響範囲が 3 画面へ同時に及ぶ
-    - 画面固有の微調整を共通部品の option として吸収する必要があり、option 過多になりやすい
-- 原則: 堅牢性 (不正入力での縮退と読み上げ順の保持) (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/usability-accessibility.md#中核概念`)
+    - バッファ長を超えた古い事象は失われる。改善要望は「今この画面で困っている」時点で出されるため、直近が残れば目的を満たす
+    - 常時収集のためのフックが全画面に載る。件数上限があるので処理コストは一定に収まる
+- 原則: 量の削減を、情報の削除ではなく同一物の集約で行う (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/information-design.md#中核概念`)
   - 採否: `applied`
-  - 章固有の根拠: 未知の cols や未閉じブロックを例外にせず通常段落へ縮退させ、利用者の手書き Markdown が文書全体の描画を壊さないようにした。段組が減っても DOM 順を記述順に保ち、視覚順と読み上げ順の乖離を作らない。
+  - 章固有の根拠: 同じ error が 300 回出ていることは、1 回出ていることとは異なる事実であり、単純に上位 N 件へ切ると『何回起きたか』という一番強い手掛かりが失われる。指紋で畳んで count を残せば、バイト数は 1/50 以下にしながら反復という事実は保てる。
   - トレードオフ:
-    - 記法ミスが目立たず、意図した段組にならないまま気付きにくい
-    - 縮退経路のぶんレンダリングの分岐とテストケースが増える
-##### 確定内容 qa-007 (対応セル: desktop-windows, desktop-macos)
+    - 指紋が粗いと別原因が同一グループへ混ざる。message 先頭 200 文字と stack 先頭フレームを含めることで、同一発生源かどうかは区別できる粒度にする
+    - 畳み込み処理をクライアントで行うぶん実装が増える。サーバ側で畳むと畳む前の生データを送ることになり、削減の目的を果たさない
+- 原則: 劣化させる順序を明示し、最後まで残す中核を決める (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/site-reliability-engineering.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: 総量上限に当たったときに何から捨てるかを実装者の裁量に任せると、画面や端末によって届く診断が変わり、管理者は届いた内容が何を意味するのか判断できない。捨てる順序と、絶対に捨てない中核 (環境情報と直近 error 3 件) を仕様で固定する。
+  - トレードオフ:
+    - 極端な場合に navigation 履歴が常に落ちる。再現手順の推定材料としては route pattern と直近 error が主で、navigation は補助にとどまる
+    - 中核を削らないため理論上は 32KB を超えて送られ得る。中核の実サイズは数 KB 程度で、上限を破る分岐を作らないことの利益が上回る
+- 原則: 収集しないことを、最も確実な保護手段として使う (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: response body と query string は、量が膨らむ主因であると同時に、個人情報やトークンが最も混入しやすい場所でもある。route pattern へ正規化して body を保持しないことで、量の問題と混入の問題を同じ一手で閉じる。
+  - トレードオフ:
+    - 失敗レスポンスのエラーメッセージ本文が届かず、原因特定に往復が要る場合がある。状態コードと route pattern で切り分けの起点は足りる
+    - query に載る検索条件などの文脈が失われる。管理者は画面名と route pattern から再現条件を尋ねられる
+##### 確定内容 qa-257 (対応セル: desktop-windows, desktop-macos)
 
-- 確定要件: ユーザー直接指定: Next.js + TypeScript、パッケージマネージャは pnpm (npm 不使用、packageManager フィールドで pin)。Hub Web は Next.js App Router を Workers 上 (@opennextjs/cloudflare) で SSR し、初期 4 画面 (業務ツール一覧 / 詳細 / 公開状態・修正内容 / Workspace 設定・Release 履歴) をレスポンシブ実装。作者向けクライアントは専用 desktop GUI を作らず、Claude Code / Codex plugin (slash command + skill + スクリプト) を Publisher の操作面とする (§5.1: Web に会話型 Creator を作らない)。
-- 設計解釈の記録経路: `legacy_backfill` (`set-qa-design-applications`)
-- 原則: 一貫性と標準準拠 (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/usability-accessibility.md#中核概念`)
+- 確定要件: 「既確定の qa-007 / qa-010 / qa-234 / qa-252 の desktop 該当部分を frontend.desktop の専用正本として…」 (全文は本章「確定内容 (質疑録)」の `qa-257` を正本とする)
+- 設計解釈の記録経路: `dialogue`
+- 原則: 配信先の違いを、実装の分岐ではなく同一実装が満たすべき条件として扱う (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/clean-architecture.md#中核概念`)
   - 採否: `applied`
-  - 章固有の根拠: 利用者向け画面は responsive な Next.js Web に統一し、作者向け操作面は既存の Claude Code / Codex plugin 規約へ揃えることで、専用 desktop GUI という別操作体系を増やさない判断に適用した。
+  - 章固有の根拠: desktop は別のクライアント種別ではなく、同じ Web クライアントを開く画面幅と入力手段の一組である。desktop 専用の実装層を作ると、同じ機能が 2 箇所で保守される。frontend.desktop の正本を『web 実装が desktop で満たす条件』として書くことで、実装の単一性を保ったまま desktop 固有の要求を明示できる。
   - トレードオフ:
-    - 作者は terminal と plugin 操作を学ぶ必要がある
-    - OS native GUI 固有の操作性は提供しない
-- 資するゴール: G1, G2, G3, G5
+    - desktop 固有の最適化 (ネイティブなキーボード統合など) を諦める。業務画面から要望を出すという用途に対しては過剰であり、失うものは小さい
+    - 条件として書くため、検証は実装ではなく動作確認に寄る。対象ブラウザを 2 メジャーに限定して検証範囲を有界にする
+- 原則: 付随機能の失敗が主機能を巻き込まないようにする (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/usability-accessibility.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: 改善要望ウィジェットは全 44 業務画面に載る。対象外ブラウザや撮影 API の不成立でウィジェットが例外を投げると、業務画面そのものが壊れる。読み込み自体を行わない、あるいは撮影なしへ縮退するという 2 段の退避を desktop の成立条件へ明示する。
+  - トレードオフ:
+    - 縮退時に投稿の情報量が落ちる。投稿できないより望ましい
+    - 退避経路の分だけ検証項目が増える。対象ブラウザを限定しているため件数は有界である
+- 原則: 利用可能な画面領域に応じて情報の配置を変える (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/information-design.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: desktop は画面幅が広く、注釈作業中に元の業務画面を見られる。全画面を覆う配置は狭い画面での妥協であり、desktop でそのまま使うと、投稿者は何について書いているかを見失う。中央ダイアログ配置を desktop の条件として固定する。
+  - トレードオフ:
+    - web と desktop で見え方が変わる。同一実装のレスポンシブな分岐で吸収でき、コード経路は分かれない
+- 資するゴール: G1, G2, G5, G6, G7
 
 ## 最新ドキュメント出典
 
-- (このカテゴリに割り当てた取得済みドキュメントなし。全体出典は index.md 参照)
-
-## Post-compile writeback: UI MVP wave 2026-08-12
-
-- 表示名 / 一覧一貫性 / 相対日時 / list `q` は presentation・既存 list の加算契約。認可 claim と deny 規則は不変のため **R4-reopen 不要**。
-- PR #700 の route-local 遅延読込と sticky 計測の配置限定は client 境界の最適化であり、API・認可・DB・route 意味を変えない。新規 qa 番号なし、R4-reopen 不要。
-- 判断と証跡の正本: [ui-mvp-wave-20260812-spec-reflection-receipt.md](../docs/features/feat-hub-foundation/ui-mvp-wave-20260812-spec-reflection-receipt.md)。
-
-## 2026-08-12 MVP 実装追記 (feat-hearing-intake / HarnessHub-370h)
-
-- S10 ヒアリングウィザードは、確定済みの4大工程 (基本情報/業務詳細/要件/確認) を維持したまま、
-  入力負荷低減のため画面分割する (FormData 30 項目)。
-- S12 は生成結果の閲覧に加え、添付 (画像/動画/CSV/Excel・25MB) と Claude Code 引き渡しトークン発行 UI を持つ。
-- 画面詳細の正本は `docs/frontend-spec.md` と feature information-design シート。
-- 本追記は製品 UI 契約の additive な具体化であり、desktop client 構成 (qa-007) や shell 契約 (qa-227) は不変。
-
-## 2026-08-13 MVP 実装追記 (表示設定の再読み込み復元 / HarnessHub-sj20)
-
-- ログイン済み共通シェル (`HubShell`) は起動時に `GET /api/v1/me/display-settings` で
-  保存済み theme / density / language を `UiProvider` へ復元する。
-- root layout は未ログイン画面も包むため、本人設定 API は公開面では読まない。
-- 既存契約 (`user_settings` が正本、公開 API / DB / 認可は不変) の実装ギャップ解消であり、
-  新規 qa 番号なし。R4-reopen 不要。
-
-## 2026-08-12 MVP 実装追記 (hearing-sheet-overhaul / issue-hearing-sheet-overhaul-20260812)
-
-- S10 を **7 画面** に統合 (整理・まとめ + 確認 → 整理・確認)。
-- 用途プロファイル系 enum と priority を既存値破壊なしで加算する。
-- 作成時添付ステージング (25MB・画像/動画/CSV/Excel) と S12 form_snapshot 全項目表示を追加する。
-- S17 個別ダッシュボードに email / 最終ログインを読み取り表示する。
-- 正本: `docs/frontend-spec.md`、`docs/features/feat-hearing-intake/mvp-sheet-overhaul-*`。
-
-## 2026-08-12 MVP 実装追記 (feat-docs-cms blog essentials / HarnessHub-zkcl)
-
-- `documents.publish_at` を nullable epoch ms として純増する。`scheduled` enum は追加しない。
-- 表示状態: `published` / `draft+future publish_at`=予約中 / それ以外の draft=非公開。
-- 予約公開 cron は default/max 100・`publish_at ASC,id ASC`・行 CAS。監査 action=`docs.scheduled_publish`。
-- 分類 (category/tags)・thumbnail/excerpt の auto/manual 契約と clear 規則の正本は
-  `docs/features/feat-docs-cms/architecture-decision-record.md` §1/§8 と `docs/backend-spec.md`。
-- 本追記は docs CMS 既存枠 (tenant 分離・admin 編集・sanitize) の具体化であり、auth role 階層は不変。
-
-## 2026-08-13 MVP 実装追記 (disclosure / dismissible / Docs empty)
-
-- 共通シェルの navigation disclosure は server-first の `details` + 開閉専用 client island。
-  切替リンクは素の `<a>` による document 遷移を維持し、client router を使わない。
-- Modal / BottomSheet の `dismissible` で未保存破棄を防ぐ。公開 API / DB / 認可は不変。
-- S15 一覧 empty は権限別 CTA と絞込解除を分離。正本は UI 基盤追補と S15 情報設計シート。
-
-## 2026-08-13 MVP 実装追記 (配色仕様書 v2)
-
-- token 正本: グラファイト `primary`、動作中専用アンバー `accent`、IBM Plex Sans + 日本語システムフォント + JetBrains Mono、`md=641` / `lg=1025`、sidebar 212/68、`radius.card=10`。
-- root layout が `--font-*` を配り、`tokens.css` が値を持つ。公開 API / DB / 認可は不変。
-- 正本: [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md)、[受領書](../docs/features/feat-hub-foundation/visual-system-v2-20260813-spec-reflection-receipt.md)。
-
-## 2026-08-13 MVP 実装追記 (着地 `/dashboard` / HarnessHub-1cno)
-
-- 既定着地は `DEFAULT_POST_SIGNIN_LANDING = /dashboard`。S00.LANDING が本人の最近作業と既存業務導線を出す。
-- S09 分析 KPI は `/metrics` のまま。着地の「要対応」は運用キューであり推移・ランキングではない。
-- 新規 qa 番号なし。R4-reopen 不要。正本は qa-170 / qa-171 と [受領書](../docs/features/feat-hub-foundation/elegant-home-review-20260813-spec-reflection-receipt.md)。
-
-
-## Post-compile writeback: 画面情報設計 (2026-08-11 / `HarnessHub-f6ix`)
-
-- qa-227 と既存 frontend 契約 (App Router / packages/ui consumer / server-first / SEC5 表示専用) は全面維持する。本追補は画面実装の *情報構造の決め方* を固定する。
-- mockup は実装方式の正本でも、画面横断の情報設計規範の正本でもない。規範は [画面情報設計追補](../specs/harness-hub-information-design-addendum.md)、詳細画面契約は [docs/frontend-spec.md](../docs/frontend-spec.md) §3.6、profile 割当は [screen-inventory](../docs/screen-inventory.md) のみを SSOT とする。
-- 画面設計の工程順序は「利用文脈 → 取捨 → 要素別意味判定 → グループ化 → 顕著度 → 表示加工 → パターン選定 → 配置 → 機能追加 → 意味装飾」。表・カード・フォームの確定を最初に置かない。
-- 情報顕著度 `lead / context / metadata` とレスポンシブ変換 pattern `P1〜P10` は別語彙である。`title` 属性だけへ絶対日時・完全識別子を隠さず、キーボード/タッチで到達できる開示を使う。
-- system-spec-harness 側では `screen-information-priority` を blocking required-info とし、`frontend-arch` より先に確定する (UI なしは理由付き N/A)。item 別回答の writer 接地検査は follow-up `HarnessHub-9wdm`。
-- 公開 API / DB schema / 認可判定 / Cloudflare deploy unit は変更しない。
-- 原則: Information Design (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/information-design.md`)
-  - 採否: `applied`
-  - 章固有の根拠: frontend architecture 確定の前に画面情報の優先と意味契約を固定し、部品選定とデータ直写が設計を主導するのを防ぐ。
-  - トレードオフ:
-    - 生成時の収集順序が長くなり、UI あり案件では情報設計 9 項目が必須になる
-    - 既存画面は一括改修せず、改修対象だけを追補へ寄せる
-
-##### 確定内容 qa-007 (対応セル: desktop-windows, desktop-macos)
-
-- 確定要件: ユーザー直接指定: Next.js + TypeScript、パッケージマネージャは pnpm (npm 不使用、packageManager フィールドで pin)。Hub Web は Next.js App Router を Workers 上 (@opennextjs/cloudflare) で SSR し、初期 4 画面 (業務ツール一覧 / 詳細 / 公開状態・修正内容 / Workspace 設定・Release 履歴) をレスポンシブ実装。作者向けクライアントは専用 desktop GUI を作らず、Claude Code / Codex plugin (slash command + skill + スクリプト) を Publisher の操作面とする (§5.1: Web に会話型 Creator を作らない)。
-- 設計解釈の記録経路: `legacy_backfill` (`set-qa-design-applications`)
-- 原則: 一貫性と標準準拠 (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/usability-accessibility.md#中核概念`)
-  - 採否: `applied`
-  - 章固有の根拠: 利用者向け画面は responsive な Next.js Web に統一し、作者向け操作面は既存の Claude Code / Codex plugin 規約へ揃えることで、専用 desktop GUI という別操作体系を増やさない判断に適用した。
-  - トレードオフ:
-    - 作者は terminal と plugin 操作を学ぶ必要がある
-    - OS native GUI 固有の操作性は提供しない
+| 対象 | バージョン | 公式発行元 | 出典URL | 取得 | 最新確認 |
+|---|---|---|---|---|---|
+| nextjs | 16.3.1 | Vercel, Inc. (nextjs.org) | https://nextjs.org/docs | 2026-08-16T02:49:50Z | 2026-08-16T02:49:50Z |
+| nextjs-proxy | 16 (改名は 16.0 で導入。middleware.ts は deprecated) | Vercel, Inc. (nextjs.org) | https://nextjs.org/docs/app/guides/upgrading/version-16 | 2026-08-15T01:35:54Z | 2026-08-15T01:35:54Z |
+| modern-screenshot | 4.7.0 | qq15725 (modern-screenshot maintainers) (github.com) | https://github.com/qq15725/modern-screenshot | 2026-08-15T00:15:16Z | 2026-08-15T00:15:16Z |

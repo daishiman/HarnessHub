@@ -13,22 +13,37 @@
 The contract names the stable system-spec interface and graph-node shape only.
 The Markdown body is always read from the confirmed caller-repository artifact
 named by each node's ``source_artifact``; product prose in a contract is
-rejected.  This keeps source lineage and imported content bound to the same
-bytes.  The caller remains responsible for invoking C02 ``upsert-node.py``.
+rejected.  Source lineage remains bound to the source bytes while local links
+are rebased to preserve their targets at the node destination.  The caller
+remains responsible for invoking C02 ``upsert-node.py``.
 """
 from __future__ import annotations
 
 import argparse
 import hashlib
 import json
+import os
+import re
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit, urlunsplit
 
 
 SCRIPT_ROOT = Path(__file__).resolve().parents[1]
 HARNESS_MANIFEST = SCRIPT_ROOT.parent / "system-spec-harness" / ".claude-plugin" / "plugin.json"
 DEFAULT_CONTRACT = SCRIPT_ROOT / "references" / "system-spec-import-contract.json"
+INLINE_LINK_RE = re.compile(
+    r"(?P<prefix>!?\[[^\]\n]*\]\()"
+    r"(?P<destination><[^>\n]+>|[^\s)\n]+)"
+    r"(?P<suffix>(?:\s+(?:\"[^\"]*\"|'[^']*'|\([^)]*\)))?\))"
+)
+REFERENCE_LINK_RE = re.compile(
+    r"^(?P<prefix>\s{0,3}\[[^\]]+\]:\s*)"
+    r"(?P<destination><[^>\n]+>|\S+)"
+    r"(?P<suffix>.*)$"
+)
+URI_SCHEME_RE = re.compile(r"^[A-Za-z][A-Za-z0-9+.-]*:")
 
 def utc_now() -> str:
     """Return the actual import time in the graph's canonical UTC form."""
@@ -72,12 +87,110 @@ def require_file(root: Path, relative: str) -> Path:
     return path
 
 
-def markdown_body(path: Path) -> str:
-    """Return substantive Markdown without optional YAML frontmatter.
+def _rebase_destination(
+    raw: str, *, source_file: Path, destination_file: Path, repo_root: Path
+) -> str:
+    """Preserve a local link's target while moving its containing Markdown."""
+    wrapped = raw.startswith("<") and raw.endswith(">")
+    value = raw[1:-1] if wrapped else raw
+    if not value or value.startswith(("#", "/", "//")) or URI_SCHEME_RE.match(value):
+        return raw
+    parsed = urlsplit(value)
+    if not parsed.path:
+        return raw
+    target = (source_file.parent / parsed.path).resolve()
+    try:
+        target.relative_to(repo_root)
+    except ValueError as exc:
+        raise ValueError(
+            f"source Markdown link escapes repo root: {source_file}: {value}"
+        ) from exc
+    if not target.exists():
+        raise ValueError(f"source Markdown link target is missing: {source_file}: {value}")
+    relative = Path(os.path.relpath(target, start=destination_file.parent)).as_posix()
+    rebased = urlunsplit(("", "", relative, parsed.query, parsed.fragment))
+    return f"<{rebased}>" if wrapped else rebased
+
+
+def _rewrite_non_code_span(
+    span: str, *, source_file: Path, destination_file: Path, repo_root: Path
+) -> str:
+    def replace_inline(match: re.Match[str]) -> str:
+        destination = _rebase_destination(
+            match.group("destination"),
+            source_file=source_file,
+            destination_file=destination_file,
+            repo_root=repo_root,
+        )
+        return f'{match.group("prefix")}{destination}{match.group("suffix")}'
+
+    rewritten = INLINE_LINK_RE.sub(replace_inline, span)
+    definition = REFERENCE_LINK_RE.match(rewritten)
+    if not definition:
+        return rewritten
+    destination = _rebase_destination(
+        definition.group("destination"),
+        source_file=source_file,
+        destination_file=destination_file,
+        repo_root=repo_root,
+    )
+    return f'{definition.group("prefix")}{destination}{definition.group("suffix")}'
+
+
+def rebase_markdown_links(
+    text: str, *, source_file: Path, destination_file: Path, repo_root: Path
+) -> str:
+    """Rebase local Markdown links, leaving fenced/inline code and URIs intact."""
+    output: list[str] = []
+    fence_char: str | None = None
+    fence_width = 0
+    for line in text.splitlines(keepends=True):
+        stripped = line.lstrip()
+        fence = re.match(r"(`{3,}|~{3,})", stripped)
+        if fence:
+            marker = fence.group(1)
+            if fence_char is None:
+                fence_char, fence_width = marker[0], len(marker)
+            elif marker[0] == fence_char and len(marker) >= fence_width:
+                fence_char, fence_width = None, 0
+            output.append(line)
+            continue
+        if fence_char is not None:
+            output.append(line)
+            continue
+
+        pieces = re.split(r"(`+)", line)
+        in_code = False
+        code_width = 0
+        for index, piece in enumerate(pieces):
+            if piece.startswith("`") and set(piece) == {"`"}:
+                width = len(piece)
+                if not in_code:
+                    in_code, code_width = True, width
+                elif width == code_width:
+                    in_code, code_width = False, 0
+                continue
+            if not in_code:
+                pieces[index] = _rewrite_non_code_span(
+                    piece,
+                    source_file=source_file,
+                    destination_file=destination_file,
+                    repo_root=repo_root,
+                )
+        output.append("".join(pieces))
+    return "".join(output)
+
+
+def markdown_body(
+    path: Path, *, destination_file: Path, repo_root: Path
+) -> str:
+    """Return substantive Markdown with destination-safe local links.
 
     C02 owns the destination frontmatter, so copying source frontmatter into
-    ``--body-file`` would create a nested envelope.  Apart from that envelope
-    removal, the confirmed source text is preserved verbatim.
+    ``--body-file`` would create a nested envelope.  Source prose is preserved;
+    local links are rebased so they keep pointing at the same repository files
+    after the body moves to the contract's destination path.  Source lineage
+    continues to hash the untouched source artifact bytes.
     """
     text = path.read_text(encoding="utf-8")
     if text.startswith("---\n"):
@@ -87,7 +200,12 @@ def markdown_body(path: Path) -> str:
         text = text[marker + 5 :].lstrip("\n")
     if not text.strip() or not any(line.startswith("#") for line in text.splitlines()):
         raise ValueError(f"source Markdown body must be substantive and headed: {path}")
-    return text.rstrip() + "\n"
+    return rebase_markdown_links(
+        text.rstrip() + "\n",
+        source_file=path,
+        destination_file=destination_file,
+        repo_root=repo_root,
+    )
 
 
 def node_from_contract(
@@ -236,7 +354,11 @@ def main() -> int:
             if name not in generated:
                 raise ValueError(f"output_order references unknown node: {name}")
             write(out / f"{name}.node.json", generated[name])
-            write(out / f"{name}.body.md", markdown_body(body_sources[name]))
+            destination = (root / generated[name]["file_path"]).resolve()
+            write(
+                out / f"{name}.body.md",
+                markdown_body(body_sources[name], destination_file=destination, repo_root=root),
+            )
     except (KeyError, ValueError) as exc:
         raise SystemExit(f"[build-system-spec-import] FAIL: {exc}")
     print(json.dumps({"out_dir": str(out), "node_ids": [generated[name]["graph_node_id"] for name in output_order]}, ensure_ascii=False))

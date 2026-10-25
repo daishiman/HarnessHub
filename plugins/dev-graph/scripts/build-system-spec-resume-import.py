@@ -21,7 +21,6 @@ import sys
 from pathlib import Path
 from typing import Any
 
-
 HERE = Path(__file__).resolve().parent
 SKILL = "run-dev-graph-system-spec"
 ORIGINAL_GOAL = (
@@ -270,7 +269,7 @@ def main(argv: list[str] | None = None) -> int:
             {"id": "content-root", "status": "pass", "evidence": "resolve-context exit 0"},
             {"id": "harness-contract", "status": "pass", "evidence": "validate-resume exit 0"},
             {"id": "upstream-selection", "status": "pass", "evidence": "current receipt reused; upstream Skill count 0"},
-            {"id": "upstream-gates", "status": "pass", "evidence": "digest-bound evaluator/coverage/source gates current"},
+            {"id": "upstream-gates", "status": "pass", "evidence": "digest-bound coverage/source_citation/knowledge_graph/evaluator gates current"},
             {"id": "live-trial-outer-closure", "status": "pending-external", "evidence": "post-run transcript gate validates this runner report"},
             {"id": "c02-node-integrity", "status": "pass", "evidence": "C02 dry-run and upsert steps exit 0"},
             {"id": "source-digest", "status": "pass", "evidence": "gate-source-digest exit 0"},

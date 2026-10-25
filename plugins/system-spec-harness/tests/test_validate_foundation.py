@@ -22,10 +22,13 @@ C12 検証は一切変更しない (本ファイルは foundation 検証の新�
 from __future__ import annotations
 
 import importlib.util
+import copy
+import hashlib
 import json
 from pathlib import Path
 
 SCRIPTS = Path(__file__).resolve().parent.parent / "scripts"
+REPO_ROOT = Path(__file__).resolve().parents[3]
 
 PLATFORMS = ["web", "mobile", "tablet", "desktop-windows", "desktop-linux", "desktop-macos"]
 CATEGORIES = ["database", "auth", "ui-ux", "security", "infrastructure", "backend", "frontend", "maintenance-ops"]
@@ -63,6 +66,13 @@ def _valid_foundation() -> dict:
         "concrete_intents": [{"id": "I1", "text": "日次バックアップ", "serves": ["G1"]}],
         "confirmed": True,
         "approval_ref": "appr-foundation",
+        "effective_source_refs": {
+            f"U{number}": {
+                "qa_ref": f"qa-foundation-u{number}",
+                "approval_ref": "appr-foundation",
+            }
+            for number in range(1, 10)
+        },
     }
 
 
@@ -81,6 +91,7 @@ def _foundation_source_indexes() -> list[dict]:
 def _valid_state() -> dict:
     """全確定セルが serves_goals で実在 goal へトレースされ、上位概念 U1-U5 が非空の状態。"""
     return {
+        "schema_version": "1.1",
         "matrix": {
             "database": {
                 "web": {"state": "確定", "qa_ref": "q", "serves_goals": ["G1"]},
@@ -105,7 +116,162 @@ def test_foundation_valid():
 def test_foundation_source_index_is_required_per_u():
     d = _valid_state()
     d["qa_log"] = d["qa_log"][:-1]
-    assert any("U9 source-index" in f for f in c12.validate_foundation(d))
+    assert any("U9 effective source-index" in f for f in c12.validate_foundation(d))
+
+
+def test_current_confirmed_foundation_requires_effective_source_refs():
+    d = _valid_state()
+    del d["requirements_foundation"]["effective_source_refs"]
+    assert any("effective_source_refs" in f for f in c12.validate_foundation(d))
+
+
+def test_exact_legacy_state_may_fall_back_to_canonical_source_indexes():
+    d = _valid_state()
+    d["schema_version"] = "1.0"
+    del d["requirements_foundation"]["effective_source_refs"]
+    assert c12.validate_foundation(d) == []
+
+
+def test_effective_source_rejects_dangling_and_non_primary_refs():
+    dangling = _valid_state()
+    dangling["requirements_foundation"]["effective_source_refs"]["U1"]["qa_ref"] = "qa-missing"
+    assert any("qa_log に不在" in f for f in c12.validate_foundation(dangling))
+
+    non_primary = _valid_state()
+    non_primary["qa_log"][0]["source"] = {
+        "kind": "harness-remediation",
+        "trigger": "review",
+    }
+    assert any("source.kind" in f for f in c12.validate_foundation(non_primary))
+
+
+def test_effective_source_rejects_retired_qa():
+    d = _valid_state()
+    d["qa_log"][0]["retirement"] = {
+        "writer": "retire-qa",
+        "reason": "歴史のみ",
+    }
+    assert any("retired" in f for f in c12.validate_foundation(d))
+
+
+def test_effective_source_rejects_qa_that_does_not_identify_the_bound_u():
+    """presenceだけでなく、各bindingのQA本文が対象Uを明示することを要求する。"""
+    d = _valid_state()
+    u1_binding = copy.deepcopy(
+        d["requirements_foundation"]["effective_source_refs"]["U1"]
+    )
+    d["requirements_foundation"]["effective_source_refs"] = {
+        f"U{number}": copy.deepcopy(u1_binding)
+        for number in range(1, 10)
+    }
+
+    findings = c12.validate_foundation(d)
+    assert any("U2 effective source-index" in finding and "示す" in finding for finding in findings)
+
+
+def _shared_u3_u4_state() -> dict:
+    """Return an explicit two-U binding with independently readable answer clauses."""
+    d = _valid_state()
+    evidence = {
+        "U3": "U3 はデータ統合をゴールとする",
+        "U4": "U4 は請求漏れ月0件を目標とする",
+    }
+    d["qa_log"].append(
+        {
+            "id": "qa-shared-u3-u4",
+            "question": "利用者との対話で U3 と U4 を共有確認する",
+            "answer": f"{evidence['U3']}。{evidence['U4']}。",
+            "source": {"kind": "user-dialogue"},
+        }
+    )
+    for label in ("U3", "U4"):
+        d["requirements_foundation"]["effective_source_refs"][label] = {
+            "qa_ref": "qa-shared-u3-u4",
+            "approval_ref": "appr-foundation",
+            "evidence_quote": evidence[label],
+            "evidence_sha256": hashlib.sha256(evidence[label].encode("utf-8")).hexdigest(),
+        }
+    return d
+
+
+def test_effective_source_accepts_explicit_shared_qa_with_consumer_evidence():
+    assert c12.validate_foundation(_shared_u3_u4_state()) == []
+
+
+def test_effective_source_rejects_shared_qa_when_answer_replaces_bound_evidence():
+    d = _shared_u3_u4_state()
+    d["qa_log"][-1]["answer"] = "AI が上位概念をひとつに要約した。"
+
+    findings = c12.validate_foundation(d)
+    assert any("shared qa_ref" in finding and "evidence_quote" in finding for finding in findings)
+
+
+def test_effective_source_rejects_out_of_scope_u_marker_in_shared_question():
+    d = _shared_u3_u4_state()
+    d["qa_log"][-1]["question"] += "。U5 も同時に扱う"
+
+    findings = c12.validate_foundation(d)
+    assert any("shared qa_ref" in finding and "question" in finding for finding in findings)
+
+
+def test_effective_source_rejects_mixed_approvals_for_one_shared_qa():
+    d = _shared_u3_u4_state()
+    d["approval_log"].append({"id": "appr-other", "note": "別の承認"})
+    d["requirements_foundation"]["effective_source_refs"]["U4"][
+        "approval_ref"
+    ] = "appr-other"
+
+    findings = c12.validate_foundation(d)
+    assert any("shared qa_ref" in finding and "approval_ref" in finding for finding in findings)
+
+
+def test_effective_source_rejects_missing_or_tampered_shared_evidence():
+    missing = _shared_u3_u4_state()
+    del missing["requirements_foundation"]["effective_source_refs"]["U3"]["evidence_quote"]
+    assert any(
+        "shared qa_ref" in finding and "evidence_quote" in finding
+        for finding in c12.validate_foundation(missing)
+    )
+
+    tampered = _shared_u3_u4_state()
+    tampered["requirements_foundation"]["effective_source_refs"]["U4"][
+        "evidence_sha256"
+    ] = "0" * 64
+    assert any("evidence_sha256" in finding for finding in c12.validate_foundation(tampered))
+
+
+def test_effective_source_rejects_same_shared_evidence_for_multiple_consumers():
+    d = _shared_u3_u4_state()
+    u3 = d["requirements_foundation"]["effective_source_refs"]["U3"]
+    u4 = d["requirements_foundation"]["effective_source_refs"]["U4"]
+    u4["evidence_quote"] = u3["evidence_quote"]
+    u4["evidence_sha256"] = u3["evidence_sha256"]
+
+    findings = c12.validate_foundation(d)
+    assert any("consumer ごとに独立" in finding for finding in findings)
+
+
+def test_production_shared_qa_binds_direct_user_decision_excerpts():
+    """qa-267 は AI 合成の確定要約でなく、利用者の直接選択へ接地する。"""
+    state = json.loads(
+        (REPO_ROOT / "system-spec" / "spec-state.json").read_text(encoding="utf-8")
+    )
+    answer = next(entry["answer"] for entry in state["qa_log"] if entry["id"] == "qa-267")
+    bindings = state["requirements_foundation"]["effective_source_refs"]
+
+    assert c12.validate_foundation(state) == []
+    for label in ("U3", "U4"):
+        quote = bindings[label]["evidence_quote"]
+        assert quote.startswith("[利用者の決定")
+        assert "[確定する上位概念]" not in quote
+        assert quote in answer
+        assert bindings[label]["evidence_sha256"] == hashlib.sha256(
+            quote.encode("utf-8")
+        ).hexdigest()
+
+    assert "『旧・承認済みの値へ戻す』" in bindings["U3"]["evidence_quote"]
+    assert "『2 つとも追加ゴールとして承認する』" in bindings["U3"]["evidence_quote"]
+    assert "『旧 O1-O4 へ完全に戻す』" in bindings["U4"]["evidence_quote"]
 
 
 # ── (a) requirements_foundation 不在 / U1-U5 空 ────────────────────────────

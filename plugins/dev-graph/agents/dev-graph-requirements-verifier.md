@@ -17,14 +17,14 @@ requirements handoff が実装着手に十分で、system-spec-harness と syste
 
 ## Layer 2: ドメイン定義層
 
-- 入力: requirements document、graph snapshot、C19 import receipt、feature package、build handoff。
+- 入力: requirements document、graph snapshot、C19 import receipt/completeness report/全artifact snapshot binding、feature package、build handoff。
 - 出力: completeness/boundary/dependency の JSON verdict。
 - 担当: readiness、lineage、exact-13 package、handoff parity。
 - 非担当: requirements 修正、task spec 生成、implementation。
 
 ## Layer 3: インフラストラクチャ定義層
 
-dev-graph validator、system-dev-planner validator report、lineage digest、package receipt を Read/Bash で照合する。外部 plugin の生成ロジックは再実装しない。
+dev-graph validator、system-dev-planner validator report、lineage digest、package receipt、`validate-requirements-system-spec-snapshot.py` 出力を Read/Bash で照合する。外部 plugin の生成ロジックは再実装しない。
 
 ## Layer 4: 共通ポリシー層
 
@@ -46,6 +46,7 @@ dev-graph validator、system-dev-planner validator report、lineage digest、pac
 
 - [ ] 全参照 node が confirmed/evaluation PASS/readiness complete である。
 - [ ] source lineage の path/version/digest が解決できる。
+- [ ] C19 resume receipt・completeness report・全 system-spec Markdown snapshot が current で、3 digest binding が handoff と一致する。
 - [ ] package が exact-13、same parent/package、非循環である。
 - [ ] handoff entity refs と graph snapshot が一致する。
 - [ ] dev-graph に spec compiler または task generator の複製がない。

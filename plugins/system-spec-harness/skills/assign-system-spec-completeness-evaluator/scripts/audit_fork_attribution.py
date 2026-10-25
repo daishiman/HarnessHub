@@ -70,6 +70,10 @@ LEDGER_RELPATH = Path("eval-log") / "system-spec-harness" / "audit-fork-ledger.j
 LEDGER_TOOL_NAMES = ("Task", "Agent")
 LEDGER_SCHEMA_LEGACY = "1.1"
 LEDGER_SCHEMA_TOOL_USE = "1.2"
+# 1.3: SubagentStop が書く completion 行。非同期 fork では PostToolUse が起動受理しか観測できず、
+# dispatch 行が恒久的に pending のまま残るため、完了という別の観測事実を追記して昇格させる。
+LEDGER_SCHEMA_COMPLETION = "1.3"
+RECORD_KIND_COMPLETION = "completion"
 PROMPT_SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 RESPONSE_SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 
@@ -110,8 +114,126 @@ def empty_ledger() -> dict:
         "sessions": {},
         "receipts": {},
         "receipts_v12": {},
+        "completions": {},
         "malformed": 0,
     }
+
+
+def _parse_completion(record: dict) -> dict | None:
+    """schema 1.3 の completion 行を検証して正規形へ写す。不正なら None。"""
+    if record.get("record_kind") != RECORD_KIND_COMPLETION:
+        return None
+    subagent_type = record.get("subagent_type")
+    session_id = record.get("session_id")
+    response_sha256 = record.get("response_sha256")
+    token = record.get("dispatch_token")
+    token = token if isinstance(token, str) and token else None
+    if not isinstance(subagent_type, str) or not subagent_type:
+        # ハーネスは agent_type を空で届けることがある。token があれば exact join で
+        # 帰属できるので受理し、無ければ照合の手掛かりが無いので不正として除外する。
+        if token is None:
+            return None
+        subagent_type = None
+    if (
+        not isinstance(session_id, str)
+        or not session_id
+        or not isinstance(response_sha256, str)
+        or not RESPONSE_SHA256_RE.fullmatch(response_sha256)
+    ):
+        return None
+    return {
+        "session_id": session_id,
+        "subagent_type": subagent_type,
+        "tool_name": record.get("tool_name"),
+        "response_sha256": response_sha256,
+        "verdict": record.get("audit_verdict"),
+        "verdict_state": record.get("verdict_state"),
+        "dispatch_token": token,
+        "agent_id": record.get("agent_id"),
+    }
+
+
+def promote_completions(receipts_v12: dict, completions: dict) -> None:
+    """pending の dispatch 行を completion 行の観測へ昇格させる (in-place)。
+
+    ハーネスは親の ``tool_use_id`` と子の ``agent_id`` を繋ぐ鍵を提供しないため、接合は
+    2 段階で行い、いずれにも当たらない場合は **昇格させない** (取り違えより未確定を選ぶ)。
+
+    1. **dispatch token による exact join**: 親が prompt へ埋め auditor が応答へ echo した
+       ``AUDIT_DISPATCH: <token>`` が、当該 (session, subagent_type) の pending 側でも
+       completion 側でも一意なときだけ接合する。
+    2. **1 対 1 の fallback**: token が無い旧来の起動でも、残った pending が 1 件・resolved な
+       completion が 1 件しかなければ対応は一意に決まる。2 件以上が残る並列起動は曖昧なので
+       pending のまま残す。``subagent_type`` を観測できなかった completion はこの fallback の
+       母数に入れない (型が不明な行を数合わせに使うと別 auditor の verdict を取り違える)。
+    """
+    for session_id, by_tool_use in receipts_v12.items():
+        by_type: dict[str, list[dict]] = {}
+        session_dispatch_token_counts: dict[str, int] = {}
+        for candidates in by_tool_use.values():
+            for candidate in candidates:
+                token = candidate.get("dispatch_token") if isinstance(candidate, dict) else None
+                if token:
+                    session_dispatch_token_counts[token] = (
+                        session_dispatch_token_counts.get(token, 0) + 1
+                    )
+            if len(candidates) != 1:
+                continue  # 重複・競合行は照合時に fail-closed で拒否される
+            receipt = candidates[0]
+            if receipt.get("verdict_state") == "resolved":
+                continue
+            by_type.setdefault(receipt.get("subagent_type"), []).append(receipt)
+        session_completions = completions.get(session_id, {})
+        for subagent_type, pendings in by_type.items():
+            def _usable(rows):
+                return [
+                    c
+                    for c in rows
+                    if c.get("verdict_state") == "resolved" and c.get("verdict") in ASPECT_VERDICTS
+                ]
+
+            typed = _usable(session_completions.get(subagent_type, []))
+            # subagent_type を観測できなかった completion は token join でしか帰属できない。
+            # 型が分からない以上 1 対 1 fallback の母数に入れると別 auditor の verdict を
+            # 取り違えるため、typed の後ろへ並べて leftover 判定から外す。
+            untyped = [c for c in _usable(session_completions.get(None, [])) if c["dispatch_token"]]
+            available = typed + untyped
+            if not available:
+                continue
+            used: set[int] = set()
+            unmatched = []
+            token_counts: dict[str, int] = {}
+            for c in available:
+                if c["dispatch_token"]:
+                    token_counts[c["dispatch_token"]] = token_counts.get(c["dispatch_token"], 0) + 1
+            for p in pendings:
+                token = p.get("dispatch_token")
+                if (
+                    not token
+                    or token_counts.get(token) != 1
+                    or session_dispatch_token_counts.get(token) != 1
+                ):
+                    unmatched.append(p)
+                    continue
+                index = next(i for i, c in enumerate(available) if c["dispatch_token"] == token)
+                _apply_promotion(p, available[index], "dispatch-token")
+                used.add(index)
+            leftover = [c for i, c in enumerate(typed) if i not in used]
+            if len(unmatched) == 1 and len(leftover) == 1:
+                _apply_promotion(unmatched[0], leftover[0], "one-to-one")
+
+
+def _apply_promotion(receipt: dict, completion: dict, join: str) -> None:
+    """dispatch 行の観測を completion 行の観測で確定させる。
+
+    verdict と response digest は **completion 行** を正とする。dispatch 行の digest は
+    起動受理 payload のもので、監査結果を何も表していないため receipt の束縛先にできない。
+    """
+    receipt["verdict_state"] = "resolved"
+    receipt["verdict"] = completion["verdict"]
+    receipt["response_sha256"] = completion["response_sha256"]
+    receipt["promoted_by"] = join
+    receipt["completion_agent_id"] = completion.get("agent_id")
 
 
 def load_fork_ledger(path) -> dict:
@@ -136,6 +258,8 @@ def load_fork_ledger(path) -> dict:
     sessions: dict[str, dict[str, int]] = {}
     receipts: dict[str, dict[str, dict[str, dict[str, str]]]] = {}
     receipts_v12: dict[str, dict[str, list[dict[str, str]]]] = {}
+    # session_id -> subagent_type -> [completion 行]。SubagentStop が書く 1.3 行の受け皿。
+    completions: dict[str, dict[str, list[dict]]] = {}
     malformed = 0
     try:
         lines = ledger_path.read_text(encoding="utf-8").splitlines()
@@ -161,7 +285,21 @@ def load_fork_ledger(path) -> dict:
             malformed += 1
             continue
         schema_version = record.get("schema_version")
+        if schema_version == LEDGER_SCHEMA_COMPLETION:
+            completion = _parse_completion(record)
+            if completion is None:
+                malformed += 1
+            else:
+                completions.setdefault(completion["session_id"], {}).setdefault(
+                    completion["subagent_type"], []
+                ).append(completion)
+            continue
         if schema_version not in {LEDGER_SCHEMA_LEGACY, LEDGER_SCHEMA_TOOL_USE}:
+            malformed += 1
+            continue
+        if schema_version == LEDGER_SCHEMA_LEGACY and record.get("tool_name") != "Task":
+            # Current Agent calls expose tool_use_id. Treating Agent as legacy would allow
+            # a malformed current receipt to bypass the schema 1.2 identity binding.
             malformed += 1
             continue
         subagent_type = record.get("subagent_type")
@@ -193,9 +331,11 @@ def load_fork_ledger(path) -> dict:
                 malformed += 1
                 continue
             receipt["verdict_state"] = record.get("verdict_state")
+            token = record.get("dispatch_token")
+            receipt["dispatch_token"] = token if isinstance(token, str) and token else None
             receipts_v12.setdefault(session_id, {}).setdefault(tool_use_id, []).append(receipt)
-            if record.get("verdict_state") != "resolved" or audit_verdict not in ASPECT_VERDICTS:
-                malformed += 1
+            # 未確定 (pending) の計上は completion 行による昇格の **後** に行う。ここで数えると
+            # 非同期 fork が必ず破損扱いになり、昇格で解消した行まで破損として残ってしまう。
             continue
         if audit_verdict not in ASPECT_VERDICTS:
             malformed += 1
@@ -204,6 +344,10 @@ def load_fork_ledger(path) -> dict:
         by_session = sessions.setdefault(subagent_type, {})
         by_session[session_id] = by_session.get(session_id, 0) + 1
         receipts.setdefault(subagent_type, {}).setdefault(session_id, {})[response_sha256] = receipt
+
+    # 非同期 fork の dispatch 行は起動受理しか観測できず pending のまま残る。SubagentStop が
+    # 追記した completion 行を join して昇格させる (台帳は append-only のまま = 既存行は不変)。
+    promote_completions(receipts_v12, completions)
 
     # schema 1.2 の識別子は session 内で一意でなければならない。候補を list のまま保持し、
     # 重複・競合を last-write-wins に潰さず照合時にも fail-closed で拒否する。
@@ -214,6 +358,8 @@ def load_fork_ledger(path) -> dict:
                 continue
             receipt = candidates[0]
             if receipt.get("verdict_state") != "resolved" or receipt.get("verdict") not in ASPECT_VERDICTS:
+                # 昇格しても未確定なら破損として計上する (下流の診断文へ件数を出すため)。
+                malformed += 1
                 continue
             subagent_type = receipt["subagent_type"]
             dispatched[subagent_type] = dispatched.get(subagent_type, 0) + 1
@@ -226,6 +372,7 @@ def load_fork_ledger(path) -> dict:
         "sessions": sessions,
         "receipts": receipts,
         "receipts_v12": receipts_v12,
+        "completions": completions,
         "malformed": malformed,
     }
 
@@ -329,6 +476,12 @@ def ledger_corroborates(delegation: dict, ledger: dict) -> tuple[bool, str]:
         return False, (
             "dispatch.tool_use_id が無く schema 1.2 台帳の dispatch と突合できない "
             "(response digest のみで 1.1 互換経路へ downgrade しない)"
+        )
+
+    if dispatch.get("tool") == "Agent":
+        return False, (
+            "現行 Agent dispatch には tool_use_id が必須で、schema 1.1 legacy 経路へ "
+            "downgrade できない (legacy receipt は Task 専用)"
         )
 
     if ledger.get("dispatched", {}).get(subagent_type, 0) < 1:

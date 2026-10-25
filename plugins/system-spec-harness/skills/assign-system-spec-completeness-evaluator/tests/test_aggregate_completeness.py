@@ -14,6 +14,9 @@
 from __future__ import annotations
 
 import json
+import os
+import subprocess
+import sys
 
 import pytest
 
@@ -80,6 +83,96 @@ def test_report_shape_and_mapping_violations_are_detected():
     assert MOD.validate_report(["not", "a", "dict"]) == ["report: オブジェクトでない"]
 
 
+def test_schema_unknown_top_level_field_is_rejected():
+    report = golden_report()
+    report["unexpected_green_field"] = True
+
+    violations = MOD.validate_report(report, golden_ledger())
+
+    assert any("schema" in item and "unexpected_green_field" in item for item in violations)
+
+
+def test_schema_definition_unknown_keyword_is_rejected_fail_closed(tmp_path, monkeypatch):
+    schema = tmp_path / "unknown-keyword.schema.json"
+    schema.write_text(
+        json.dumps({"$schema": "https://json-schema.org/draft-07/schema#", "type": "object", "unknownGate": True}),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(MOD, "COMPLETENESS_SCHEMA", schema)
+
+    violations = MOD.validate_schema({})
+
+    assert any("unknownGate" in item and "schema" in item for item in violations)
+
+
+def test_report_validation_is_stdlib_only_under_clean_python_s(tmp_path):
+    report_path = tmp_path / "report.json"
+    report_path.write_text(json.dumps(golden_report(), ensure_ascii=False), encoding="utf-8")
+    ledger_path = tmp_path / "audit-fork-ledger.jsonl"
+    write_ledger(ledger_path)
+    script = SKILL_DIR / "scripts" / "aggregate-completeness.py"
+    env = dict(os.environ)
+    env.pop("PYTHONPATH", None)
+
+    process = subprocess.run(
+        [
+            sys.executable,
+            "-S",
+            str(script),
+            "--report",
+            str(report_path),
+            "--fork-ledger",
+            str(ledger_path),
+            "--session",
+            "sess-1",
+        ],
+        cwd=SKILL_DIR.parents[3],
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert process.returncode == 0, process.stderr or process.stdout
+
+
+def test_report_validation_ignores_a_poisoned_jsonschema_module(tmp_path):
+    report_path = tmp_path / "report.json"
+    report_path.write_text(json.dumps(golden_report(), ensure_ascii=False), encoding="utf-8")
+    ledger_path = tmp_path / "audit-fork-ledger.jsonl"
+    write_ledger(ledger_path)
+    poison = tmp_path / "poison"
+    poison.mkdir()
+    (poison / "jsonschema.py").write_text(
+        "raise RuntimeError('external jsonschema must not be imported')\n",
+        encoding="utf-8",
+    )
+    script = SKILL_DIR / "scripts" / "aggregate-completeness.py"
+    env = dict(os.environ)
+    env["PYTHONPATH"] = str(poison)
+
+    process = subprocess.run(
+        [
+            sys.executable,
+            "-S",
+            str(script),
+            "--report",
+            str(report_path),
+            "--fork-ledger",
+            str(ledger_path),
+            "--session",
+            "sess-1",
+        ],
+        cwd=SKILL_DIR.parents[3],
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert process.returncode == 0, process.stderr or process.stdout
+
+
 def test_coverage_gate_passes_and_fails_on_fixture_matrix(tmp_path):
     matrix = tmp_path / "spec-state.json"
     write_matrix(matrix, complete=True)
@@ -95,6 +188,41 @@ def test_knowledge_graph_gate_passes_on_shipped_assets_and_cli_outputs_json(caps
     assert {item["profile"] for item in result["subgates"]} == {"knowledge", "doctrine", "required-info", "cross"}
     assert MOD.main(["--knowledge-graph"]) == 0
     assert json.loads(capsys.readouterr().out)["id"] == "G-knowledge-graph"
+
+
+def test_knowledge_graph_gate_output_is_valid_report_schema():
+    report = golden_report()
+    report["gate_results"].append(MOD.run_knowledge_graph_gate())
+
+    assert MOD.validate_schema(report) == []
+
+
+def test_knowledge_graph_schema_rejects_duplicate_profile_projection():
+    report = golden_report()
+    knowledge = next(
+        item for item in report["gate_results"] if item["id"] == "G-knowledge-graph"
+    )
+    knowledge["subgates"][1]["profile"] = "knowledge"
+
+    assert any("gate_results" in item and "profile" in item for item in MOD.validate_schema(report))
+
+
+def test_knowledge_graph_signal_termination_is_fail_closed(monkeypatch):
+    completed = iter(
+        [
+            __import__("subprocess").CompletedProcess([], -9, "", "killed"),
+            *[
+                __import__("subprocess").CompletedProcess([], 0, "", "")
+                for _ in range(3)
+            ],
+        ]
+    )
+    monkeypatch.setattr(MOD.subprocess, "run", lambda *args, **kwargs: next(completed))
+
+    result = MOD.run_knowledge_graph_gate()
+
+    assert result["subgates"][0]["exit_code"] == -9
+    assert result["exit_code"] != 0
 
 
 def test_schema_and_rubric_match_the_aggregate_contract():

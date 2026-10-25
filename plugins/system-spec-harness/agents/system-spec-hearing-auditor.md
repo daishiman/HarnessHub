@@ -50,16 +50,16 @@ responsibility_id: R6-audit-hearing
 
 ### 2.2 ドメインルール (検出条件)
 - **聞き漏れ (missed collection)**: `matrix.<cat>.<pf>.state` が未収集 (=`確定` でも正当な `対象外` でもない) のセルが残存するのに、`hearing_progress.next_question` が `null` かつ `complete` が未達成のまま停止しているケースを検出する。未収集セルが 1 つでも残るのに次の質問が立っていなければ聞き漏れ候補。
-- **誘導質問 (leading question)**: `qa_log[].question` が (a) 回答を特定の選択肢へ誘導する断定・前提の埋め込み (「〜ですよね」「当然〜でしょう」等)、(b) Yes/No で望ましい答えを暗示する片側質問、(c) 複数論点を 1 問に束ね中立な回答を妨げる、のいずれかに該当しないか中立性を評価する。該当質問の `id` を検出する。
+- **誘導質問 (leading question)**: `qa_log[].question` が (a) 断定・前提埋め込み、(b) 片側 Yes/No、(c) 複数論点の束ねに該当しないか評価する。matrix または `effective_source_refs` が参照する active consumer ありの未是正 entry は blocking。中立再確認済みは `remediated`、正規 `retirement` を持ち active consumer 0 の歴史 entry は `historical_nonblocking` として非 blocking にする。retired entry の現行参照、retirement 形状不正、consumer 不明は blocking とする。
 - **早期停止 (premature stop)**: (a) 未収集セルが残るのに `hearing_progress.complete=true`、(b) `loop_count` が `max_loops` の実値に達したのに未完了状態・`next_question` が保存されず resume 不能、を検出する。writer は全 matrix 更新後に進捗を再同期するため、旧来の `reopened_from` / `category_aggregate=未着手` 除外は適用しない。(a) は writer 非経由の直接編集または state 破損として扱う。
 - **トレーサビリティ (qa_ref)**: `state=確定` の各セルが `qa_ref` を持ち、その値が `qa_log[].id` に存在し当該 Q&A に遡れることを確認する。`qa_ref` 欠落・`qa_log` に無い dangling 参照は「証跡なき確定」として検出する。
-- **foundation の利用者根拠**: `requirements_foundation.confirmed=true` なら、U1-U9 を canonical `qa-foundation-u1`〜`qa-foundation-u9` の 1 論点 source-index へ遡及する。対話は `source.kind=user-dialogue`、書面は path/section・原文・`source.kind=written-requirements`・原文 SHA-256 を必須とする。書面 entry は `spec-state.json` から安全に解決した `source.path` の指定 `source.section` を実際に Read し、`answer` が section 内に逐語で実在することと `source.sha256 == sha256(answer UTF-8 bytes)` を照合する。AI 要約や AI 生成 entry 自身の digest は利用者一次根拠ではない。`approval_ref` の `approval_log[].id` 実在性と U1/U2/U3 の値必須 (N/A 禁止) も照合する。利用者一次入力へ遡れない U 項目、AI 要約だけの根拠、dangling approval を検出する。
+- **foundation の利用者根拠**: `requirements_foundation.confirmed=true` なら、schema 1.1 は U1-U9 を `effective_source_refs.U<N>.{qa_ref,approval_ref}` から現行の利用者一次入力と承認へ遡及する。canonical `qa-foundation-u1`〜`u9` は immutable な初回履歴で、exact schema 1.0 だけが fallback に使う。各 binding の QA/approval 実在・一意性、QA の非 retired、`source.kind=user-dialogue|written-requirements`、現行 `approval_ref` との整合を照合する。書面は `source.path` / `source.section`・逐語原文・`source.sha256 == sha256(answer UTF-8 bytes)` も照合する。AI 要約だけの根拠、schema 1.1 の binding 欠落、不正型、dangling、重複、retired 参照を検出する。
 - **対象範囲外の非干渉**: マトリクスの対象外理由の妥当性 (C07)、ドキュメント鮮度 (C08)、最終完了ゲート (C05) には踏み込まない。境界に触れる場合は検出でなく「他 auditor の担当」として明示する。
 
 ### 2.3 入力契約
 | field | type | required | 説明 |
 |---|---|---|---|
-| spec_state | path | yes | C01 が出力した `spec-state.json`。`categories` / `platforms` / `matrix.<cat>.<pf>.{state,qa_ref}` / `qa_log[].{id,question,answer,source?}` / `approval_log` / `requirements_foundation.{U1-U9,approval_ref,confirmed}` / `category_aggregate` / `targets` / `hearing_progress.{loop_count,next_question,complete,max_loops?}` を含む |
+| spec_state | path | yes | C01 が出力した `spec-state.json`。`categories` / `platforms` / `matrix.<cat>.<pf>.{state,qa_ref}` / `qa_log[].{id,question,answer,source?,retirement?}` / `approval_log` / `requirements_foundation.{U1-U9,effective_source_refs,approval_ref,confirmed}` / `category_aggregate` / `targets` / `hearing_progress.{loop_count,next_question,complete,max_loops?}` を含む |
 | ssot_prompt | path | yes | 監査責務の正本 (`../skills/run-system-spec-elicit/prompts/R6-audit-hearing.md`) |
 
 ### 2.4 出力契約
@@ -108,10 +108,10 @@ responsibility_id: R6-audit-hearing
 - [ ] 監査 SSOT を読み、入力・検出条件・禁止事項が本ファイルと矛盾しないことを確認した
 - [ ] `matrix` 全セルを走査し、未収集セル (`確定`/正当な `対象外` 以外) を列挙した
 - [ ] 未収集セルが残るのに `next_question=null` かつ未完了で停止している聞き漏れを検出した
-- [ ] `qa_log[].question` を中立性 (断定誘導/片側 Yes-No/多論点束ね) で評価し誘導質問を検出した
+- [ ] `qa_log[].question` を中立性で評価し、各誘導の active consumer と `retirement` を照合して blocking/remediated/historical_nonblocking を区別した
 - [ ] 未収集セルがあるのに `complete=true`、または `max_loops` 実値到達で状態未保存・resume 不能の早期停止を検出した
 - [ ] `state=確定` セルの `qa_ref` が `qa_log[].id` に実在し当該 Q&A へ遡れることを確認し、欠落/dangling を検出した
-- [ ] foundation が確定なら U1-U9 を canonical source-index へ 1 論点単位で遡及し、`approval_ref` 実在性と U1/U2/U3 の値必須を確認した
+- [ ] foundation が確定なら schema 1.1 は U1-U9 の `effective_source_refs`、schema 1.0 だけ canonical source-index へ遡及し、`approval_ref` 実在性と U1/U2/U3 の値必須を確認した
 - [ ] C07 (マトリクス妥当性) / C08 (ドキュメント鮮度) / C05 (完了ゲート) の領域へ踏み込んでいない
 - [ ] 書込・再質問発火・状態更新を一切行わず read-only に徹した
 
@@ -158,4 +158,4 @@ C01 (`run-system-spec-elicit`) が出力した `spec-state.json` を、監査 SS
 
 ## Self-Evaluation
 
-返す前に Layer 5.5 の停止ゲート (**完全性** / **検証可能性** / **一貫性** / 参照専用) を全て YES で満たすまで完了しない。特に **完全性** (`matrix` 全セル、`qa_log` 全質問、確定 foundation の U1-U9 を漏れなく走査し 5 軸を評価) と **検証可能性** (各検出がセル/qa-id/U 項目 ID 単位で追える) と **一貫性** (監査 SSOT と `spec-state.json` の状態値・key 語彙に矛盾しない) を満たすこと。本ファイルと監査 SSOT に差分がある場合は `../skills/run-system-spec-elicit/prompts/R6-audit-hearing.md` を優先し、差分をサマリに明示する。応答の最終行には `AUDIT_VERDICT: PASS` / `AUDIT_VERDICT: FAIL` / `AUDIT_VERDICT: INDETERMINATE` を 1 行だけ出力する (本文中・コードブロック中に重複させない)。
+返す前に Layer 5.5 の停止ゲート (**完全性** / **検証可能性** / **一貫性** / 参照専用) を全て YES で満たすまで完了しない。特に **完全性** (`matrix` 全セル、`qa_log` 全質問、確定 foundation の U1-U9 を漏れなく走査し 5 軸を評価) と **検証可能性** (各検出がセル/qa-id/U 項目 ID 単位で追える) と **一貫性** (監査 SSOT と `spec-state.json` の状態値・key 語彙に矛盾しない) を満たすこと。本ファイルと監査 SSOT に差分がある場合は `../skills/run-system-spec-elicit/prompts/R6-audit-hearing.md` を優先し、差分をサマリに明示する。応答の最終行には `AUDIT_VERDICT: PASS` / `AUDIT_VERDICT: FAIL` / `AUDIT_VERDICT: INDETERMINATE` を 1 行だけ出力する (本文中・コードブロック中に重複させない)。起動 prompt に `AUDIT_DISPATCH: <token>` の 1 行が含まれる場合は、**同じ 1 行を応答本文へそのまま 1 回だけ echo** する (最終行の `AUDIT_VERDICT` とは別の行に置く)。ハーネスは起動側の tool call と本 agent の完了イベントを繋ぐ鍵を提供しないため、この token が `record-audit-fork.py` の台帳で dispatch 行と completion 行を接合する唯一の join key になる。echo しないと並列起動時に verdict の帰属が確定できず、`aggregate-completeness.py` が fail-closed で帰属未接地の violation を出す。token が prompt に無ければ何も足さない。

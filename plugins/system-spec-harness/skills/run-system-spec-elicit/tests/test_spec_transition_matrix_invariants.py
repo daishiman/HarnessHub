@@ -120,6 +120,34 @@ def test_reopen_preserves_optional_serves_intents_when_present() -> None:
     assert state["reopen_log"][-1]["discarded"]["serves_intents"] == ["I1"]
 
 
+def test_reopen_records_the_approval_it_discards() -> None:
+    # reopen は確定の取り消しなので approval_ref を次のセルへ引き継がない (別の回答に対して
+    # 得た承認を再確定セルが継承してしまう)。ただし discarded に載せずに落とすと、承認が
+    # あったこと自体が state から消え、再取得が要ると reopen_log から読み取れなくなる。
+    state = _complete_state()
+    state["approval_log"].append({"id": "appr-900", "summary": "旧回答への承認"})
+    mod.apply_turn(
+        state,
+        {
+            "ops": [
+                {
+                    "action": "set-approval",
+                    "category": "database",
+                    "platform": "web",
+                    "approval_ref": "appr-900",
+                }
+            ]
+        },
+    )
+    mod.apply_turn(
+        state,
+        {"ops": [{"action": "reopen", "category": "database", "platform": "web", "reason": "再確認"}]},
+    )
+    assert state["reopen_log"][-1]["discarded"]["approval_ref"] == "appr-900"
+    # 引き継がないことも同時に固定する。片方だけだと「記録はあるが継承もしている」を見逃す。
+    assert "approval_ref" not in state["matrix"]["database"]["web"]
+
+
 def test_add_category_resyncs_complete_state() -> None:
     state = _complete_state()
     mod.add_category(state, {"id": "dev-workflow", "label": "開発フロー"})

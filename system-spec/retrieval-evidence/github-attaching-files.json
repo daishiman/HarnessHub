@@ -1,0 +1,14 @@
+{
+  "retrieval_path": "WebSearch (allowed_domains=docs.github.com)",
+  "query": "Attaching files GitHub Docs drag and drop issue comment file types anonymized URL",
+  "retrieved_at": "2026-08-16T02:49:50Z",
+  "official_url": "https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/attaching-files",
+  "facts": [
+    "attach by dragging and dropping into the comment box, or clicking below the comment box to browse, or copy-and-pasting images in many browsers",
+    "on attach the file is uploaded immediately and the text field is updated to show the anonymized URL",
+    "anyone can view the anonymized URL WITHOUT authentication, even if the issue/PR is in a private repository or private mode is enabled",
+    "to keep sensitive media private, serve them from a private network or server requiring authentication",
+    "supported types include PNG, JPEG/JPG, GIF, SVG and video (MP4, MOV) with per-type size limits",
+    "no API-based upload path is described; all described paths are browser UI interactions"
+  ]
+}

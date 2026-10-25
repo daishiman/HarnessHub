@@ -7,10 +7,10 @@ scenario 契約 (live-trial-positive-scenarios.json):
             --package REPO/system-plan/F-LIVE-001/package.json
   fixture_contract:
     feature が confirmed / evaluation-pass / readiness-complete で、package が
-    P01..P13 exact-13 の DAG・source digest 一致・parent feature 一致であること。
+    P01..P13 exact-13 の DAG・source digest 一致・parent feature 一致、かつ
+    C19 の digest-bound PASS bundle が current であること。
 
-この 3 条件がどの実装で機械検査されるかを追うと、fixture が満たすべき形は次の
-3 gate の積になる (SKILL.md criteria:IN1 が同じ 3 gate を要求している)。
+この条件を機械検査する C04 の入力境界は次の 4 gate group の積になる。
 
   1. C11  plugins/dev-graph/scripts/validate-graph-schema.py
      graph node 群の schema / DAG / artifact 実体を検査する。
@@ -27,6 +27,10 @@ scenario 契約 (live-trial-positive-scenarios.json):
      task-graph/13 task specs/handoff/manifest の exact-set と digest を検査する。
      C04 は promotion 後の consumer なので、fixture は feature 別 current pointer も持ち、
      ``--feature-package feature-package/F-LIVE-001`` から published package を解決できる。
+  4. C19  plugins/dev-graph/scripts/validate-requirements-system-spec-snapshot.py
+     ``validate-system-spec-resume.py`` を正本として再利用し、C19 の receipt/report と全
+     system-spec Markdown snapshot を再検証する。receipt が束縛する upstream 4 gate は
+     ``coverage`` / ``source_citation`` / ``knowledge_graph`` / ``evaluator`` の exact set である。
 
 したがって本 shape は「published package 一式」と「その package を C02 が登録し終えた
 graph」を同時に作る。scenario が --package で指す ``package.json`` は、C12 が読む
@@ -42,7 +46,8 @@ validator が要求する canonical 名を両立させるため)。
 requirements_exact13_package) だけとする。
 
 なお本 fixture が置く成果物は**すべて C04 の入力**であり、C04 自身の出力
-(要件定義書・readiness matrix・capability-build handoff・graph snapshot) は 1 件も
+(要件定義書・readiness matrix・capability-build handoff・graph snapshot・C19 の
+``resume_receipt_sha256`` / ``completeness_report_sha256`` / ``artifact_snapshot_sha256``) は 1 件も
 含まない。判定根拠と、名前が紛らわしい ``system-build-handoff.json`` /
 ``task-graph.json`` を入力と確定した実装上の証拠は ``requirements_baseline`` の
 module docstring を正本とする。生成の最後にその宣言と実 tree の exact 一致を検査し、
@@ -82,7 +87,6 @@ from .requirements_exact13_package import (
     PACKAGE_DIR_REL,
     PHASE_META,
     PHASES,
-    SYSTEM_SPEC_INDEX_REL,
     SYSTEM_SPEC_REQUIREMENTS_REL,
     dump_json,
     run_build_system_handoff,
@@ -91,8 +95,23 @@ from .requirements_exact13_package import (
     task_id,
     write_package_sources,
 )
+from .system_spec_confirmed_bundle import content as system_spec_content
 
 SHAPE = "requirements"
+
+
+def _system_spec_inputs() -> dict[str, str]:
+    manifest = (
+        Path(__file__).resolve().parents[4]
+        / "system-spec-harness"
+        / ".claude-plugin"
+        / "plugin.json"
+    )
+    version = str(json.loads(manifest.read_text(encoding="utf-8"))["version"])
+    return system_spec_content(version)
+
+
+SYSTEM_SPEC_INPUTS = _system_spec_inputs()
 
 
 def _write_current_pointer(out: Path, package_digest: str) -> None:
@@ -141,23 +160,11 @@ def _add_plan_roots(out: Path) -> str:
 
 
 def _write_system_spec(out: Path) -> None:
-    """package の source lineage が指す system-spec-harness 確定成果物 (引用元)。"""
-    (out / SYSTEM_SPEC_INDEX_REL).write_text(
-        "# live-trial fixture system spec index\n\n"
-        f"- 確定章: {SYSTEM_SPEC_REQUIREMENTS_REL}\n"
-        f"- 対象 feature: {FEATURE_ID}\n"
-        "- confirmation_status: confirmed / evaluation_status: pass\n",
-        encoding="utf-8",
-    )
-    (out / SYSTEM_SPEC_REQUIREMENTS_REL).write_text(
-        "# 要件定義 (live-trial fixture)\n\n"
-        "## 目的\n\n"
-        "live-trial の被験 skill が参照する確定要件を、実 repository から隔離して固定する。\n\n"
-        "## 受入条件\n\n"
-        "- exact-13 package の全 task が implementation_readiness=complete である\n"
-        "- 要件の引用元がこのファイルに閉じている\n",
-        encoding="utf-8",
-    )
+    """C19 の upstream 4 gate に digest-bound された確定成果物一式。"""
+    for relative, body in SYSTEM_SPEC_INPUTS.items():
+        target = out / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(body, encoding="utf-8")
 
 
 def _architecture_node(spec_digest_hex: str) -> dict:
@@ -455,6 +462,6 @@ def build(out: Path) -> None:
 
     # commit 後に「baseline = C04 の入力だけ」を検査する。ここで宣言外の path を弾くので、
     # 被験 skill の出力に相当する artifact を fixture へ足すには宣言の更新が必須になる。
-    declared = declared_inputs()
+    declared = declared_inputs(list(SYSTEM_SPEC_INPUTS))
     assert_input_closure(out, declared)
     write_baseline_receipt(out, common, declared)

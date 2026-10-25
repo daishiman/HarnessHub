@@ -101,21 +101,43 @@ def test_false_independence_unknown_agent_duplicate_and_verdict_mismatch_are_rej
     assert any("忠実に転記" in item for item in MOD.validate_attribution(report, golden_ledger()))
 
 
-def test_agent_tool_rows_and_reforks_are_accepted():
-    report = golden_report()
+def test_agent_tool_rows_and_reforks_are_accepted_only_with_tool_use_ids(tmp_path):
+    report, records = _schema12_fixture()
     for delegation in report["audit_delegations"]:
         delegation["dispatch"]["tool"] = "Agent"
-    ledger = golden_ledger()
-    for by_session in ledger["receipts"].values():
-        for by_digest in by_session.values():
-            for receipt in by_digest.values():
-                receipt["tool_name"] = "Agent"
+    for record in records:
+        record["tool_name"] = "Agent"
+    ledger = _load_schema12_ledger(tmp_path / "agent-v12.jsonl", records)
     assert AGGREGATE.validate_report(report, ledger) == []
     delegation = golden_delegations()[0]
     ledger = golden_ledger()
     ledger["dispatched"][delegation["auditor"]] = 3
     ledger["sessions"][delegation["auditor"]] = {"sess-1": 3}
     assert MOD.ledger_corroborates(delegation, ledger)[0]
+
+
+def test_legacy_schema_agent_row_cannot_downgrade_around_tool_use_id(tmp_path):
+    path = tmp_path / "audit-fork-ledger.jsonl"
+    delegation = golden_delegations()[0]
+    delegation["dispatch"]["tool"] = "Agent"
+    record = {
+        "schema_version": "1.1",
+        "tool_name": "Agent",
+        "session_id": delegation["dispatch"]["session_id"],
+        "subagent_type": delegation["dispatch"]["subagent_type"],
+        "prompt_sha256": "1" * 64,
+        "response_sha256": delegation["dispatch"]["response_sha256"],
+        "audit_verdict": delegation["verdict"],
+    }
+    write_ledger(path, auditors=[], extra_lines=[json.dumps(record)])
+
+    ledger = MOD.load_fork_ledger(path)
+    corroborated, reason = MOD.ledger_corroborates(delegation, ledger)
+
+    assert ledger["malformed"] == 1
+    assert ledger["dispatched"] == {}
+    assert corroborated is False
+    assert "Agent" in reason and "tool_use_id" in reason
 
 
 def test_receipt_must_match_hook_observed_response_verdict_and_tool():
@@ -165,7 +187,9 @@ def test_ledger_loader_handles_missing_broken_session_and_agent_rows(tmp_path):
         "prompt_sha256": "1" * 64, "response_sha256": response_digest("system-spec-hearing-auditor"),
         "audit_verdict": "PASS",
     })])
-    assert MOD.load_fork_ledger(path)["dispatched"]["system-spec-hearing-auditor"] == 1
+    ledger = MOD.load_fork_ledger(path)
+    assert ledger["malformed"] == 1
+    assert ledger["dispatched"] == {}
 
 
 def test_ledger_rejects_handwritten_or_invalid_prompt_digest(tmp_path):
@@ -280,3 +304,185 @@ def test_hook_writer_and_reader_contracts_match():
     recorded = hook.audit_agents(PLUGIN_ROOT)
     for requirement in MOD.required_delegations():
         assert requirement["auditor"] in recorded
+
+
+# --- 非同期 fork の completion 昇格 (schema 1.3 / 第 2 writer) ---------------------------
+
+_DISPATCH_DIGEST = "d" * 64  # 起動受理 payload の digest。監査結果を何も表さない。
+_A = "system-spec-doc-freshness-auditor"
+_B = "system-spec-hearing-auditor"
+
+
+def _pending_dispatch(tool_use_id, subagent_type, token=None, session="sess-async"):
+    row = {
+        "schema_version": "1.2", "record_kind": "dispatch", "ts": "2026-08-15T00:00:00Z",
+        "session_id": session, "tool_name": "Agent", "tool_use_id": tool_use_id,
+        "subagent_type": subagent_type, "prompt_sha256": "c" * 64,
+        "response_sha256": _DISPATCH_DIGEST, "audit_verdict": None, "verdict_state": "pending",
+    }
+    if token:
+        row["dispatch_token"] = token
+    return row
+
+
+def _completion(subagent_type, digest, verdict, token=None, session="sess-async", state="resolved"):
+    return {
+        "schema_version": "1.3", "record_kind": "completion", "ts": "2026-08-15T00:01:00Z",
+        "session_id": session, "tool_name": "Agent", "subagent_type": subagent_type,
+        "agent_id": "ag-" + digest[:4], "dispatch_token": token, "prompt_sha256": None,
+        "response_sha256": digest, "audit_verdict": verdict, "verdict_state": state,
+    }
+
+
+_LEDGER_SEQ = [0]
+
+
+def _resolved(tmp_path, rows):
+    """台帳を書いて読み、tool_use_id -> (state, verdict, digest, join) を返す。"""
+    _LEDGER_SEQ[0] += 1
+    path = tmp_path / f"ledger-{_LEDGER_SEQ[0]}.jsonl"
+    path.write_text(
+        "\n".join(json.dumps(row, ensure_ascii=False) for row in rows) + "\n", encoding="utf-8"
+    )
+    ledger = MOD.load_fork_ledger(path)
+    out = {}
+    for session in ledger["receipts_v12"].values():
+        for tool_use_id, candidates in session.items():
+            receipt = candidates[0]
+            out[tool_use_id] = (
+                receipt.get("verdict_state"), receipt.get("verdict"),
+                receipt.get("response_sha256"), receipt.get("promoted_by"),
+            )
+    return out
+
+
+def test_completion_row_promotes_single_pending_dispatch(tmp_path):
+    """非同期 fork の pending 行が、完了行の観測で resolved へ昇格する。
+
+    昇格後の response_sha256 は **完了行** のものになる。起動受理 payload の digest を
+    receipt の束縛先にすると、監査結果と無関係な値に verdict を紐づけてしまう。
+    """
+    got = _resolved(tmp_path, [_pending_dispatch("t1", _A), _completion(_A, "a" * 64, "PASS")])
+    assert got == {"t1": ("resolved", "PASS", "a" * 64, "one-to-one")}
+
+
+def test_parallel_dispatch_without_token_stays_pending(tmp_path):
+    """並列起動で対応が一意に決まらないときは昇格させない (取り違えより未確定を選ぶ)。"""
+    got = _resolved(tmp_path, [
+        _pending_dispatch("t1", _A), _pending_dispatch("t2", _A),
+        _completion(_A, "a" * 64, "PASS"), _completion(_A, "b" * 64, "FAIL"),
+    ])
+    assert got == {
+        "t1": ("pending", None, _DISPATCH_DIGEST, None),
+        "t2": ("pending", None, _DISPATCH_DIGEST, None),
+    }
+
+
+def test_dispatch_token_joins_parallel_forks_exactly(tmp_path):
+    """prompt へ埋め応答へ echo された token があれば、並列でも exact join できる。"""
+    got = _resolved(tmp_path, [
+        _pending_dispatch("t1", _A, "tok-aaaa1"), _pending_dispatch("t2", _A, "tok-bbbb2"),
+        _completion(_A, "a" * 64, "PASS", "tok-aaaa1"), _completion(_A, "b" * 64, "FAIL", "tok-bbbb2"),
+    ])
+    assert got == {
+        "t1": ("resolved", "PASS", "a" * 64, "dispatch-token"),
+        "t2": ("resolved", "FAIL", "b" * 64, "dispatch-token"),
+    }
+
+
+def test_unresolved_or_cross_session_completion_does_not_promote(tmp_path):
+    """verdict 未確定の完了行と、別 session の完了行は昇格材料にしない。"""
+    absent = _resolved(tmp_path, [
+        _pending_dispatch("t1", _A), _completion(_A, "a" * 64, None, state="absent"),
+    ])
+    assert absent["t1"][0] == "pending"
+    cross = _resolved(tmp_path, [
+        _pending_dispatch("t1", _A), _completion(_A, "a" * 64, "PASS", session="other"),
+    ])
+    assert cross["t1"][0] == "pending"
+
+
+def test_completion_does_not_leak_across_subagent_types(tmp_path):
+    got = _resolved(tmp_path, [
+        _pending_dispatch("t1", _A), _pending_dispatch("t2", _B),
+        _completion(_A, "a" * 64, "PASS"), _completion(_B, "b" * 64, "FAIL"),
+    ])
+    assert got == {
+        "t1": ("resolved", "PASS", "a" * 64, "one-to-one"),
+        "t2": ("resolved", "FAIL", "b" * 64, "one-to-one"),
+    }
+
+
+def test_hook_and_reader_agree_on_completion_schema():
+    """writer が書く schema/record_kind と、reader が受理する定数がずれないよう固定する。"""
+    hook = _load_hook()
+    assert hook.COMPLETION_SCHEMA_VERSION == MOD.LEDGER_SCHEMA_COMPLETION
+    assert hook.RECORD_KIND_COMPLETION == MOD.RECORD_KIND_COMPLETION
+
+
+def _untyped_completion(digest, verdict, token, session="sess-async"):
+    """ハーネスが ``agent_type`` を空で届けた完了行 (実測されたケース)。"""
+    row = _completion(_A, digest, verdict, token, session)
+    row["subagent_type"] = None
+    return row
+
+
+def test_untyped_completion_promotes_only_through_dispatch_token(tmp_path):
+    """agent_type 欠落でも token があれば帰属でき、token が無ければ帰属しない。"""
+    joined = _resolved(tmp_path, [
+        _pending_dispatch("t1", _A, "tok-aaaa1"),
+        _untyped_completion("a" * 64, "PASS", "tok-aaaa1"),
+    ])
+    assert joined == {"t1": ("resolved", "PASS", "a" * 64, "dispatch-token")}
+
+    no_token = _resolved(tmp_path, [
+        _pending_dispatch("t1", _A), _untyped_completion("a" * 64, "PASS", None),
+    ])
+    assert no_token["t1"][0] == "pending"
+
+
+def test_untyped_completion_is_excluded_from_one_to_one_fallback(tmp_path):
+    """型不明の完了行を数合わせに使うと別 auditor の verdict を取り違えるため除外する。"""
+    got = _resolved(tmp_path, [
+        _pending_dispatch("t1", _A), _pending_dispatch("t2", _A, "tok-bbbb2"),
+        _untyped_completion("b" * 64, "FAIL", "tok-bbbb2"),
+        _untyped_completion("a" * 64, "PASS", "tok-cccc3"),
+    ])
+    assert got == {
+        "t1": ("pending", None, "d" * 64, None),
+        "t2": ("resolved", "FAIL", "b" * 64, "dispatch-token"),
+    }
+
+
+def test_untyped_completion_token_cannot_join_across_subagent_types(tmp_path):
+    """session内で再利用されたtokenは型不明completionを複数auditorへ帰属させない。"""
+    got = _resolved(tmp_path, [
+        _pending_dispatch("t1", _A, "tok-reused"),
+        _pending_dispatch("t2", _B, "tok-reused"),
+        _untyped_completion("a" * 64, "PASS", "tok-reused"),
+    ])
+
+    assert got == {
+        "t1": ("pending", None, _DISPATCH_DIGEST, None),
+        "t2": ("pending", None, _DISPATCH_DIGEST, None),
+    }
+
+
+def test_resolved_dispatch_token_cannot_be_reused_by_pending_dispatch(tmp_path):
+    """resolved済みdispatchもsession-wide token一意性の母集団から除外しない。"""
+    resolved = _pending_dispatch("t1", _A, "tok-reused")
+    resolved.update({
+        "verdict_state": "resolved",
+        "audit_verdict": "PASS",
+        "response_sha256": "b" * 64,
+    })
+    got = _resolved(tmp_path, [
+        resolved,
+        _pending_dispatch("t2", _B, "tok-reused"),
+        _untyped_completion("a" * 64, "PASS", "tok-reused"),
+    ])
+
+    assert got == {
+        "t1": ("resolved", "PASS", "b" * 64, None),
+        "t2": ("pending", None, _DISPATCH_DIGEST, None),
+    }

@@ -3,19 +3,19 @@
   "floors": {
     "scripts": {
       "mechanical": 85.6,
-      "llm_eval": 63.1
+      "llm_eval": 63.3
     },
     "skills": {
       "mechanical": 100.0,
-      "llm_eval": 86.8
+      "llm_eval": 87.2
     },
     "agents": {
       "mechanical": 75.0,
       "llm_eval": 63.2
     },
     "commands": {
-      "mechanical": 96.8,
-      "llm_eval": 48.4
+      "mechanical": 97.0,
+      "llm_eval": 51.5
     },
     "hooks": {
       "mechanical": 100.0,
@@ -26,5 +26,5 @@
       "llm_eval": 69.6
     }
   },
-  "note": "各軸カバレッジの下限 floor。現値がこれを下回ると --ratchet が exit1。改善時は --update-floor で floor を引き上げる (ratchet up・回帰は焼かない)。2026-07-12: plugins/ 再編 (refactor/restructure-to-plugins) で test/verdict 未添付の新規 doc/scripts artifact が母数に加わったため、scripts.llm_eval / docs.mechanical / docs.llm_eval の floor を clean-checkout 実測値へ意図的に baseline reset (evaluation の捏造による緑化を避ける)。2026-07-23 (HarnessHub-aoe): validate-receipt.py (deterministic script・機械テスト有/llm_eval 対象外) と doc/evidence-integrity-practices.md (散文の統治知見・test/verdict 未添付) の 2 新規 artifact が母数に加わり、同 3 軸が floor を 0.2〜1.0pp 割ったため、2026-07-12 と同型に実測値 (scripts.llm_eval 64.1 / docs.mechanical 83.9 / docs.llm_eval 69.6) へ意図的 reset。verdict の捏造 (Goodhart) を避ける本 PR の主題に沿った honest な対応。2026-07-28 (HarnessHub-6in4): 500 行分割規約に従い guard/upsert 実装を責務分離した結果、新規 scripts 7 件 (build-graph-store.py, build-repo-config.py, node_body.py, node_lifecycle.py, registration_preflight.py, registration_schema.py, lint-script-naming-pending-paths.py) が llm_eval verdict 未添付で母数に加わり scripts.llm_eval が 64.1 -> 63.1 へ希釈された。分割元 upsert-node.py の verdict (PASS/91) は失われておらず、7 件を除いた実測は 64.2% で floor 超え。すなわち回帰の全量が分母希釈に由来する。--update-floor は max(old,現値) で回帰時据え置きのため使えず、同型 2 例に倣い手動 reset。なお --update-floor は note を固定文字列で上書きするため、実行後は本 note を復元すること。500 行分割が coverage 分母を希釈する構造問題は HarnessHub-2mor で追跡する。"
+  "note": "各軸カバレッジの下限 floor。現値がこれを下回ると --ratchet が exit1。改善時は --update-floor で floor を引き上げる (ratchet up・回帰は焼かない)。"
 }

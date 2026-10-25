@@ -87,7 +87,7 @@ serves_goals: [G1]
 
 ##### 確定内容 qa-security (対応セル: web, mobile, tablet)
 
-- 確定要件: OWASP Top 10 準拠、Web/モバイル/タブレットのみ
+- 確定要件: 「OWASP Top 10 準拠、Web/モバイル/タブレットのみ」 (正本: 本章「確定内容 (質疑録)」の `qa-security`)
 - 設計解釈の記録経路: `unrecorded`
 - 設計原則の採否根拠: (未記録 — qa_log[].design_applications を writer 経由で補完すること)
 - 資するゴール: G1

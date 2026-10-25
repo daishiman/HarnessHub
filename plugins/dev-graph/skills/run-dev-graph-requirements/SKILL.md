@@ -1,7 +1,7 @@
 ---
 name: run-dev-graph-requirements
 description: 確定 system spec と feature package から実装要件を導出したいとき、readiness 完了時だけ capability-build/task-graph build へ handoff したいときに使う。
-version: 0.1.0
+version: 0.2.1
 owner: harness maintainers
 source: plugin-plans/dev-graph/component-inventory.json#C04
 kind: run
@@ -10,9 +10,9 @@ hierarchy: L1
 user-invocable: true
 argument-hint: "[--repo-root PATH] [--feature-id ID] [--handoff-target PATH]"
 allowed-tools: [Read, Write, Bash, Skill, AskUserQuestion, Agent]
-script_refs: [../../scripts/resolve-repo-context.py, ../../scripts/validate-graph-schema.py, ../../scripts/validate-source-digest.py, ../../scripts/gh-bridge.py]
-schema_refs: [../../schemas/graph-node.schema.json, ../../schemas/package-registration-receipt.schema.json]
-reference_refs: [../../templates/template-contract.json, ../../../system-dev-planner/references/feature-execution-package-contract.md]
+script_refs: [../../scripts/resolve-repo-context.py, ../../scripts/validate-graph-schema.py, ../../scripts/validate-source-digest.py, ../../scripts/validate-requirements-system-spec-snapshot.py, ../../scripts/gh-bridge.py]
+schema_refs: [../../schemas/graph-node.schema.json, ../../schemas/package-registration-receipt.schema.json, ../../schemas/requirements-system-spec-snapshot.schema.json]
+reference_refs: [references/resource-map.yaml, ../../templates/template-contract.json, ../../../system-dev-planner/references/feature-execution-package-contract.md]
 responsibility_refs:
   - prompts/R1-elicit.md
   - prompts/R2-plan.md
@@ -30,11 +30,11 @@ responsibilities:
   - id: R2b-readiness
     name: readiness
     prompt_required: true
-    summary: "C11の純粋validation reportとC02が保存したimplementation_readiness/evaluation_statusを照合し、不一致またはincomplete/pending/fail/staleならmissing sectionsをsurfaceしてhandoffを保留する"
+    summary: "C11/C02 readiness、feature/package lineage、system plan、C19 digest-bound system-spec snapshotを正規validatorで照合し、不一致またはincomplete/pending/fail/staleならmissing sectionsをsurfaceしてhandoffを保留する"
   - id: R3-handoff
     name: handoff
     prompt_required: true
-    summary: "C11のreadiness検証とsystem-dev-planner所有のsystem-plan検証 (validate-system-plan.py) の完了時だけ要件定義書をcapability-build/task-graph buildへhandoffする。不足時はmissing_sectionsを返して停止し、実装コードは生成しない"
+    summary: "C11/readiness・feature/package lineage・system-plan・C19 system-spec snapshotの全検証完了時だけ要件定義書をcapability-build/task-graph buildへhandoffする。不足時はmissing_sectionsを返して停止し、実装コードは生成しない"
 combinators:
   - with-goal-seek
   - with-feedback-contract
@@ -49,7 +49,7 @@ feedback_contract:
   criteria:
     - id: IN1
       loop_scope: inner
-      text: "C11のreadiness validation digestとC02保存済みimplementation_readiness/evaluation_statusが一致し、選択feature・そのarchitecture_refs・package task 13件のlineage closure全件を--registeredに渡したvalidate-source-digest.pyがexit 0 (stale digest 0件) で、system-dev-plannerのvalidate-system-plan.pyを--feature-package <選択featureのfeature_package_id>で実行してP01..P13 exact 13・共通parent_feature/feature_package_id・機能内前方dependencyを検証し必須キー欠落が0件"
+      text: "C11のreadiness validation digestとC02保存済みimplementation_readiness/evaluation_statusが一致し、選択feature・そのarchitecture_refs・package task 13件のlineage closure全件を--registeredに渡したvalidate-source-digest.pyがexit 0 (stale digest 0件) で、system-dev-plannerのvalidate-system-plan.pyを--feature-package <選択featureのfeature_package_id>で実行してP01..P13 exact 13・共通parent_feature/feature_package_id・機能内前方dependencyを検証し必須キー欠落が0件で、さらにvalidate-requirements-system-spec-snapshot.pyがexit 0となり、upstream成功後のpost-validation rehashでC19のsystem-spec/resume-receipt.json・completeness-report.json・全system-spec Markdown artifact snapshotのdigestがcurrentかつreceipt/report/全artifactが同一pass中に安定している"
       verify_by: script
     - id: OUT1
       loop_scope: outer
@@ -66,8 +66,8 @@ feedback_contract:
 ## Purpose & Output Contract
 
 - 入力: C24/C11 検証済み subgraph、C02 保存済み readiness/evaluation/source digest、system-dev-planner package。
-- 出力: requirements document、readiness matrix、snapshot digest に固定した capability-build/task-graph handoff。
-- 完了条件: C11/C02/`validate-source-digest.py`/`validate-system-plan.py` の四 gate が同一 digest で PASS し、missing section が0、本 skill による実装 code 生成が0である。
+- 出力: requirements document、readiness matrix、graph/package digest と C19 receipt/report/artifact-snapshot digest に固定した capability-build/task-graph handoff。
+- 完了条件: C11/C02/`validate-source-digest.py`/`validate-system-plan.py`/`validate-requirements-system-spec-snapshot.py` の五 gate が PASS し、missing section が0、本 skill による実装 code 生成が0である。
 
 実装コードは生成しない。graph の5 artifact kind、C19 が取り込んだ system-spec lineage、external system-dev-planner の feature execution package を引用して requirements handoff を作る。
 
@@ -90,8 +90,15 @@ python3 "$SYSTEM_DEV_PLANNER/scripts/validate-system-plan.py" \
   --repo-root "$DEV_GRAPH_ROOT" \
   --feature-package "<選択 feature node の feature_package_id>"
 ```
-4. incomplete/pending/fail/stale、不足 section、lineage/confirmation 不整合が1件でもあれば `missing_sections` と remediation owner を返して handoff 0件で停止する。
-5. 全 gate PASS 時だけ requirements document、graph snapshot digest、package reference、capability-build handoff reference を atomic emit する。gate 検証の PASS だけで完了扱いにしない — 要件定義書と handoff package の**成果物ファイルを emit するまでが本 skill の完了条件**であり、emit 0 件での完了申告は契約違反として扱う。
+4. C19 が確定した上流仕様の完全な snapshot を、C04 の一部 node lineage だけで代用しない。正規 C19 validator を呼ぶ薄い adapter を必ず実行する。adapter は upstream 成功後に receipt/report/列挙 artifact を post-validation rehash し、2回の完全 capture が同一の安定 snapshot だけを PASS にする。
+
+```bash
+python3 "$DEV_GRAPH_PLUGIN/scripts/validate-requirements-system-spec-snapshot.py" \
+  --repo-root "$DEV_GRAPH_ROOT"
+# exit 2 = receipt/report/全 system-spec Markdown のいずれかが missing/stale → handoff 0件
+```
+5. incomplete/pending/fail/stale、不足 section、lineage/confirmation 不整合、または C19 snapshot 不整合が1件でもあれば `missing_sections` と remediation owner を返して handoff 0件で停止する。
+6. 全 gate PASS 時だけ requirements document、graph/package snapshot digest、C19 `resume_receipt_sha256` / `completeness_report_sha256` / `artifact_snapshot_sha256`、capability-build handoff reference を atomic emit する。gate 検証の PASS だけで完了扱いにしない — 要件定義書と handoff package の**成果物ファイルを emit するまでが本 skill の完了条件**であり、emit 0 件での完了申告は契約違反として扱う。
 
 出力は readiness matrix と handoff package。`run-system-dev-plan` の出力を消費するが dev-graph 自身は task spec を作らない。
 
@@ -111,6 +118,7 @@ system-spec-harness確定成果物とsystem development task planを含むグラ
 - [ ] C11 report と C02 保存済み readiness/evaluation が一致する (report は `validate-graph-schema.py` の実行出力。graph.json 直読や自作照合で代替しない)
 - [ ] 選択 feature、同 feature の `architecture_refs`、同一 package の task 13 件を重複除去した lineage closure 全件を `--registered` に渡した `validate-source-digest.py` が exit 0 である (task 13 件だけ、自作比較、目視で代替しない)
 - [ ] `validate-system-plan.py --repo-root "$DEV_GRAPH_ROOT" --feature-package "<選択 feature node の feature_package_id>"` が PASS し、`--staging` や引数なし実行を使っていない
+- [ ] `validate-requirements-system-spec-snapshot.py --repo-root "$DEV_GRAPH_ROOT"` が exit 0 で、upstream 成功後の post-validation rehash により C19 の `resume-receipt.json`・`completeness-report.json`・全 `system-spec/**/*.md` artifact snapshot が current かつ同一 pass 中で安定している
 - [ ] incomplete/pending/fail/stale node の missing_sections と remediation owner が全件表示される
 - [ ] 全 gate PASS の場合だけ requirements と capability-build handoff が同一 snapshot digest で生成される (成果物ファイルの実在が条件。progress.json 内の記載やgate PASS の事実だけでは未達)
 - [ ] 本 skill が生成した実装 code file が0件である
@@ -148,7 +156,8 @@ PY
 
 ## Criteria acceptance
 
-- `criteria:IN1`: C11のreadiness validation digestとC02保存済み`implementation_readiness`/`evaluation_status`が一致し、選択feature・同featureの`architecture_refs`・同一packageのtask 13件からなるlineage closure全件を`--registered`に渡した`validate-source-digest.py`がexit 0 (stale digest 0件) になり、system-dev-plannerの`validate-system-plan.py --feature-package <選択featureのfeature_package_id>`がP01..P13 exact 13・共通`parent_feature/feature_package_id`・機能内前方dependencyを検証して必須キー欠落が0件になる。`gh-bridge.py` 由来のissue contextは補助入力に留め、この四gateの代替にしない。
+- `criteria:IN1`: C11のreadiness validation digestとC02保存済み`implementation_readiness`/`evaluation_status`が一致し、選択feature・同featureの`architecture_refs`・同一packageのtask 13件からなるlineage closure全件を`--registered`に渡した`validate-source-digest.py`がexit 0 (stale digest 0件) になり、system-dev-plannerの`validate-system-plan.py --feature-package <選択featureのfeature_package_id>`がP01..P13 exact 13・共通`parent_feature/feature_package_id`・機能内前方dependencyを検証して必須キー欠落が0件になる。その上で`validate-requirements-system-spec-snapshot.py`がexit 0となり、C19のreceipt/report/全Markdown snapshot digestがcurrentになる。`gh-bridge.py` 由来のissue contextは補助入力に留め、この五gateの代替にしない。
+- `criteria:IN1` の current 判定は upstream 成功後の post-validation rehash を含み、receipt/report/全 artifact が同一 pass 中に安定していることを要求する。
 - `criteria:OUT1`: requirementsを`capability-build/task-graph`へhandoffし、本skill自身は実装コードを生成しない。
 - `criteria:OUT2`: `implementation_readiness=incomplete`では全`missing_sections`をsurfaceし、該当handoffを保留する。
 
@@ -159,5 +168,7 @@ PY
 - digest scope は package task だけではない。選択 feature と、その `architecture_refs` を含む lineage closure を同時に検査し、handoff が引用する上流仕様の stale を拒否する。
 - `validate-system-plan.py` の exact-13 検証を独自ロジックで代替しない。
 - promotion 後の requirements consumer は `--feature-package <選択 feature の package id>` を使う。生成中だけ存在する `--staging`、または package 引数なしの実行をしない。
+- feature と `architecture_refs` の source digest が current でも、そこから直接参照されない `system-spec/backend.md` 等が評価後に変更されている可能性がある。C19 の全 artifact snapshot は `validate-requirements-system-spec-snapshot.py` の exit code で再検証し、個別 gate を C04 に複製しない。
+- C19 validator が exit 0 でも、終了直後に `backend.md` 等が変更される TOCTOU 競合がある。adapter のpost-validation rehashと安定性検査を省略せず、upstream stdout だけで handoff しない。
 - incomplete/pending/fail/stale を一部 handoff で回避せず、対応する `missing_sections` を全件返す。
 - 実装は capability-build/task-graph に引き渡し、本 skill 内で code を生成しない。

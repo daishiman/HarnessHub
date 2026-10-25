@@ -12,7 +12,7 @@ iteration: null
 title: "一覧のカード型シェル (カードグリッド既定・表示切替・状態タブ・検索)"
 owners: ["daishiman"]
 created_at: "2026-08-13T22:39:59Z"
-updated_at: "2026-08-15T23:36:56.395553Z"
+updated_at: "2026-08-16T07:15:30Z"
 status: "draft"
 depends_on: ["feat-card-mutation-safety","feat-semantic-emphasis-icons"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-design-system","feat-docs-cms","feat-hearing-intake","feat-dual-catalog-web"]
@@ -78,3 +78,5 @@ frontend と design-system を参照し、認可は既存 backend 境界を変�
 ## Handoff
 
 実装は DataTable への `viewMode` / `onViewModeChange` 純増 (既定はカード、sessionStorage は view mode だけ)、Docs / Sheets / Catalog を同一 column model からカードと表で描く一覧、および `status_counts` と title / body / tags の OR 検索の repository 応答への純増へ接地した。認可は query の最初の境界に置き、権限外の行を items・件数・検索対象のいずれにも出さない。詳細・検証・残課題は [仕様反映受領書](../docs/features/feat-card-list-shell/spec-reflection-receipt.md) を正本とする。
+
+PR #731 は 2026-08-16 に main へ merge 済み（`fc2dc9c2`）。運用手順は [operations](../docs/features/feat-card-list-shell/operations.md)、実装接地は [implementation-notes](../docs/features/feat-card-list-shell/implementation-notes.md)、最終レビューは [final-review-20260816](../docs/features/feat-card-list-shell/final-review-20260816.md)。

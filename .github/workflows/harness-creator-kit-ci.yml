@@ -39,6 +39,20 @@ jobs:
         run: |
           find scripts plugins -type f -name '*.py' -print0 | xargs -0 python3 -m py_compile
 
+      # features/<id>.context.json は writer が無い sidecar で、upsert-node.py が graph.json と
+      # .md frontmatter だけを書くたびに 3 者 parity が片肺で崩れる。pytest でも検出できるが
+      # 8000 件超の中に埋もれて「どう直すか」が読めないため、数百 ms のこの step を前に置いて
+      # 原因と修復コマンドを最初のエラーとして出す。落ちても後段の pytest が同じ契約を守る
+      # (この step だけを消しても保証は無音にならない)。
+      # キー集合と型の契約 (plan の入力形状) を値の突合より先に見る。形が違うものを値で
+      # 比較しても意味が無く、エラーも読みにくい。契約の正本は plan ゲートの
+      # validate_feature_context() で、この step はそれを作成時へ前倒ししているだけ。
+      - name: Check feature context contract (validate-feature-context)
+        run: python3 scripts/validate-feature-context.py --skip-frozen
+
+      - name: Check feature context sidecar parity (build-feature-context)
+        run: python3 scripts/build-feature-context.py --all --check --skip-frozen
+
       # 機械保証 (hook-guard-skillgen 等) の振る舞いを回帰検証する。
       # これが無いと tests/ のテストは一度も実行されず保証が無言で腐る (F-HYP-01)。
       # 依存は requirements-dev.txt 一枚を SSOT に install する (per-plugin step と同一)。

@@ -52,3 +52,6 @@ resources:
   - file: site-reliability-engineering.md
     topic: SLI/SLO/エラーバジェット・観測可能性・環境再現性・トイル削減・一次資料・鮮度
     read_when: infrastructure の実行基盤・環境差分・信頼性目標を章へ反映するとき
+  - file: cloud-architecture-patterns.md
+    topic: blob offloading・原子性境界と補償・冪等キー・基盤制約の非機能要件化・劣化順序・一次資料・鮮度
+    read_when: database/infrastructure のデータ配置とサービス跨ぎ書込みの整合性境界を章へ反映するとき

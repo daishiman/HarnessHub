@@ -1,0 +1,403 @@
+{
+  "schema_version": "1.0.0",
+  "kind": "live-trial-independent-observations",
+  "verdict": "PASS",
+  "blockers": [],
+  "evaluator": {
+    "mode": "fresh-independent-context",
+    "id": "fdd2a547-0f66-45c3-a2d5-3f43af177a92",
+    "constraints_honored": [
+      "did not invoke dev-graph:run-dev-graph-requirements",
+      "did not edit the fixture repository (tree digest identical before/after: 34a1050213051815590d029936be9fb13de2ee795b7d799df7dc75aa1e37491b)",
+      "did not modify any HarnessHub behavior file, content-review artifact, criteria receipt, or existing trial evidence",
+      "read-only validators only; no repair attempted"
+    ]
+  },
+  "target": {
+    "skill": "dev-graph:run-dev-graph-requirements",
+    "scenario": "C04-OUT1-positive-ready-handoff",
+    "session_id": "1ca02257-f207-4f29-bd2f-32a2f6db8bc8",
+    "trial_root": "/Users/dm/orca/workspaces/HarnessHub/改善要望を記録する/eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T092817Z-c04-out1-fresh-r2",
+    "fixture_repo": "/Users/dm/orca/workspaces/HarnessHub/改善要望を記録する/eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T092817Z-c04-out1-fresh-r2/fixture-repo"
+  },
+  "observations": {
+    "1": {
+      "title": "single skill invocation, DONE: PASS without nudge or gate response, transcript digest match",
+      "result": "PASS",
+      "evidence": {
+        "transcript_sha256_declared": "06055476c8e2a35cb8bb5f7d13557a7c29b873da6518f43dd760530a5183768d",
+        "transcript_sha256_recomputed": "06055476c8e2a35cb8bb5f7d13557a7c29b873da6518f43dd760530a5183768d",
+        "transcript_sha256_match": true,
+        "transcript_lines": 187,
+        "skill_tool_use_count": 1,
+        "skill_tool_use": {
+          "skill": "dev-graph:run-dev-graph-requirements",
+          "args": "--repo-root /Users/dm/orca/workspaces/HarnessHub/改善要望を記録する/eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260817T092817Z-c04-out1-fresh-r2/fixture-repo --feature-id F-LIVE-001"
+        },
+        "skill_body_loaded": "user row 22 carries 'Base directory for this skill: .../plugins/dev-graph/skills/run-dev-graph-requirements' + SKILL.md body, proving the real skill route was entered rather than a script-only substitute",
+        "first_execution_action": "Read task.md (row 12), then the literal Skill call (row 20) as the first execution action",
+        "human_text_user_turns": 1,
+        "human_text_user_turn_content": "初回 task.md 投入プロンプトのみ。nudge / gate 応答 / 追加指示の user turn は 0 件 (残る user rows はすべて tool_result)",
+        "final_assistant_text": "DONE: PASS (transcript row 185; pane.txt line 41 と一致)",
+        "tool_use_histogram": {"Bash": 31, "Write": 2, "Read": 1, "Skill": 1},
+        "writes_outside_fixture": [
+          "/private/tmp/claude-501/.../1ca02257-.../scratchpad/emit_c04.py (scratchpad, HarnessHub 外)",
+          "<trial-root>/out/status.json"
+        ],
+        "out_dir_contents": ["status.json"],
+        "out_status_json": {"status": "PASS", "scenario": "C04-OUT1-positive-ready-handoff"},
+        "poll_state": {"elapsed": 411, "stall": 0, "gate_ticks": 0, "prev": "jsonl:511479:IDLE_TURN_COMPLETE"},
+        "scenario_canon_source": "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
+        "required_observations_verbatim_match": true
+      }
+    },
+    "2": {
+      "title": "five input gates evidenced and current (independently re-run read-only)",
+      "result": "PASS",
+      "evidence": {
+        "note": "全 gate を評価者が fixture に対して再実行し、target が申告した exit code / JSON と byte 一致することを確認した。修復は一切行っていない。",
+        "fixture_tree_digest_unchanged_after_reruns": true
+      }
+    },
+    "3": {
+      "title": "capability-build/task-graph handoff is a newly emitted C04 output with exact P01..P13 binding",
+      "result": "PASS",
+      "evidence": {
+        "handoff_path": "docs/requirements/F-LIVE-001/capability-build-handoff.json",
+        "kind": "capability-build-task-graph-handoff",
+        "producer": "dev-graph/run-dev-graph-requirements (R3-handoff)",
+        "consumer": "capability-build / task-graph build",
+        "handoff_status": "ready",
+        "newly_emitted": true,
+        "newly_emitted_proof": [
+          "git ls-files --others --exclude-standard に含まれる (untracked = 新規)",
+          ".git/dev-graph/live-trial-baseline.json の inputs 49 件に docs/requirements/ 配下は 1 件も無い",
+          "baseline の subject_outputs_absent_at_baseline が requirements document / readiness matrix / capability-build handoff 参照 / graph snapshot digest / C19 3 digest binding の不在を明記"
+        ],
+        "task_ids_exact_13": [
+          "SYS-LIVE-001-P01", "SYS-LIVE-001-P02", "SYS-LIVE-001-P03", "SYS-LIVE-001-P04",
+          "SYS-LIVE-001-P05", "SYS-LIVE-001-P06", "SYS-LIVE-001-P07", "SYS-LIVE-001-P08",
+          "SYS-LIVE-001-P09", "SYS-LIVE-001-P10", "SYS-LIVE-001-P11", "SYS-LIVE-001-P12",
+          "SYS-LIVE-001-P13"
+        ],
+        "task_count": 13,
+        "task_ids_equal_graph_task_node_set": true,
+        "feature_id": "F-LIVE-001",
+        "feature_package_id": "feature-package/F-LIVE-001",
+        "parent_feature": "F-LIVE-001",
+        "digest_cross_checks": {
+          "package_canonical_digest": {
+            "handoff": "sha256:e213d300df4fda212f99d998cb2648e9334409fe9666dd90eef3f026b40cfe7b",
+            "staging_manifest_canonical_digest": "sha256:e213d300df4fda212f99d998cb2648e9334409fe9666dd90eef3f026b40cfe7b",
+            "plan_state_published_digest": "sha256:e213d300df4fda212f99d998cb2648e9334409fe9666dd90eef3f026b40cfe7b",
+            "promotion_receipt_evaluated_digest": "sha256:e213d300df4fda212f99d998cb2648e9334409fe9666dd90eef3f026b40cfe7b",
+            "registration_receipt_source_digest": "sha256:e213d300df4fda212f99d998cb2648e9334409fe9666dd90eef3f026b40cfe7b",
+            "validate_system_plan_validated_digest": "sha256:e213d300df4fda212f99d998cb2648e9334409fe9666dd90eef3f026b40cfe7b",
+            "match": true
+          },
+          "graph_snapshot_digest": {
+            "handoff": "sha256:b538fd34419fa7fb6630f93bd446212556a1c1571e016d61ebb79117f488b4a8",
+            "registration_receipt_graph_digest_after": "sha256:b538fd34419fa7fb6630f93bd446212556a1c1571e016d61ebb79117f488b4a8",
+            "evaluator_recomputed_canonical_digest": "sha256:b538fd34419fa7fb6630f93bd446212556a1c1571e016d61ebb79117f488b4a8",
+            "recompute_method": "register-package.py:77 _canonical_digest = sha256(json.dumps(graph, ensure_ascii=False, sort_keys=True, separators=(',',':')))",
+            "match": true,
+            "current": true
+          },
+          "graph_state_file_sha256": {
+            "handoff": "d68e2049af91152eae5b0a1edfa4b9682331f115005ed61f667d458aafd0cabd",
+            "measured": "d68e2049af91152eae5b0a1edfa4b9682331f115005ed61f667d458aafd0cabd",
+            "baseline_receipt": "d68e2049af91152eae5b0a1edfa4b9682331f115005ed61f667d458aafd0cabd",
+            "match": true
+          },
+          "graph_revision": {"handoff": 3, "graph_json": 3, "registration_receipt_after": 3, "match": true},
+          "feature_source_lineage_digest": {
+            "handoff": "f2f24d652c2a92c9ee11396bcc40d3ed35ea383626ce05c8672b3fc5ce42405d",
+            "graph_feature_node_source_lineage": "f2f24d652c2a92c9ee11396bcc40d3ed35ea383626ce05c8672b3fc5ce42405d",
+            "sha256_of_system_spec_00_requirements_definition_md": "f2f24d652c2a92c9ee11396bcc40d3ed35ea383626ce05c8672b3fc5ce42405d",
+            "match": true
+          },
+          "system_build_handoff_sha256": {
+            "handoff_field": "26a0581f877c8698e7e6e46a735fa6fe29fb2ec1ff9b734bcb3e3cc10b15d8e9",
+            "measured_file_sha256": "26a0581f877c8698e7e6e46a735fa6fe29fb2ec1ff9b734bcb3e3cc10b15d8e9",
+            "staging_manifest_files_entry": "26a0581f877c8698e7e6e46a735fa6fe29fb2ec1ff9b734bcb3e3cc10b15d8e9",
+            "role": "input reference only (package_reference.system_build_handoff), not claimed as C04 output"
+          },
+          "task_source_digests_all_equal_graph_nodes": true,
+          "task_spec_sha256_all_equal_staging_manifest": true,
+          "task_depends_on_chain_equals_graph_and_readiness_matrix": true,
+          "task_node_paths_exist_on_disk": true
+        }
+      }
+    },
+    "4": {
+      "title": "C19 三 digest が fresh validator 実測と一致し、C04 成果物間で一貫伝播している",
+      "result": "PASS",
+      "evidence": {
+        "fresh_validator_command": "python3 plugins/dev-graph/scripts/validate-requirements-system-spec-snapshot.py --repo-root <FIXTURE>",
+        "fresh_validator_exit_code": 0,
+        "fresh_validator_valid": true,
+        "fresh_validator_failures": [],
+        "fresh_validator_mode": "reuse-confirmed",
+        "fresh_validator_upstream": "validate-system-spec-resume",
+        "fresh_capture_count": 2,
+        "fresh_captures_identical": true,
+        "c19_digests": {
+          "resume_receipt_sha256": "b2e0284fba74fa6e297fd9e610e3f93773a61f23d86059c8560f358df71f263f",
+          "completeness_report_sha256": "4af2fd6346f158168deea021fce2865374c0941c3fcf0f3e48dc34566cf4c74b",
+          "artifact_snapshot_sha256": "82d4a32be9099dbbe276c3b99758311c9b1778cbff1703051289a5f14ba82830"
+        },
+        "artifacts_covered": [
+          "system-spec/00-requirements-definition.md",
+          "system-spec/backend.md",
+          "system-spec/completeness-report.json",
+          "system-spec/fetched-references.json",
+          "system-spec/index.md",
+          "system-spec/spec-state.json"
+        ],
+        "propagation": {
+          "docs/requirements/F-LIVE-001/capability-build-handoff.json": "3 digest すべて一致 (c19_system_spec_snapshot と digest_binding.c19_* の両方)",
+          "docs/requirements/F-LIVE-001/readiness-matrix.json": "3 digest すべて一致 (c19_system_spec_snapshot / digest_binding / gates.validate_requirements_system_spec_snapshot.report)",
+          "docs/requirements/F-LIVE-001/graph-snapshot-digest.json": "3 digest すべて一致 (c19_system_spec_snapshot と digest_binding)",
+          "docs/requirements/F-LIVE-001/requirements.md": "§6 digest binding に 3 digest を逐語記載、一致",
+          "fixture-repo/eval-log/run-dev-graph-requirements-progress.json": "gate5 evidence に同一 3 digest",
+          "conflicting_c19_values_found": 0
+        }
+      }
+    },
+    "5": {
+      "title": "negative controls",
+      "result": "PASS",
+      "evidence": {
+        "baseline_receipt": ".git/dev-graph/live-trial-baseline.json",
+        "baseline_schema_version": "1.0.0",
+        "baseline_scenario_id": "C04-OUT1-positive-ready-handoff",
+        "baseline_inputs_count": 49,
+        "baseline_inputs_all_present": true,
+        "baseline_inputs_sha256_mismatches": 0,
+        "baseline_contains_no_docs_requirements_path": true,
+        "baseline_contains_no_eval_log_run_dev_graph_requirements_path": true,
+        "subject_outputs_absent_at_baseline": [
+          "要件定義書 (requirements document)",
+          "参照ノードごとの implementation_readiness / missing_sections 一覧 (readiness matrix)",
+          "capability-build/task-graph build 向け handoff 参照",
+          "グラフスナップショット digest",
+          "C19 resume_receipt_sha256 digest binding",
+          "C19 completeness_report_sha256 digest binding",
+          "C19 artifact_snapshot_sha256 digest binding"
+        ],
+        "name_collision_not_misclassified": {
+          "system-plan/F-LIVE-001/system-build-handoff.json": "baseline input のまま無変更 (26a0581f...)。C04 出力としては引用されず、handoff の package_reference.system_build_handoff / digest_binding.system_build_handoff_sha256 という入力参照にとどまる",
+          "system-plan/F-LIVE-001/task-graph.json": "baseline input のまま無変更 (d675c60c...)。emitted_artifacts にも含まれない",
+          "emitted_artifacts_declared": [
+            "docs/requirements/F-LIVE-001/requirements.md",
+            "docs/requirements/F-LIVE-001/readiness-matrix.json",
+            "docs/requirements/F-LIVE-001/graph-snapshot-digest.json",
+            "docs/requirements/F-LIVE-001/capability-build-handoff.json"
+          ]
+        },
+        "git_status_short": [
+          "?? docs/requirements/",
+          "?? eval-log/run-dev-graph-requirements-goal-spec.json",
+          "?? eval-log/run-dev-graph-requirements-intermediate.jsonl",
+          "?? eval-log/run-dev-graph-requirements-progress.json"
+        ],
+        "modified_tracked_files": [],
+        "deleted_tracked_files": [],
+        "new_commits_created_by_run": 0,
+        "git_log": "3127e8237d9e0946cb310ece9730cbc40c3f7b64 chore(fixture): initialize dev-graph live-trial fixture (単一 commit のまま)",
+        "new_files": [
+          "docs/requirements/F-LIVE-001/capability-build-handoff.json",
+          "docs/requirements/F-LIVE-001/graph-snapshot-digest.json",
+          "docs/requirements/F-LIVE-001/readiness-matrix.json",
+          "docs/requirements/F-LIVE-001/requirements.md",
+          "eval-log/run-dev-graph-requirements-goal-spec.json",
+          "eval-log/run-dev-graph-requirements-intermediate.jsonl",
+          "eval-log/run-dev-graph-requirements-progress.json"
+        ],
+        "new_file_count": 7,
+        "new_file_extension_histogram": {"json": 5, "jsonl": 1, "md": 1},
+        "new_files_limited_to_c04_docs_plus_goal_seek": true,
+        "implementation_source_file_count": 0,
+        "implementation_source_extensions_checked": [".py", ".ts", ".tsx", ".js", ".jsx", ".go", ".rs", ".java", ".rb", ".sql", ".c", ".cpp", ".sh"],
+        "handoff_self_generated_implementation_files": [],
+        "fixture_files_touched_by_evaluator": 0
+      }
+    },
+    "6": {
+      "title": "goal-seek 配線",
+      "result": "PASS",
+      "evidence": {
+        "files_present": {
+          "eval-log/run-dev-graph-requirements-goal-spec.json": true,
+          "eval-log/run-dev-graph-requirements-progress.json": true,
+          "eval-log/run-dev-graph-requirements-intermediate.jsonl": true
+        },
+        "original_goal_hash_declared": "04482e65a513cf4eb345f2c370d45ce5751e7732b0d3ef89c786c5eac4266c96",
+        "original_goal_hash_recomputed_utf8_sha256": "04482e65a513cf4eb345f2c370d45ce5751e7732b0d3ef89c786c5eac4266c96",
+        "original_goal_matches_skill_md_goal_verbatim": true,
+        "skill_md_goal_ref": "plugins/dev-graph/skills/run-dev-graph-requirements/SKILL.md:109 (### ゴール (Goal))",
+        "intermediate_row_count": 2,
+        "rows_with_all_six_required_keys": 2,
+        "rows_with_unexpected_extra_keys": 0,
+        "rows_original_goal_equal_to_spec": 2,
+        "rows_original_goal_hash_equal_to_recomputed": 2,
+        "drift_signals": ["none", "none"],
+        "progress_overall": "PASS",
+        "progress_checklist_items": 8,
+        "progress_checklist_pass": 8,
+        "progress_checklist_matches_skill_md_checklist": true,
+        "progress_truthfulness": "checklist の evidence 記述 (五 gate exit 0、closure 15 件、emit 4 件、実装 file 0 件、blocked_nodes/missing_sections/remediation_owners 0 件) は評価者の実測とすべて一致。emitted_artifacts に列挙された 4 file はいずれもディスク上に実在し、baseline に不在だった新規 file である。虚偽・先取り申告は検出されなかった。",
+        "skill_goal_seek_selfcheck_in_transcript": "SKILL.md ### ゴールシーク検証 の assert スクリプトを target が実行し 'goal-seek verification OK: rows=2, hash=0448...' / GOALSEEK_EXIT=0 (pane.txt lines 19-21)。評価者側でも同等検査を独立再実行して一致"
+      }
+    }
+  },
+  "gate_results": {
+    "C11_validate_graph_schema": {
+      "command": "python3 plugins/dev-graph/scripts/validate-graph-schema.py --graph <FIXTURE>/.dev-graph/state/graph.json --repo-root <FIXTURE>",
+      "evaluator_rerun_exit_code": 0,
+      "result": "PASS",
+      "report": {"valid": true, "violations": [], "missing_sections": [], "implementation_readiness": "complete"},
+      "matches_target_claim": true
+    },
+    "C02_saved_state": {
+      "method": "graph.json の 15 node と .dev-graph/plan-state/current/feature-package-F-LIVE-001.json / atomic-promotion-receipt.json / dev-graph-registration-receipt.json を実バイトで突合",
+      "result": "PASS",
+      "scope_node_count": 15,
+      "feature": {"id": "F-LIVE-001", "confirmation_status": "confirmed", "evaluation_status": "pass", "implementation_readiness": "complete", "architecture_refs": ["LT-ARCH-001"]},
+      "architecture_ref": {"id": "LT-ARCH-001", "confirmation_status": "confirmed", "evaluation_status": "pass", "implementation_readiness": "complete", "file_path": "architecture/lt-arch-001.md"},
+      "tasks_P01_P13": {
+        "count": 13,
+        "all_confirmed": true,
+        "all_evaluation_pass": true,
+        "all_readiness_complete": true,
+        "all_parent_feature_F_LIVE_001": true,
+        "all_feature_package_id_feature_package_F_LIVE_001": true
+      },
+      "plan_state_published_digest": "sha256:e213d300df4fda212f99d998cb2648e9334409fe9666dd90eef3f026b40cfe7b",
+      "promotion_receipt_implementation_readiness": "complete",
+      "promotion_receipt_quality_conditions": {"consistent": "PASS", "dependency_integrity": "PASS", "no_contradiction": "PASS", "no_missing": "PASS"},
+      "registration_receipt": {"status": "registered", "expected_count": 13, "applied_count": 13},
+      "consistent_with_c11_report": true
+    },
+    "validate_source_digest_full_closure": {
+      "command": "python3 plugins/dev-graph/scripts/validate-source-digest.py --repo-root <FIXTURE> --registered F-LIVE-001,LT-ARCH-001,SYS-LIVE-001-P01,...,SYS-LIVE-001-P13",
+      "registered_count": 15,
+      "registered_sorted_deduped": true,
+      "not_narrowed_to_13_tasks": true,
+      "evaluator_rerun_exit_code": 0,
+      "result": "PASS",
+      "report": {"checked": 15, "registered_mismatch": []},
+      "matches_target_claim": true
+    },
+    "validate_system_plan_exact_13": {
+      "command": "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root <FIXTURE> --feature-package feature-package/F-LIVE-001",
+      "evaluator_rerun_exit_code": 0,
+      "result": "PASS",
+      "report": {
+        "status": "pass",
+        "feature_package_id": "feature-package/F-LIVE-001",
+        "parent_feature": "F-LIVE-001",
+        "phase_refs": ["P01","P02","P03","P04","P05","P06","P07","P08","P09","P10","P11","P12","P13"],
+        "validated_digest": "sha256:e213d300df4fda212f99d998cb2648e9334409fe9666dd90eef3f026b40cfe7b",
+        "violations": [],
+        "contract_version": "1.3.0"
+      },
+      "staging_flag_used": false,
+      "package_argument_omitted": false,
+      "matches_target_claim": true
+    },
+    "validate_requirements_system_spec_snapshot": {
+      "command": "python3 plugins/dev-graph/scripts/validate-requirements-system-spec-snapshot.py --repo-root <FIXTURE>",
+      "evaluator_rerun_exit_code": 0,
+      "evaluator_second_capture_exit_code": 0,
+      "stable_across_captures": true,
+      "result": "PASS",
+      "report": {"valid": true, "failures": [], "mode": "reuse-confirmed", "upstream_validator": "validate-system-spec-resume"},
+      "matches_target_claim": true
+    }
+  },
+  "c19_digests": {
+    "resume_receipt_sha256": "b2e0284fba74fa6e297fd9e610e3f93773a61f23d86059c8560f358df71f263f",
+    "completeness_report_sha256": "4af2fd6346f158168deea021fce2865374c0941c3fcf0f3e48dc34566cf4c74b",
+    "artifact_snapshot_sha256": "82d4a32be9099dbbe276c3b99758311c9b1778cbff1703051289a5f14ba82830"
+  },
+  "task_ids": [
+    "SYS-LIVE-001-P01", "SYS-LIVE-001-P02", "SYS-LIVE-001-P03", "SYS-LIVE-001-P04",
+    "SYS-LIVE-001-P05", "SYS-LIVE-001-P06", "SYS-LIVE-001-P07", "SYS-LIVE-001-P08",
+    "SYS-LIVE-001-P09", "SYS-LIVE-001-P10", "SYS-LIVE-001-P11", "SYS-LIVE-001-P12",
+    "SYS-LIVE-001-P13"
+  ],
+  "changed_files": [],
+  "new_files": [
+    "docs/requirements/F-LIVE-001/capability-build-handoff.json",
+    "docs/requirements/F-LIVE-001/graph-snapshot-digest.json",
+    "docs/requirements/F-LIVE-001/readiness-matrix.json",
+    "docs/requirements/F-LIVE-001/requirements.md",
+    "eval-log/run-dev-graph-requirements-goal-spec.json",
+    "eval-log/run-dev-graph-requirements-intermediate.jsonl",
+    "eval-log/run-dev-graph-requirements-progress.json"
+  ],
+  "implementation_source_file_count": 0,
+  "goal_seek_result": {
+    "status": "PASS",
+    "files": 3,
+    "intermediate_rows": 2,
+    "required_keys_per_row": 6,
+    "rows_missing_keys": 0,
+    "original_goal_hash": "04482e65a513cf4eb345f2c370d45ce5751e7732b0d3ef89c786c5eac4266c96",
+    "hash_mismatches": 0,
+    "drift_signals": ["none", "none"],
+    "progress_overall": "PASS",
+    "progress_truthful": true
+  },
+  "commands_used": [
+    "shasum -a 256 <trial-root>/transcript.jsonl",
+    "python3 (transcript.jsonl 解析: type/role 集計、tool_use 列挙、Skill 呼出回数、user text turn 抽出、DONE 行抽出)",
+    "python3 plugins/dev-graph/scripts/validate-graph-schema.py --graph <FIXTURE>/.dev-graph/state/graph.json --repo-root <FIXTURE>",
+    "python3 plugins/dev-graph/scripts/validate-source-digest.py --repo-root <FIXTURE> --registered <15 node ID 昇順>",
+    "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root <FIXTURE> --feature-package feature-package/F-LIVE-001",
+    "python3 plugins/dev-graph/scripts/validate-requirements-system-spec-snapshot.py --repo-root <FIXTURE>  (2 回)",
+    "git -C <FIXTURE> status --short",
+    "git -C <FIXTURE> ls-files / ls-files --others --exclude-standard",
+    "git -C <FIXTURE> log --oneline",
+    "shasum -a 256 <FIXTURE>/system-plan/F-LIVE-001/system-build-handoff.json",
+    "shasum -a 256 <FIXTURE>/system-spec/00-requirements-definition.md",
+    "find <FIXTURE> -type f | sort | xargs shasum -a 256 | shasum -a 256  (評価前後の tree 不変検証)",
+    "python3 (baseline 49 inputs の sha256 再計算・突合)",
+    "python3 (graph canonical digest 再計算: json.dumps(sort_keys=True, separators=(',',':'), ensure_ascii=False) + sha256)",
+    "python3 (handoff/readiness-matrix/graph node/staging-manifest の depends_on・source_digest・task_spec_sha256 突合)",
+    "python3 (goal-spec/intermediate.jsonl の UTF-8 SHA-256 再計算と 6 key 検査)",
+    "grep -c <c19 digest> docs/requirements/F-LIVE-001/*"
+  ],
+  "paths_used_as_evidence": [
+    "<trial-root>/evaluator-task.md",
+    "<trial-root>/task.md",
+    "<trial-root>/planner.json",
+    "<trial-root>/transcript.jsonl",
+    "<trial-root>/pane.txt",
+    "<trial-root>/poll-state.json",
+    "<trial-root>/out/status.json",
+    "<FIXTURE>/.git/dev-graph/live-trial-baseline.json",
+    "<FIXTURE>/.dev-graph/state/graph.json",
+    "<FIXTURE>/.dev-graph/plan-state/current/feature-package-F-LIVE-001.json",
+    "<FIXTURE>/system-plan/F-LIVE-001/staging-manifest.json",
+    "<FIXTURE>/system-plan/F-LIVE-001/atomic-promotion-receipt.json",
+    "<FIXTURE>/system-plan/F-LIVE-001/dev-graph-registration-receipt.json",
+    "<FIXTURE>/system-plan/F-LIVE-001/system-build-handoff.json",
+    "<FIXTURE>/system-plan/F-LIVE-001/task-graph.json",
+    "<FIXTURE>/docs/requirements/F-LIVE-001/requirements.md",
+    "<FIXTURE>/docs/requirements/F-LIVE-001/readiness-matrix.json",
+    "<FIXTURE>/docs/requirements/F-LIVE-001/graph-snapshot-digest.json",
+    "<FIXTURE>/docs/requirements/F-LIVE-001/capability-build-handoff.json",
+    "<FIXTURE>/eval-log/run-dev-graph-requirements-goal-spec.json",
+    "<FIXTURE>/eval-log/run-dev-graph-requirements-progress.json",
+    "<FIXTURE>/eval-log/run-dev-graph-requirements-intermediate.jsonl",
+    "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
+    "plugins/dev-graph/skills/run-dev-graph-requirements/SKILL.md",
+    "plugins/dev-graph/scripts/register-package.py"
+  ],
+  "notes": [
+    "digest_binding.source_feature_digest (sha256:9ea5885d...) は system-plan/F-LIVE-001/feature-context.json の実 sha256 と一致する実値であり、feature の lineage digest は別キー feature_source_lineage_digest (f2f24d65...) として正しく束縛されている。名称はやや紛らわしいが偽値ではなく、required_observations の充足を妨げない。",
+    "SKILL.md の goal-seek 配線は未達 responsibility の Agent fork を許すが、本 run は loop1 で全 checklist が PASS したため fork 局面が発生していない。intermediate.jsonl の 2 行 (loop1 開始前 / loop1 完了) は配線契約の必須 6 key をすべて満たしている。"
+  ]
+}

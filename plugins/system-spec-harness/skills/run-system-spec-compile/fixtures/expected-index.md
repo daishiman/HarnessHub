@@ -33,6 +33,10 @@ kind: index
 - **確定**: database, auth, ui-ux, security, infrastructure, backend, frontend
 - **対象外**: maintenance-ops
 
+## 実装 writeback
+
+- [実装 writeback 索引](./implementation-writebacks.md) — 要件確定後の実装契約を、再compileの所有範囲外で保持する正本
+
 ## 全体ドキュメント出典 (未割当参照)
 
 - (全ての取得済みドキュメントは各章へ割り当て済み)

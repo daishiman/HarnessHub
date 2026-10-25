@@ -24,10 +24,10 @@
 - **未収集セルの定義**: `state` が `確定` でも「正当な理由付き `対象外`」でもないセル。1 つでも残れば収集は未完。
 - **監査 5 軸**:
   1. **聞き漏れ (missed collection)**: 未収集セルが残るのに `hearing_progress.next_question=null` かつ `complete` 未達成で停止していないか。次の質問が立たず放置されたセルを検出する。
-  2. **誘導質問 (leading question)**: `qa_log[].question` が回答を誘導し中立性を欠かないか。判定観点 = (a) 断定・前提埋め込み型 (「〜ですよね」「当然〜」)、(b) 望ましい答えを暗示する片側 Yes/No、(c) 複数論点を 1 問に束ね中立回答を妨げる。該当 `id` を検出する。
+  2. **誘導質問 (leading question)**: `qa_log[].question` が回答を誘導し中立性を欠かないか。判定観点 = (a) 断定・前提埋め込み型 (「〜ですよね」「当然〜」)、(b) 望ましい答えを暗示する片側 Yes/No、(c) 複数論点を 1 問に束ね中立回答を妨げる。該当 `id` を検出する。**現行/履歴の区別**: matrix の確定セルまたは `requirements_foundation.effective_source_refs` が参照する entry は active consumer を持つ現行証拠なので、誘導が未是正なら blocking FAIL とする。後続の中立な再確認が現行値の根拠なら `remediated` として非 blocking にできる。一般 writer `retire-qa` が付けた `retirement` を持ち、かつ active consumer が 0 件の entry は逐語を残すための歴史証跡であり、`historical_nonblocking` として列挙するが FAIL にしない。retired entry を現行参照が消費している、`retirement` の形状が不正、または active consumer 数を確定できない場合は blocking とする。本文を削除・改変して誘導を隠してはならない。
   3. **早期停止 (premature stop)**: (a) 未収集セルが残るのに `hearing_progress.complete=true`、(b) `loop_count` が `max_loops` の実値に達したのに未完了状態・`next_question` が保存されず resume 不能に打ち切られている、を検出する。writer は `reopen` / `add-category` / `apply` 後も未収集数から進捗を再同期するため、旧来の `reopened_from` / `category_aggregate=未着手` 除外は適用しない。(a) は writer 非経由の直接編集または state 破損として扱う。`max_loops` が無い chunk 未実行 state では上限到達を推測せず、(b) を判定不能として明示する。契約: `references/spec-state-contract.md`「hearing_progress の意味論 (SSOT)」。
   4. **トレーサビリティ (qa_ref)**: `state=確定` の各セルが `qa_ref` を持ち、その値が `qa_log[].id` に実在し当該 Q&A へ遡れるか。欠落 (`qa_ref` なし)・dangling (`qa_log` に無い参照) を検出する。
-  5. **上位概念の遡及性 (foundation challenger)**: `requirements_foundation.confirmed=true` のとき、U1-U9 の各値が AI の誘導・推測でなく canonical id `qa-foundation-u1`〜`qa-foundation-u9` の利用者一次入力へ遡れるか (challenger 視点)。対話入力は `source.kind=user-dialogue`、書面要件は質問の path/section・回答の原文・`source.kind=written-requirements` と原文 SHA-256 を持つ**Uごとの 1論点 source-index**を根拠とする。書面 entry は `spec-state.json` から解決した安全な相対 `source.path` の指定 `source.section` を Read し、`answer` がその section 内に逐語で実在し、`source.sha256 == sha256(answer UTF-8 bytes)` であることを照合する。path 逸脱・section 不在・逐語原文不在は根拠なしとする。承認ログの文書名だけ、複数論点を束ねた質問、AI 要約、または AI が生成した entry 自身の digest だけでは根拠にしない。判定観点 = (a) U1-U9 の値がこの根拠を持たず AI が代弁・創作していないか、(b) `confirmed=true` なのに承認 `approval_ref` が `approval_log[].id` に実在するか (無ければユーザー未承認の勝手確定)、(c) U1/U2/U3 が値でなく N/A で埋められていないか (値必須の違反)。利用者一次入力へ遡れない U 項目・dangling な `approval_ref` を検出する。
+  5. **上位概念の遡及性 (foundation challenger)**: `requirements_foundation.confirmed=true` のとき、schema 1.1 は U1-U9 の各値を `effective_source_refs.U<N>.{qa_ref,approval_ref}` から現行の利用者一次入力と承認へ遡る。canonical `qa-foundation-u1`〜`u9` は初回確定の immutable な履歴であり、現在値と食い違うことだけを FAIL にしない。exact schema 1.0 で effective binding が無い場合だけ canonical source-index へ fallback する。対話入力は `source.kind=user-dialogue`、書面要件は質問の path/section・回答の原文・`source.kind=written-requirements` と原文 SHA-256 を持つ**Uごとの 1論点 source-index**を根拠とする。原則は U ごとに別 QA だが、answer に U ごとに分離可能な利用者決定が逐語で残る **明示的な共有 binding** は許可し、qa_ref の一致だけを重複違反にしない。機械ゲートは `qa_ref` ごとの binding U 集合を作り、question の **共有対象の全 U marker** が集合と exact match、各 binding の consumer 別 `evidence_quote` が answer に完全一致し `evidence_sha256 == sha256(evidence_quote UTF-8 bytes)`、consumer 間の quote が同一または包含関係でない、全 binding の `approval_ref` が同一、を検査する。answer 全体の他 U 言及は binding 範囲を広げない。対象 marker 欠落、question の対象外 marker、quote 欠落/改変/hash 不一致/流用は機械層で拒否する。ただし、quote が現行 U 値を意味的に裏付けるか、AI 要約でなく逐語の利用者決定かは機械層だけでは判別できない。本 C06 で question / answer / approval / consumer 別 quote の生証跡を読み、分離可能性・逐語性・意味的な裏付けを監査する。各 binding の QA/approval 実在・一意性、QA が retired でないこと、利用者一次入力の source kind、現行 `requirements_foundation.approval_ref` との整合を照合する。書面 entry は安全な相対 `source.path` の指定 `source.section` を Read し、`answer` の逐語実在と `source.sha256 == sha256(answer UTF-8 bytes)` を照合する。承認ログの文書名だけ、分離不能な複数論点を束ねた質問、AI 要約、AI 生成 entry 自身の digest は根拠にしない。U1/U2/U3 の N/A、dangling/重複/不正型、schema 1.1 の binding 欠落を検出する。
 - **非担当 (境界)**: `decisions[]` の比較・推奨・採択根拠は C05 `decision_guidance`、マトリクスの対象外理由の妥当性は C07 (`system-spec-matrix-auditor`)、取得ドキュメント鮮度は C08 (`system-spec-doc-freshness-auditor`)、収集完了の最終ゲートは C05 (completeness-evaluator)。caller が decisions の遡及監査を追加要求しても担当外として合否へ含めず、本責務は matrix と foundation の「ヒアリングの進め方」だけを見る。
 
 ## Layer 3: インフラ層
@@ -37,7 +37,7 @@
   - `categories[]` = `{id, label}` / `platforms[]` = canonical platform id (`web`/`mobile`/`tablet`/`desktop-windows`/`desktop-linux`/`desktop-macos`)。
   - `matrix.<cat>.<pf>` = `{state, qa_ref}`。
   - `qa_log[]` = `{id, question, answer}` / `approval_log[]` = `{id, note}` / `category_aggregate{}` / `targets[]`。
-  - `requirements_foundation` = `{essential_purpose(U1), background(U2), goals(U3), objectives(U4), success_criteria(U5), stakeholders(U6), scope(U7), constraints(U8), concrete_intents(U9), approval_ref, confirmed}` (上位概念 U1-U9・確定は承認 approval_ref 付き)。
+  - `requirements_foundation` = `{essential_purpose(U1), background(U2), goals(U3), objectives(U4), success_criteria(U5), stakeholders(U6), scope(U7), constraints(U8), concrete_intents(U9), effective_source_refs, approval_ref, confirmed}`。schema 1.1 の confirmed state は全 U の effective binding 必須、schema 1.0 だけ canonical fallback。
   - `hearing_progress` = `{loop_count, next_question, complete, max_loops?}`。
 
 ## Layer 4: 共通ポリシー層
@@ -59,9 +59,10 @@
 ### 5.3 完了チェックリスト (ゴール到達の停止条件)
 - [ ] 全 matrix セルが聞き漏れ評価の対象になっている
 - [ ] 全 qa_log 質問が誘導性評価の対象になっている
+- [ ] 検出した誘導ごとに active consumer を数え、現行の未是正は FAIL、中立再確認済みは `remediated`、正規 `retirement` かつ active consumer 0 は `historical_nonblocking` と区別している
 - [ ] hearing_progress が早期停止条件と照合されている
 - [ ] 全確定セルの qa_ref が実在ログと照合されている
-- [ ] requirements_foundation が確定なら U1-U9 の各値が利用者の対話回答または書面要件 source-index (qa_log) へ 1論点単位で遡及照合され、AI 誘導・推測が検出されている
+- [ ] requirements_foundation が確定なら schema 1.1 は U1-U9 の `effective_source_refs`、schema 1.0 だけ canonical fallback から利用者の対話回答または書面要件と approval へ遡及照合されている
 - [ ] requirements_foundation が確定なら approval_ref が approval_log に実在し U1/U2/U3 が値 (N/A不可) であることが照合されている
 - [ ] 各 finding がセルまたは質問IDまたはU項目IDへ追跡できる
 - [ ] verdict が finding と入力状態から一意に導出されている

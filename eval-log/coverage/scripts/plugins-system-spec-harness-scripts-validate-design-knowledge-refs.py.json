@@ -1,0 +1,10 @@
+{
+  "artifact": "plugins/system-spec-harness/scripts/validate-design-knowledge-refs.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 87,
+    "notes": "design_applications[].knowledge_ref の path 実在・repo 外拒否・見出し anchor 照合だけを見る決定論ゲート。形状検査は coverage-matrix に残し、参照先の空振りだけを落とす単一責務。network:false / write-scope:none。対応テスト test_validate_design_knowledge_refs.py あり。"
+  }
+}

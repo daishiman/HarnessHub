@@ -30,6 +30,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import shlex
 import sys
 from pathlib import Path
 from typing import Any, Iterable
@@ -68,7 +69,12 @@ UPSERT_EXECUTION = re.compile(
 )
 LOOPING_SLEEP = re.compile(r"\b(?:until|while|for)\b[\s\S]*\bsleep\b")
 LONG_SLEEP = re.compile(r"\bsleep\s+(?P<seconds>\d+(?:\.\d+)?)\b")
-RESUME_RUNNER = re.compile(r"(?:^|[\s/])build-system-spec-resume-import\.py(?:\s|$)")
+# Claude Code の Bash tool は non-ASCII cwd の絶対 path を引用符で囲む。
+# shell token の境界として空白/path separator に加え、引用符も受理する。
+RESUME_RUNNER = re.compile(
+    r"(?:^|[\s/\"'])build-system-spec-resume-import\.py(?=[\s\"']|$)"
+)
+RESUME_RUNNER_RELATIVE = "plugins/dev-graph/scripts/build-system-spec-resume-import.py"
 
 
 def _blocks(record: dict[str, Any]) -> Iterable[dict[str, Any]]:
@@ -132,6 +138,34 @@ def _is_upsert_mutation(command: str) -> bool:
             continue
         return True
     return False
+
+
+def _canonical_resume_runner_command(expected_repo_root: Path) -> str:
+    """resume fixture に許可する唯一の raw Bash command を返す。"""
+    return shlex.join([
+        "python3",
+        RESUME_RUNNER_RELATIVE,
+        "--repo-root",
+        str(expected_repo_root),
+    ])
+
+
+def _resume_runner_command_violation(
+    command: str, *, expected_repo_root: Path
+) -> str | None:
+    """raw Bash command が canonical command と完全一致するかを返す。
+
+    parser や shell 演算子 blacklist は受理 authority にしない。``shlex.join``
+    で生成した 1 行と raw 文字列を照合することで、展開・glob・代替引用・
+    空白差分・prefix/suffix・operator・wrapper・末尾改行を一括で拒否する。
+    """
+    expected = _canonical_resume_runner_command(expected_repo_root)
+    if command != expected:
+        return (
+            "resume runner は canonical command の1行と raw 完全一致しなければ"
+            f"ならない: expected={expected!r}, actual={command!r}"
+        )
+    return None
 
 
 def _write_target(inputs: dict[str, Any]) -> str | None:
@@ -223,7 +257,10 @@ def _validate_resume_report(report: Any) -> list[dict[str, Any]]:
 
 
 def validate(
-    records: list[dict[str, Any]], *, resume_report: dict[str, Any] | None = None
+    records: list[dict[str, Any]],
+    *,
+    resume_report: dict[str, Any] | None = None,
+    resume_repo_root: Path | None = None,
 ) -> dict[str, Any]:
     violations: list[dict[str, Any]] = []
     launches: list[dict[str, Any]] = []
@@ -368,12 +405,30 @@ def validate(
                     f"skill={len(target_skill_events)}, runner={len(resume_runner_events)}"
                 ),
             })
-        elif _result_json(result_by_use_id.get(str(resume_runner_events[0]["tool_use_id"]))) != resume_report:
-            violations.append({
-                "rule": "EV-023",
-                "line": resume_runner_events[0]["line"],
-                "detail": "runner tool_result JSON と resume report が一致しない",
-            })
+        else:
+            runner = resume_runner_events[0]
+            command = runner["input"].get("command")
+            command_violation = (
+                _resume_runner_command_violation(
+                    command, expected_repo_root=resume_repo_root
+                )
+                if isinstance(command, str) and resume_repo_root is not None
+                else "--resume-report から expected repo root を確定できない"
+                if isinstance(command, str)
+                else "runner Bash input.command が string でない"
+            )
+            if command_violation is not None:
+                violations.append({
+                    "rule": "EV-024",
+                    "line": runner["line"],
+                    "detail": command_violation,
+                })
+            elif _result_json(result_by_use_id.get(str(runner["tool_use_id"]))) != resume_report:
+                violations.append({
+                    "rule": "EV-023",
+                    "line": runner["line"],
+                    "detail": "runner tool_result JSON と resume report が一致しない",
+                })
     else:
         if not launches:
             violations.append({"rule": "EV-006", "detail": "evaluator Skill 起動が 0 件"})
@@ -464,7 +519,12 @@ def main() -> int:
     args = parser.parse_args()
     records, load_violations = _load(args.transcript)
     resume_report: dict[str, Any] | None = None
+    resume_repo_root: Path | None = None
     if args.resume_report:
+        # runner が出力する report は <fixture-repo>/eval-log/ 直下。
+        # report 自身と同じ fixture から必要な root を回収し、transcript
+        # 側の --repo-root 自己申告に依存しない。
+        resume_repo_root = args.resume_report.resolve().parent.parent
         try:
             loaded = json.loads(args.resume_report.read_text(encoding="utf-8"))
             if isinstance(loaded, dict):
@@ -475,7 +535,11 @@ def main() -> int:
         except (OSError, json.JSONDecodeError) as exc:
             load_violations.append({"rule": "EV-013", "detail": f"resume report を読めない: {exc}"})
             resume_report = {}
-    report = validate(records, resume_report=resume_report)
+    report = validate(
+        records,
+        resume_report=resume_report,
+        resume_repo_root=resume_repo_root,
+    )
     if load_violations:
         report["status"] = "FAIL"
         report["violations"] = load_violations + report["violations"]

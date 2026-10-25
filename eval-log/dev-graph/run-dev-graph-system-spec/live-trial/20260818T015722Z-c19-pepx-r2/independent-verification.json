@@ -1,0 +1,16 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "evaluator": {
+    "mode": "fresh-independent-context",
+    "id": "ccb36075-fddd-4d1c-9f71-babbae4bad1b"
+  },
+  "transcript_sha256": "c2bb013c588ae5f2406a2dff93c8a2fb501cdaf6b0b690244bea683cfae32d2a",
+  "evidence_refs": [
+    "independent-observations.json",
+    "transcript.jsonl",
+    "pane.txt",
+    "poll-state.json",
+    "out/status.json"
+  ]
+}

@@ -251,3 +251,5 @@ N/A: 今回の分冊に伴う製品判断はない。
 - S09 は `/dashboard` へ同居、S16 は `/tracking`。旧 `/metrics` 系は 308 転送のみ。
 - 配色 5 種と Build create/update は確定 QA を変えず、本分冊と architecture 差分へ写す。
 - 判断と検証は [カード wave 受領書](../docs/features/feat-card-list-shell/card-family-20260816-spec-reflection-receipt.md)。
+- 2026-08-16 最終レビュー: PR #731 は main 着地済み。運用・実装メモ・task P05/P12 追記と
+  `system-spec/index.md` 索引行を補った。確定章本文は引き続き非変更。

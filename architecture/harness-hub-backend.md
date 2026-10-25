@@ -220,6 +220,14 @@ Route Handler、入力検証、OpenAPI、状態遷移、共通エラー契約を
 正本は [backend](../system-spec/backend.md)。詳細 ADR は各 feature の
 `docs/features/*/architecture-decision-record.md`。
 
+## 2026-08-17 画面内改善要望 I15（仕様のみ）
+
+出口は D10 GitHub Issue。画像は D11 専用 R2。Workers からの GitHub 操作は D12 の
+fetch 薄 client。token は Workers Secret、Issues + Contents の read-write、対象 1 repo。
+起票は本文ハッシュで新規/更新/変更なしを導出する。診断は 32KB 上限。実装は未着手。
+正本は `system-spec/backend.md` と
+[I15 追補](../docs/features/feat-feedback-loop/i15-in-app-improvement-request-addendum.md)。
+
 ## 2026-08-12 hearing-intake 用途プロファイル / 共有トークン (MVP)
 
 **Beads**: `HarnessHub-370h` / graph node `issue-hearing-intake-pr705-elegant-review-20260812` / PR #705

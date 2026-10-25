@@ -1,7 +1,23 @@
 """Foundation and decision transitions for the spec-state single writer."""
 from __future__ import annotations
 
-from foundation_provenance import validate_foundation_source_indexes
+import importlib.util
+from pathlib import Path
+
+
+_FOUNDATION_PROVENANCE_PATH = (
+    Path(__file__).resolve().parents[3] / "scripts" / "foundation_provenance.py"
+)
+_FOUNDATION_PROVENANCE_SPEC = importlib.util.spec_from_file_location(
+    "system_spec_foundation_provenance", _FOUNDATION_PROVENANCE_PATH
+)
+if _FOUNDATION_PROVENANCE_SPEC is None or _FOUNDATION_PROVENANCE_SPEC.loader is None:
+    raise ImportError(f"cannot load foundation provenance helper: {_FOUNDATION_PROVENANCE_PATH}")
+_FOUNDATION_PROVENANCE = importlib.util.module_from_spec(_FOUNDATION_PROVENANCE_SPEC)
+_FOUNDATION_PROVENANCE_SPEC.loader.exec_module(_FOUNDATION_PROVENANCE)
+validate_foundation_source_indexes = _FOUNDATION_PROVENANCE.validate_foundation_source_indexes
+FOUNDATION_SOURCE_INDEXES = _FOUNDATION_PROVENANCE.FOUNDATION_SOURCE_INDEXES
+
 from state_transition_common import (
     DECISION_COMPARISON_AXES,
     DECISION_COST_CATEGORIES,
@@ -21,6 +37,61 @@ from state_transition_common import (
 )
 
 
+def _require_fresh_bindings_for_confirmed_value_changes(
+    previous: dict, merged: dict
+) -> None:
+    """A confirmed U value cannot change while retaining its old evidence."""
+    if not previous.get("confirmed") or not merged.get("confirmed"):
+        return
+    changed = [
+        (field, label)
+        for field, label, _canonical_qa in FOUNDATION_SOURCE_INDEXES
+        if previous.get(field) != merged.get(field)
+    ]
+    if not changed:
+        return
+
+    previous_refs = previous.get("effective_source_refs")
+    merged_refs = merged.get("effective_source_refs")
+    previous_refs = previous_refs if isinstance(previous_refs, dict) else {}
+    merged_refs = merged_refs if isinstance(merged_refs, dict) else {}
+    invalid_labels: list[str] = []
+    changed_approval_refs: set[str] = set()
+    for _field, label in changed:
+        old_binding = previous_refs.get(label)
+        new_binding = merged_refs.get(label)
+        old_binding = old_binding if isinstance(old_binding, dict) else {}
+        new_binding = new_binding if isinstance(new_binding, dict) else {}
+        qa_changed = (
+            isinstance(new_binding.get("qa_ref"), str)
+            and new_binding.get("qa_ref") != old_binding.get("qa_ref")
+        )
+        approval_changed = (
+            isinstance(new_binding.get("approval_ref"), str)
+            and new_binding.get("approval_ref") != old_binding.get("approval_ref")
+        )
+        if not qa_changed or not approval_changed:
+            invalid_labels.append(label)
+        if approval_changed:
+            changed_approval_refs.add(new_binding["approval_ref"])
+    if invalid_labels:
+        raise TransitionError(
+            "確定済み foundation の値変更には対象U "
+            + ", ".join(invalid_labels)
+            + " の新しい qa_ref / approval_ref が必須"
+        )
+
+    current_approval = merged.get("approval_ref")
+    if (
+        current_approval == previous.get("approval_ref")
+        or current_approval not in changed_approval_refs
+    ):
+        raise TransitionError(
+            "確定済み foundation の値変更には、変更対象Uの新しい approval_ref を"
+            " requirements_foundation.approval_ref に設定する必要がある"
+        )
+
+
 def set_foundation(state: dict, foundation: dict) -> None:
     """Merge and confirm U1--U9 only after source, value, and approval gates pass."""
     if not isinstance(foundation, dict):
@@ -28,11 +99,12 @@ def set_foundation(state: dict, foundation: dict) -> None:
     foundation = dict(foundation)
     approval_note = foundation.pop("approval_note", None)
     approval_ref = foundation.get("approval_ref")
+    approvals = list(state.get("approval_log") or [])
     if approval_ref and approval_note is not None:
-        approvals = state.setdefault("approval_log", [])
         if not has_entry(approvals, approval_ref):
             approvals.append({"id": approval_ref, "note": approval_note})
-    merged = dict(state.get("requirements_foundation") or {})
+    previous = dict(state.get("requirements_foundation") or {})
+    merged = dict(previous)
     for key, value in foundation.items():
         if key not in FOUNDATION_KEYS:
             raise TransitionError(f"requirements_foundation の未知キー: {key!r}")
@@ -61,18 +133,23 @@ def set_foundation(state: dict, foundation: dict) -> None:
                 raise TransitionError(f"concrete_intent {intent.get('id')!r} の serves={goal_id!r} が実在 goal を指さない")
     confirmed = bool(merged.get("confirmed"))
     if confirmed:
+        _require_fresh_bindings_for_confirmed_value_changes(previous, merged)
         missing = foundation_missing_fields(merged)
         if missing:
             raise TransitionError("確定条件不足: U1-U3 は値必須・U4-U9 は値または明示 N/A+理由が必須: " + ", ".join(missing))
         approval_ref = merged.get("approval_ref")
         if not isinstance(approval_ref, str) or not approval_ref.strip():
             raise TransitionError("確定条件不足: confirmed には approval_ref (ユーザー合意の approval_log 参照) が必須")
-        if not has_entry(state.get("approval_log") or [], approval_ref):
+        if not has_entry(approvals, approval_ref):
             raise TransitionError(f"確定条件不足: approval_ref={approval_ref!r} が approval_log に不在 (承認証跡なし)")
-        source_findings = validate_foundation_source_indexes(state)
+        candidate = dict(state)
+        candidate["approval_log"] = approvals
+        candidate["requirements_foundation"] = merged
+        source_findings = validate_foundation_source_indexes(candidate)
         if source_findings:
             raise TransitionError("確定条件不足: " + "; ".join(source_findings))
     merged["confirmed"] = confirmed
+    state["approval_log"] = approvals
     state["requirements_foundation"] = merged
 
 

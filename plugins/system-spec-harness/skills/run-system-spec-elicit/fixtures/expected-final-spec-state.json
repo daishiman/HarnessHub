@@ -440,16 +440,27 @@
     "constraints": [
       "社内 k8s 上で稼働"
     ],
-    "concrete_intents": [
+  "concrete_intents": [
       {
         "id": "I1",
         "text": "日次バックアップ",
         "serves": [
           "G1"
-        ]
-      }
-    ],
-    "confirmed": true,
+      ]
+    }
+  ],
+  "effective_source_refs": {
+    "U1": {"qa_ref": "qa-foundation-u1", "approval_ref": "appr-foundation"},
+    "U2": {"qa_ref": "qa-foundation-u2", "approval_ref": "appr-foundation"},
+    "U3": {"qa_ref": "qa-foundation-u3", "approval_ref": "appr-foundation"},
+    "U4": {"qa_ref": "qa-foundation-u4", "approval_ref": "appr-foundation"},
+    "U5": {"qa_ref": "qa-foundation-u5", "approval_ref": "appr-foundation"},
+    "U6": {"qa_ref": "qa-foundation-u6", "approval_ref": "appr-foundation"},
+    "U7": {"qa_ref": "qa-foundation-u7", "approval_ref": "appr-foundation"},
+    "U8": {"qa_ref": "qa-foundation-u8", "approval_ref": "appr-foundation"},
+    "U9": {"qa_ref": "qa-foundation-u9", "approval_ref": "appr-foundation"}
+  },
+  "confirmed": true,
     "approval_ref": "appr-foundation"
   },
   "decisions": [],

@@ -2,7 +2,7 @@
 # /// script
 # name: test-compile-spec-doc
 # version: 0.1.0
-# purpose: run-system-spec-compile の受入テスト。IN1(validate-coverage-matrix.py + validate-source-citation.py が fixture spec-state/fetched-references に exit0)/OUT1(生成章がカテゴリ×プラットフォームの確定/対象外理由と最新ドキュメント出典を含む)/章 frontmatter の確定マーカー(status:confirmed + spec_cells)を検証する。
+# purpose: run-system-spec-compile の受入テスト。IN1(coverage/source-citation/knowledge_ref 実在の3ゲート)/OUT1(生成章がカテゴリ×プラットフォームの確定/対象外理由と最新ドキュメント出典を含む)/章 frontmatter の確定マーカー(status:confirmed + spec_cells)を検証する。
 # inputs:
 #   - argv: pytest 収集 (引数なし)
 # outputs:
@@ -33,6 +33,7 @@ SPEC = FIXTURES / "spec-state.json"
 REFS = FIXTURES / "fetched-references.json"
 COV_VALIDATOR = PLUGIN_ROOT / "scripts" / "validate-coverage-matrix.py"
 CITE_VALIDATOR = PLUGIN_ROOT / "scripts" / "validate-source-citation.py"
+KNOWLEDGE_REF_VALIDATOR = PLUGIN_ROOT / "scripts" / "validate-design-knowledge-refs.py"
 
 
 def _load_mod():
@@ -63,7 +64,7 @@ def _run(script: Path, args: list[str]) -> int:
 
 # --------------------------------------------------------------------------- #
 # IN1 (inner, script): 生成直前の spec-state / fetched-references に            #
-# validate-coverage-matrix.py と validate-source-citation.py が exit0          #
+# coverage / source-citation / design knowledge_ref 実在検査が exit0      #
 # --------------------------------------------------------------------------- #
 def test_IN1_coverage_matrix_exit0_loop():
     assert SPEC.is_file()
@@ -81,6 +82,38 @@ def test_IN1_source_citation_exit0():
         CITE_VALIDATOR,
         ["--targets", str(SPEC), "--references", str(REFS), "--repo-root", str(SKILL_DIR)],
     ) == 0
+
+
+def test_IN1_compile_rejects_dangling_knowledge_ref_after_other_gates_pass(tmp_path):
+    """coverage/source-citation のみ緑でも、根拠の無い設計参照は compile しない。"""
+    spec = _spec()
+    spec["qa_log"][0]["design_applications"] = [
+        {
+            "knowledge_ref": "definitely-missing-knowledge-card.md#Missing principle",
+            "principle": "実在しない原則",
+            "applicability": "applied",
+            "rationale": "参照先実在ゲートの回帰テスト",
+            "tradeoffs": ["実在しない根拠は利用できない"],
+        }
+    ]
+    spec_path = tmp_path / "spec-state.json"
+    spec_path.write_text(json.dumps(spec, ensure_ascii=False), encoding="utf-8")
+
+    assert _run(COV_VALIDATOR, ["--matrix", str(spec_path), "--require-complete"]) == 0
+    assert _run(
+        CITE_VALIDATOR,
+        ["--targets", str(spec_path), "--references", str(REFS), "--repo-root", str(SKILL_DIR)],
+    ) == 0
+    assert _run(
+        KNOWLEDGE_REF_VALIDATOR,
+        ["--matrix", str(spec_path), "--repo-root", str(SKILL_DIR)],
+    ) == 1
+
+    out_dir = tmp_path / "system-spec"
+    assert mod.main(
+        ["compile", "--spec", str(spec_path), "--references", str(REFS), "--out-dir", str(out_dir)]
+    ) == 1
+    assert not out_dir.exists()
 
 
 # --------------------------------------------------------------------------- #
