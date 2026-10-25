@@ -1,0 +1,61 @@
+{
+  "artifact": "plugins/flyer-studio/scripts/build-local-package.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 100,
+    "notes": "repo共通feedbackのsymlink配備に伴うpackaging差分を独立実読。IGNOREはBASE_IGNOREへ、repo専用共有リンクの正確な条件を足す共通predicate。root引数を持ち、ignored/shipped/check_versionsとcopytreeが同じ条件に従う。 repo専用の除外はdirectoryがroot/skillsと一致・対象がsymlink・readlinkが../../harness-creator/skills/run-skill-feedbackと一致した場合だけ。同名の実体・絶対リンク・任意の相対リンク・入れ子の同名リンクは除外されないことを独立境界matrixで実測。 実production callback（root既定）も正規リンクを除外することを確認。fixtureだけに通る特例ではない。 package-contract.test.cjsの既存第1テストに、正規共有リンクの異版0.1 SKILL/manifestが版照合を汚さないこと、copytreeに入らないこと、通常skillが残ること、任意symlink/同名実体が未登録として拒否される回帰を追加。独立実行4/4PASS。 ローカルキットは正規共有リンクを含めず既存6制作skillを維持。コピー対象の追加や公開範囲変更はない。 既存のcheck先行・新規dir/隣接zip限定・外部symlink拒否・例外時非0・ネットワークなし/グローバル設定変更なしの境界は維持。frontmatter必須キーも引き続きlint成功。観測範囲に新規欠陥findingなし。"
+  },
+  "reviewed_by": "codex-independent-final-artifact-review",
+  "checked": [
+    "soundness",
+    "responsibility",
+    "error-handling",
+    "side-effect-safety",
+    "frontmatter"
+  ],
+  "source_sha256": "2bc72d64c55be9b39e1aaf709920c21659ece4a1e843eebde687d7c98423ad31",
+  "evidence": {
+    "ast_parse": true,
+    "entry_points_errors": [],
+    "registry_errors": [],
+    "stage_errors": [],
+    "links_errors": [],
+    "frontmatter_lint_exit": 0,
+    "repo_feedback_ignore_boundary": {
+      "canonical_relative": true,
+      "same_target_absolute": false,
+      "wrong_relative": false,
+      "same_name_real_directory": false,
+      "nested_canonical_literal": false,
+      "actual_production_callback_excludes_canonical": true
+    },
+    "package_contract_regression": {
+      "command": "node --test plugins/flyer-studio/tests/package-contract.test.cjs",
+      "tests": 4,
+      "pass": 4,
+      "fail": 0,
+      "exit": 0
+    },
+    "package_check": {
+      "command": "python3 plugins/flyer-studio/scripts/build-local-package.py --check",
+      "assets": 42,
+      "fail": 0,
+      "exit": 0
+    }
+  },
+  "findings": [],
+  "limits": [
+    "本版を1回だけ現物確認したfocused最終評価。run-elegant-reviewの30法runではなく、過去Codex30PASS・Claude23使用7skip/incomplete・r06 deltaの合格を転用していない。",
+    "実ホストでの独立した担当の起動・委任とツール権限の強制は未実測。",
+    "実印刷物・来場/申込効果・実機QR読取は今回の範囲外。",
+    "個人写真を含む公開範囲についてユーザー回答待ち。外部公開の実行許可を表す評価ではない。",
+    "これは本3pyのレビュー。呼び出す全CJS実装の完全な再監査やローカルキットの実ホスト導入は範囲外。",
+    "本再確認は共有feedback接続のpackaging境界まで。Notion送信・認証情報取得・実ホスト起動は実行していない。正規canonical側の全既存機能を新規再評価したものではない。"
+  ],
+  "resolved_findings": [
+    "SF-001"
+  ],
+  "reviewed_at": "2026-10-25T01:47:21.714414Z"
+}

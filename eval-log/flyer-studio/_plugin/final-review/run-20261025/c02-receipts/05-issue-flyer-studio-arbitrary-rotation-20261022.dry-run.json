@@ -1,0 +1,16 @@
+{
+  "artifact_sha256_after": "2fd8ded9c547a7dd816c0c95fa24a838a4fefde2d4bb78f88b1b64abdff654d5",
+  "body_source": "preserved",
+  "file_path": "issues/flyer-studio-arbitrary-rotation-20261022.md",
+  "graph_node_id": "issue-flyer-studio-arbitrary-rotation-20261022",
+  "graph_revision_after": 1781,
+  "graph_revision_before": 1780,
+  "graph_sha256_after": "0b62122563659311156b08c3ce2d029c11989be20320b825a86fb421f90fe3ac",
+  "graph_sha256_before": "1189e310109b2425dd349f4fb1a5ee432c033f086ab12949ddc4e456aec35959",
+  "idempotent": false,
+  "operation": "updated",
+  "owner": "C02/run-dev-graph-node",
+  "replaced_body_lines": null,
+  "status": "preview",
+  "write_count": 0
+}

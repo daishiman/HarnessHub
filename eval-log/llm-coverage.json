@@ -1,6 +1,6 @@
 {
   "threshold": 80.0,
-  "skills_measured": 70,
+  "skills_measured": 74,
   "below_threshold": 0,
   "average_coverage_pct": 100.0,
   "reports": [
@@ -274,6 +274,66 @@
       "under_derived": true,
       "coverage_pct": 100.0,
       "since": "2026-07-11"
+    },
+    {
+      "plugin": "flyer-studio",
+      "skill": "run-analyze-flyer",
+      "criteria_total": 2,
+      "criteria_covered": 2,
+      "covered_ids": [
+        "IN1",
+        "OUT1"
+      ],
+      "uncovered_ids": [],
+      "checklist_items": 0,
+      "under_derived": false,
+      "coverage_pct": 100.0,
+      "since": null
+    },
+    {
+      "plugin": "flyer-studio",
+      "skill": "run-create-flyer",
+      "criteria_total": 2,
+      "criteria_covered": 2,
+      "covered_ids": [
+        "IN1",
+        "OUT1"
+      ],
+      "uncovered_ids": [],
+      "checklist_items": 0,
+      "under_derived": false,
+      "coverage_pct": 100.0,
+      "since": null
+    },
+    {
+      "plugin": "flyer-studio",
+      "skill": "run-intake-flyer",
+      "criteria_total": 2,
+      "criteria_covered": 2,
+      "covered_ids": [
+        "IN1",
+        "OUT1"
+      ],
+      "uncovered_ids": [],
+      "checklist_items": 0,
+      "under_derived": false,
+      "coverage_pct": 100.0,
+      "since": null
+    },
+    {
+      "plugin": "flyer-studio",
+      "skill": "run-learn-flyer",
+      "criteria_total": 2,
+      "criteria_covered": 2,
+      "covered_ids": [
+        "IN1",
+        "OUT1"
+      ],
+      "uncovered_ids": [],
+      "checklist_items": 0,
+      "under_derived": false,
+      "coverage_pct": 100.0,
+      "since": null
     },
     {
       "plugin": "harness-creator",

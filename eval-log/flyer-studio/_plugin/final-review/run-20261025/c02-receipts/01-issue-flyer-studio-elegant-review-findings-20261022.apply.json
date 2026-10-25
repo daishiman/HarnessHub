@@ -1,0 +1,17 @@
+{
+  "artifact_sha256_after": "0a640c6321a9a95159851576a8d67fd51bbf5ff8f180cd48906f7f8208762cb0",
+  "body_source": "from_input",
+  "file_path": "issues/flyer-studio-elegant-review-findings-20261022.md",
+  "graph_node_id": "issue-flyer-studio-elegant-review-findings-20261022",
+  "graph_revision_after": 1771,
+  "graph_revision_before": 1770,
+  "graph_sha256_after": "b78b849a98613c593d9c6cb4797b20359624ff40a34e00ee4272692221684e90",
+  "graph_sha256_before": "1d22b43dc19879d9ca10b0239eeabfd1e128f0697da998ddfde716d089345474",
+  "idempotent": false,
+  "operation": "added",
+  "owner": "C02/run-dev-graph-node",
+  "recovered_interrupted_transaction": false,
+  "replaced_body_lines": null,
+  "status": "applied",
+  "write_count": 2
+}

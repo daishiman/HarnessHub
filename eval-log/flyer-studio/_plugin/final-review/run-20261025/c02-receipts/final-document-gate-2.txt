@@ -1,0 +1,1 @@
+OK: 保存先の正規表に適合 (orphan/docs-frontmatter/system-spec/root すべて緑)

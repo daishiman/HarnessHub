@@ -1,0 +1,20 @@
+[harness-coverage] RATCHET FAIL: 4 軸が floor を下回った (回帰)
+  - scripts/llm_eval: 62.9% < floor 63.3% (回帰: test/verdict 未添付の新規 artifact の疑い)
+  - skills/llm_eval: 82.0% < floor 87.2% (回帰: test/verdict 未添付の新規 artifact の疑い)
+  - agents/mechanical: 71.8% < floor 75.0% (回帰: test/verdict 未添付の新規 artifact の疑い)
+  - agents/llm_eval: 60.6% < floor 63.2% (回帰: test/verdict 未添付の新規 artifact の疑い)
+  → 新規 artifact に test/verdict を添付するか、意図した floor 変更なら --update-floor で更新する。
+[harness-coverage] 閾値 80.0% / 二軸×種別 12 中 計測済 12 / 達成 7
+  [OK ] scripts   mechanical 85.6%
+  [～  ] scripts   llm_eval   62.9%
+  [OK ] skills    mechanical 100.0%
+  [OK ] skills    llm_eval   82.0%
+  [～  ] agents    mechanical 71.8%
+  [～  ] agents    llm_eval   60.6%
+  [OK ] commands  mechanical 97.0%
+  [～  ] commands  llm_eval   51.5%
+  [OK ] hooks     mechanical 100.0%
+  [OK ] hooks     llm_eval   100.0%
+  [OK ] docs      mechanical 83.9%
+  [～  ] docs      llm_eval   69.6%
+[harness-coverage] 総合: FAIL (ハーネス仕様 未達)

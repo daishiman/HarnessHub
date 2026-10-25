@@ -1,0 +1,22 @@
+{
+  "user_selection": "2",
+  "scope": "個人素材・案件履歴も含めて公開する",
+  "repository": "daishiman/HarnessHub",
+  "included": "プラグイン実装・素材42件・hyogo-ai presetとproduction-history・汎用文書・本件最終証跡",
+  "excluded_local_historical_artifacts": [
+    {
+      "path": "plugins/flyer-studio/development-plan",
+      "files": 25,
+      "original_preserved": "/Users/dm/dev/dev/個人開発/HarnessHub/plugins/flyer-studio/development-plan",
+      "copy_archived": "/tmp/flyer-final-local-history-20261025/development-plan"
+    },
+    {
+      "path": "plugins/flyer-studio/verification",
+      "files": 85,
+      "original_preserved": "/Users/dm/dev/dev/個人開発/HarnessHub/plugins/flyer-studio/verification",
+      "copy_archived": "/tmp/flyer-final-local-history-20261025/verification"
+    }
+  ],
+  "private_handoff": "元rootで保全、公開対象外",
+  "marketplace_registration": false
+}

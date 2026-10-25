@@ -1,0 +1,46 @@
+{
+  "artifact": "plugins/flyer-studio/scripts/build-flyer.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 100,
+    "notes": "自己相対cli.cjsをsubprocessのargv配列で呼び、shellなしで空白を含む引数を保持。mock実測でNode欠落exit2・backend exit7の伝播を確認。処理責務は入口に閉じ、描画/案件ファイル更新等はCLI側へ委譲。 最終版は必須script frontmatterのname/purpose/inputs/outputs/contexts/network/write-scope/dependenciesが揃い、lint-script-frontmatterがchecked3/violations0/exit0。metadataを除いたsource SHAが初回と一致するため、前回の動作・責務・エラー/書込境界の実読観測を引き継ぐ。書込範囲は実装と一致（packageは新dirと隣接zip）。確認範囲で残る欠陥findingなし。"
+  },
+  "reviewed_by": "codex-independent-final-artifact-review",
+  "checked": [
+    "soundness",
+    "responsibility",
+    "error-handling",
+    "side-effect-safety",
+    "frontmatter"
+  ],
+  "source_sha256": "a42b88809829d23f886addb25bf8167eedf079591fd5f1d2e0c795598656b30c",
+  "evidence": {
+    "ast_parse": true,
+    "missing_node_exit": 2,
+    "backend_exit_forwarded": 7,
+    "argv": [
+      "/node",
+      "/Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/flyer-studio-final-20261025/plugins/flyer-studio/scripts/cli.cjs",
+      "help",
+      "--arg",
+      "text with spaces"
+    ],
+    "shell_used": false,
+    "metadata_only_change_confirmed": true,
+    "frontmatter_lint_exit": 0
+  },
+  "findings": [],
+  "limits": [
+    "本版を1回だけ現物確認したfocused最終評価。run-elegant-reviewの30法runではなく、過去Codex30PASS・Claude23使用7skip/incomplete・r06 deltaの合格を転用していない。",
+    "実ホストでの独立した担当の起動・委任とツール権限の強制は未実測。",
+    "実印刷物・来場/申込効果・実機QR読取は今回の範囲外。",
+    "個人写真を含む公開範囲についてユーザー回答待ち。外部公開の実行許可を表す評価ではない。",
+    "これは本3pyのレビュー。呼び出す全CJS実装の完全な再監査やローカルキットの実ホスト導入は範囲外。"
+  ],
+  "resolved_findings": [
+    "SF-001"
+  ],
+  "reviewed_at": "2026-10-25T01:37:28.296243Z"
+}

@@ -1,0 +1,17 @@
+{
+  "artifact_sha256_after": "1db13bc7ee8fddfd301a5613ba111fa8200f65d86be4165c0476be613dea933d",
+  "body_source": "preserved",
+  "file_path": "issues/flyer-studio-style-knowledge-lenses-20261022.md",
+  "graph_node_id": "issue-flyer-studio-style-knowledge-lenses-20261022",
+  "graph_revision_after": 1785,
+  "graph_revision_before": 1784,
+  "graph_sha256_after": "a2f6943d4f8ac1f95afa37f479527114e79b1bbeb20791441391bbd4631588b7",
+  "graph_sha256_before": "c262a1fa1ee0ab570d55a92dfcf15bf1bab0a23ff7b093bad00d1ced70906c44",
+  "idempotent": false,
+  "operation": "updated",
+  "owner": "C02/run-dev-graph-node",
+  "recovered_interrupted_transaction": false,
+  "replaced_body_lines": null,
+  "status": "applied",
+  "write_count": 2
+}

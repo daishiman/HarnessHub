@@ -1,0 +1,17 @@
+{
+  "artifact_sha256_after": "dd7b2a2d9aefd4b257532c894e8810ee888d1c36dfe068f0181fb5f2fdf62808",
+  "body_source": "preserved",
+  "file_path": "issues/flyer-studio-review-evidence-refresh-20261022.md",
+  "graph_node_id": "issue-flyer-studio-review-evidence-refresh-20261022",
+  "graph_revision_after": 1784,
+  "graph_revision_before": 1783,
+  "graph_sha256_after": "c262a1fa1ee0ab570d55a92dfcf15bf1bab0a23ff7b093bad00d1ced70906c44",
+  "graph_sha256_before": "bceba8469562c41f5ccdc2b3540a5e0bbad5e235e0dc3b7ee4d9e6475d494242",
+  "idempotent": false,
+  "operation": "updated",
+  "owner": "C02/run-dev-graph-node",
+  "recovered_interrupted_transaction": false,
+  "replaced_body_lines": null,
+  "status": "applied",
+  "write_count": 2
+}

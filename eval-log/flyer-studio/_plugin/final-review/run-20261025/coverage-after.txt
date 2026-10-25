@@ -1,0 +1,15 @@
+[harness-coverage] 閾値 80.0% / 二軸×種別 12 中 計測済 12 / 達成 7
+  [OK ] scripts   mechanical 85.6%
+  [～  ] scripts   llm_eval   63.5%
+  [OK ] skills    mechanical 100.0%
+  [OK ] skills    llm_eval   88.0%
+  [～  ] agents    mechanical 76.1%
+  [～  ] agents    llm_eval   64.8%
+  [OK ] commands  mechanical 97.0%
+  [～  ] commands  llm_eval   51.5%
+  [OK ] hooks     mechanical 100.0%
+  [OK ] hooks     llm_eval   100.0%
+  [OK ] docs      mechanical 83.9%
+  [～  ] docs      llm_eval   69.6%
+[harness-coverage] 総合: FAIL (ハーネス仕様 未達)
+[harness-coverage] RATCHET OK: 全軸が floor 以上 (回帰なし)

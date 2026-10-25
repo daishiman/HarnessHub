@@ -12,10 +12,10 @@ iteration: null
 title: "Harness Hub システム要件仕様 — 実装 writeback 分冊"
 owners: ["daishiman"]
 created_at: "2026-08-09T00:00:00Z"
-updated_at: "2026-08-15T00:00:00Z"
+updated_at: "2026-10-25T00:00:00Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
-related_nodes: ["arch-harness-hub-dev-workflow","issue-audit-fork-ledger-forgery-20260728","issue-rubric-proposal-20260806-review","task-rubric-proposal-retention-final-review-handoff-20260810","doc-rubric-proposal-retention-spec-reflection-receipt-20260810","issue-production-tenant-bootstrap-readiness-20260814"]
+related_nodes: ["arch-harness-hub-dev-workflow","issue-audit-fork-ledger-forgery-20260728","issue-rubric-proposal-20260806-review","task-rubric-proposal-retention-final-review-handoff-20260810","doc-rubric-proposal-retention-spec-reflection-receipt-20260810","issue-production-tenant-bootstrap-readiness-20260814","doc-flyer-studio-final-review-spec-reflection-20261025","task-flyer-studio-final-integration-20261025"]
 resource_scope: ["specs/harness-hub-system-specification-implementation-writebacks.md","specs/harness-hub-system-specification.md","system-spec/index.md","docs/features/feat-dev-pipeline-improvement/audit-ledger-transition-c19-final-review-20260808.md","docs/features/feat-dev-pipeline-improvement/rubric-proposal-retention-final-review-spec-reflection-receipt.md","tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-rubric-proposal-retention-final-review-handoff.md"]
 purpose: "総合仕様を500行以下に保ちながら既存の実装 writeback と正本・受領書の参照関係を維持する"
 goal: "分冊後も各実装確定事項から system-spec 正本と仕様反映受領書へ追跡できる"
@@ -253,3 +253,7 @@ N/A: 今回の分冊に伴う製品判断はない。
 - 判断と検証は [カード wave 受領書](../docs/features/feat-card-list-shell/card-family-20260816-spec-reflection-receipt.md)。
 - 2026-08-16 最終レビュー: PR #731 は main 着地済み。運用・実装メモ・task P05/P12 追記と
   `system-spec/index.md` 索引行を補った。確定章本文は引き続き非変更。
+
+## 2026-10-25 flyer-studio 最終統合 writeback
+
+6skillの共通判断、独立評価、承認失効、pilot順序、様式提案、owner中立、配布対象の内部契約を整理した。製品API/DB/認証/UI/配備、確定質疑、既存exact13 packageは非変更。過去Codex全PASSと最新Claude runの23使用7skip/incompleteを区別し、r06の限定検証を現行版の全30PASSへ読み替えない。Beads cgix/h9ahのclose根拠と残4課題、最小ゲートは [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/flyer-studio-final-review-spec-reflection-receipt.md)、実行条件は [統合task](../tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-flyer-studio-final-integration.md) を正とする。

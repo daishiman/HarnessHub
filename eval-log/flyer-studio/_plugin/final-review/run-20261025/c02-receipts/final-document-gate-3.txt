@@ -1,0 +1,1 @@
+OK: doc-line-limit 適合 (検査 834 文書, 上限 300 行, allowlist 0 件)

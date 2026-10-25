@@ -1,0 +1,17 @@
+{
+  "artifact_sha256_after": "5a6d6db3832b4072e814618ffbfa1c02a5cfb809456892dffc3e089a88edcb87",
+  "body_source": "from_input",
+  "file_path": "architecture/harness-hub-dev-workflow.md",
+  "graph_node_id": "arch-harness-hub-dev-workflow",
+  "graph_revision_after": 1777,
+  "graph_revision_before": 1776,
+  "graph_sha256_after": "31ce09ddd9d871f7ec20ed9fb406a22a549b163e407de82a5eec221c2ebce570",
+  "graph_sha256_before": "3a18048ee290da57351d16ab58a9b22749be042a19cd79e7ee6eae05f29ad500",
+  "idempotent": false,
+  "operation": "updated",
+  "owner": "C02/run-dev-graph-node",
+  "recovered_interrupted_transaction": false,
+  "replaced_body_lines": 250,
+  "status": "applied",
+  "write_count": 2
+}
