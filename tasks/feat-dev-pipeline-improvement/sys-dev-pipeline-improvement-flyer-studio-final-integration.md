@@ -12,7 +12,7 @@ iteration: null
 title: "flyer-studio 最終レビュー・対象限定公開の統合task"
 owners: ["daishiman"]
 created_at: "2026-10-25T00:00:00Z"
-updated_at: "2026-10-25T08:20:31.401588Z"
+updated_at: "2026-10-25T08:24:50.904558Z"
 status: "draft"
 depends_on: []
 related_nodes: ["issue-flyer-studio-agent-capability-manifest-20261022","issue-flyer-studio-arbitrary-rotation-20261022","issue-flyer-studio-elegant-review-findings-20261022","issue-flyer-studio-pilot-order-gate-20261022","issue-flyer-studio-review-evidence-refresh-20261022","issue-flyer-studio-style-knowledge-lenses-20261022","doc-flyer-studio-final-review-spec-reflection-20261025","feat-dev-pipeline-improvement"]
@@ -41,9 +41,9 @@ tracker_binding: "beads"
 beads_linkage: {"bd_issue_id":"HarnessHub-h9xn","linked_at":"2026-10-25T01:33:19.984898+00:00","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
-pull_request_linkages: []
+pull_request_linkages: [{"base_branch":"main","closing_reference_verified":false,"head_branch":"devgraph/issue-flyer-studio-elegant-review-findings-20261022","linked_at":"2026-10-25T08:24:39.200733Z","merge_commit_sha":null,"merged_at":null,"pr_number":742,"repo":"daishiman/HarnessHub","state":"open","url":"https://github.com/daishiman/HarnessHub/pull/742"}]
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":["docs/features/feat-dev-pipeline-improvement/flyer-studio-final-review-spec-reflection-receipt.md"],"policy":"manual","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":"2026-10-25T08:23:58Z","evidence_refs":["docs/features/feat-dev-pipeline-improvement/flyer-studio-final-review-spec-reflection-receipt.md","https://github.com/daishiman/HarnessHub/pull/742"],"policy":"manual","reconciled_at":"2026-10-25T08:24:39.200733Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-10-25T00:00:00Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -125,4 +125,4 @@ bash scripts/run-ci-checks.sh
 
 ## 最終レビューの追跡
 
-統合追跡は Beads HarnessHub-h9xn。実装課題cgix/h9ahと公開前レビューを区別する。最終通常試験は221件中217 PASS・0 FAIL・4 SKIP、読取専用CLIの回帰25件全PASS。共通CIは151 PASS・5 WARN・0 FAIL、共通feedback梱包境界の回帰4件全PASS。discovery台帳は正規再生成し、floor回帰なし。公開先がpublicであることを説明後、利用者の選択「2」で個人素材・案件履歴も含めた公開を明示承認済み。commit・push・PRとHEAD束縛受領書は未実施。
+統合追跡は Beads HarnessHub-h9xn。実装課題cgix/h9ahと公開前レビューを区別する。最終通常試験は221件中217 PASS・0 FAIL・4 SKIP、読取専用CLIの回帰25件全PASS。共通CIは151 PASS・5 WARN・0 FAIL、共通feedback梱包境界の回帰4件全PASS。discovery台帳は正規再生成し、floor回帰なし。公開先がpublicであることを説明後、利用者の選択「2」で個人素材・案件履歴も含めた公開を明示承認済み。実装commit06ccd688と最新main取込9f080b097761をoriginへpushし、main向け [draft PR #742](https://github.com/daishiman/HarnessHub/pull/742) を作成した。PR作成時のHEAD束縛受領書と実hook入力によるguard許可を確認し、文書追記後は最終HEADで再発行する。Beads HarnessHub-h9xnは2026-10-25T08:23:58Zにclosed、completion_evidenceはmanual/done。PRのmainへのmergeは完了範囲外。

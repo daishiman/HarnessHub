@@ -13,7 +13,7 @@ iteration: null
 title: "flyer-studio 最終レビュー・仕様反映受領書"
 owners: ["daishiman"]
 created_at: "2026-10-25T00:00:00Z"
-updated_at: "2026-10-25T08:20:29.394298Z"
+updated_at: "2026-10-25T08:24:48.762314Z"
 status: "draft"
 depends_on: []
 related_nodes: ["issue-flyer-studio-agent-capability-manifest-20261022","issue-flyer-studio-arbitrary-rotation-20261022","issue-flyer-studio-elegant-review-findings-20261022","issue-flyer-studio-pilot-order-gate-20261022","issue-flyer-studio-review-evidence-refresh-20261022","issue-flyer-studio-style-knowledge-lenses-20261022","task-flyer-studio-final-integration-20261025"]
@@ -80,7 +80,7 @@ flyer-studio の改善を対象限定の draft PR へまとめるため、実装
 
 ### レビュー証跡の限界
 
-2026-10-23 Codex run の30種全PASSは、その時点の版の結果。後続 run-20261023-claude-restart の正式判定は **23種使用・7種理由付き省略、3反復で incomplete（C2 FAIL）** のまま保存されている。post-loop-r06 は限定差分の独立検証で追加 blocking が無かった結果であり、現行版を全30種PASSへ読み替えない。最新統合では下記の必要最小ゲートを再実行する。
+2026-10-23 Codex run の30種全PASSは、その時点の版の結果。後続 run-20261023-claude-restart の正式判定は **23種使用・7種理由付き省略、3反復で incomplete（C2 FAIL）** のまま保存されている。post-loop-r06 は限定差分の独立検証で追加 blocking が無かった結果であり、現行版を全30種PASSへ読み替えない。最新統合では下記の必要最小ゲートを再実行した。
 
 過去の実PDF試験は隔離した合成fixture（試験用データ）での回帰試験であり、実案件の独立目視承認、実印刷、集客効果を保証しない。
 
@@ -95,7 +95,7 @@ flyer-studio の改善を対象限定の draft PR へまとめるため、実装
 | HarnessHub-dtr8 | issue-flyer-studio-agent-capability-manifest-20261022 | blocked。上流 eh99 の型契約調整待ち |
 | HarnessHub-pzdu | issue-flyer-studio-arbitrary-rotation-20261022 | open。任意回転の実装 |
 
-今回の最終公開作業は Beads `HarnessHub-h9xn` / `task-flyer-studio-final-integration-20261025` で追跡する。過去の実装完了と公開前レビューを分け、既存 Beads 6件へ関連付ける。公開範囲は承認済み。commit・push・draft PRの公開工程を実施してから完了を記録する。文書status（有効な文書か）と completion_evidence（実行完了根拠）を分ける。
+今回の最終公開作業は Beads `HarnessHub-h9xn` / `task-flyer-studio-final-integration-20261025` で追跡する。過去の実装完了と公開前レビューを分け、既存 Beads 6件へ関連付ける。公開範囲は承認済み。実装commit `06ccd688`、最新main取込後 `9f080b097761` をoriginへpushし、main向け [draft PR #742](https://github.com/daishiman/HarnessHub/pull/742) を提出した。Beads HarnessHub-h9xnは2026-10-25T08:23:58Zにclosed。補助taskの完了policy=manualへ反映し、PRはopen/draft、main未mergeとして区別する。文書status（有効な文書か）と completion_evidence（実行完了根拠）を分ける。
 
 ### 最終レビューで追加修正した点
 
@@ -111,7 +111,7 @@ flyer-studio の改善を対象限定の draft PR へまとめるため、実装
 - repository共通CI: **151 PASS・5 WARN・0 FAIL**。警告は段階導入中のcompletenessとrubric参照で、今回の失敗4件は原因を修正して再実行した。discovery由来のcriteria rosterとLLM coverage台帳は正規コマンドで再生成し、既存floorは下げていない。文書リンクは既存違反354件をbaselineとして新規0件。
 - 共通の評価記録: 新規12対象の独立評価を保存し、coverageの既存floorに対する回帰は解消。repository全体の80%目標は以前から未達の軸があり、全体仕様達成とは表現しない。content-review lintは全84skillの記録を検証して成功。
 - 文書ゲート: C02 dry-run/apply、full graph schema（違反0・readiness complete）、配置・行数guard（836文書・上限300・allowlist0）、git diff --checkが成功。対象11node・相対リンク88件の存在と6issue原文保全も確認。PR作成を検査する仕様反映guardは、最終commit後のHEAD束縛receipt生成・hook入力でroot担当が実評価する（stdin無しのexit0は判定実施を意味しない）。
-- 公開範囲: 個人素材・案件履歴を含めることを利用者が明示承認。git公開とmarketplace登録は別であり、distribution.distributable=falseは維持する。commit・PR・HEAD束縛receiptは公開工程で確定する。
+- 公開範囲: 個人素材・案件履歴を含めることを利用者が明示承認。git公開とmarketplace登録は別であり、distribution.distributable=falseは維持する。実装commit `06ccd688` とmain取込 `9f080b097761` をpushし、main向けdraft PR #742を作成した。PR作成時HEADで機械受領書を生成し、実PR作成hook入力によるguard exit0を確認。公開結果の文書追記後は最終HEADへ機械受領書を再発行する。
 
 ## 決定事項
 
