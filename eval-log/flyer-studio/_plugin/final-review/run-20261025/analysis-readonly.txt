@@ -1,0 +1,160 @@
+TAP version 13
+# Subtest: analysis template is not approvable without visual evidence
+ok 1 - analysis template is not approvable without visual evidence
+  ---
+  duration_ms: 284.087625
+  type: 'test'
+  ...
+# Subtest: independent reviewed analysis works without native scene
+ok 2 - independent reviewed analysis works without native scene
+  ---
+  duration_ms: 196.75525
+  type: 'test'
+  ...
+# Subtest: source modification invalidates analysis approval
+ok 3 - source modification invalidates analysis approval
+  ---
+  duration_ms: 70.0355
+  type: 'test'
+  ...
+# Subtest: producer cannot approve own analysis
+ok 4 - producer cannot approve own analysis
+  ---
+  duration_ms: 53.724584
+  type: 'test'
+  ...
+# Subtest: missing one of four analysis checks is rejected
+ok 5 - missing one of four analysis checks is rejected
+  ---
+  duration_ms: 42.749708
+  type: 'test'
+  ...
+# Subtest: analysis change invalidates prior review
+ok 6 - analysis change invalidates prior review
+  ---
+  duration_ms: 49.336875
+  type: 'test'
+  ...
+# Subtest: pending required decision blocks analysis use
+ok 7 - pending required decision blocks analysis use
+  ---
+  duration_ms: 13.160667
+  type: 'test'
+  ...
+# Subtest: declining a required request blocks analysis use
+ok 8 - declining a required request blocks analysis use
+  ---
+  duration_ms: 13.975334
+  type: 'test'
+  ...
+# Subtest: approved analysis is required when used for production and finalization
+ok 9 - approved analysis is required when used for production and finalization
+  ---
+  duration_ms: 62.103792
+  type: 'test'
+  ...
+# Subtest: unsealed purpose and constraints need deliberate sealing before review
+ok 10 - unsealed purpose and constraints need deliberate sealing before review
+  ---
+  duration_ms: 118.176583
+  type: 'test'
+  ...
+# Subtest: unknown design knowledge reference is rejected
+ok 11 - unknown design knowledge reference is rejected
+  ---
+  duration_ms: 17.022917
+  type: 'test'
+  ...
+# Subtest: source-list coverage prevents unreviewed original artifacts
+ok 12 - source-list coverage prevents unreviewed original artifacts
+  ---
+  duration_ms: 18.281167
+  type: 'test'
+  ...
+# Subtest: required scope cannot silently target a nonexistent original artifact
+ok 13 - required scope cannot silently target a nonexistent original artifact
+  ---
+  duration_ms: 15.943958
+  type: 'test'
+  ...
+# Subtest: new-from-brief records the skipped diagnosis stages and refuses a hidden analysis
+ok 14 - new-from-brief records the skipped diagnosis stages and refuses a hidden analysis
+  ---
+  duration_ms: 7.380958
+  type: 'test'
+  ...
+# Subtest: an undecided analysis mode is rejected instead of defaulting
+ok 15 - an undecided analysis mode is rejected instead of defaulting
+  ---
+  duration_ms: 1.814542
+  type: 'test'
+  ...
+# Subtest: analysis-template switches the case to source-artifact and copies the brief purpose
+ok 16 - analysis-template switches the case to source-artifact and copies the brief purpose
+  ---
+  duration_ms: 19.25725
+  type: 'test'
+  ...
+# Subtest: analysis purpose cannot differ from the brief purpose
+ok 17 - analysis purpose cannot differ from the brief purpose
+  ---
+  duration_ms: 23.764416
+  type: 'test'
+  ...
+# Subtest: analysis policy covers only declared yardsticks and fails closed when one is missing
+ok 18 - analysis policy covers only declared yardsticks and fails closed when one is missing
+  ---
+  duration_ms: 3.908417
+  type: 'test'
+  ...
+# Subtest: re-review archives the earlier analysis-review and records its FIX before handing out a fresh sheet
+ok 19 - re-review archives the earlier analysis-review and records its FIX before handing out a fresh sheet
+  ---
+  duration_ms: 51.194041
+  type: 'test'
+  ...
+# Subtest: 提案のtyped FIXは本質条項を保持し、台帳再読込と原文退避を経て最新PASSへ進める
+ok 20 - 提案のtyped FIXは本質条項を保持し、台帳再読込と原文退避を経て最新PASSへ進める
+  ---
+  duration_ms: 97.491167
+  type: 'test'
+  ...
+# Subtest: 提案の必須修正はserves欠落・空配列・未知本質IDを取込で拒否する
+ok 21 - 提案の必須修正はserves欠落・空配列・未知本質IDを取込で拒否する
+  ---
+  duration_ms: 132.685042
+  type: 'test'
+  ...
+# Subtest: 4条件全PASSの好みだけは提案PASSとして記録しcycleを消費しない
+ok 22 - 4条件全PASSの好みだけは提案PASSとして記録しcycleを消費しない
+  ---
+  duration_ms: 95.116208
+  type: 'test'
+  ...
+# Subtest: 提案のdecisionと4条件と必須修正が矛盾する記録を取込で拒否する
+ok 23 - 提案のdecisionと4条件と必須修正が矛盾する記録を取込で拒否する
+  ---
+  duration_ms: 163.585416
+  type: 'test'
+  ...
+# Subtest: 旧文字列FIXは通常取込を止め、原記録を改変せず退避して新型の再評価へ移れる
+ok 24 - 旧文字列FIXは通常取込を止め、原記録を改変せず退避して新型の再評価へ移れる
+  ---
+  duration_ms: 89.183459
+  type: 'test'
+  ...
+# Subtest: analysis-review CLI validation stays read-only for PASS/FIX; caller still records the cycle
+ok 25 - analysis-review CLI validation stays read-only for PASS/FIX; caller still records the cycle
+  ---
+  duration_ms: 984.996958
+  type: 'test'
+  ...
+1..25
+# tests 25
+# suites 0
+# pass 25
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3433.82475

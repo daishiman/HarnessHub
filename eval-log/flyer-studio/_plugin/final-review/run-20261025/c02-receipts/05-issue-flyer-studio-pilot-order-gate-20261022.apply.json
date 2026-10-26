@@ -1,0 +1,17 @@
+{
+  "artifact_sha256_after": "4e620a3e44373d3295d6e4fee8a8cd2f6f231f1ddfa900f04ece924c45cf747d",
+  "body_source": "preserved",
+  "file_path": "issues/flyer-studio-pilot-order-gate-20261022.md",
+  "graph_node_id": "issue-flyer-studio-pilot-order-gate-20261022",
+  "graph_revision_after": 1783,
+  "graph_revision_before": 1782,
+  "graph_sha256_after": "bceba8469562c41f5ccdc2b3540a5e0bbad5e235e0dc3b7ee4d9e6475d494242",
+  "graph_sha256_before": "e711b7527c3a8cc7f25ae7ef0a1374757ca9e019b6bfc6b44256b4e63be8b2c2",
+  "idempotent": false,
+  "operation": "updated",
+  "owner": "C02/run-dev-graph-node",
+  "recovered_interrupted_transaction": false,
+  "replaced_body_lines": null,
+  "status": "applied",
+  "write_count": 2
+}

@@ -12,10 +12,10 @@ iteration: null
 title: "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)"
 owners: ["daishiman"]
 created_at: "2026-07-21T14:40:00Z"
-updated_at: "2026-08-08T02:55:09Z"
-status: "closed"
+updated_at: "2026-10-25T00:00:00Z"
+status: "active"
 depends_on: []
-related_nodes: ["issue-audit-followups-20260717","issue-c02-upsert-lifecycle-regression-20260729","issue-id-uniqueness-gate-generalization-20260728","issue-doc-line-limit-followup-mfh7-20260728","issue-register-package-projection-idempotency-drift-20260728","task-schedule-beads-ready-entry-absent-reporting-20260803","issue-hooks-entry-point-parity-generalization-20260728","task-hooks-entry-point-parity-final-review-handoff-20260804","doc-hooks-entry-point-parity-spec-reflection-receipt-20260804","issue-rubric-proposal-20260806-review","task-rubric-proposal-retention-final-review-handoff-20260810","doc-rubric-proposal-retention-spec-reflection-receipt-20260810"]
+related_nodes: ["issue-audit-followups-20260717","issue-c02-upsert-lifecycle-regression-20260729","issue-id-uniqueness-gate-generalization-20260728","issue-doc-line-limit-followup-mfh7-20260728","issue-register-package-projection-idempotency-drift-20260728","task-schedule-beads-ready-entry-absent-reporting-20260803","issue-hooks-entry-point-parity-generalization-20260728","task-hooks-entry-point-parity-final-review-handoff-20260804","doc-hooks-entry-point-parity-spec-reflection-receipt-20260804","issue-rubric-proposal-20260806-review","task-rubric-proposal-retention-final-review-handoff-20260810","doc-rubric-proposal-retention-spec-reflection-receipt-20260810","doc-flyer-studio-final-review-spec-reflection-20261025","task-flyer-studio-final-integration-20261025"]
 resource_scope: ["features/feat-dev-pipeline-improvement.md"]
 purpose: "開発管理パイプライン (dev-graph 11 verb・beads・plugin-plans・eval-log・成果物管理) の運用実態調査 (qa-067) で検出された整合性・肥大化・消化状態の課題を解消し、G1/G4/G5 を支える開発基盤の健全性を回復する。あわせて qa-071 で確定した開発管理の方法論 (マクロ構造・exact-13・外側/内側ループ・スコープ分離・情報配置・書き戻し・既存保全と更新統制) を本 feature の 13 フェーズ実行契約として明示的に採用し、feature context から task spec まで意味的に伝播する"
 goal: "qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-log 直下残置・未消化 findings が決定論検査で 0 件に収束し、再実行しても同じ結果になる状態。加えて qa-071 の方法論要件が goal-spec と P01..P13 task spec の実行契約 (外側ループの目的/背景/ゴール固定・内側ループの goal-seek 反復・スコープ分離・情報配置=正本参照と lineage のみ・P13 書き戻し) として trace され、tag/lineage 一致だけでは PASS しない semantic coverage 検査で保証された状態"
@@ -180,3 +180,7 @@ ui-ux・testing-qa・dev-workflow・infrastructure に章固有の deep card を
 - verification tier の 9 gate は `wiring_state=unwired` を明示し、部分切替による偽の完成を拒否する (`HarnessHub-xcl3`)。
 - pre-push の jsonschema 誤判定は `resolve-python.sh` 再 exec で塞ぐ (`HarnessHub-sl6o`)。
 - 受領は [2026-08-11 受領書](../docs/features/feat-dual-catalog-web/mvp-ops-reliability-20260811-spec-reflection-receipt.md)。
+
+## 2026-10-25 flyer-studio 最終統合 writeback
+
+6skillの共通判断、独立評価、承認失効、pilot順序、様式提案、owner中立、配布対象の内部契約を整理した。製品API/DB/認証/UI/配備、確定質疑、既存exact13 packageは非変更。過去Codex全PASSと最新Claude runの23使用7skip/incompleteを区別し、r06の限定検証を現行版の全30PASSへ読み替えない。Beads cgix/h9ahのclose根拠と残4課題、最小ゲートは [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/flyer-studio-final-review-spec-reflection-receipt.md)、実行条件は [統合task](../tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-flyer-studio-final-integration.md) を正とする。

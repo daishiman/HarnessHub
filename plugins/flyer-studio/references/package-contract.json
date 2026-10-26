@@ -1,0 +1,56 @@
+{
+  "name": "flyer-studio",
+  "package_mode": "bundle",
+  "distribution": {
+    "distributable": false
+  },
+  "entry_points": {
+    "skills": [
+      "run-intake-flyer",
+      "run-analyze-flyer",
+      "run-create-flyer",
+      "run-learn-flyer"
+    ],
+    "agents": [
+      "flyer-composition-reviewer",
+      "flyer-typography-reviewer",
+      "flyer-color-reviewer"
+    ],
+    "commands": [],
+    "hooks": []
+  },
+  "manifests": [
+    "plugin.json",
+    ".claude-plugin/plugin.json",
+    ".codex-plugin/plugin.json"
+  ],
+  "required_files": [
+    "SKILL.md",
+    "README.md",
+    "INSTALL.md",
+    "CHANGELOG.md",
+    "EVALS.json",
+    "package.json",
+    "package-lock.json",
+    "plugin-composition.yaml"
+  ],
+  "codex_distribution": {
+    "local_catalog_only": true
+  },
+  "runtime": {
+    "orchestration": "Python standard library",
+    "render_backend": "Node 22+ / Chromium / Poppler",
+    "dependencies": "package-lock.json",
+    "image_generation": "host-tool-discovery-and-confirmation"
+  },
+  "install": {
+    "global_changes": "explicit-user-request-only",
+    "hook_trust_changes": false
+  },
+  "entry_point_policy": {
+    "skills": "user-invocable な skill のみ。",
+    "agents": "agents/ 直下の専門レンズのみ。skill 内 agents/ の4担当は委任専用で、直接の入口には含めない。"
+  },
+  "distribution_reason": "ユーザーの写真・ロゴ・参考チラシを含む個人用ローカルキット。公開登録しない。",
+  "pkg_checks": {}
+}

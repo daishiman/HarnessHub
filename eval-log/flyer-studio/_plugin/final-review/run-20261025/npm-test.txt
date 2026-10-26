@@ -1,0 +1,1334 @@
+
+> flyer-studio@1.3.0 test
+> node --test tests/*.test.cjs
+
+TAP version 13
+# Subtest: 実際のPDF/PNGを使う完了・鮮度・目視の受入試験
+ok 1 - 実際のPDF/PNGを使う完了・鮮度・目視の受入試験 # SKIP
+  ---
+  duration_ms: 8.909625
+  type: 'test'
+  ...
+# Subtest: required analysis cannot disappear into an empty production feedback list
+ok 2 - required analysis cannot disappear into an empty production feedback list
+  ---
+  duration_ms: 2371.59425
+  type: 'test'
+  ...
+# Subtest: same requirement and variant IDs automatically bind without extra configuration
+ok 3 - same requirement and variant IDs automatically bind without extra configuration
+  ---
+  duration_ms: 414.816125
+  type: 'test'
+  ...
+# Subtest: renamed outputs require explicit coverage mapping
+ok 4 - renamed outputs require explicit coverage mapping
+  ---
+  duration_ms: 259.218625
+  type: 'test'
+  ...
+# Subtest: explicit mapping allows different input and output IDs and source-scoped requirements
+ok 5 - explicit mapping allows different input and output IDs and source-scoped requirements
+  ---
+  duration_ms: 787.01575
+  type: 'test'
+  ...
+# Subtest: global requirements cannot escape to one output, an empty mapping or a nonexistent output
+ok 6 - global requirements cannot escape to one output, an empty mapping or a nonexistent output
+  ---
+  duration_ms: 1729.907625
+  type: 'test'
+  ...
+# Subtest: feedback target exclusions and downgraded required requests are rejected
+ok 7 - feedback target exclusions and downgraded required requests are rejected
+  ---
+  duration_ms: 1030.27075
+  type: 'test'
+  ...
+# Subtest: declined proposals remain traceable and cannot simply be dropped
+ok 8 - declined proposals remain traceable and cannot simply be dropped
+  ---
+  duration_ms: 1794.5255
+  type: 'test'
+  ...
+# Subtest: mapping changes after approval invalidate its context
+ok 9 - mapping changes after approval invalidate its context
+  ---
+  duration_ms: 860.679291
+  type: 'test'
+  ...
+# Subtest: mixed proposal decisions cannot borrow the other original's adoption or decline
+ok 10 - mixed proposal decisions cannot borrow the other original's adoption or decline
+  ---
+  duration_ms: 1325.056167
+  type: 'test'
+  ...
+# Subtest: pilot variants must be a strict, existing subset before propagation
+ok 11 - pilot variants must be a strict, existing subset before propagation
+  ---
+  duration_ms: 192.384416
+  type: 'test'
+  ...
+# Subtest: propagation beyond the pilot waits for its independent PASS on current images
+ok 12 - propagation beyond the pilot waits for its independent PASS on current images
+  ---
+  duration_ms: 577.072625
+  type: 'test'
+  ...
+# Subtest: a pilot PASS does not survive a changed prescription
+ok 13 - a pilot PASS does not survive a changed prescription
+  ---
+  duration_ms: 184.285541
+  type: 'test'
+  ...
+# Subtest: plans without a pilot and legacy projects keep rendering every variant
+ok 14 - plans without a pilot and legacy projects keep rendering every variant
+  ---
+  duration_ms: 454.892208
+  type: 'test'
+  ...
+# Subtest: renamed outputs cannot inherit a pilot by guesswork
+ok 15 - renamed outputs cannot inherit a pilot by guesswork
+  ---
+  duration_ms: 168.444583
+  type: 'test'
+  ...
+# Subtest: same-ID strengths are required in both the template and completed visual review
+ok 16 - same-ID strengths are required in both the template and completed visual review
+  ---
+  duration_ms: 344.284459
+  type: 'test'
+  ...
+# Subtest: renamed originals with strengths cannot silently lose preservation through requirement bindings
+ok 17 - renamed originals with strengths cannot silently lose preservation through requirement bindings
+  ---
+  duration_ms: 231.427792
+  type: 'test'
+  ...
+# Subtest: visual validation also rejects an empty preservation list on renamed outputs
+ok 18 - visual validation also rejects an empty preservation list on renamed outputs
+  ---
+  duration_ms: 242.56075
+  type: 'test'
+  ...
+# Subtest: more outputs keep each original's strengths only on its matching output ID
+ok 19 - more outputs keep each original's strengths only on its matching output ID
+  ---
+  duration_ms: 144.668208
+  type: 'test'
+  ...
+# Subtest: fewer outputs cannot discard an original's strengths through request-only mappings
+ok 20 - fewer outputs cannot discard an original's strengths through request-only mappings
+  ---
+  duration_ms: 175.288584
+  type: 'test'
+  ...
+# Subtest: analysis template is not approvable without visual evidence
+ok 21 - analysis template is not approvable without visual evidence
+  ---
+  duration_ms: 625.920666
+  type: 'test'
+  ...
+# Subtest: independent reviewed analysis works without native scene
+ok 22 - independent reviewed analysis works without native scene
+  ---
+  duration_ms: 693.481125
+  type: 'test'
+  ...
+# Subtest: source modification invalidates analysis approval
+ok 23 - source modification invalidates analysis approval
+  ---
+  duration_ms: 269.814792
+  type: 'test'
+  ...
+# Subtest: producer cannot approve own analysis
+ok 24 - producer cannot approve own analysis
+  ---
+  duration_ms: 356.25725
+  type: 'test'
+  ...
+# Subtest: missing one of four analysis checks is rejected
+ok 25 - missing one of four analysis checks is rejected
+  ---
+  duration_ms: 326.318542
+  type: 'test'
+  ...
+# Subtest: analysis change invalidates prior review
+ok 26 - analysis change invalidates prior review
+  ---
+  duration_ms: 182.965833
+  type: 'test'
+  ...
+# Subtest: pending required decision blocks analysis use
+ok 27 - pending required decision blocks analysis use
+  ---
+  duration_ms: 42.871084
+  type: 'test'
+  ...
+# Subtest: declining a required request blocks analysis use
+ok 28 - declining a required request blocks analysis use
+  ---
+  duration_ms: 24.692167
+  type: 'test'
+  ...
+# Subtest: approved analysis is required when used for production and finalization
+ok 29 - approved analysis is required when used for production and finalization
+  ---
+  duration_ms: 194.9845
+  type: 'test'
+  ...
+# Subtest: unsealed purpose and constraints need deliberate sealing before review
+ok 30 - unsealed purpose and constraints need deliberate sealing before review
+  ---
+  duration_ms: 180.825417
+  type: 'test'
+  ...
+# Subtest: unknown design knowledge reference is rejected
+ok 31 - unknown design knowledge reference is rejected
+  ---
+  duration_ms: 133.54475
+  type: 'test'
+  ...
+# Subtest: source-list coverage prevents unreviewed original artifacts
+ok 32 - source-list coverage prevents unreviewed original artifacts
+  ---
+  duration_ms: 29.87375
+  type: 'test'
+  ...
+# Subtest: required scope cannot silently target a nonexistent original artifact
+ok 33 - required scope cannot silently target a nonexistent original artifact
+  ---
+  duration_ms: 133.180542
+  type: 'test'
+  ...
+# Subtest: new-from-brief records the skipped diagnosis stages and refuses a hidden analysis
+ok 34 - new-from-brief records the skipped diagnosis stages and refuses a hidden analysis
+  ---
+  duration_ms: 12.900458
+  type: 'test'
+  ...
+# Subtest: an undecided analysis mode is rejected instead of defaulting
+ok 35 - an undecided analysis mode is rejected instead of defaulting
+  ---
+  duration_ms: 101.95775
+  type: 'test'
+  ...
+# Subtest: analysis-template switches the case to source-artifact and copies the brief purpose
+ok 36 - analysis-template switches the case to source-artifact and copies the brief purpose
+  ---
+  duration_ms: 141.477917
+  type: 'test'
+  ...
+# Subtest: analysis purpose cannot differ from the brief purpose
+ok 37 - analysis purpose cannot differ from the brief purpose
+  ---
+  duration_ms: 101.823708
+  type: 'test'
+  ...
+# Subtest: analysis policy covers only declared yardsticks and fails closed when one is missing
+ok 38 - analysis policy covers only declared yardsticks and fails closed when one is missing
+  ---
+  duration_ms: 8.609125
+  type: 'test'
+  ...
+# Subtest: re-review archives the earlier analysis-review and records its FIX before handing out a fresh sheet
+ok 39 - re-review archives the earlier analysis-review and records its FIX before handing out a fresh sheet
+  ---
+  duration_ms: 182.537542
+  type: 'test'
+  ...
+# Subtest: 提案のtyped FIXは本質条項を保持し、台帳再読込と原文退避を経て最新PASSへ進める
+ok 40 - 提案のtyped FIXは本質条項を保持し、台帳再読込と原文退避を経て最新PASSへ進める
+  ---
+  duration_ms: 458.340542
+  type: 'test'
+  ...
+# Subtest: 提案の必須修正はserves欠落・空配列・未知本質IDを取込で拒否する
+ok 41 - 提案の必須修正はserves欠落・空配列・未知本質IDを取込で拒否する
+  ---
+  duration_ms: 327.277583
+  type: 'test'
+  ...
+# Subtest: 4条件全PASSの好みだけは提案PASSとして記録しcycleを消費しない
+ok 42 - 4条件全PASSの好みだけは提案PASSとして記録しcycleを消費しない
+  ---
+  duration_ms: 369.462833
+  type: 'test'
+  ...
+# Subtest: 提案のdecisionと4条件と必須修正が矛盾する記録を取込で拒否する
+ok 43 - 提案のdecisionと4条件と必須修正が矛盾する記録を取込で拒否する
+  ---
+  duration_ms: 1423.037459
+  type: 'test'
+  ...
+# Subtest: 旧文字列FIXは通常取込を止め、原記録を改変せず退避して新型の再評価へ移れる
+ok 44 - 旧文字列FIXは通常取込を止め、原記録を改変せず退避して新型の再評価へ移れる
+  ---
+  duration_ms: 767.177667
+  type: 'test'
+  ...
+# Subtest: preset なしの init は中立の既定値で、案件固有の値を持たない
+ok 45 - preset なしの init は中立の既定値で、案件固有の値を持たない
+  ---
+  duration_ms: 784.587375
+  type: 'test'
+  ...
+# Subtest: hyogo と hyogo-ai の preset は従来の兵庫の brief を同じ値で作る
+ok 46 - hyogo と hyogo-ai の preset は従来の兵庫の brief を同じ値で作る
+  ---
+  duration_ms: 295.959042
+  type: 'test'
+  ...
+# Subtest: preset.json の brief は例の brief と一致し、未知の preset は拒否する
+ok 47 - preset.json の brief は例の brief と一致し、未知の preset は拒否する
+  ---
+  duration_ms: 0.977166
+  type: 'test'
+  ...
+# Subtest: preset.json の sceneExample は宣言があれば、その preset フォルダ内に実在し scene の schema に従う
+ok 48 - preset.json の sceneExample は宣言があれば、その preset フォルダ内に実在し scene の schema に従う
+  ---
+  duration_ms: 205.49725
+  type: 'test'
+  ...
+# Subtest: hyogo-ai の素材は preset を選んだ案件だけが一覧・import・照合に使える
+ok 49 - hyogo-ai の素材は preset を選んだ案件だけが一覧・import・照合に使える
+  ---
+  duration_ms: 1070.654791
+  type: 'test'
+  ...
+# Subtest: 承認済み白黒の中央軸シーンが検査を通る
+ok 50 - 承認済み白黒の中央軸シーンが検査を通る
+  ---
+  duration_ms: 244.862875
+  type: 'test'
+  ...
+# Subtest: QRを除いた幅の中央90mmに寄せた文章を拒否
+ok 51 - QRを除いた幅の中央90mmに寄せた文章を拒否
+  ---
+  duration_ms: 187.583875
+  type: 'test'
+  ...
+# Subtest: 全幅の中央軸はQR位置を変えても不変
+ok 52 - 全幅の中央軸はQR位置を変えても不変
+  ---
+  duration_ms: 189.117333
+  type: 'test'
+  ...
+# Subtest: 軸なし方針では会場を中心から外した構図を許可
+ok 53 - 軸なし方針では会場を中心から外した構図を許可
+  ---
+  duration_ms: 464.068375
+  type: 'test'
+  ...
+# Subtest: 案件で指定した意味群だけを中心軸で検査
+ok 54 - 案件で指定した意味群だけを中心軸で検査
+  ---
+  duration_ms: 689.847666
+  type: 'test'
+  ...
+# Subtest: 紙面に無い軸意味群・空の軸指定・軸なしとの矛盾を拒否
+ok 55 - 紙面に無い軸意味群・空の軸指定・軸なしとの矛盾を拒否
+  ---
+  duration_ms: 1198.042625
+  type: 'test'
+  ...
+# Subtest: 必須トーンの欠落と案数超過を拒否し、案件ごとに変更できる
+ok 56 - 必須トーンの欠落と案数超過を拒否し、案件ごとに変更できる
+  ---
+  duration_ms: 1662.838666
+  type: 'test'
+  ...
+# Subtest: 色だけ違う構図を拒否
+ok 57 - 色だけ違う構図を拒否
+  ---
+  duration_ms: 248.234917
+  type: 'test'
+  ...
+# Subtest: 写真の承認cropを外すと拒否
+ok 58 - 写真の承認cropを外すと拒否
+  ---
+  duration_ms: 1040.393167
+  type: 'test'
+  ...
+# Subtest: 参考人物画像を実素材として使うことを拒否
+ok 59 - 参考人物画像を実素材として使うことを拒否
+  ---
+  duration_ms: 166.515584
+  type: 'test'
+  ...
+# Subtest: 生成プロンプトだけで背景生成済みにはならない
+ok 60 - 生成プロンプトだけで背景生成済みにはならない
+  ---
+  duration_ms: 377.40325
+  type: 'test'
+  ...
+# Subtest: 過去の駅前表記・必須住所の欠落を拒否
+ok 61 - 過去の駅前表記・必須住所の欠落を拒否
+  ---
+  duration_ms: 310.29425
+  type: 'test'
+  ...
+# Subtest: 非公開の新写真は確認記録なしでimportしない
+ok 62 - 非公開の新写真は確認記録なしでimportしない
+  ---
+  duration_ms: 1.516875
+  type: 'test'
+  ...
+# Subtest: プロジェクト外の相対パスを拒否
+ok 63 - プロジェクト外の相対パスを拒否
+  ---
+  duration_ms: 5.158958
+  type: 'test'
+  ...
+# Subtest: 中心ポリシーの上書きを入力契約で拒否
+ok 64 - 中心ポリシーの上書きを入力契約で拒否
+  ---
+  duration_ms: 162.749333
+  type: 'test'
+  ...
+# Subtest: 希望していない表現形式を拒否
+ok 65 - 希望していない表現形式を拒否
+  ---
+  duration_ms: 251.900417
+  type: 'test'
+  ...
+# Subtest: 意味群の付け替えで中央軸検査を回避できない
+ok 66 - 意味群の付け替えで中央軸検査を回避できない
+  ---
+  duration_ms: 162.574792
+  type: 'test'
+  ...
+# Subtest: 欠落した数値と単一案は入力契約で拒否
+ok 67 - 欠落した数値と単一案は入力契約で拒否
+  ---
+  duration_ms: 284.801584
+  type: 'test'
+  ...
+# Subtest: 公開条件の確認後も素材変更はSHAで検出
+ok 68 - 公開条件の確認後も素材変更はSHAで検出
+  ---
+  duration_ms: 322.84425
+  type: 'test'
+  ...
+# Subtest: 白外縁0mmと安全域を超える外縁を拒否
+ok 69 - 白外縁0mmと安全域を超える外縁を拒否
+  ---
+  duration_ms: 233.015417
+  type: 'test'
+  ...
+# Subtest: 新写真は各公開項目の確認内容が必要
+ok 70 - 新写真は各公開項目の確認内容が必要
+  ---
+  duration_ms: 12.008083
+  type: 'test'
+  ...
+# Subtest: 同梱写真の台帳から承認crop条件を削除しても拒否
+ok 71 - 同梱写真の台帳から承認crop条件を削除しても拒否
+  ---
+  duration_ms: 127.832042
+  type: 'test'
+  ...
+# Subtest: 同梱写真の顔の公開条件を変更しても拒否
+ok 72 - 同梱写真の顔の公開条件を変更しても拒否
+  ---
+  duration_ms: 94.707917
+  type: 'test'
+  ...
+# Subtest: QRとロゴ・被写体保護領域の重なりを拒否
+ok 73 - QRとロゴ・被写体保護領域の重なりを拒否
+  ---
+  duration_ms: 320.248292
+  type: 'test'
+  ...
+# Subtest: ロゴ枠への写真の誤指定を拒否
+ok 74 - ロゴ枠への写真の誤指定を拒否
+  ---
+  duration_ms: 99.030084
+  type: 'test'
+  ...
+# Subtest: 目視台帳は文字列false・不正日時・重複IDを拒否
+ok 75 - 目視台帳は文字列false・不正日時・重複IDを拒否
+  ---
+  duration_ms: 276.148917
+  type: 'test'
+  ...
+# Subtest: 初見の読み順は設計意図と照合し、自己申告で通さない
+ok 76 - 初見の読み順は設計意図と照合し、自己申告で通さない
+  ---
+  duration_ms: 403.787
+  type: 'test'
+  ...
+# Subtest: 分析で保持すると決めた点を新画像で確認しないと合格しない
+ok 77 - 分析で保持すると決めた点を新画像で確認しないと合格しない
+  ---
+  duration_ms: 187.477292
+  type: 'test'
+  ...
+# Subtest: 各案は比較して採らなかった候補と理由を持ち、他案の理由を流用しない
+ok 78 - 各案は比較して採らなかった候補と理由を持ち、他案の理由を流用しない
+  ---
+  duration_ms: 289.401792
+  type: 'test'
+  ...
+# Subtest: 同じSHAの素材は正規ID一件となり、別名と元ファイルを失わない
+ok 79 - 同じSHAの素材は正規ID一件となり、別名と元ファイルを失わない
+  ---
+  duration_ms: 21.640917
+  type: 'test'
+  ...
+# Subtest: 中立のbriefとsceneの例は入力schemaに従い、案件素材を含まない
+ok 80 - 中立のbriefとsceneの例は入力schemaに従い、案件素材を含まない
+  ---
+  duration_ms: 35.380917
+  type: 'test'
+  ...
+# Subtest: 中立のbriefとsceneの例は組み合わせると、URLなしの申込導線・主題・必須情報の検査を通る
+ok 81 - 中立のbriefとsceneの例は組み合わせると、URLなしの申込導線・主題・必須情報の検査を通る
+  ---
+  duration_ms: 450.268084
+  type: 'test'
+  ...
+# Subtest: 汎用の文書は特定presetの中身へMarkdownリンクしない
+ok 82 - 汎用の文書は特定presetの中身へMarkdownリンクしない
+  ---
+  duration_ms: 346.84975
+  type: 'test'
+  ...
+# Subtest: presetの無い素材は参照専用か、人物を含まないものに限る
+ok 83 - presetの無い素材は参照専用か、人物を含まないものに限る
+  ---
+  duration_ms: 0.824375
+  type: 'test'
+  ...
+# Subtest: 判断本文だけの変更で分析承認と完成レビューが失効する: references/design-rules.md
+ok 84 - 判断本文だけの変更で分析承認と完成レビューが失効する: references/design-rules.md
+  ---
+  duration_ms: 160.800708
+  type: 'test'
+  ...
+# Subtest: 判断本文だけの変更で分析承認と完成レビューが失効する: skills/assign-flyer-review/references/review-contract.md
+ok 85 - 判断本文だけの変更で分析承認と完成レビューが失効する: skills/assign-flyer-review/references/review-contract.md
+  ---
+  duration_ms: 172.790042
+  type: 'test'
+  ...
+# Subtest: 判断本文だけの変更で分析承認と完成レビューが失効する: references/workflow.md
+ok 86 - 判断本文だけの変更で分析承認と完成レビューが失効する: references/workflow.md
+  ---
+  duration_ms: 124.911666
+  type: 'test'
+  ...
+# Subtest: CSS color parser preserves alpha and rejects invalid hex
+ok 87 - CSS color parser preserves alpha and rejects invalid hex
+  ---
+  duration_ms: 12.737125
+  type: 'test'
+  ...
+# Subtest: invisible paint and same-color backgrounds have no contrast
+ok 88 - invisible paint and same-color backgrounds have no contrast
+  ---
+  duration_ms: 7.702708
+  type: 'test'
+  ...
+# Subtest: layout diagnostics measure actual glyph groups rather than frame centers
+ok 89 - layout diagnostics measure actual glyph groups rather than frame centers
+  ---
+  duration_ms: 16.63275
+  type: 'test'
+  ...
+# Subtest: 配置・配色・余白の設計意図がない案を描画契約で拒否
+ok 90 - 配置・配色・余白の設計意図がない案を描画契約で拒否
+  ---
+  duration_ms: 1324.476292
+  type: 'test'
+  ...
+# Subtest: 無関係なsignature追加キーで構図差を水増しできない
+ok 91 - 無関係なsignature追加キーで構図差を水増しできない
+  ---
+  duration_ms: 736.582291
+  type: 'test'
+  ...
+# Subtest: 読み順と群の配置理由は実在する全群を指す
+ok 92 - 読み順と群の配置理由は実在する全群を指す
+  ---
+  duration_ms: 531.116417
+  type: 'test'
+  ...
+# Subtest: 宣言した文字色の理由と紙面内の余白領域が必要
+ok 93 - 宣言した文字色の理由と紙面内の余白領域が必要
+  ---
+  duration_ms: 772.769625
+  type: 'test'
+  ...
+# Subtest: 全必須文字を透明にしても掲載済みとは扱わない
+ok 94 - 全必須文字を透明にしても掲載済みとは扱わない
+  ---
+  duration_ms: 658.568084
+  type: 'test'
+  ...
+# Subtest: 独立レビュアーの具体的な5観点と3レンズ参照を受理
+ok 95 - 独立レビュアーの具体的な5観点と3レンズ参照を受理
+  ---
+  duration_ms: 304.888417
+  type: 'test'
+  ...
+# Subtest: 観点欠落・一言OK・不正な設計参照・紙面外の証拠を拒否
+ok 96 - 観点欠落・一言OK・不正な設計参照・紙面外の証拠を拒否
+  ---
+  duration_ms: 1733.595625
+  type: 'test'
+  ...
+# Subtest: 画像を見ず全案へ同じ所見を複写する台帳を拒否
+ok 97 - 画像を見ず全案へ同じ所見を複写する台帳を拒否
+  ---
+  duration_ms: 465.28525
+  type: 'test'
+  ...
+# Subtest: 自己レビューと制作担当のidentity別名空白だけの変更を拒否
+ok 98 - 自己レビューと制作担当のidentity別名空白だけの変更を拒否
+  ---
+  duration_ms: 1148.379125
+  type: 'test'
+  ...
+# Subtest: 3専門担当のmodeは3人、知見レンズmodeは同一独立reviewerを要求
+ok 99 - 3専門担当のmodeは3人、知見レンズmodeは同一独立reviewerを要求
+  ---
+  duration_ms: 1181.179542
+  type: 'test'
+  ...
+# Subtest: 画像のSHAだけでなく品質基準の旧判定も拒否
+ok 100 - 画像のSHAだけでなく品質基準の旧判定も拒否
+  ---
+  duration_ms: 224.5115
+  type: 'test'
+  ...
+# Subtest: 制作目的の読者・価値・行動は欠落や空白のまま進めない
+ok 101 - 制作目的の読者・価値・行動は欠落や空白のまま進めない
+  ---
+  duration_ms: 1015.734958
+  type: 'test'
+  ...
+# Subtest: 新規・presetとも目的は今回の回答を入れる空欄で初期化
+ok 102 - 新規・presetとも目的は今回の回答を入れる空欄で初期化
+  ---
+  duration_ms: 3.927416
+  type: 'test'
+  ...
+# Subtest: 別用途の目的3点が背景指示へ実値で反映される
+ok 103 - 別用途の目的3点が背景指示へ実値で反映される
+  ---
+  duration_ms: 163.68725
+  type: 'test'
+  ...
+# Subtest: 必須修正は分類・本質条項・戻り先を持ち、FIX の案は合格にならない
+ok 104 - 必須修正は分類・本質条項・戻り先を持ち、FIX の案は合格にならない
+  ---
+  duration_ms: 158.905292
+  type: 'test'
+  ...
+# Subtest: 好み・戻り先の取り違え・本質条項に無い serves・形の崩れた必須修正を拒否
+ok 105 - 好み・戻り先の取り違え・本質条項に無い serves・形の崩れた必須修正を拒否
+  ---
+  duration_ms: 761.818209
+  type: 'test'
+  ...
+# Subtest: 好みは preferenceNotes に残しても合格を妨げない
+ok 106 - 好みは preferenceNotes に残しても合格を妨げない
+  ---
+  duration_ms: 94.150208
+  type: 'test'
+  ...
+# Subtest: fixRouting は workflow.md の改善と納品の表と一致する
+ok 107 - fixRouting は workflow.md の改善と納品の表と一致する
+  ---
+  duration_ms: 2.979209
+  type: 'test'
+  ...
+# Subtest: 昇格条件に当たらない案は専門役なしで合格し、テンプレートも専門役を出さない
+ok 108 - 昇格条件に当たらない案は専門役なしで合格し、テンプレートも専門役を出さない
+  ---
+  duration_ms: 332.59325
+  type: 'test'
+  ...
+# Subtest: 確信度 low の観点はその担当の専門役を必須にする
+ok 109 - 確信度 low の観点はその担当の専門役を必須にする
+  ---
+  duration_ms: 142.634208
+  type: 'test'
+  ...
+# Subtest: 利用者が指定した専門役は全案で必須、未知の役名は拒否
+ok 110 - 利用者が指定した専門役は全案で必須、未知の役名は拒否
+  ---
+  duration_ms: 198.104958
+  type: 'test'
+  ...
+# Subtest: 前回 FIX が出た観点は次のレビューで担当の専門役を必須にする
+ok 111 - 前回 FIX が出た観点は次のレビューで担当の専門役を必須にする
+  ---
+  duration_ms: 140.564125
+  type: 'test'
+  ...
+# Subtest: 描画より前の実見と、描画記録と違う画像のレビューを拒否
+ok 112 - 描画より前の実見と、描画記録と違う画像のレビューを拒否
+  ---
+  duration_ms: 118.684042
+  type: 'test'
+  ...
+# Subtest: 前の画像の観察文を新しい画像へ写したレビューを拒否
+ok 113 - 前の画像の観察文を新しい画像へ写したレビューを拒否
+  ---
+  duration_ms: 140.444833
+  type: 'test'
+  ...
+# Subtest: 入力・画像・規範が同じ案は前回の独立 PASS を引き継ぐ
+ok 114 - 入力・画像・規範が同じ案は前回の独立 PASS を引き継ぐ
+  ---
+  duration_ms: 259.06825
+  type: 'test'
+  ...
+# Subtest: 1案だけ変えるとその案だけ失効し、共通部分を変えると全案が失効する
+ok 115 - 1案だけ変えるとその案だけ失効し、共通部分を変えると全案が失効する
+  ---
+  duration_ms: 92.369291
+  type: 'test'
+  ...
+# Subtest: 書き換えた再利用・画像の違う再利用・存在しない元への再利用を拒否
+ok 116 - 書き換えた再利用・画像の違う再利用・存在しない元への再利用を拒否
+  ---
+  duration_ms: 407.890625
+  type: 'test'
+  ...
+# Subtest: 退避は既存の退避を上書きしない
+ok 117 - 退避は既存の退避を上書きしない
+  ---
+  duration_ms: 93.645459
+  type: 'test'
+  ...
+# Subtest: 基準は依頼文・purpose・確定事実を固定し、ハッシュで改ざんを検出できる
+ok 118 - 基準は依頼文・purpose・確定事実を固定し、ハッシュで改ざんを検出できる
+  ---
+  duration_ms: 1186.396333
+  type: 'test'
+  ...
+# Subtest: 基準は上書きできず、未解決のヒアリングや食い違う依頼文では作らない
+ok 119 - 基準は上書きできず、未解決のヒアリングや食い違う依頼文では作らない
+  ---
+  duration_ms: 286.094708
+  type: 'test'
+  ...
+# Subtest: 承認記録の無い目的や事実の変更は drift になり、承認記録があれば通る
+ok 120 - 承認記録の無い目的や事実の変更は drift になり、承認記録があれば通る
+  ---
+  duration_ms: 44.326667
+  type: 'test'
+  ...
+# Subtest: 基準ファイルを書き換えると drift になる
+ok 121 - 基準ファイルを書き換えると drift になる
+  ---
+  duration_ms: 16.979333
+  type: 'test'
+  ...
+# Subtest: intake.json が無い旧案件は brief から基準を作り、依頼文を必須にする
+ok 122 - intake.json が無い旧案件は brief から基準を作り、依頼文を必須にする
+  ---
+  duration_ms: 91.900875
+  type: 'test'
+  ...
+# Subtest: clauses は本質の正本を読むだけで返す
+ok 123 - clauses は本質の正本を読むだけで返す
+  ---
+  duration_ms: 0.53025
+  type: 'test'
+  ...
+# Subtest: essence-revise records the user-approved change so essence-check passes again
+ok 124 - essence-revise records the user-approved change so essence-check passes again
+  ---
+  duration_ms: 10.087125
+  type: 'test'
+  ...
+# Subtest: feedbackのない従来案件は新しい要求台帳なしで通る
+ok 125 - feedbackのない従来案件は新しい要求台帳なしで通る
+  ---
+  duration_ms: 2365.352666
+  type: 'test'
+  ...
+# Subtest: 元画像・対象要素・分析・採否理由と適用意図を要求ごとに記録する
+ok 126 - 元画像・対象要素・分析・採否理由と適用意図を要求ごとに記録する
+  ---
+  duration_ms: 2063.941458
+  type: 'test'
+  ...
+# Subtest: 明示必須指示の見送りを拒否し、具体的根拠のある維持と提案見送りは許可
+ok 127 - 明示必須指示の見送りを拒否し、具体的根拠のある維持と提案見送りは許可
+  ---
+  duration_ms: 1862.645709
+  type: 'test'
+  ...
+# Subtest: 各対象案で要求別の最終評価と既存criteria証拠の参照を必須にする
+ok 128 - 各対象案で要求別の最終評価と既存criteria証拠の参照を必須にする
+  ---
+  duration_ms: 2948.330458
+  type: 'test'
+  ...
+# Subtest: 対象省略とallは全案を評価し、未決の要求は完成しない
+ok 129 - 対象省略とallは全案を評価し、未決の要求は完成しない
+  ---
+  duration_ms: 533.3215
+  type: 'test'
+  ...
+# Subtest: 維持は元画像と同じSHAでも評価でき、要求変更後の旧レビューは使えない
+ok 130 - 維持は元画像と同じSHAでも評価でき、要求変更後の旧レビューは使えない
+  ---
+  duration_ms: 454.60175
+  type: 'test'
+  ...
+# Subtest: cycleBudget は composition の revisionBudget.maxCycles と一致する
+ok 131 - cycleBudget は composition の revisionBudget.maxCycles と一致する
+  ---
+  duration_ms: 16.476958
+  type: 'test'
+  ...
+# Subtest: FIX の評価は 1 cycle を消費し、同じ記録を何度読んでも・退避しても 1 件のまま
+ok 132 - FIX の評価は 1 cycle を消費し、同じ記録を何度読んでも・退避しても 1 件のまま
+  ---
+  duration_ms: 2053.216791
+  type: 'test'
+  ...
+# Subtest: R4: 同じ所見・同じ画像の再提出と、同じ画像への追記と、好みだけの所見は消費しない
+ok 133 - R4: 同じ所見・同じ画像の再提出と、同じ画像への追記と、好みだけの所見は消費しない
+  ---
+  duration_ms: 408.957541
+  type: 'test'
+  ...
+# Subtest: 退避済みの旧い形の FIX は分類なしで数え、後のコマンドを止めない
+ok 134 - 退避済みの旧い形の FIX は分類なしで数え、後のコマンドを止めない
+  ---
+  duration_ms: 145.191042
+  type: 'test'
+  ...
+# Subtest: 提案評価の FIX は前提崩れと推測せず分析へ戻し、同じ予算で数える
+ok 135 - 提案評価の FIX は前提崩れと推測せず分析へ戻し、同じ予算で数える
+  ---
+  duration_ms: 500.834666
+  type: 'test'
+  ...
+# Subtest: 台帳の形が崩れていれば止め、予算の判定は design-contract.json の値で行う
+ok 136 - 台帳の形が崩れていれば止め、予算の判定は design-contract.json の値で行う
+  ---
+  duration_ms: 177.310167
+  type: 'test'
+  ...
+# Subtest: cycle-status は台帳を作り、要約を返す
+ok 137 - cycle-status は台帳を作り、要約を返す
+  ---
+  duration_ms: 70.769042
+  type: 'test'
+  ...
+# Subtest: 予算を超えた finalize は INCOMPLETE を返し、納品物と古い完了記録を残さない
+ok 138 - 予算を超えた finalize は INCOMPLETE を返し、納品物と古い完了記録を残さない
+  ---
+  duration_ms: 149.109292
+  type: 'test'
+  ...
+# Subtest: 予算内なら cycle の関門を通り、後段の失敗は pending で残す
+ok 139 - 予算内なら cycle の関門を通り、後段の失敗は pending で残す
+  ---
+  duration_ms: 93.702417
+  type: 'test'
+  ...
+# Subtest: 未解決のヒアリングは予算超過より先に止め、INCOMPLETE にしない
+ok 140 - 未解決のヒアリングは予算超過より先に止め、INCOMPLETE にしない
+  ---
+  duration_ms: 362.5525
+  type: 'test'
+  ...
+# Subtest: 承認の無い本質アンカーの変更は予算超過より先に止め、ヒアリングの未解決はそれより先
+ok 141 - 承認の無い本質アンカーの変更は予算超過より先に止め、ヒアリングの未解決はそれより先
+  ---
+  duration_ms: 40.138958
+  type: 'test'
+  ...
+# Subtest: review-template は前の評価を reviews/<label>/ へ退避してから作り直し、上書きしない
+ok 142 - review-template は前の評価を reviews/<label>/ へ退避してから作り直し、上書きしない
+  ---
+  duration_ms: 179.47125
+  type: 'test'
+  ...
+# Subtest: verify は案ごとの指紋で失効を判定し、共通部分の変更は全案を失効させる
+ok 143 - verify は案ごとの指紋で失効を判定し、共通部分の変更は全案を失効させる
+  ---
+  duration_ms: 1903.573375
+  type: 'test'
+  ...
+# Subtest: variantFingerprint の無い旧い描画記録は全体の指紋で判定する
+ok 144 - variantFingerprint の無い旧い描画記録は全体の指紋で判定する
+  ---
+  duration_ms: 510.036417
+  type: 'test'
+  ...
+# Subtest: 先行試作は analysisMode で判定し、試作案以外の変更では試作の PASS を失効させない
+ok 145 - 先行試作は analysisMode で判定し、試作案以外の変更では試作の PASS を失効させない
+  ---
+  duration_ms: 508.218625
+  type: 'test'
+  ...
+# Subtest: premise を intake へ返す正規FIXは台帳再読込と退避・再開でも1 cycleを保つ
+ok 146 - premise を intake へ返す正規FIXは台帳再読込と退避・再開でも1 cycleを保つ
+  ---
+  duration_ms: 1528.478416
+  type: 'test'
+  ...
+# Subtest: 一括シートは全ての確定事実と必須の質問を 1 枚に載せる
+ok 147 - 一括シートは全ての確定事実と必須の質問を 1 枚に載せる
+  ---
+  duration_ms: 38.365292
+  type: 'test'
+  ...
+# Subtest: 資料から読み取った値は「確認のみ」になり、使えない値は理由付きで質問に残る
+ok 148 - 資料から読み取った値は「確認のみ」になり、使えない値は理由付きで質問に残る
+  ---
+  duration_ms: 432.580458
+  type: 'test'
+  ...
+# Subtest: learn の参考値はそのまま受け取り、要確認として記入し、事実には記入しない
+ok 149 - learn の参考値はそのまま受け取り、要確認として記入し、事実には記入しない
+  ---
+  duration_ms: 520.094792
+  type: 'test'
+  ...
+# Subtest: 回答には出典が付き、brief と intake.json に書かれる（plugin の外だけ）
+ok 150 - 回答には出典が付き、brief と intake.json に書かれる（plugin の外だけ）
+  ---
+  duration_ms: 22.888167
+  type: 'test'
+  ...
+# Subtest: 仮置きの確定事実は未解決に残り、assertResolved が止める
+ok 151 - 仮置きの確定事実は未解決に残り、assertResolved が止める
+  ---
+  duration_ms: 43.044083
+  type: 'test'
+  ...
+# Subtest: residual は不足・矛盾・確認だけを返し、答えた質問を聞き直さない
+ok 152 - residual は不足・矛盾・確認だけを返し、答えた質問を聞き直さない
+  ---
+  duration_ms: 82.393292
+  type: 'test'
+  ...
+# Subtest: 確定事実の確認は、一覧を見る前や事実を直した回には受け付けない
+ok 153 - 確定事実の確認は、一覧を見る前や事実を直した回には受け付けない
+  ---
+  duration_ms: 42.422458
+  type: 'test'
+  ...
+# Subtest: 様式提案: 雰囲気の言葉だけの様式は styleProposalNeeded に根拠を返す
+ok 154 - 様式提案: 雰囲気の言葉だけの様式は styleProposalNeeded に根拠を返す
+  ---
+  duration_ms: 37.336875
+  type: 'test'
+  ...
+# Subtest: 様式提案: proposal の値が選ばれた案と一致しなければ未解決、一致すれば決まる
+ok 155 - 様式提案: proposal の値が選ばれた案と一致しなければ未解決、一致すれば決まる
+  ---
+  duration_ms: 102.406666
+  type: 'test'
+  ...
+# Subtest: 様式提案: 様式が決まっていないだけでは assertResolved は止めない
+ok 156 - 様式提案: 様式が決まっていないだけでは assertResolved は止めない
+  ---
+  duration_ms: 10.459667
+  type: 'test'
+  ...
+# Subtest: preset の前回の値は確かめるまで使わず、同じ値の回答は preset-reconfirmed になる
+ok 157 - preset の前回の値は確かめるまで使わず、同じ値の回答は preset-reconfirmed になる
+  ---
+  duration_ms: 8.096917
+  type: 'test'
+  ...
+# Subtest: 汎用の質問に案件固有の値を書かない（preset にだけ置く）
+ok 158 - 汎用の質問に案件固有の値を書かない（preset にだけ置く）
+  ---
+  duration_ms: 12.878625
+  type: 'test'
+  ...
+# Subtest: URL がない当日受付も、行動案内を事実として確認してから制作へ渡す
+ok 159 - URL がない当日受付も、行動案内を事実として確認してから制作へ渡す
+  ---
+  duration_ms: 14.23125
+  type: 'test'
+  ...
+# Subtest: URL なしでも行動案内の欠落・仮置きは確認済みにしない
+ok 160 - URL なしでも行動案内の欠落・仮置きは確認済みにしない
+  ---
+  duration_ms: 52.106
+  type: 'test'
+  ...
+# Subtest: 資料に明示された様式はtemplateの雛形からdocument出典のままapplyへ往復できる
+ok 161 - 資料に明示された様式はtemplateの雛形からdocument出典のままapplyへ往復できる
+  ---
+  duration_ms: 10.436792
+  type: 'test'
+  ...
+# Subtest: finalize 済みの案件を記録すると、一時 HOME の台帳へ 1 行追加される
+ok 162 - finalize 済みの案件を記録すると、一時 HOME の台帳へ 1 行追加される
+  ---
+  duration_ms: 949.710167
+  type: 'test'
+  ...
+# Subtest: 同じ案件を同じ finalize のまま再記録しても行は増えない（冪等）
+ok 163 - 同じ案件を同じ finalize のまま再記録しても行は増えない（冪等）
+  ---
+  duration_ms: 15.186709
+  type: 'test'
+  ...
+# Subtest: finalize をやり直すと新しい行になるが、report は同じ案件を 1 件として数える
+ok 164 - finalize をやり直すと新しい行になるが、report は同じ案件を 1 件として数える
+  ---
+  duration_ms: 55.649792
+  type: 'test'
+  ...
+# Subtest: finalize されていない案件は記録しない
+ok 165 - finalize されていない案件は記録しない
+  ---
+  duration_ms: 12.162292
+  type: 'test'
+  ...
+# Subtest: 電話番号・氏名・URL・事実値・自由記述は台帳へ入らない
+ok 166 - 電話番号・氏名・URL・事実値・自由記述は台帳へ入らない
+  ---
+  duration_ms: 26.626625
+  type: 'test'
+  ...
+# Subtest: 許可リスト外のキー・長い文字列・個人情報らしい値は保存前に止める（fail-closed）
+ok 167 - 許可リスト外のキー・長い文字列・個人情報らしい値は保存前に止める（fail-closed）
+  ---
+  duration_ms: 22.060583
+  type: 'test'
+  ...
+# Subtest: 入力ファイルが欠けていても記録でき、欠けたものは missingInputs に残る
+ok 168 - 入力ファイルが欠けていても記録でき、欠けたものは missingInputs に残る
+  ---
+  duration_ms: 4.10075
+  type: 'test'
+  ...
+# Subtest: 台帳を plugin の中に置く設定は拒否し、何も作らない
+ok 169 - 台帳を plugin の中に置く設定は拒否し、何も作らない
+  ---
+  duration_ms: 6.06675
+  type: 'test'
+  ...
+# Subtest: 件数が minCases 未満なら提案せず insufficient として件数だけ返す
+ok 170 - 件数が minCases 未満なら提案せず insufficient として件数だけ返す
+  ---
+  duration_ms: 16.645916
+  type: 'test'
+  ...
+# Subtest: 3 件以上で同じ質問が 1 回目に未確定なら、聞き方・順序の見直しを提案する
+ok 171 - 3 件以上で同じ質問が 1 回目に未確定なら、聞き方・順序の見直しを提案する
+  ---
+  duration_ms: 82.685
+  type: 'test'
+  ...
+# Subtest: 壊れた行や許可リストに合わない行は数えずに skippedLines へ回す
+ok 172 - 壊れた行や許可リストに合わない行は数えずに skippedLines へ回す
+  ---
+  duration_ms: 5.203666
+  type: 'test'
+  ...
+# Subtest: suggest は事実値を返さず、参考値は suggestion・要確認として返す
+ok 173 - suggest は事実値を返さず、参考値は suggestion・要確認として返す
+  ---
+  duration_ms: 11.780625
+  type: 'test'
+  ...
+# Subtest: 様式: 提案から 2 番目を選ぶと source=proposal・chosenRank=2・その label だけを記録する
+ok 174 - 様式: 提案から 2 番目を選ぶと source=proposal・chosenRank=2・その label だけを記録する
+  ---
+  duration_ms: 5.573292
+  type: 'test'
+  ...
+# Subtest: 様式: おまかせは delegated、様式名の指定は answer として記録し、answer では提案ファイル欠落を数えない
+ok 175 - 様式: おまかせは delegated、様式名の指定は answer として記録し、answer では提案ファイル欠落を数えない
+  ---
+  duration_ms: 20.006125
+  type: 'test'
+  ...
+# Subtest: 様式: 40 字を超えるラベルやパスらしいラベルは切り詰めずに拒否し、台帳へ書かない
+ok 176 - 様式: 40 字を超えるラベルやパスらしいラベルは切り詰めずに拒否し、台帳へ書かない
+  ---
+  duration_ms: 15.387792
+  type: 'test'
+  ...
+# Subtest: 様式: report は言葉にできなかった割合 (f) と採択ラベルの傾向 (g) を出し、suggest は参考候補として返す
+ok 177 - 様式: report は言葉にできなかった割合 (f) と採択ラベルの傾向 (g) を出し、suggest は参考候補として返す
+  ---
+  duration_ms: 109.614708
+  type: 'test'
+  ...
+# Subtest: 様式: 件数が minCases 未満なら (f)(g) は insufficient で、suggest も様式を返さない
+ok 178 - 様式: 件数が minCases 未満なら (f)(g) は insufficient で、suggest も様式を返さない
+  ---
+  duration_ms: 8.590125
+  type: 'test'
+  ...
+# Subtest: 同じ所見・同じ画像の再提出は、FIX の傾向に二重に数えない
+ok 179 - 同じ所見・同じ画像の再提出は、FIX の傾向に二重に数えない
+  ---
+  duration_ms: 4.9455
+  type: 'test'
+  ...
+# Subtest: 資料で明示された様式は出典documentを保持し、集計では明示指定answerへ数える
+ok 180 - 資料で明示された様式は出典documentを保持し、集計では明示指定answerへ数える
+  ---
+  duration_ms: 4.764125
+  type: 'test'
+  ...
+# Subtest: 新旧の提案差戻しはcycleを維持し、前提崩れの統計と提案を増やさない
+ok 181 - 新旧の提案差戻しはcycleを維持し、前提崩れの統計と提案を増やさない
+  ---
+  duration_ms: 10.440625
+  type: 'test'
+  ...
+# Subtest: 提案レビューの好みは既存の好み集計へ入り、前提崩れとは分けて記録される
+ok 182 - 提案レビューの好みは既存の好み集計へ入り、前提崩れとは分けて記録される
+  ---
+  duration_ms: 2.475167
+  type: 'test'
+  ...
+# Subtest: 結合した実PDFは全案・白案の順序とページ内容が一致すると通る
+ok 183 - 結合した実PDFは全案・白案の順序とページ内容が一致すると通る # SKIP
+  ---
+  duration_ms: 2.155584
+  type: 'test'
+  ...
+# Subtest: 結合した実PDFは逆順ページと元PDFのSHA不一致を拒否する
+ok 184 - 結合した実PDFは逆順ページと元PDFのSHA不一致を拒否する # SKIP
+  ---
+  duration_ms: 0.209292
+  type: 'test'
+  ...
+# Subtest: page-copy merge preserves high precision Type3 FontMatrix and source files
+ok 185 - page-copy merge preserves high precision Type3 FontMatrix and source files
+  ---
+  duration_ms: 978.041125
+  type: 'test'
+  ...
+# Subtest: page-copy merge matches every real Type3 page pixel without tolerance
+ok 186 - page-copy merge matches every real Type3 page pixel without tolerance
+  ---
+  duration_ms: 5563.933
+  type: 'test'
+  ...
+# Subtest: merge rejects overwriting a source PDF and leaves an existing output intact on failure
+ok 187 - merge rejects overwriting a source PDF and leaves an existing output intact on failure
+  ---
+  duration_ms: 20.576
+  type: 'test'
+  ...
+# Subtest: merge rejects a source changed while its pages are copied
+ok 188 - merge rejects a source changed while its pages are copied
+  ---
+  duration_ms: 35.8045
+  type: 'test'
+  ...
+# Subtest: package checks read the registry and reject drift in both directions
+ok 189 - package checks read the registry and reject drift in both directions
+  ---
+  duration_ms: 6622.640875
+  type: 'test'
+  ...
+# Subtest: package asset gate rejects unsafe scope, aliases, privacy types and changed originals
+ok 190 - package asset gate rejects unsafe scope, aliases, privacy types and changed originals
+  ---
+  duration_ms: 3895.812417
+  type: 'test'
+  ...
+# Subtest: FIX routing agrees across composition, contract and workflow without bypassing the dependency DAG
+ok 191 - FIX routing agrees across composition, contract and workflow without bypassing the dependency DAG
+  ---
+  duration_ms: 342.104833
+  type: 'test'
+  ...
+# Subtest: policy coverage follows usedBy DD bodies, related sections and stage contracts
+ok 192 - policy coverage follows usedBy DD bodies, related sections and stage contracts
+  ---
+  duration_ms: 316.418292
+  type: 'test'
+  ...
+# Subtest: URLがない案件は来場案内を必須掲載し、HTMLにQRを出さない
+ok 193 - URLがない案件は来場案内を必須掲載し、HTMLにQRを出さない
+  ---
+  duration_ms: 2548.958167
+  type: 'test'
+  ...
+# Subtest: URLなしを理由に行動案内の空白・掲載漏れ・古いQR枠を通さない
+ok 194 - URLなしを理由に行動案内の空白・掲載漏れ・古いQR枠を通さない
+  ---
+  duration_ms: 2375.159666
+  type: 'test'
+  ...
+# Subtest: URLありの案件は引き続きHTTP(S)と22mm以上の全案QRを必須にする
+ok 195 - URLありの案件は引き続きHTTP(S)と22mm以上の全案QRを必須にする
+  ---
+  duration_ms: 616.669625
+  type: 'test'
+  ...
+# Subtest: 確定した来場案内の無承認変更は本質アンカーが検出する
+ok 196 - 確定した来場案内の無承認変更は本質アンカーが検出する
+  ---
+  duration_ms: 460.829083
+  type: 'test'
+  ...
+# Subtest: 納品indexは白案があるときだけ白系PDFへリンクし、全案の印刷用PDFとPNGを並べる
+ok 197 - 納品indexは白案があるときだけ白系PDFへリンクし、全案の印刷用PDFとPNGを並べる
+  ---
+  duration_ms: 111.251667
+  type: 'test'
+  ...
+# Subtest: 納品indexは案件名と案名を文字として埋め込み、HTMLとして解釈させない
+ok 198 - 納品indexは案件名と案名を文字として埋め込み、HTMLとして解釈させない
+  ---
+  duration_ms: 81.252666
+  type: 'test'
+  ...
+# Subtest: 実PDF経路: QRなし・白案なしでも検査と納品を通り、古い白PDFとリンクを残さない
+ok 199 - 実PDF経路: QRなし・白案なしでも検査と納品を通り、古い白PDFとリンクを残さない # SKIP
+  ---
+  duration_ms: 2.233792
+  type: 'test'
+  ...
+# Subtest: analysisMode decides the analysis gate for the fixture and a new init
+ok 200 - analysisMode decides the analysis gate for the fixture and a new init
+  ---
+  duration_ms: 790.122709
+  type: 'test'
+  ...
+# Subtest: source-artifact production rejects missing analysis before opening a browser
+ok 201 - source-artifact production rejects missing analysis before opening a browser
+  ---
+  duration_ms: 554.913625
+  type: 'test'
+  ...
+# Subtest: pending feedback blocks production
+ok 202 - pending feedback blocks production
+  ---
+  duration_ms: 333.721958
+  type: 'test'
+  ...
+# Subtest: vertical mode reaches HTML and defaults preserve horizontal writing
+ok 203 - vertical mode reaches HTML and defaults preserve horizontal writing
+  ---
+  duration_ms: 388.831375
+  type: 'test'
+  ...
+# Subtest: vertical writing without height or unsupported direction is rejected
+ok 204 - vertical writing without height or unsupported direction is rejected
+  ---
+  duration_ms: 396.519541
+  type: 'test'
+  ...
+# Subtest: rotation is explicitly unsupported
+ok 205 - rotation is explicitly unsupported
+  ---
+  duration_ms: 141.995708
+  type: 'test'
+  ...
+# Subtest: render frozen fingerprint rejects input changed after start
+ok 206 - render frozen fingerprint rejects input changed after start
+  ---
+  duration_ms: 238.112167
+  type: 'test'
+  ...
+# Subtest: render frozen fingerprint rejects changed source bytes
+ok 207 - render frozen fingerprint rejects changed source bytes
+  ---
+  duration_ms: 152.9805
+  type: 'test'
+  ...
+# Subtest: baseline削除はrenderとfinalizeの前で停止しcycle台帳を変えない
+ok 208 - baseline削除はrenderとfinalizeの前で停止しcycle台帳を変えない
+  ---
+  duration_ms: 71.185583
+  type: 'test'
+  ...
+# Subtest: 目的の無承認変更はrenderとfinalizeの前で停止する
+ok 209 - 目的の無承認変更はrenderとfinalizeの前で停止する
+  ---
+  duration_ms: 70.044625
+  type: 'test'
+  ...
+# Subtest: intakeのない旧briefは明示baseline作成後に次の制作関門へ進める
+ok 210 - intakeのない旧briefは明示baseline作成後に次の制作関門へ進める
+  ---
+  duration_ms: 211.403041
+  type: 'test'
+  ...
+# Subtest: single-use rejects a second selected ref even under a larger legitimate character limit
+ok 211 - single-use rejects a second selected ref even under a larger legitimate character limit
+  ---
+  duration_ms: 887.614958
+  type: 'test'
+  ...
+# Subtest: single-use rejects a direct literal reprint of a selected value
+ok 212 - single-use rejects a direct literal reprint of a selected value
+  ---
+  duration_ms: 360.382625
+  type: 'test'
+  ...
+# Subtest: single-use rejects two copies inside one directly authored block
+ok 213 - single-use rejects two copies inside one directly authored block
+  ---
+  duration_ms: 177.969709
+  type: 'test'
+  ...
+# Subtest: single-use matches Unicode compatibility normalization and whitespace variants
+ok 214 - single-use matches Unicode compatibility normalization and whitespace variants
+  ---
+  duration_ms: 125.308875
+  type: 'test'
+  ...
+# Subtest: selected ref must occur exactly once even when a literal supplies its words
+ok 215 - selected ref must occur exactly once even when a literal supplies its words
+  ---
+  duration_ms: 143.726917
+  type: 'test'
+  ...
+# Subtest: single-use array values are one logical group across their own lines
+ok 216 - single-use array values are one logical group across their own lines
+  ---
+  duration_ms: 406.51275
+  type: 'test'
+  ...
+# Subtest: name-list matching does not count a short name within another name
+ok 217 - name-list matching does not count a short name within another name
+  ---
+  duration_ms: 139.12575
+  type: 'test'
+  ...
+# Subtest: unknown and ambiguous short selected values give configuration errors
+ok 218 - unknown and ambiguous short selected values give configuration errors
+  ---
+  duration_ms: 233.176417
+  type: 'test'
+  ...
+# Subtest: legacy briefs and intentional unselected repetition remain compatible
+ok 219 - legacy briefs and intentional unselected repetition remain compatible
+  ---
+  duration_ms: 291.74175
+  type: 'test'
+  ...
+# Subtest: Hyogo preset selects factual groups and copies without changing date, fee or QR action
+ok 220 - Hyogo preset selects factual groups and copies without changing date, fee or QR action
+  ---
+  duration_ms: 77.928167
+  type: 'test'
+  ...
+1..220
+# tests 220
+# suites 0
+# pass 216
+# fail 0
+# cancelled 0
+# skipped 4
+# todo 0
+# duration_ms 15543.687541

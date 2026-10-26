@@ -12,10 +12,10 @@ iteration: null
 title: "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-18T08:10:00Z"
-updated_at: "2026-08-10T01:48:56.084284Z"
+updated_at: "2026-10-25T01:25:46.304061Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
-related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure","issue-hooks-entry-point-parity-generalization-20260728","spec-harness-hub-plugin-hook-governance-20260804","doc-hooks-entry-point-parity-spec-reflection-receipt-20260804","issue-rubric-proposal-20260806-review","task-rubric-proposal-retention-final-review-handoff-20260810","doc-rubric-proposal-retention-spec-reflection-receipt-20260810"]
+related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure","issue-hooks-entry-point-parity-generalization-20260728","spec-harness-hub-plugin-hook-governance-20260804","doc-hooks-entry-point-parity-spec-reflection-receipt-20260804","issue-rubric-proposal-20260806-review","task-rubric-proposal-retention-final-review-handoff-20260810","doc-rubric-proposal-retention-spec-reflection-receipt-20260810","doc-flyer-studio-final-review-spec-reflection-20261025","task-flyer-studio-final-integration-20261025"]
 resource_scope: ["architecture/harness-hub-dev-workflow.md"]
 purpose: "Hub 本体の開発フロー、作者ローカル環境規律、MVP ファースト判断軸、C02/C11 の安全境界、live-trial session 環境隔離、検査対象 0 件と CI/local 呼び出し parity、および外部参考層と能動 plugin の所有境界を参照する"
 goal: "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096/qa-102/qa-122/qa-139/qa-140、C16 qa-141/qa-142、および qa-143 の確定内容に適合し、C11 artifact readiness、C02 document parity、tmux session 環境隔離、CI/local 品質ゲート、inline Python graph authority、worktree 診断、ready-payload 欠落の復旧境界、hook entry point parity、consumer-owned reference の境界を情報欠落なく提供する"
@@ -61,7 +61,7 @@ implementation_readiness: {"checked_at":"2026-07-18T08:10:00Z","missing_sections
 
 ## 要件定義書 (上位概念)
 
-この wrapper は開発フローの設計判断を上位要件へ追跡する索引であり、要件本文の正本は `system-spec/dev-workflow.md` に置く。
+この wrapper は開発フローの設計判断を上位要件へ追跡する索引であり、要件本文の正本は `system-spec/dev-workflow.md` に置く。 flyer-studio の内部責務・承認鮮度・配布契約は [最終統合受領書](../docs/features/feat-dev-pipeline-improvement/flyer-studio-final-review-spec-reflection-receipt.md) に接続する（cgix/h9ah、製品API/DB・確定質疑は非変更、最新Claude全体判定incompleteを保持）。
 
 ### U1 本質的目的 (essential_purpose)
 
@@ -297,4 +297,3 @@ build path の authority は独立 evaluator の native completion、resume path
 - **収束方法**: 契約 §1 の migration 節に従い close で収束させ、物理削除はしない。beads の `external_ref` が GitHub issue の URL を参照しており、削除するとリンクが解決不能になる。正規経路は `gh-bridge.py --op issue-close`。
 - **GitHub Issues の残存用途**: CI からの自動通知 (`update-yaml-spec.yml`) と、public repository としての外部受付窓口に限定する。運用手順は [beads-operations-runbook §1.1](../docs/beads-operations-runbook.md)。
 - 判断と検証の索引: [mx65 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/mx65-github-issue-mirror-retirement-spec-reflection-receipt.md)。
-

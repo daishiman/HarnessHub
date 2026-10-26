@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1768,
+  "graph_revision": 1801,
   "nodes": [
     {
       "acceptance": [
@@ -13177,7 +13177,9 @@
         "doc-hooks-entry-point-parity-spec-reflection-receipt-20260804",
         "issue-rubric-proposal-20260806-review",
         "task-rubric-proposal-retention-final-review-handoff-20260810",
-        "doc-rubric-proposal-retention-spec-reflection-receipt-20260810"
+        "doc-rubric-proposal-retention-spec-reflection-receipt-20260810",
+        "doc-flyer-studio-final-review-spec-reflection-20261025",
+        "task-flyer-studio-final-integration-20261025"
       ],
       "resource_scope": [
         "architecture/harness-hub-dev-workflow.md"
@@ -13208,7 +13210,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-10T01:48:56.084284Z"
+      "updated_at": "2026-10-25T01:25:46.304061Z"
     },
     {
       "acceptance": [
@@ -25553,7 +25555,9 @@
         "doc-hooks-entry-point-parity-spec-reflection-receipt-20260804",
         "issue-rubric-proposal-20260806-review",
         "task-rubric-proposal-retention-final-review-handoff-20260810",
-        "doc-rubric-proposal-retention-spec-reflection-receipt-20260810"
+        "doc-rubric-proposal-retention-spec-reflection-receipt-20260810",
+        "doc-flyer-studio-final-review-spec-reflection-20261025",
+        "task-flyer-studio-final-integration-20261025"
       ],
       "resource_scope": [
         "features/feat-dev-pipeline-improvement.md"
@@ -25597,7 +25601,7 @@
       "template_version": "1.0.0",
       "title": "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-10T01:48:11.173218Z"
+      "updated_at": "2026-10-25T00:00:00Z"
     },
     {
       "acceptance": [
@@ -55030,7 +55034,9 @@
         "issue-rubric-proposal-20260806-review",
         "task-rubric-proposal-retention-final-review-handoff-20260810",
         "doc-rubric-proposal-retention-spec-reflection-receipt-20260810",
-        "issue-production-tenant-bootstrap-readiness-20260814"
+        "issue-production-tenant-bootstrap-readiness-20260814",
+        "doc-flyer-studio-final-review-spec-reflection-20261025",
+        "task-flyer-studio-final-integration-20261025"
       ],
       "resource_scope": [
         "specs/harness-hub-system-specification-implementation-writebacks.md",
@@ -55068,7 +55074,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub システム要件仕様 — 実装 writeback 分冊",
       "tracker_binding": "none",
-      "updated_at": "2026-08-15T00:00:00Z"
+      "updated_at": "2026-10-25T00:00:00Z"
     },
     {
       "acceptance": [
@@ -68671,6 +68677,917 @@
       "title": "validate-source-citation.py が version と取得証跡本文の整合を検査しない",
       "tracker_binding": "beads",
       "updated_at": "2026-08-17T00:00:00.000000Z"
+    },
+    {
+      "acceptance": [
+        "lint-capability-manifest が flyer-studio の agent 定義8件で exit 0",
+        "package.py --check と npm test が緑のまま"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-dtr8",
+        "linked_at": "2026-10-22T13:17:57Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/flyer-studio-agent-capability-manifest-20261022.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "flyer-studio への v13 品質層反映で残った追跡課題",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "blocked"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-10-22T13:00:57Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/flyer-studio-agent-capability-manifest-20261022.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "8件すべてが harness-creator の agent frontmatter 規約を満たし、lint-capability-manifest が緑になる。",
+      "graph_node_id": "issue-flyer-studio-agent-capability-manifest-20261022",
+      "implementation_readiness": {
+        "checked_at": "2026-10-22T13:00:57Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "lint-capability-manifest（agent 定義の前置き情報を検査する lint）が、flyer-studio の agent 定義8件で kind・version などの CapabilityManifest frontmatter の欠落をエラー報告する。",
+      "related_nodes": [
+        "doc-flyer-studio-final-review-spec-reflection-20261025",
+        "task-flyer-studio-final-integration-20261025"
+      ],
+      "resource_scope": [
+        "plugins/flyer-studio/agents",
+        "plugins/flyer-studio/skills/assign-flyer-analysis-review/agents",
+        "plugins/flyer-studio/skills/assign-flyer-review/agents",
+        "plugins/flyer-studio/skills/run-analyze-flyer/agents",
+        "plugins/flyer-studio/skills/run-create-flyer/agents"
+      ],
+      "scope_in": [
+        "8件の frontmatter 追加",
+        "package.py --check と npm test の再確認"
+      ],
+      "scope_out": [
+        "agent 本文の書き換え"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-10-22T13:00:57Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "flyer-studio",
+        "lint",
+        "agent"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "flyer-studio: agent定義8件へ CapabilityManifest frontmatter を追加する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-10-25T01:24:18.813016Z"
+    },
+    {
+      "acceptance": [
+        "rotation を指定した scene が検査を通り、描画結果に反映される",
+        "回転後にはみ出す・重なる配置は検査が失敗する",
+        "rotation 未指定の既存案件の結果が変わらない"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-pzdu",
+        "linked_at": "2026-10-22T13:22:33Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/flyer-studio-arbitrary-rotation-20261022.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "flyer-studio への v13 品質層反映で残った追跡課題",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-10-22T13:00:57Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/flyer-studio-arbitrary-rotation-20261022.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "scene で任意角度の回転を指定でき、描画とはみ出し・重なり検査が回転後の外接矩形で正しく動く。",
+      "graph_node_id": "issue-flyer-studio-arbitrary-rotation-20261022",
+      "implementation_readiness": {
+        "checked_at": "2026-10-22T13:00:57Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "low",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "漫画の傾いたフキダシ・墨絵の斜めの書・写真の傾きなど、様式によっては任意角度の回転配置が必要になる。現行の scene は任意回転を未対応として検査で止める。",
+      "related_nodes": [
+        "doc-flyer-studio-final-review-spec-reflection-20261025",
+        "task-flyer-studio-final-integration-20261025"
+      ],
+      "resource_scope": [
+        "plugins/flyer-studio/schemas",
+        "plugins/flyer-studio/scripts",
+        "plugins/flyer-studio/tests"
+      ],
+      "scope_in": [
+        "scene schema への回転指定",
+        "描画と境界検査の回転対応",
+        "試験の追加"
+      ],
+      "scope_out": [
+        "回転を既定にすること"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-10-22T13:00:57Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "feature",
+        "flyer-studio",
+        "rendering",
+        "style"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "flyer-studio: 任意角度の回転配置に対応する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-10-25T01:24:20.628377Z"
+    },
+    {
+      "acceptance": [
+        "様式の語彙が design-contract の enum を正本にし、写真以外 (漫画・墨絵・文字主体) の brief fixture が visual-review まで通る",
+        "cycle 番号が記録され、上限超過で INCOMPLETE を返すことをテストで固定",
+        "reviewedAt が render.createdAt より後であること、および前版と同一の観察文を拒否することをテストで固定",
+        "workflow.md・run-create-flyer manifest・composition outputs に pilot 工程が載る",
+        "component-inventory が現物 (4 agent・pilot・DD11/12) と一致するか、将来目標と明示されている",
+        "再 capability-review で C1〜C4 PASS"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-cgix",
+        "linked_at": "2026-10-25T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/flyer-studio-elegant-review-findings-20261022.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "capability-review の FAIL を改善へつなぐための追跡。改善は /skill-improve で行う",
+      "completion_evidence": {
+        "completed_at": "2026-10-23T01:37:53Z",
+        "evidence_refs": [
+          "docs/features/feat-dev-pipeline-improvement/flyer-studio-final-review-spec-reflection-receipt.md"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-10-25T00:00:00Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-10-22T14:40:00Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/flyer-studio-elegant-review-findings-20261022.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "/skill-improve で eval-log/flyer-studio/_plugin/elegant-review/run-20261022-232500/review-plugin.md の論点 A〜J が反映され、再度の capability-review で C1〜C4 が PASS になっている状態",
+      "graph_node_id": "issue-flyer-studio-elegant-review-findings-20261022",
+      "implementation_readiness": {
+        "checked_at": "2026-10-22T14:40:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "capability-review (dry-run) の結果、品質ゲートの穴 (cycle 上限がコード未強制、旧レビュー転記で通過、独立性が名前の自己申告のみ) と、依頼の中心である多様な様式 (漫画・墨絵・文字主体) が schema・rubric・fixture に落ちていないことが分かった",
+      "related_nodes": [
+        "doc-flyer-studio-final-review-spec-reflection-20261025",
+        "task-flyer-studio-final-integration-20261025"
+      ],
+      "resource_scope": [
+        "plugins/flyer-studio/"
+      ],
+      "scope_in": [
+        "review-plugin.md の論点 A〜J"
+      ],
+      "scope_out": [
+        "実案件の証拠更新 (HarnessHub-f0ps)",
+        "利用者の明示依頼が無い commit / push"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-10-22T14:40:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "flyer-studio",
+        "elegant-review",
+        "quality-gate"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "flyer-studio の elegant-review で C1〜C4 が全て FAIL: 3cycle 上限・独立性・旧レビュー転記・様式の機械化・計画正本の古さを直す",
+      "tracker_binding": "beads",
+      "updated_at": "2026-10-25T01:24:22.539556Z"
+    },
+    {
+      "acceptance": [
+        "pilot の独立 PASS 前に propagation 対象案を再制作した記録があると検査が非 0 終了する",
+        "pilot PASS 後の展開は通る",
+        "executionPlan を省いた小修正は従来どおり通る",
+        "異常系の試験が tests に追加されている"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-h9ah",
+        "linked_at": "2026-10-22T13:13:37Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/flyer-studio-pilot-order-gate-20261022.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "flyer-studio への v13 品質層反映で残った追跡課題",
+      "completion_evidence": {
+        "completed_at": "2026-10-22T14:18:34Z",
+        "evidence_refs": [
+          "docs/features/feat-dev-pipeline-improvement/flyer-studio-final-review-spec-reflection-receipt.md"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-10-25T00:00:00Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-10-22T13:00:57Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/flyer-studio-pilot-order-gate-20261022.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "propagation 対象案の再制作が、pilot 案の独立 PASS（同じ画像 SHA に結び付いた判定）より前に行われた場合、検査が非 0 終了する。",
+      "graph_node_id": "issue-flyer-studio-pilot-order-gate-20261022",
+      "implementation_readiness": {
+        "checked_at": "2026-10-22T13:00:57Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "analysis.executionPlan の先行試作（pilot＝一部の案だけで先に処方を試すこと）について、機械検査は「pilot が既存案の真部分集合か」「選んだ理由と展開方法が書かれているか」だけを見ている。pilot の独立レビュー PASS より前に残りの案へ処方を広げても、機械では止まらない。",
+      "related_nodes": [
+        "doc-flyer-studio-final-review-spec-reflection-20261025",
+        "task-flyer-studio-final-integration-20261025"
+      ],
+      "resource_scope": [
+        "plugins/flyer-studio/scripts/analysis.cjs",
+        "plugins/flyer-studio/schemas/analysis.schema.json",
+        "plugins/flyer-studio/tests"
+      ],
+      "scope_in": [
+        "visual-review.json の案ごと pngSha256 と再制作の記録を突き合わせる検査",
+        "EVALS.json PILOT ケースの「順序は独立評価で確認」を機械検査に格上げ"
+      ],
+      "scope_out": [
+        "pilot の選び方そのものの自動決定",
+        "小さな修正で executionPlan を省く運用の禁止"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-10-22T13:00:57Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "flyer-studio",
+        "pilot",
+        "gate"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "flyer-studio: 先行試作(pilot)の独立PASS前に残り案へ展開した順序違反を機械検査で止める",
+      "tracker_binding": "beads",
+      "updated_at": "2026-10-25T01:45:24.387393Z"
+    },
+    {
+      "acceptance": [
+        "verification/ に新しい reviewPolicyFingerprint に結び付いた visual-review と analysis-review がある",
+        "readingTest・preservationChecks・rejectedAlternatives・executionPlan が実データで埋まっている",
+        "レビュー実施者が制作者と別である"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-f0ps",
+        "linked_at": "2026-10-22T13:16:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/flyer-studio-review-evidence-refresh-20261022.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "flyer-studio への v13 品質層反映で残った追跡課題",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-10-22T13:00:57Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/flyer-studio-review-evidence-refresh-20261022.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "実案件1件で、新しい項目を含む 制作→分析→提案評価→再制作→独立最終レビュー が一巡し、新しい指紋に結び付いた証跡が verification/ にある。",
+      "graph_node_id": "issue-flyer-studio-review-evidence-refresh-20261022",
+      "implementation_readiness": {
+        "checked_at": "2026-10-22T13:00:57Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "v13 反映で design-contract の reviewPolicyFiles（評価規範として指紋を取るファイル群）に含まれる文書を変更した。そのため reviewPolicyFingerprint（規範の指紋）が変わり、verification/ 配下の既存の独立レビュー証跡は古い規範に結び付いたまま（stale）になった。",
+      "related_nodes": [
+        "doc-flyer-studio-final-review-spec-reflection-20261025",
+        "task-flyer-studio-final-integration-20261025"
+      ],
+      "resource_scope": [
+        "plugins/flyer-studio/verification",
+        "plugins/flyer-studio/references/design-contract.json"
+      ],
+      "scope_in": [
+        "実案件1件での一巡と証跡の保存",
+        "readingTest の語が紙面の文言と一致すること・preservationChecks の記録"
+      ],
+      "scope_out": [
+        "v13 案件そのものの再デザイン",
+        "証跡の指紋だけを書き換える偽装"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-10-22T13:00:57Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "flyer-studio",
+        "evidence",
+        "review"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "flyer-studio: レビュー規範の変更で古くなった verification/ の独立レビュー証跡を取り直す",
+      "tracker_binding": "beads",
+      "updated_at": "2026-10-25T01:24:27.507532Z"
+    },
+    {
+      "acceptance": [
+        "DD11 の各様式に対応する出典付きレンズが designer-knowledge.md にある",
+        "固定数値や特定作家の模写を既定にしていない",
+        "package.py --check が緑のまま"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-mv0o",
+        "linked_at": "2026-10-22T13:20:01Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/flyer-studio-style-knowledge-lenses-20261022.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "flyer-studio への v13 品質層反映で残った追跡課題",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-10-22T13:00:57Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/flyer-studio-style-knowledge-lenses-20261022.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "様式ごとに出典付きのレンズがあり、DD11 の各様式から参照され、制作とレビューの根拠に使える。",
+      "graph_node_id": "issue-flyer-studio-style-knowledge-lenses-20261022",
+      "implementation_readiness": {
+        "checked_at": "2026-10-22T13:00:57Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "DD11（style-profiles.md）で様式ごとの判断点・背景生成・レビューの重点は定義した。しかし designer-knowledge.md の専門知見は写真・文字組・配色が中心で、漫画や墨絵などを一次資料（原典に近い出典）に基づいて判断するレンズ（見方）が無い。",
+      "related_nodes": [
+        "doc-flyer-studio-final-review-spec-reflection-20261025",
+        "task-flyer-studio-final-integration-20261025"
+      ],
+      "resource_scope": [
+        "plugins/flyer-studio/references/designer-knowledge.md",
+        "plugins/flyer-studio/references/style-profiles.md",
+        "plugins/flyer-studio/references/design-knowledge-index.json"
+      ],
+      "scope_in": [
+        "漫画・墨絵ほか DD11 の様式ごとの出典付きレンズ",
+        "DD11 からの参照リンク"
+      ],
+      "scope_out": [
+        "特定作家の画風の模写指示",
+        "様式ごとの固定数値（pt や比率）の焼き込み"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-10-22T13:00:57Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "flyer-studio",
+        "knowledge",
+        "style"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "flyer-studio: designer-knowledge に様式別の一次資料レンズ(漫画・墨絵など)を追加する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-10-25T01:24:29.440756Z"
+    },
+    {
+      "acceptance": [
+        "対象限定diff",
+        "最小品質ゲート成功",
+        "層別索引と課題対応が一致",
+        "latest runの限界と残課題を明記"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "document",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "document",
+          "candidate_path": "docs/features/feat-dev-pipeline-improvement/flyer-studio-final-review-spec-reflection-receipt.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "既存プラグインの最終統合・仕様影響を記録する補助成果物。exact13 packageと製品API/DB仕様を変更しない。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-10-25T00:00:00Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "docs/features/feat-dev-pipeline-improvement/flyer-studio-final-review-spec-reflection-receipt.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "対象差分・最小品質ゲート・仕様索引・追跡ID・draft PRが同じ完了範囲を指す",
+      "graph_node_id": "doc-flyer-studio-final-review-spec-reflection-20261025",
+      "implementation_readiness": {
+        "checked_at": "2026-10-25T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "layer": "feature-spec-reflection",
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "flyer-studioの最終統合条件と仕様影響を、完了済みと残課題を分けて記録する",
+      "related_nodes": [
+        "issue-flyer-studio-agent-capability-manifest-20261022",
+        "issue-flyer-studio-arbitrary-rotation-20261022",
+        "issue-flyer-studio-elegant-review-findings-20261022",
+        "issue-flyer-studio-pilot-order-gate-20261022",
+        "issue-flyer-studio-review-evidence-refresh-20261022",
+        "issue-flyer-studio-style-knowledge-lenses-20261022",
+        "task-flyer-studio-final-integration-20261025"
+      ],
+      "resource_scope": [
+        "plugins/flyer-studio/",
+        "docs/features/feat-dev-pipeline-improvement/flyer-studio-final-review-spec-reflection-receipt.md",
+        "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-flyer-studio-final-integration.md"
+      ],
+      "scope_in": [
+        "flyer-studio plugin",
+        "仕様反映受領",
+        "最小品質ゲート",
+        "対象限定公開"
+      ],
+      "scope_out": [
+        "製品API/DB/認証/UI/配備変更",
+        "他plugin変更",
+        "実案件再承認",
+        "既存exact13再生成"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-10-22T14:40:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "flyer-studio",
+        "final-integration",
+        "spec-reflection"
+      ],
+      "target_date": null,
+      "template_id": "document",
+      "template_version": "1.0.0",
+      "title": "flyer-studio 最終レビュー・仕様反映受領書",
+      "tracker_binding": "none",
+      "updated_at": "2026-10-25T08:24:48.762314Z"
+    },
+    {
+      "acceptance": [
+        "対象限定diff",
+        "最小品質ゲート成功",
+        "層別索引と課題対応が一致",
+        "latest runの限界と残課題を明記"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-h9xn",
+        "linked_at": "2026-10-25T01:33:19.984898+00:00",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-flyer-studio-final-integration.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "既存プラグインの最終統合・仕様影響を記録する補助成果物。exact13 packageと製品API/DB仕様を変更しない。",
+      "completion_evidence": {
+        "completed_at": "2026-10-25T08:23:58Z",
+        "evidence_refs": [
+          "docs/features/feat-dev-pipeline-improvement/flyer-studio-final-review-spec-reflection-receipt.md",
+          "https://github.com/daishiman/HarnessHub/pull/742"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-10-25T08:24:39.200733Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-10-25T00:00:00Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-flyer-studio-final-integration.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "対象差分・最小品質ゲート・仕様索引・追跡ID・draft PRが同じ完了範囲を指す",
+      "graph_node_id": "task-flyer-studio-final-integration-20261025",
+      "implementation_readiness": {
+        "checked_at": "2026-10-25T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": false,
+          "head_branch": "devgraph/issue-flyer-studio-elegant-review-findings-20261022",
+          "linked_at": "2026-10-25T08:24:39.200733Z",
+          "merge_commit_sha": null,
+          "merged_at": null,
+          "pr_number": 742,
+          "repo": "daishiman/HarnessHub",
+          "state": "open",
+          "url": "https://github.com/daishiman/HarnessHub/pull/742"
+        }
+      ],
+      "purpose": "flyer-studioの最終統合条件と仕様影響を、完了済みと残課題を分けて記録する",
+      "related_nodes": [
+        "issue-flyer-studio-agent-capability-manifest-20261022",
+        "issue-flyer-studio-arbitrary-rotation-20261022",
+        "issue-flyer-studio-elegant-review-findings-20261022",
+        "issue-flyer-studio-pilot-order-gate-20261022",
+        "issue-flyer-studio-review-evidence-refresh-20261022",
+        "issue-flyer-studio-style-knowledge-lenses-20261022",
+        "doc-flyer-studio-final-review-spec-reflection-20261025",
+        "feat-dev-pipeline-improvement"
+      ],
+      "resource_scope": [
+        "plugins/flyer-studio/",
+        "docs/features/feat-dev-pipeline-improvement/flyer-studio-final-review-spec-reflection-receipt.md",
+        "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-flyer-studio-final-integration.md"
+      ],
+      "scope_in": [
+        "flyer-studio plugin",
+        "仕様反映受領",
+        "最小品質ゲート",
+        "対象限定公開"
+      ],
+      "scope_out": [
+        "製品API/DB/認証/UI/配備変更",
+        "他plugin変更",
+        "実案件再承認",
+        "既存exact13再生成"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-10-22T14:40:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "flyer-studio",
+        "final-integration",
+        "spec-reflection"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "flyer-studio 最終レビュー・対象限定公開の統合task",
+      "tracker_binding": "beads",
+      "updated_at": "2026-10-25T08:24:50.904558Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

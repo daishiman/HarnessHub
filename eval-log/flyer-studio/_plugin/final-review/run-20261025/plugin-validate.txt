@@ -1,0 +1,3 @@
+Validating plugin manifest: /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/flyer-studio-final-20261025/plugins/flyer-studio/.claude-plugin/plugin.json
+
+✔ Validation passed

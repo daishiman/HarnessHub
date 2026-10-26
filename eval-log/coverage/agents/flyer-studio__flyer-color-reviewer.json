@@ -1,0 +1,36 @@
+{
+  "artifact": "plugins/flyer-studio/agents/flyer-color-reviewer.md",
+  "type": "agents",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 94,
+    "notes": "責務はcolor/integrationの読み取り専用の所見返却に限定。tools=Read,Glob,Grepで書込/コマンド/Agent権限を持たず、共通規則から非再帰・同snapshot・stage別返却先を読む。知識索引のusedByとDD06→color節/§10・DD07/DD08/DD12へ接続。完成評価ではcriteria本文を一度記録しexpertReviewsから参照する。analysis/create用途の所見を完成画像の合格へ昇格させない。mechanical=trueの根拠は自身が実行したbuild-local-package.py --checkのerrors=[]/fail=0で、check_registryの実agent参照・check_manifest resources・check_links・check_entry_pointsの3専門agent入口集合照合を含む。ホストで実際に独立起動したことを意味しない。 最終差分確認でsource SHAが初回観測と一致。依存するstage-common・knowledge index・review contract・専門agent本文もSHA不変。6SKILLの入口記載と3py metadataの変更は専門担当の責務/権限/参照を変更しておらず、今回もpackage検査fail0を実測。"
+  },
+  "reviewed_by": "codex-independent-final-artifact-review",
+  "checked": [
+    "responsibility",
+    "reference-existence",
+    "permission-boundary",
+    "independence",
+    "non-recursion",
+    "package-agent-references",
+    "entry-point-coverage"
+  ],
+  "source_sha256": "cdf0db434f7d27ccaf2f463ad6af81318658d731d9ec7c9ab971e18f564b714f",
+  "evidence": [
+    "plugins/flyer-studio/references/stage-common.md#専門レンズの共通規則",
+    "plugins/flyer-studio/references/design-knowledge-index.json",
+    "plugins/flyer-studio/skills/assign-flyer-review/references/review-contract.md",
+    "plugins/flyer-studio/plugin-composition.yaml",
+    "plugins/flyer-studio/scripts/build-local-package.py:check_registry/check_entry_points"
+  ],
+  "limits": [
+    "本版を1回だけ現物確認したfocused最終評価。run-elegant-reviewの30法runではなく、過去Codex30PASS・Claude23使用7skip/incomplete・r06 deltaの合格を転用していない。",
+    "実ホストでの独立した担当の起動・委任とツール権限の強制は未実測。",
+    "実印刷物・来場/申込効果・実機QR読取は今回の範囲外。",
+    "個人写真を含む公開範囲についてユーザー回答待ち。外部公開の実行許可を表す評価ではない。",
+    "isolation:forkとtoolsは文書・設定として確認。実ホストでの独立起動とimage Read可用性は未実測。"
+  ],
+  "reviewed_at": "2026-10-25T01:37:28.296243Z"
+}

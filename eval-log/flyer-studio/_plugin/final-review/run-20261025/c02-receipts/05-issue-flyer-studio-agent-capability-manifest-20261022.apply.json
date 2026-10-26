@@ -1,0 +1,17 @@
+{
+  "artifact_sha256_after": "a5cc06577a86c750178ee87b05fdc379ffb9f57a0e06ea7543412c909fb3e24d",
+  "body_source": "preserved",
+  "file_path": "issues/flyer-studio-agent-capability-manifest-20261022.md",
+  "graph_node_id": "issue-flyer-studio-agent-capability-manifest-20261022",
+  "graph_revision_after": 1780,
+  "graph_revision_before": 1779,
+  "graph_sha256_after": "1189e310109b2425dd349f4fb1a5ee432c033f086ab12949ddc4e456aec35959",
+  "graph_sha256_before": "0bd6ad5194862bcc2fca2d0c3dbf0650359d66a6585b71007f52506cc4220d22",
+  "idempotent": false,
+  "operation": "updated",
+  "owner": "C02/run-dev-graph-node",
+  "recovered_interrupted_transaction": false,
+  "replaced_body_lines": null,
+  "status": "applied",
+  "write_count": 2
+}

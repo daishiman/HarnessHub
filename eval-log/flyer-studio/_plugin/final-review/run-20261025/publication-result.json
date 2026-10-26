@@ -1,0 +1,20 @@
+{
+  "pr_url": "https://github.com/daishiman/HarnessHub/pull/742",
+  "base": "main",
+  "draft": true,
+  "beads_id": "HarnessHub-h9xn",
+  "beads_status": "closed",
+  "closed_at": "2026-10-25T08:23:58Z",
+  "close_reason": "対象限定の最終レビュー・内部仕様反映・最小ゲート・個人素材公開承認・main取込・origin push・draft PR #742提出を完了。PR mergeと既存残4課題は対象外。",
+  "first_push_exit_code": 0,
+  "first_push_ci": {
+    "pass": 151,
+    "warn": 5,
+    "fail": 0
+  },
+  "spec_reflection_guard": {
+    "real_pr_create_payload": true,
+    "exit_code": 0,
+    "head": "9f080b0977616e3b66bb98f22d21f46185e81eff"
+  }
+}

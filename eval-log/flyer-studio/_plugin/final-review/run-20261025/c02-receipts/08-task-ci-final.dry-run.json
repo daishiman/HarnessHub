@@ -1,0 +1,16 @@
+{
+  "artifact_sha256_after": "7f608de5981bd3754c8103a3b757f1626847476706e4a470de11173c9dc0dce2",
+  "body_source": "from_file",
+  "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-flyer-studio-final-integration.md",
+  "graph_node_id": "task-flyer-studio-final-integration-20261025",
+  "graph_revision_after": 1795,
+  "graph_revision_before": 1794,
+  "graph_sha256_after": "3c24d6dcd2fa4bb0a4a79e192d5363a10646d7175ecbd7d2ad265240086438bf",
+  "graph_sha256_before": "d9fc0b9d172686e9f1dd6058cc84b230757a0a1396532b5fbd4e27c69112c134",
+  "idempotent": false,
+  "operation": "updated",
+  "owner": "C02/run-dev-graph-node",
+  "replaced_body_lines": 77,
+  "status": "preview",
+  "write_count": 0
+}

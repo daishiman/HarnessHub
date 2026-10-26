@@ -1,0 +1,17 @@
+{
+  "artifact_sha256_after": "db640c6f8ce5a9bf81428b4d6c5c84982079a0a4ff470b9bccb92ec4f311e0e5",
+  "body_source": "from_input",
+  "file_path": "specs/harness-hub-system-specification-implementation-writebacks.md",
+  "graph_node_id": "spec-harness-hub-system-specification-implementation-writebacks",
+  "graph_revision_after": 1779,
+  "graph_revision_before": 1778,
+  "graph_sha256_after": "0bd6ad5194862bcc2fca2d0c3dbf0650359d66a6585b71007f52506cc4220d22",
+  "graph_sha256_before": "9416195239a7ab3142e8398a515d85efa6beafa4ae5cd4631d75ef29f8247476",
+  "idempotent": false,
+  "operation": "updated",
+  "owner": "C02/run-dev-graph-node",
+  "recovered_interrupted_transaction": false,
+  "replaced_body_lines": 206,
+  "status": "applied",
+  "write_count": 2
+}

@@ -1,0 +1,16 @@
+{
+  "artifact_sha256_after": "38779c0d7074f61272b4517184691a7d9abe2b9c8104f05d6acca877b53e6887",
+  "body_source": "from_input",
+  "file_path": "docs/features/feat-dev-pipeline-improvement/flyer-studio-final-review-spec-reflection-receipt.md",
+  "graph_node_id": "doc-flyer-studio-final-review-spec-reflection-20261025",
+  "graph_revision_after": 1789,
+  "graph_revision_before": 1788,
+  "graph_sha256_after": "5074576cb6e3cfc78882d73b328698a6087b6881c03bc4437c00ca2ee6ff569f",
+  "graph_sha256_before": "1b0960fcf2c18a4045b028efe39159bb8de58313b6853941cb84eca2b2957837",
+  "idempotent": false,
+  "operation": "updated",
+  "owner": "C02/run-dev-graph-node",
+  "replaced_body_lines": 77,
+  "status": "preview",
+  "write_count": 0
+}

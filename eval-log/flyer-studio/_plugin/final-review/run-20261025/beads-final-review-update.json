@@ -1,0 +1,32 @@
+{
+  "applied_fields": [
+    "append_notes"
+  ],
+  "bd_version": "1.1.0",
+  "op": "update",
+  "result": [
+    {
+      "created_at": "2026-10-25T01:32:56Z",
+      "created_by": "daishiman",
+      "description": "既存課題HarnessHub-cgix/HarnessHub-h9ahの変更と後続Claude修正を最終レビューし、必要最小限の品質ゲートと正規仕様反映を行い、無関係差分を除いたdevgraphブランチをoriginへpushしてdraft PRを作成する。公開先はpublicなので個人写真・案件履歴の公開範囲は利用者回答待ち。元作業は保全する。",
+      "external_ref": "dev-graph:task-flyer-studio-final-integration-20261025",
+      "id": "HarnessHub-h9xn",
+      "issue_type": "task",
+      "notes": "main→作業branchの取り込み完了。他案件dirty15件はstash SHA固定で保全・復元済。最新220tests=216PASS/0FAIL/4SKIP。共通命名・package schemaを修正し、現在独立最終レビュー記録を補完中。公開先はpublic、個人素材の公開範囲質問は未回答のためpush/PR未実施。\n最終レビュー: npm test 221件/217 PASS/0 FAIL/4 SKIP、読取専用CLI回帰25/25、共通feedback梱包回帰4/4。repository共通CI 151 PASS/5 WARN/0 FAIL。独立評価6skill・3agent・3Python入口のsource hashを照合し、coverage floor回帰なし。docs/features/system-spec/specs/architecture/tasksへC02反映済み。origin/main→local main→devgraph作業branchのmerge完了、元rootの無関係11ファイルはバイト一致で保全。originはpublic、既存契約distribution=falseかつ個人写真/案件履歴を含むため公開範囲の利用者回答待ち。commit/push/draft PRと最終HEAD束縛受領書は未実施。h9xnはin_progressを維持。",
+      "owner": "daishimanju@gmail.com",
+      "priority": 1,
+      "started_at": "2026-10-25T01:33:13Z",
+      "status": "in_progress",
+      "title": "flyer-studioの最終レビュー・仕様反映・draft PR公開",
+      "updated_at": "2026-10-25T01:51:56Z"
+    }
+  ],
+  "workspace_identity": {
+    "attributes": {
+      "database_path": "/Users/dm/dev/dev/個人開発/HarnessHub/.beads/embeddeddolt",
+      "prefix": "HarnessHub",
+      "schema_version": "1"
+    },
+    "workspace_id": "bdw_8c8e069eb72d81502a14ff72"
+  }
+}

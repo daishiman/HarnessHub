@@ -1,0 +1,30 @@
+{
+  "npm_test": {
+    "total": 221,
+    "pass": 217,
+    "fail": 0,
+    "skip": 4
+  },
+  "repository_ci": {
+    "pass": 151,
+    "warn": 5,
+    "fail": 0,
+    "log": "prepush-ci-final.txt"
+  },
+  "publication": "draft-pr-created",
+  "commit": null,
+  "pr": {
+    "number": 742,
+    "url": "https://github.com/daishiman/HarnessHub/pull/742",
+    "base": "main",
+    "draft": true
+  },
+  "head_bound_receipt": "created-and-guarded-at-first-publication-head; reissue-after-final-documentation-commit",
+  "beads_id": "HarnessHub-h9xn",
+  "branch": "devgraph/issue-flyer-studio-elegant-review-findings-20261022",
+  "base": "main",
+  "implementation_commit": "06ccd688",
+  "first_publication_head": "9f080b0977616e3b66bb98f22d21f46185e81eff",
+  "beads_status": "closed",
+  "beads_closed_at": "2026-10-25T08:23:58Z"
+}

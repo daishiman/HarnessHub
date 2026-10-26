@@ -1,0 +1,38 @@
+{
+  "artifact": "plugins/flyer-studio/scripts/build-asset-gallery.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 100,
+    "notes": "catalogを正本とし、--check時は書込なし、通常時は固定assets/index.htmlだけを生成。実測で既存HTMLとの完全一致と</script>文字列の\\u003cエスケープを確認。DOM textContent中心で素材説明を描画し、ネットワーク送信や外部依存を持たない。異常JSON/I/Oは非0で止まるが専用の要約エラー整形はない。 最終版は必須script frontmatterのname/purpose/inputs/outputs/contexts/network/write-scope/dependenciesが揃い、lint-script-frontmatterがchecked3/violations0/exit0。metadataを除いたsource SHAが初回と一致するため、前回の動作・責務・エラー/書込境界の実読観測を引き継ぐ。書込範囲は実装と一致（packageは新dirと隣接zip）。確認範囲で残る欠陥findingなし。"
+  },
+  "reviewed_by": "codex-independent-final-artifact-review",
+  "checked": [
+    "soundness",
+    "responsibility",
+    "error-handling",
+    "side-effect-safety",
+    "frontmatter"
+  ],
+  "source_sha256": "dd577aafb753cff6bf534dbd945db98f3c75eeafb1ea7e1bf824feaa3ebe540a",
+  "evidence": {
+    "ast_parse": true,
+    "embedded_end_script_escaped": true,
+    "catalog_matches": true,
+    "metadata_only_change_confirmed": true,
+    "frontmatter_lint_exit": 0
+  },
+  "findings": [],
+  "limits": [
+    "本版を1回だけ現物確認したfocused最終評価。run-elegant-reviewの30法runではなく、過去Codex30PASS・Claude23使用7skip/incomplete・r06 deltaの合格を転用していない。",
+    "実ホストでの独立した担当の起動・委任とツール権限の強制は未実測。",
+    "実印刷物・来場/申込効果・実機QR読取は今回の範囲外。",
+    "個人写真を含む公開範囲についてユーザー回答待ち。外部公開の実行許可を表す評価ではない。",
+    "これは本3pyのレビュー。呼び出す全CJS実装の完全な再監査やローカルキットの実ホスト導入は範囲外。"
+  ],
+  "resolved_findings": [
+    "SF-001"
+  ],
+  "reviewed_at": "2026-10-25T01:37:28.296243Z"
+}

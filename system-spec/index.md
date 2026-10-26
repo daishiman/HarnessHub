@@ -42,3 +42,7 @@ kind: index
 ## 全体ドキュメント出典 (未割当参照)
 
 - (全ての取得済みドキュメントは各章へ割り当て済み)
+
+## flyer-studio 内部契約の実装 writeback（2026-10-25）
+
+[既存writeback分冊](../specs/harness-hub-system-specification-implementation-writebacks.md#2026-10-25-flyer-studio-最終統合-writeback) と [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/flyer-studio-final-review-spec-reflection-receipt.md) へ接続する。製品API・DB・認証・UI・配備の要件変更はなく、確定章・質疑・spec-stateは変更しない。内部判断責務と承認・配布契約への影響のみ反映する。

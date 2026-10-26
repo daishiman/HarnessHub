@@ -1,0 +1,26 @@
+{
+  "original_goal": "flyer-studio の最終統合に必要な仕様影響受領書・補助task・既存層索引・6課題の追跡をC02単一writerで反映し、元案件と他機能の内容を保持する",
+  "status": "complete",
+  "loop": 2,
+  "checks": {
+    "context": "PASS",
+    "classification": "PASS automatic .99/margin .89",
+    "atomic_write": "PASS C02 dry-run/apply receipts",
+    "schema": "PASS 0 violations",
+    "focused_readiness": "PASS",
+    "scope_preservation": "PASS other nodes unchanged"
+  },
+  "limitations": [
+    "最終commit後のHEAD束縛仕様反映receiptとhook guard",
+    "公開素材範囲のユーザー回答",
+    "stage後のgit追跡済target限定リンクlint",
+    "draft PR確定後の受領書更新",
+    "全体git diff check: rootへruntime.md末尾空行を連絡済"
+  ],
+  "feedback_criteria": {
+    "IN1": "PASS graph schema",
+    "OUT1": "PASS current routing/parity; crash injection not rerun for doc-only usage",
+    "OUT2": "PASS required sections",
+    "OUT3": "N/A exact13 unchanged; no registration"
+  }
+}

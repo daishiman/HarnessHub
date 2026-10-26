@@ -1,0 +1,34 @@
+TAP version 13
+# Subtest: package checks read the registry and reject drift in both directions
+ok 1 - package checks read the registry and reject drift in both directions
+  ---
+  duration_ms: 2542.799583
+  type: 'test'
+  ...
+# Subtest: package asset gate rejects unsafe scope, aliases, privacy types and changed originals
+ok 2 - package asset gate rejects unsafe scope, aliases, privacy types and changed originals
+  ---
+  duration_ms: 4823.416709
+  type: 'test'
+  ...
+# Subtest: FIX routing agrees across composition, contract and workflow without bypassing the dependency DAG
+ok 3 - FIX routing agrees across composition, contract and workflow without bypassing the dependency DAG
+  ---
+  duration_ms: 365.371167
+  type: 'test'
+  ...
+# Subtest: policy coverage follows usedBy DD bodies, related sections and stage contracts
+ok 4 - policy coverage follows usedBy DD bodies, related sections and stage contracts
+  ---
+  duration_ms: 312.884958
+  type: 'test'
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 8286.755291

@@ -1,0 +1,35 @@
+{
+  "base_ref": "origin/main",
+  "base_sha": "2542d14e105959602d5c7dff16f63d95c94b83fb",
+  "local_main_sha": "c1bcb5cf40d0f2577665ab4a5d47fbca592199c1",
+  "branch": "devgraph/issue-flyer-studio-elegant-review-findings-20261022",
+  "original_dirty_paths": [
+    ".beads/interactions.jsonl",
+    ".claude/settings.json",
+    ".dev-graph/state/graph.json",
+    "doc/ClaudeCodeスキルの設計書/34a-settings-merge-spec.md",
+    "eval-log/review-queue.jsonl",
+    "plugins/harness-creator/EVALS.json",
+    "plugins/harness-creator/skills/run-skill-rubric-governance/SKILL.md",
+    "plugins/harness-creator/skills/run-skill-rubric-governance/prompts/R1-govern.md",
+    "plugins/harness-creator/skills/run-skill-rubric-governance/scripts/aggregate-evals.py",
+    "plugins/harness-creator/skills/run-skill-rubric-governance/templates/proposal.json",
+    "plugins/harness-creator/skills/run-skill-rubric-governance/workflow-manifest.json",
+    "scripts/build-claude-settings.py",
+    "tests/scripts-plugins/test_harness_creator__aggregate_evals.py",
+    "tests/test_aggregate_evals.py",
+    "tests/test_build_claude_settings.py"
+  ],
+  "preserved_stash": "7370424727ba430910d88c938014c18b49b56148",
+  "retired_stubs_removed": [
+    "agents/flyer-reviewer.md",
+    "references/interview.md"
+  ],
+  "handoff_excluded": "元作業フォルダのclaude-handoff.txtは保持、配布候補へコピーしない",
+  "final_main_integration": {
+    "remote_main": "5559e4e61e03ca24d6d86e124dc30beee1d58555",
+    "local_main": "05295fd66aee67bd2f9fef5bbab7acb2888e7e8f",
+    "branch_merge_head": "9f080b0977616e3b66bb98f22d21f46185e81eff",
+    "flow": "origin/main -> local main -> work branch"
+  }
+}
